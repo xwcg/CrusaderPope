@@ -1,0 +1,236 @@
+/* Editing from the map: ✎ on the side panel's rows and their editors (components/map/MapEdit.tsx) */
+
+.map-edit-btn {
+  float: right;
+  padding: 0 5px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--text-dim);
+  visibility: hidden;
+}
+.map-rows tr:hover .map-edit-btn,
+.map-edit-btn.on {
+  visibility: visible;
+}
+.map-edit-btn.on {
+  color: var(--accent);
+  border-color: var(--accent-dim);
+}
+.map-edit-open th,
+.map-edit-open td {
+  color: var(--accent);
+}
+
+.map-edit-row > td {
+  padding: 2px 0 10px;
+}
+/* (width 0 + min-width 100%: the editor takes the row's width and never widens the panel's table) */
+.map-edit {
+  width: 0;
+  min-width: 100%;
+  box-sizing: border-box;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--text);
+}
+.map-edit input:not([type='color']),
+.map-edit select {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+.map-edit-head {
+  font-size: 12.5px;
+}
+
+.map-edit-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.map-edit-label {
+  width: 44px;
+  flex: none;
+  color: var(--text-faint);
+  font-size: 12px;
+}
+.map-edit-value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.map-edit-field button.on {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+.map-edit-color {
+  width: 34px;
+  height: 22px;
+  padding: 1px 2px;
+  flex: none;
+  cursor: pointer;
+}
+.map-edit-number {
+  width: 64px;
+  flex: none;
+  padding: 3px 6px;
+  font-size: 12.5px;
+}
+
+.map-edit-when {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.map-edit-when select {
+  padding: 3px 6px;
+  font-size: 12px;
+}
+.map-edit-target {
+  color: var(--text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.map-edit-chooser {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.map-edit-chooser input {
+  width: 100%;
+  padding: 4px 8px;
+  font-size: 12.5px;
+}
+.map-edit-list {
+  max-height: 232px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.map-edit-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 3px 8px;
+  text-align: left;
+  font-size: 12.5px;
+  flex: none;
+}
+.map-edit-item.hi,
+.map-edit-item:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+.map-edit-item.cur .map-edit-name {
+  color: var(--accent);
+}
+.map-edit-item.dim {
+  opacity: 0.55;
+}
+.map-edit-swatch {
+  width: 10px;
+  height: 10px;
+  flex: none;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.map-edit-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.map-edit-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.map-edit-sub {
+  color: var(--text-faint);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.map-edit-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.map-edit-hint {
+  margin-left: auto;
+  flex: none;
+  color: var(--text-faint);
+  font-size: 11px;
+}
+.map-edit-now {
+  flex: none;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--accent-dim);
+}
+.map-edit-hint + .map-edit-now {
+  margin-left: 4px;
+}
+.map-edit-name + .map-edit-now {
+  margin-left: auto;
+}
+.map-edit-empty {
+  padding: 6px 8px;
+  color: var(--text-faint);
+  font-size: 12px;
+}
+.map-edit-error {
+  color: var(--danger);
+  font-size: 12px;
+}
+.map-edit-busy {
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.map-edit-foot {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  color: var(--text-faint);
+  font-size: 12px;
+}
+.map-edit-foot-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.map-edit-foot-row button {
+  flex: none;
+  white-space: nowrap;
+}
+/* the last map edit's undo, while main has one */
+.map-edit-undo {
+  display: block;
+  max-width: 100%;
+  margin-top: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}

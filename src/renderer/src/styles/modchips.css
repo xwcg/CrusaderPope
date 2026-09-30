@@ -1,0 +1,292 @@
+/* ================================================================== mods: how the loaded mods touch entries (docs/mods.md) */
+/* --mod = the mod's colour (modStore.modColor), set inline */
+
+.mod-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex: none;
+  max-width: 118px;
+  padding: 0 6px 0 4px;
+  border-radius: 9px;
+  border: 1px solid color-mix(in srgb, var(--mod) 45%, transparent);
+  background: color-mix(in srgb, var(--mod) 11%, transparent);
+  color: var(--mod);
+  font-size: 10px;
+  line-height: 15px;
+  white-space: nowrap;
+  cursor: default;
+}
+.mod-chip .mod-glyph,
+.mod-badge .mod-glyph {
+  font-weight: 700;
+  min-width: 8px;
+  text-align: center;
+}
+.mod-chip .mod-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mod-chip .mod-more {
+  color: var(--text-faint);
+}
+/* two or more mods change the entry, one over the other */
+.mod-chip.conflict .mod-more {
+  color: var(--danger);
+}
+.mod-chip.removed,
+.mod-badge.removed {
+  border-style: dashed;
+}
+/* defined twice where the game keeps no winner (events, history characters, localization outside replace/) */
+.mod-chip .mod-dup,
+.mod-badge .mod-dup {
+  color: var(--danger);
+  font-weight: 700;
+}
+.mod-banner.duplicate {
+  border-color: color-mix(in srgb, var(--danger) 60%, transparent);
+}
+.mod-banner.duplicate b {
+  color: var(--danger);
+}
+/* a mod defines it again, as the game does: no change — quiet */
+.mod-chip.same,
+.mod-badge.same {
+  border-style: dotted;
+  background: transparent;
+  opacity: 0.75;
+}
+
+/* an entry a mod removed: still listed, clearly not part of the game */
+.entity-row.removed .name {
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, var(--text-dim) 60%, transparent);
+  color: var(--text-dim);
+}
+.entity-row.removed .display {
+  color: var(--text-faint);
+}
+
+.mod-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 1px 10px 1px 7px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--mod) 50%, transparent);
+  background: color-mix(in srgb, var(--mod) 13%, transparent);
+  color: var(--mod);
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: default;
+}
+.mod-dots {
+  display: inline-flex;
+  gap: 3px;
+}
+.mod-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--mod);
+}
+.tabs .mod-badge {
+  align-self: center;
+  margin-left: auto;
+  margin-bottom: 3px;
+}
+
+.mod-banner {
+  max-width: 900px;
+  margin: 0 auto 14px;
+  padding: 9px 14px;
+  border: 1px dashed color-mix(in srgb, var(--mod) 55%, transparent);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--mod) 7%, transparent);
+  color: var(--text-dim);
+  line-height: 1.45;
+}
+.mod-banner b {
+  color: var(--mod);
+  font-weight: 600;
+}
+
+/* where a definition comes from */
+.origin-tag {
+  flex: none;
+  font-size: 10.5px;
+  padding: 0 6px;
+  border-radius: 3px;
+  border: 1px solid var(--border-strong);
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.origin-tag.mod {
+  border-color: color-mix(in srgb, var(--mod) 50%, transparent);
+  background: color-mix(in srgb, var(--mod) 11%, transparent);
+  color: var(--mod);
+}
+.origin-hidden {
+  flex: none;
+  font-size: 11px;
+  font-style: italic;
+  color: var(--mod);
+  white-space: nowrap;
+}
+.def-site.hidden-def {
+  border-style: dashed;
+}
+.def-site.hidden-def > header .path {
+  text-decoration: line-through;
+  color: var(--text-dim);
+}
+.def-site.hidden-def .code,
+.def-site.hidden-def .doc-comment {
+  opacity: 0.5;
+}
+.detail-header .sites .site {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.detail-header .sites .site.hidden .site-link {
+  opacity: 0.55;
+  text-decoration: line-through;
+}
+
+/* toggles and filters */
+.mod-toggle {
+  white-space: nowrap;
+}
+.mod-toggle.on {
+  color: var(--accent);
+  border-color: var(--accent-dim);
+  background: var(--bg-active);
+}
+/* entries the loaded mods removed: listed (struck through) or hidden — at the right of the list's title line */
+.hide-removed {
+  margin-left: auto;
+  align-self: center;
+  padding: 0 7px;
+  font-size: 11px;
+  line-height: 18px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.hide-removed.on {
+  color: var(--text-dim);
+  border-style: dashed;
+}
+.search .mod-toggle {
+  position: absolute;
+  right: 58px;
+  top: 4px;
+  font-size: 11px;
+  padding: 1px 6px;
+}
+.search .mod-toggle.on {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: inherit;
+}
+.search input.with-mods {
+  padding-right: 110px;
+}
+.mod-states {
+  align-self: flex-start;
+}
+.mod-states button {
+  font-variant-numeric: tabular-nums;
+}
+.mod-states button.conflicts:not(.active) {
+  color: color-mix(in srgb, var(--danger) 80%, var(--text));
+}
+
+/* sidebar / folder tree: entries per type, files per folder the mods touch */
+.type-row .mod-count,
+.folder-row .mod-count {
+  font-size: 10px;
+  line-height: 13px;
+  padding: 0 5px;
+  border-radius: 7px;
+  border: 1px solid var(--accent-dim);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.sidebar .mod-only-note {
+  padding: 6px 10px 0;
+  font-size: 11px;
+  color: var(--accent);
+}
+.sidebar .mod-only-note.conflicts,
+.type-row .count.conflicts {
+  color: color-mix(in srgb, var(--danger) 80%, var(--text));
+}
+
+/* search results: the chip next to the name */
+.search-result .name-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.search-result .name-line .name {
+  min-width: 0;
+}
+
+/* references: the chip before the count */
+.ref-item .count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* gallery tiles from a mod */
+.tile {
+  position: relative;
+}
+.tile-mod {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  max-width: calc(100% - 6px);
+  padding: 0 5px;
+  border-radius: 3px;
+  background: rgba(20, 17, 13, 0.85);
+  border: 1px solid color-mix(in srgb, var(--mod) 55%, transparent);
+  color: var(--mod);
+  font-size: 9.5px;
+  line-height: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  z-index: 1;
+}
+.tile-mod.removed {
+  border-style: dashed;
+}
+/* a picture a mod's replace_path removed: its former picture, dimmed and struck through; no page of its own */
+.tile.removed {
+  cursor: default;
+}
+.tile.removed .tile-img img {
+  opacity: 0.35;
+  filter: grayscale(0.7);
+}
+.tile.removed .tile-name {
+  text-decoration: line-through;
+  color: var(--text-faint);
+}
+.tile-mod .mod-glyph {
+  font-weight: 700;
+  margin-right: 3px;
+}
+.tile-mod .mod-more {
+  margin-left: 3px;
+  color: var(--text-faint);
+}
+/* two or more mods had the file: the last in load order wins */
+.tile-mod.conflict .mod-more {
+  color: var(--danger);
+}

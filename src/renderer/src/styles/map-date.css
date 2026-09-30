@@ -1,0 +1,31 @@
+/* The map's date control (components/map/DateControl.tsx): bookmarks, year slider, date entry. */
+.map-date > select {
+  max-width: 190px;
+}
+.map-date-slider {
+  width: 180px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.map-date-entry {
+  width: 84px;
+  background: var(--bg-raised);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 3px 6px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.map-date-entry:focus {
+  outline: none;
+  border-color: var(--accent-dim);
+}
+.map-date-entry.bad {
+  border-color: var(--danger);
+}
+/* a date asked for, its map on the way */
+.map-date.pending .map-date-entry {
+  color: var(--accent);
+}

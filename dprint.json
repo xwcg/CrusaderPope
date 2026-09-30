@@ -1,0 +1,38 @@
+{
+  "typescript": {
+    "lineWidth": 320,
+    "indentWidth": 4,
+    "useTabs": false,
+    "newLineKind": "auto",
+    "semiColons": "always",
+    "quoteStyle": "preferSingle",
+    "jsx.quoteStyle": "preferDouble",
+    "jsx.bracketPosition": "maintain",
+    "bracePosition": "nextLine",
+    "nextControlFlowPosition": "nextLine",
+    "singleBodyPosition": "nextLine",
+    "useBraces": "maintain",
+    "operatorPosition": "maintain",
+    "trailingCommas": "never",
+    "arrowFunction.useParentheses": "force",
+    "memberExpression.linePerExpression": false,
+    "module.sortImportDeclarations": "maintain",
+    "module.sortExportDeclarations": "maintain",
+    "importDeclaration.sortNamedImports": "maintain",
+    "exportDeclaration.sortNamedExports": "maintain",
+    "quoteProps": "preserve"
+  },
+  "includes": [
+    "src/**/*.{ts,tsx,js,mjs,cjs}",
+    "scripts/**/*.{ts,tsx,js,mjs,cjs}",
+    "*.{ts,mjs,cjs}"
+  ],
+  "excludes": [
+    "**/node_modules",
+    "out",
+    "dist"
+  ],
+  "plugins": [
+    "npm:@dprint/typescript@0.96.1"
+  ]
+}

@@ -1,0 +1,28 @@
+/* ================================================================== coats of arms (CoatOfArms.tsx) */
+
+.coa {
+  display: inline-block;
+  flex: none;
+  vertical-align: middle;
+}
+
+/* the detail header of titles, dynasties and houses (DetailView) */
+.detail-header:has(> .detail-coa) {
+  display: flow-root;
+}
+.detail-header .detail-coa {
+  float: right;
+  margin: 0 0 4px 12px;
+}
+.detail-header.compact .detail-coa {
+  margin: 4px 0 0 12px;
+}
+
+/* the map's side panel (map/MapPanel.tsx): the selected group's arms beside its name, small ones before title links */
+.map-panel-group .map-coa {
+  float: right;
+  margin: 10px 18px 4px 8px;
+}
+.map-rows .map-coa-row {
+  margin: -2px 5px 0 0;
+}

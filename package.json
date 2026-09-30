@@ -1,0 +1,90 @@
+{
+  "name": "crusader-pope",
+  "version": "0.1.0",
+  "description": "Mod editor and explorer for Crusader Kings III",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": "github:xwcg/CrusaderPope",
+  "main": "./out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev --watch",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
+    "index:cli": "node --experimental-strip-types --no-warnings --max-old-space-size=6000 scripts/index-cli.ts",
+    "postinstall": "node --experimental-require-module node_modules/electron/install.js",
+    "drive": "node scripts/drive.mjs",
+    "format": "node --experimental-strip-types --no-warnings scripts/format.ts",
+    "format:check": "node --experimental-strip-types --no-warnings scripts/format.ts --check",
+    "dist": "electron-vite build && node --experimental-require-module node_modules/electron-builder/cli.js --win",
+    "dist:dir": "electron-vite build && node --experimental-require-module node_modules/electron-builder/cli.js --win --dir"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.186.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "dprint": "^0.57.4",
+    "electron": "^44.4.5",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^5.0.0",
+    "playwright-core": "^1.63.0",
+    "typescript": "5.9",
+    "vite": "^7.3.6"
+  },
+  "dependencies": {
+    "cross-shader": "^0.2.3",
+    "cytoscape": "^3.34.3",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "texture2ddecoder-wasm": "^1.2.2",
+    "three": "^0.186.1"
+  },
+  "build": {
+    "appId": "io.github.xwcg.crusaderpope",
+    "productName": "CrusaderPope",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "out/**",
+      "package.json",
+      "LICENSE"
+    ],
+    "asar": false,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "license": "LICENSE"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "xwcg",
+      "repo": "CrusaderPope"
+    }
+  }
+}

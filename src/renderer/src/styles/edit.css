@@ -1,0 +1,1636 @@
+/* ================================================================== editing the active mod (docs/mods.md) */
+/* the override button and menu (OverrideMenu.tsx), app notices (Notices.tsx), the top bar's change notice (TopBar.tsx) */
+
+.tabs .tabs-end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  margin-bottom: 3px;
+}
+.tabs .tabs-end .mod-badge {
+  margin: 0;
+}
+
+.override-btn {
+  padding: 2px 9px;
+  font-size: 12px;
+  white-space: nowrap;
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+.override-btn.no-mod {
+  border-color: var(--border-strong);
+  color: var(--text-dim);
+}
+.def-site > header .override-btn {
+  padding: 2px 8px;
+}
+
+.override-menu {
+  padding: 0;
+  max-height: calc(100vh - 80px);
+  overflow: auto;
+}
+.override-menu .om-head {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 12px;
+}
+.override-menu .om-head b {
+  color: var(--text);
+  font-weight: 600;
+}
+.override-menu .om-head.bad {
+  color: var(--danger);
+}
+.override-menu .om-warn {
+  color: #e0b070;
+}
+.override-menu .item {
+  padding: 8px 12px;
+  gap: 2px;
+  border-bottom: 1px solid var(--border);
+}
+.override-menu .item.disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+.override-menu .item.disabled:hover {
+  background: transparent;
+}
+.override-menu .om-label {
+  font-size: 13px;
+  color: var(--text);
+}
+.override-menu .item:not(.disabled) .om-label {
+  color: var(--accent);
+}
+.override-menu small {
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--text-dim);
+}
+.override-menu .om-target {
+  font-family: var(--font-code);
+  font-size: 11px;
+  color: var(--link);
+  word-break: break-all;
+}
+.override-menu .om-why {
+  color: #e0b070;
+}
+.override-menu .om-note.warn {
+  color: #e0b070;
+}
+.override-menu .om-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px 12px 10px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+.override-menu .om-foot button {
+  padding: 2px 10px;
+  font-size: 12px;
+}
+
+/* app notices, bottom right */
+.notices {
+  position: fixed;
+  right: 16px;
+  /* (above the change bar while it shows) */
+  bottom: calc(16px + var(--change-bar-h, 0px));
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(460px, calc(100vw - 32px));
+}
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 8px 9px 12px;
+  border-radius: var(--radius);
+  border: 1px solid #3f6b55;
+  background: #18241f;
+  color: #bfe3cf;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  line-height: 1.45;
+  user-select: text;
+  word-break: break-word;
+}
+.notice.info {
+  border-color: var(--border-strong);
+  background: var(--bg-raised);
+  color: var(--text);
+}
+.notice.error {
+  border-color: #7a3f36;
+  background: #2a1a18;
+  color: #f0c0b5;
+}
+.notice-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.notice-body b {
+  font-weight: 600;
+}
+.notice-body small {
+  font-size: 11.5px;
+  opacity: 0.8;
+}
+.notice-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 5px;
+}
+.notice-actions button {
+  padding: 2px 9px;
+  font-size: 12px;
+}
+.notice-close {
+  padding: 0 6px;
+  color: var(--text-dim);
+}
+
+/* top bar: the active mod's files changed since the last build (the index stats give way to it) */
+.topbar .status {
+  min-width: 0;
+  overflow: hidden;
+}
+.mod-change {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 4px 2px 10px;
+  border: 1px solid var(--accent-dim);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  color: var(--accent);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.mod-change button {
+  padding: 1px 10px;
+  font-size: 12px;
+  border-radius: 11px;
+}
+
+/* ================================================================== editing in place (InPlaceEdit.tsx) */
+/* the readable view's rows written in the active mod: hover actions, selection, the inline editor */
+
+.read-view:focus {
+  outline: none;
+}
+.read-toolbar {
+  gap: 12px;
+  align-items: center;
+}
+.read-toolbar label {
+  margin-left: auto;
+  flex: none;
+}
+
+/* the hint bar: what editing this entry takes */
+.edit-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 3px 4px 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+.edit-bar > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.edit-bar button {
+  flex: none;
+  padding: 1px 9px;
+  font-size: 12px;
+}
+.edit-bar.mine {
+  border-color: var(--accent-dim);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  color: var(--accent);
+  padding-right: 10px;
+}
+.edit-bar.mine b {
+  font-weight: 600;
+}
+.edit-bar.mine small {
+  flex: none;
+  color: var(--text-faint);
+  font-size: 11px;
+}
+
+/* rows */
+.line-row.editable,
+.ev2-option-text.editable {
+  position: relative;
+  border-radius: 4px;
+  cursor: default;
+}
+.line-row.editable:hover,
+.ev2-option-text.editable:hover {
+  background: rgba(201, 164, 92, 0.07);
+}
+.line-row.selected,
+.ev2-option-text.selected {
+  background: rgba(201, 164, 92, 0.13);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+.row-actions {
+  display: none;
+  flex: none;
+  gap: 1px;
+  align-self: flex-start;
+  margin-left: 6px;
+}
+.line-row.editable:hover > .row-actions,
+.line-row.selected > .row-actions,
+.ev2-option-text.editable:hover .row-actions,
+.ev2-option-text.selected .row-actions {
+  display: inline-flex;
+}
+/* an if's one condition in its text ("If ‹you are an adult›:"): a row of its own within the line */
+.if-cond {
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--accent) 45%, transparent);
+  cursor: default;
+}
+.if-cond:hover {
+  background: rgba(201, 164, 92, 0.12);
+}
+.if-cond.selected {
+  background: rgba(201, 164, 92, 0.2);
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+.if-cond > .row-actions {
+  margin-left: 4px;
+  vertical-align: middle;
+}
+.if-cond:hover > .row-actions,
+.if-cond.selected > .row-actions {
+  display: inline-flex;
+}
+/* a line of a scripted effect the entry calls, not the active mod's: ✎ overrides it first */
+.line-row:hover > .owner-offer {
+  display: inline-flex;
+}
+.owner-offer button {
+  opacity: 0.6;
+}
+.owner-offer button:hover {
+  opacity: 1;
+}
+.ev2-option-text .row-actions {
+  font-family: var(--font-ui);
+  vertical-align: middle;
+}
+.row-actions button {
+  padding: 0 5px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--accent);
+}
+.row-actions button:nth-child(2) {
+  color: var(--danger);
+}
+
+/* "＋ Add …" of a section (in its title: the title's lettering does not apply) */
+.sec-add {
+  text-transform: none;
+  letter-spacing: normal;
+}
+.sec-add > button {
+  margin-left: 8px;
+  padding: 0 7px;
+  font-size: 11px;
+  line-height: 17px;
+  color: var(--accent);
+  opacity: 0.75;
+}
+.sec-add > button:hover:not(:disabled) {
+  opacity: 1;
+}
+.sec-empty {
+  color: var(--text-faint);
+  font-style: italic;
+  font-size: 12px;
+  padding: 2px 0;
+}
+.sec-empty.inline {
+  padding: 0;
+}
+.req-body {
+  flex: 1;
+  min-width: 0;
+}
+.req-body .sec-add > button {
+  margin-left: 0;
+}
+.ev2-option-add {
+  margin: 2px 0 2px -2px;
+}
+.ev2-option-add .sec-add > button {
+  margin-left: 0;
+}
+.ev2-add-option {
+  padding: 4px 8px;
+  border: 1px dashed #5c4c30;
+  border-radius: 8px;
+}
+.ev2-add-option .sec-add > button {
+  margin-left: 0;
+}
+
+/* the inline editor (under its row or section title) */
+.inline-editor,
+.source-editor {
+  display: block;
+  margin: 4px 0 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--accent-dim);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-style: normal;
+  color: var(--text);
+  text-transform: none;
+  letter-spacing: normal;
+  cursor: default;
+}
+.source-editor {
+  margin: 0;
+  border-radius: 0 0 var(--radius) var(--radius);
+  box-shadow: none;
+}
+.ie-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.ie-head b {
+  font-weight: 600;
+  color: var(--accent);
+}
+.ie-head small {
+  font-family: var(--font-code);
+  font-size: 11px;
+  color: var(--text-faint);
+}
+.ie-modes {
+  margin-left: auto;
+  display: flex;
+  gap: 2px;
+}
+.ie-modes button.on {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+.ie-problem {
+  margin-bottom: 6px;
+  padding: 5px 8px;
+  border: 1px solid #7a3f36;
+  border-radius: 4px;
+  background: #2a1a18;
+  color: #f0c0b5;
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+.ie-wait {
+  color: var(--text-faint);
+  font-style: italic;
+}
+.ie-script {
+  display: block;
+  width: 100%;
+  resize: vertical;
+  font-family: var(--font-code);
+  font-size: 12.5px;
+  line-height: 1.45;
+  tab-size: 4;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 6px 8px;
+  outline: none;
+  white-space: pre;
+}
+.ie-script:focus {
+  border-color: var(--accent-dim);
+}
+.ie-scalar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ie-scalar code {
+  font-family: var(--font-code);
+  font-size: 12.5px;
+}
+.ie-key {
+  color: var(--tok-key);
+}
+.ie-op {
+  color: var(--tok-op);
+}
+.ie-scalar input {
+  font-family: var(--font-code);
+  font-size: 12.5px;
+  padding: 3px 7px;
+  width: 220px;
+}
+.ie-scalar input[type='number'] {
+  width: 110px;
+}
+.ie-scalar select {
+  padding: 3px 5px;
+  font-family: var(--font-code);
+}
+.ie-type {
+  color: var(--text-faint);
+  font-size: 11px;
+}
+.ie-entity {
+  position: relative;
+  display: inline-block;
+}
+.ie-hits {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 2px);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  min-width: 260px;
+  max-height: 260px;
+  overflow: auto;
+  padding: 3px 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+.ie-hit {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 3px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ie-hit small {
+  font-family: var(--font-code);
+  font-size: 11px;
+  color: var(--text-faint);
+}
+.ie-hit.on,
+.ie-hit:hover {
+  background: var(--bg-hover);
+}
+.ie-preview {
+  margin-top: 6px;
+  padding: 4px 8px;
+  border-left: 2px solid var(--accent-dim);
+  background: rgba(201, 164, 92, 0.05);
+}
+.ie-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-faint);
+}
+.ie-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+.ie-actions button {
+  padding: 2px 12px;
+  font-size: 12px;
+}
+.ie-actions small {
+  margin-left: 6px;
+  color: var(--text-faint);
+  font-size: 11px;
+}
+
+/* the Source tab's edit toggle, the override menu's removal */
+.def-site > header .override-btn.on {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+.override-menu .item.danger .om-label {
+  color: var(--danger);
+}
+.mods-confirm p.warn {
+  color: #e0b070;
+}
+
+/* ------------------------------------------------------------------ the change bar (ChangeBar.tsx, changes.ts) */
+
+.change-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 120;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  height: 34px;
+  padding: 0 8px 0 12px;
+  border-top: 1px solid var(--border-strong);
+  border-left: 3px solid #4f8f6d;
+  background: #16201b;
+  color: #bfe3cf;
+  font-size: 12.5px;
+}
+.change-bar.info {
+  border-left-color: var(--accent-dim);
+  background: #1e1b15;
+  color: var(--text);
+}
+.change-bar.error {
+  border-left-color: var(--danger);
+  background: #261614;
+  color: #f0c4bb;
+}
+.cb-icon {
+  flex: none;
+  width: 14px;
+  text-align: center;
+}
+.cb-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.cb-text b {
+  flex: none;
+  max-width: 55%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+}
+.cb-where {
+  flex: none;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--link);
+  font-family: var(--font-code);
+  font-size: 11.5px;
+  cursor: pointer;
+}
+.cb-where:hover {
+  text-decoration: underline;
+}
+.cb-mod {
+  flex: none;
+  color: var(--text-dim);
+}
+.cb-details {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-dim);
+  font-size: 11.5px;
+}
+.cb-actions {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cb-actions button {
+  height: 24px;
+  padding: 0 9px;
+  font-size: 12px;
+}
+.cb-count.on {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+.cb-close {
+  width: 24px;
+  padding: 0 !important;
+}
+.cb-list {
+  position: absolute;
+  right: 8px;
+  bottom: calc(100% + 6px);
+  z-index: 140;
+  display: flex;
+  flex-direction: column;
+  width: min(620px, calc(100vw - 32px));
+  max-height: 50vh;
+  overflow-y: auto;
+  padding: 4px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+.cb-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 5px 8px;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: var(--text);
+  text-align: left;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.cb-item:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+.cb-item:disabled {
+  cursor: default;
+}
+.cb-item.info .cb-item-text {
+  color: var(--text-dim);
+}
+.cb-time {
+  flex: none;
+  color: var(--text-faint);
+  font-family: var(--font-code);
+  font-size: 11px;
+}
+.cb-item-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cb-item-where {
+  flex: none;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-faint);
+  font-family: var(--font-code);
+  font-size: 11px;
+}
+
+/* ------------------------------------------------------------------ an asset's ⋯ menu (AssetMenu.tsx) */
+
+.asset-menu {
+  position: relative;
+  display: inline-flex;
+}
+.am-btn {
+  height: 24px;
+  min-width: 28px;
+  padding: 0 7px;
+  font-size: 14px;
+  line-height: 1;
+}
+.am-btn.on {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+.am-pop {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  min-width: 230px;
+  padding: 4px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+.am-item {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.am-item:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+.am-item:disabled {
+  color: var(--text-faint);
+  cursor: default;
+}
+.am-note {
+  padding: 4px 10px 2px;
+  color: var(--text-faint);
+  font-size: 11px;
+}
+/* on tiles: top right, shown on hover (and while open) */
+.tile,
+.tex-tile {
+  position: relative;
+}
+.tile-menu {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.tile:hover .tile-menu,
+.tex-tile:hover .tile-menu,
+.tile-menu:has(.am-pop) {
+  opacity: 1;
+}
+.tile-menu .am-btn {
+  background: rgba(20, 17, 13, 0.8);
+}
+.am-item.danger {
+  color: #e59a8c;
+}
+.am-item.danger.confirm {
+  background: rgba(217, 112, 95, 0.18);
+  color: #ffb8aa;
+}
+
+/* ------------------------------------------------------------------ the type list's context menu, "New <type>" (NewEntry.tsx) */
+
+.ctx-menu {
+  position: fixed;
+  z-index: 170;
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  padding: 4px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+.modal-back {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 14vh;
+  background: rgba(8, 7, 6, 0.55);
+}
+.new-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(480px, calc(100vw - 32px));
+  padding: 16px 18px;
+  border: 1px solid var(--accent-dim);
+  border-radius: 8px;
+  background: var(--bg-panel);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+}
+.new-entry h3 {
+  margin: 0 0 2px;
+  font-family: var(--font-display);
+  font-weight: normal;
+  font-size: 19px;
+}
+.ne-mod {
+  color: var(--text-dim);
+  font-size: 14px;
+}
+.new-entry label {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  align-items: center;
+  gap: 10px;
+}
+.new-entry label span {
+  color: var(--text-dim);
+}
+.new-entry input {
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-code);
+}
+.ne-note {
+  color: var(--text-faint);
+  font-size: 12px;
+}
+.ne-note code {
+  color: var(--text-dim);
+}
+.ne-problem {
+  color: #f0a898;
+  font-size: 12.5px;
+}
+.ne-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+.ne-actions .primary {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+
+/* ------------------------------------------------------------------ an event's texts edited in place (LocEdit.tsx) */
+
+.loc-editable {
+  position: relative;
+}
+.loc-edit-btn {
+  margin-left: 6px;
+  padding: 0 5px;
+  font-size: 12px;
+  vertical-align: middle;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.loc-editable:hover > .loc-edit-btn,
+.loc-edit-btn:focus-visible {
+  opacity: 1;
+}
+/* a line's text (Line.locKey): "✎ text", shown while the row is hovered */
+.loc-edit-btn.labelled {
+  font-size: 11px;
+  color: var(--accent);
+}
+.line-row:hover .loc-edit-btn.labelled {
+  opacity: 0.8;
+}
+.loc-empty {
+  color: var(--text-faint);
+  font-style: italic;
+}
+.loc-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 6px 0;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-style: normal;
+}
+.loc-editor textarea,
+.loc-editor input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  border: 1px solid var(--accent-dim);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+.loc-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.loc-actions small {
+  color: var(--text-faint);
+}
+.loc-key {
+  color: var(--text-faint);
+  font-family: var(--font-code);
+  font-size: 11px;
+  margin-right: auto;
+}
+.loc-actions .primary {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+
+.ev2-text-add {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px 8px;
+}
+.ev2-when .sec-add {
+  margin-left: 8px;
+}
+
+/* ------------------------------------------------------------------ an event's scene (SceneChooser.tsx) */
+
+.ev2-scene {
+  position: relative;
+}
+.ev2-scene.none::after {
+  display: none;
+}
+.ev2-scene.none {
+  height: 44px;
+  border-bottom: 1px dashed var(--border-strong);
+}
+.scene-change {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  right: 10px;
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  background: rgba(14, 12, 10, 0.72);
+  color: var(--text);
+  font-size: 12.5px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.ev2-scene:hover .scene-change,
+.ev2-scene.none .scene-change,
+.scene-change:focus-visible {
+  opacity: 1;
+}
+.scene-change:hover {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+.scene-chooser {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(1100px, calc(100vw - 48px));
+  max-height: 76vh;
+  padding: 14px 16px;
+  border: 1px solid var(--accent-dim);
+  border-radius: 8px;
+  background: var(--bg-panel);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+}
+.sc-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sc-head h3 {
+  margin: 0 8px 0 0;
+  font-family: var(--font-display);
+  font-weight: normal;
+  font-size: 19px;
+  white-space: nowrap;
+}
+.sc-head input {
+  flex: 1;
+  min-width: 120px;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+}
+.sc-head .primary {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+.sc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  overflow-y: auto;
+  padding: 2px;
+}
+.sc-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg);
+  text-align: left;
+}
+.sc-tile img {
+  width: 100%;
+  aspect-ratio: 1592 / 848;
+  object-fit: cover;
+  border-radius: 3px;
+}
+.sc-tile span {
+  overflow: hidden;
+  color: var(--text-dim);
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.sc-tile em {
+  color: var(--accent);
+  font-style: normal;
+}
+.sc-tile:hover {
+  border-color: var(--accent-dim);
+}
+.sc-tile.current {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+/* ------------------------------------------------------------------ who's who, what fires an event (EventCast.tsx) */
+
+.whoswho .ww-count {
+  color: var(--text-faint);
+  font-weight: normal;
+}
+.ww-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 6px;
+}
+.ww-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 190px) 1fr 190px;
+  align-items: start;
+  gap: 12px;
+  padding: 5px 6px;
+  border-radius: 4px;
+}
+.ww-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+.ww-name {
+  display: flex;
+  flex-direction: column;
+}
+.ww-name span {
+  color: var(--text);
+  font-weight: 600;
+}
+.ww-name code {
+  color: var(--text-faint);
+  font-size: 11.5px;
+}
+.ww-who {
+  min-width: 0;
+  color: var(--text-dim);
+}
+.ww-tag {
+  margin-left: 8px;
+  padding: 0 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-faint);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.ww-note {
+  color: var(--text-faint);
+  font-size: 12px;
+}
+.ww-conds {
+  margin-top: 2px;
+}
+.ww-side {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.ww-portrait {
+  height: auto;
+  padding: 2px 4px;
+  line-height: 1.3;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text-dim);
+  font-size: 12px;
+}
+.ww-remove {
+  opacity: 0;
+}
+.ww-row:hover .ww-remove {
+  opacity: 1;
+}
+.ww-unknown {
+  padding: 4px 6px;
+  color: var(--text-faint);
+  font-size: 12px;
+}
+.ww-unknown code {
+  margin: 0 3px;
+  color: var(--text-dim);
+}
+.origin-x {
+  margin-left: 4px;
+  padding: 0 3px;
+  border: none;
+  background: none;
+  color: var(--text-faint);
+  font-size: 11px;
+  cursor: pointer;
+}
+.origin-x:hover {
+  color: #f0a898;
+}
+.origin-add {
+  margin-left: 4px;
+}
+/* an on_action being edited: "＋ event" of its lists, ✕ on its entries */
+.pool-add {
+  margin-left: 8px;
+  padding: 0 7px;
+  font-size: 11px;
+  line-height: 17px;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--accent);
+  opacity: 0.75;
+}
+.pool-add:hover {
+  opacity: 1;
+}
+.pool-x {
+  margin-left: auto;
+  padding: 0 5px;
+  color: var(--danger);
+  opacity: 0;
+}
+.pool-item:hover .pool-x {
+  opacity: 1;
+}
+.when-chooser {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(1100px, calc(100vw - 48px));
+  height: min(640px, 76vh);
+  padding: 14px 16px;
+  border: 1px solid var(--accent-dim);
+  border-radius: 8px;
+  background: var(--bg-panel);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+}
+.wc-body {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 14px;
+  min-height: 0;
+  flex: 1;
+}
+.wc-list {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+}
+.wc-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 0 8px;
+  padding: 5px 8px;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background: none;
+  text-align: left;
+}
+.wc-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+.wc-item.selected {
+  background: rgba(200, 160, 80, 0.12);
+}
+.wc-label {
+  color: var(--text);
+}
+.wc-label em {
+  color: var(--accent);
+  font-style: normal;
+}
+.wc-game {
+  color: var(--text-faint);
+  font-size: 11.5px;
+}
+.wc-sum {
+  grid-column: 1;
+  overflow: hidden;
+  color: var(--text-faint);
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.wc-count {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  align-self: center;
+  color: var(--text-faint);
+  font-size: 12px;
+}
+.wc-detail {
+  overflow-y: auto;
+  color: var(--text-dim);
+}
+.wc-detail h4 {
+  margin: 0 0 6px;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-weight: normal;
+  font-size: 18px;
+}
+.wc-detail h4 code {
+  color: var(--text-faint);
+  font-size: 12px;
+}
+.wc-detail p {
+  margin: 0 0 8px;
+}
+.wc-field {
+  margin: 6px 0;
+}
+.wc-field > span {
+  display: block;
+  color: var(--text-faint);
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.wc-field ul {
+  margin: 2px 0;
+  padding-left: 18px;
+}
+.wc-field code {
+  color: var(--text);
+}
+.wc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+.wc-actions .primary {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+.wc-or {
+  color: var(--text-faint);
+}
+.wc-weight {
+  color: var(--text-faint);
+  font-size: 12px;
+}
+.wc-weight input {
+  width: 48px;
+  height: 24px;
+  margin-left: 4px;
+  padding: 0 6px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.wc-who label {
+  display: block;
+  margin: 3px 0;
+  color: var(--text-dim);
+}
+.wc-who b {
+  color: var(--text);
+  font-weight: 600;
+}
+.wc-keep {
+  padding-left: 22px;
+}
+.wc-keep input {
+  width: 110px;
+  height: 24px;
+  margin-left: 2px;
+  padding: 0 6px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-code);
+}
+
+/* ------------------------------------------------------------------ a portrait's settings (EventCast.tsx) */
+
+.ww-pset {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+  padding: 6px 8px;
+  border-left: 2px solid var(--accent-dim);
+  border-radius: 0 4px 4px 0;
+  background: rgba(255, 255, 255, 0.025);
+  font-size: 12.5px;
+}
+.ww-pline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  color: var(--text-faint);
+}
+.ww-pline > label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.ww-select {
+  max-width: 200px;
+  padding: 2px 4px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text-dim);
+  font-size: 12px;
+  line-height: 1.3;
+}
+.ww-flag {
+  cursor: pointer;
+}
+.ww-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 2px 0 7px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--text-dim);
+}
+.ww-chip button {
+  padding: 0 3px;
+  border: none;
+  background: none;
+  color: var(--text-faint);
+  font-size: 10px;
+  cursor: pointer;
+}
+.ww-when {
+  color: var(--text-dim);
+}
+.ww-when b {
+  color: var(--text);
+  font-weight: 600;
+}
+.ww-when:hover .ww-remove {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------------ crop & rotate (ImageCrop.tsx) */
+
+.crop-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--accent-dim);
+  border-radius: 8px;
+  background: var(--bg-panel);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+  outline: none;
+}
+.crop-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: calc(100vw - 80px);
+  background: repeating-conic-gradient(#1b1915 0% 25%, #221f1a 0% 50%) 50% / 20px 20px;
+  border-radius: 4px;
+}
+.crop-stage canvas {
+  cursor: move;
+  touch-action: none;
+}
+.crop-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.crop-tools button.on {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+.crop-fine {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 8px;
+  color: var(--text-dim);
+}
+.crop-fine input {
+  width: 180px;
+}
+.crop-fine span {
+  width: 42px;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* placeholders: what a mod's faith, religion or doctrine still lacks (cards/culture-faith.ts), and row / section acts */
+.line.placeholder-line > .line-row .line-text {
+  font-style: italic;
+  color: var(--text-dim);
+}
+.line.placeholder-line.tone-bad > .line-row {
+  box-shadow: inset 2px 0 0 rgba(224, 108, 90, 0.7);
+  padding-left: 4px;
+  border-radius: 2px;
+}
+.line.placeholder-line.tone-bad > .line-row .line-text {
+  color: #f0cfc8;
+}
+.line-act {
+  flex: none;
+  align-self: flex-start;
+  margin-left: 6px;
+  font-style: normal;
+}
+/* (a written row's act shows on hover, like its ✎; a placeholder's always) */
+.line:not(.placeholder-line) > .line-row .line-act {
+  visibility: hidden;
+}
+.line:not(.placeholder-line) > .line-row:hover .line-act,
+.line:not(.placeholder-line) > .line-row.selected .line-act {
+  visibility: visible;
+}
+.act-btn {
+  padding: 0 7px;
+  font-size: 11px;
+  line-height: 17px;
+  color: var(--accent);
+  border: 1px solid rgba(201, 164, 92, 0.35);
+  border-radius: 3px;
+}
+.rpg-section-title .line-act {
+  margin-left: 8px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.rpg-section-title .line-act .act-btn {
+  border: none;
+  opacity: 0.8;
+}
+.rpg-section-title .line-act .act-btn:hover {
+  opacity: 1;
+}
+.act-color {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.line-act .loc-edit-btn {
+  opacity: 0.85;
+}
+/* a description's part / version being edited (StoryView DescView): its tools in a column at the right, always there
+   (an empty text is a small target), brighter on hover */
+.ev2-item.with-tools {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 8px;
+  align-items: start;
+}
+.ev2-tools {
+  display: flex;
+  gap: 1px;
+  opacity: 0.45;
+  padding-left: 6px;
+  border-left: 1px solid rgba(233, 223, 198, 0.12);
+}
+.ev2-tools button {
+  min-width: 24px;
+  padding: 2px 6px;
+}
+.ev2-item:hover > .ev2-tools {
+  opacity: 1;
+}
+.ev2-adds {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+/* an event's scenes (SceneChooser SceneList): several or conditional override_backgrounds, in the order the game checks
+   them */
+.ev2-scenes {
+  padding: 8px 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ev2-scene-row {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) auto;
+  column-gap: 10px;
+  align-items: center;
+}
+.ev2-scene-row img {
+  width: 96px;
+  height: 51px;
+  object-fit: cover;
+  border-radius: 3px;
+  display: block;
+}
+.ev2-scene-what .ev2-when {
+  margin: 0;
+}
+.ev2-scene-ref {
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.ev2-scene-row:hover > .ev2-tools {
+  opacity: 1;
+}
+/* the entry list's context menu (EntryMenu.tsx): groups apart, a reference's prefix in code type */
+.ctx-menu .am-sep {
+  height: 1px;
+  margin: 4px 6px;
+  background: var(--border);
+}
+.ctx-menu .am-item code {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.ctx-menu .am-note {
+  font-family: var(--font-mono, monospace);
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* "New <type>" of a type written inside other definitions (NewEntry.tsx NestedFields): which holder, what it starts as */
+.ne-nested {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ne-holders {
+  display: flex;
+  flex-direction: column;
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2px;
+}
+.ne-holder {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  text-align: left;
+  border: none;
+  background: none;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.ne-holder:hover {
+  background: var(--bg-hover);
+}
+.ne-holder.on {
+  background: var(--accent-soft, rgba(212, 175, 95, 0.18));
+}
+.ne-holder em {
+  font-style: normal;
+  font-size: 11px;
+  color: var(--text-faint);
+}

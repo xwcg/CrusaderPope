@@ -1,0 +1,117 @@
+import { contextBridge, ipcRenderer } from 'electron';
+import type { IndexStatus, ModChange, RendererApi } from '../shared/api.ts';
+
+const api: RendererApi = {
+    getSettings: () => ipcRenderer.invoke('settings:get'),
+    setSettings: (s) => ipcRenderer.invoke('settings:set', s),
+    chooseGameDir: () => ipcRenderer.invoke('settings:chooseGameDir'),
+    chooseUserDir: () => ipcRenderer.invoke('settings:chooseUserDir'),
+    detectFolders: () => ipcRenderer.invoke('settings:detect'),
+    checkDir: (kind, dir) => ipcRenderer.invoke('settings:checkDir', kind, dir),
+    languages: () => ipcRenderer.invoke('settings:languages'),
+    cpuCount: () => ipcRenderer.invoke('settings:cpuCount'),
+    status: () => ipcRenderer.invoke('index:status'),
+    rebuild: (force) => ipcRenderer.invoke('index:rebuild', force),
+    onStatus: (cb) =>
+    {
+        const listener = (_e: unknown, s: IndexStatus): void => cb(s);
+        ipcRenderer.on('index:status', listener);
+        return () => ipcRenderer.removeListener('index:status', listener);
+    },
+    types: () => ipcRenderer.invoke('index:types'),
+    typeDoc: (type) => ipcRenderer.invoke('index:typeDoc', type),
+    list: (type) => ipcRenderer.invoke('index:list', type),
+    search: (q, opts) => ipcRenderer.invoke('index:search', q, opts),
+    detail: (type, name) => ipcRenderer.invoke('index:detail', type, name),
+    graph: (type, name, opts) => ipcRenderer.invoke('index:graph', type, name, opts),
+    card: (type, name) => ipcRenderer.invoke('index:card', type, name),
+    story: (type, name) => ipcRenderer.invoke('index:story', type, name),
+    tooltip: (type, name) => ipcRenderer.invoke('index:tooltip', type, name),
+    usageAll: (type, name, userType) => ipcRenderer.invoke('index:usageAll', type, name, userType),
+    describeScript: (text, kind, type) => ipcRenderer.invoke('index:describeScript', text, kind, type),
+    modifierKeys: () => ipcRenderer.invoke('index:modifierKeys'),
+    fieldSuggestions: (source) => ipcRenderer.invoke('index:fieldSuggestions', source),
+    createEntries: (creates) => ipcRenderer.invoke('mods:createEntries', creates),
+    locEntry: (key) => ipcRenderer.invoke('index:locEntry', key),
+    locCodes: () => ipcRenderer.invoke('index:locCodes'),
+    locScopes: (type, name) => ipcRenderer.invoke('index:locScopes', type, name),
+    eventBackgrounds: () => ipcRenderer.invoke('index:eventBackgrounds'),
+    childrenOf: (type, holderType, holder) => ipcRenderer.invoke('index:childrenOf', type, holderType, holder),
+    portraitOptions: () => ipcRenderer.invoke('index:portraitOptions'),
+    eventScopes: (name) => ipcRenderer.invoke('index:eventScopes', name),
+    editLoc: (key, text) => ipcRenderer.invoke('mods:editLoc', key, text),
+    fireEvent: (req) => ipcRenderer.invoke('mods:fireEvent', req),
+    unfireEvent: (event, onAction) => ipcRenderer.invoke('mods:unfireEvent', event, onAction),
+    onActions: (event) => ipcRenderer.invoke('index:onActions', event),
+    newEntryPlan: (type) => ipcRenderer.invoke('mods:newEntryPlan', type),
+    createEntry: (req) => ipcRenderer.invoke('mods:createEntry', req),
+    duplicateEvent: (req) => ipcRenderer.invoke('mods:duplicateEvent', req),
+    duplicateEntry: (req) => ipcRenderer.invoke('mods:duplicateEntry', req),
+    scriptKeys: (kind) => ipcRenderer.invoke('index:scriptKeys', kind),
+    fileFolders: (type) => ipcRenderer.invoke('index:fileFolders', type),
+    filesIn: (type, folder) => ipcRenderer.invoke('index:filesIn', type, folder),
+    modelFolder: (folder) => ipcRenderer.invoke('index:modelFolder', folder),
+    modelInfo: (path) => ipcRenderer.invoke('index:modelInfo', path),
+    modelGeometry: (path, pdxmesh) => ipcRenderer.invoke('index:modelGeometry', path, pdxmesh),
+    textureUsers: (path) => ipcRenderer.invoke('index:textureUsers', path),
+    // Blender round trip (src/main/blender/ipc.ts)
+    exportModel: (path, pdxmesh) => ipcRenderer.invoke('model:export', path, pdxmesh),
+    importModelPlan: (path, pdxmesh) => ipcRenderer.invoke('model:importPlan', path, pdxmesh),
+    importModel: (path, pdxmesh) => ipcRenderer.invoke('model:import', path, pdxmesh),
+    exportAsset: (path, as, pdxmesh) => ipcRenderer.invoke('asset:export', path, as, pdxmesh),
+    replaceAsset: (path, pdxmesh, source) => ipcRenderer.invoke('asset:replace', path, pdxmesh, source),
+    importEventScene: (type, name, source) => ipcRenderer.invoke('asset:eventScene', type, name, source),
+    pickImage: (title) => ipcRenderer.invoke('asset:pickImage', title),
+    assetOverride: (path, pdxmesh) => ipcRenderer.invoke('asset:override', path, pdxmesh),
+    removeAssetOverride: (path, pdxmesh) => ipcRenderer.invoke('asset:removeOverride', path, pdxmesh),
+    shader: (req) => ipcRenderer.invoke('index:shader', req),
+    textureData: (path, maxSize) => ipcRenderer.invoke('index:textureData', path, maxSize),
+    mapInfo: (date) => ipcRenderer.invoke('index:mapInfo', date),
+    mapStatic: () => ipcRenderer.invoke('index:mapStatic'),
+    mapDated: (date) => ipcRenderer.invoke('index:mapDated', date),
+    mapTerrain: () => ipcRenderer.invoke('index:mapTerrain'),
+    mapOverlays: () => ipcRenderer.invoke('index:mapOverlays'),
+    mapEdit: (req) => ipcRenderer.invoke('mods:mapEdit', req),
+    mapCharacters: (q, date) => ipcRenderer.invoke('index:mapCharacters', q, date),
+    coatOfArms: (kind, key, date) => ipcRenderer.invoke('index:coatOfArms', kind, key, date),
+    shaderPrograms: () => ipcRenderer.invoke('index:shaderPrograms'),
+    logShader: (entry) => ipcRenderer.invoke('log:shader', entry),
+    // mods (handlers: src/main/mods/manager.ts)
+    modsState: () => ipcRenderer.invoke('mods:state'),
+    selectModList: (ref) => ipcRenderer.invoke('mods:select', ref),
+    saveModList: (list) => ipcRenderer.invoke('mods:saveList', list),
+    deleteModList: (ref) => ipcRenderer.invoke('mods:deleteList', ref),
+    writeModList: (ref, target, mods, opts) => ipcRenderer.invoke('mods:writeList', ref, target, mods, opts),
+    setActiveMod: (id) => ipcRenderer.invoke('mods:setActive', id),
+    createMod: (req) => ipcRenderer.invoke('mods:create', req),
+    packMod: (id, overwrite) => ipcRenderer.invoke('mods:pack', id, overwrite),
+    unpackMod: (id) => ipcRenderer.invoke('mods:unpack', id),
+    openModFolder: (id) => ipcRenderer.invoke('mods:openFolder', id),
+    modThumbnail: (id) => ipcRenderer.invoke('mods:thumbnail', id),
+    // editing the active mod (src/main/mods/edit.ts) and its folder watcher
+    overridePlan: (type, name) => ipcRenderer.invoke('mods:overridePlan', type, name),
+    overrideEntry: (req) => ipcRenderer.invoke('mods:override', req),
+    modChange: () => ipcRenderer.invoke('mods:changeState'),
+    // editing in place (src/main/mods/scriptEdit.ts)
+    scriptText: (at) => ipcRenderer.invoke('mods:scriptText', at),
+    editScript: (req) => ipcRenderer.invoke('mods:editScript', req),
+    undoChange: (step) => ipcRenderer.invoke('mods:undo', step),
+    forgetChange: (step) => ipcRenderer.invoke('mods:forgetChange', step),
+    onModChange: (cb) =>
+    {
+        const listener = (_e: unknown, c: ModChange | null): void => cb(c);
+        ipcRenderer.on('mods:changed', listener);
+        return () => ipcRenderer.removeListener('mods:changed', listener);
+    },
+    portrait: (type, name, opts) => ipcRenderer.invoke('index:portrait', type, name, opts),
+    portraitReport: (type, name, opts) => ipcRenderer.invoke('index:portraitReport', type, name, opts),
+    characterFilter: (filter) => ipcRenderer.invoke('index:characterFilter', filter),
+    characterFacets: () => ipcRenderer.invoke('index:characterFacets'),
+    familyTree: (id) => ipcRenderer.invoke('index:familyTree', id),
+    searchCharacters: (q, limit) => ipcRenderer.invoke('index:searchCharacters', q, limit),
+    openFile: (absPath, line) => ipcRenderer.invoke('shell:openFile', absPath, line),
+    revealFile: (absPath) => ipcRenderer.invoke('shell:revealFile', absPath),
+    startTarget: () => ipcRenderer.invoke('app:startTarget')
+};
+
+contextBridge.exposeInMainWorld('api', api);

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CrusaderPope</title>
+<meta name="description" content="A free explorer and WYSIWYG mod editor for Crusader Kings III. Read the game's script as plain language, edit mods in place, see 3D portraits and the map.">
+<meta property="og:title" content="CrusaderPope">
+<meta property="og:description" content="A free explorer and WYSIWYG mod editor for Crusader Kings III.">
+<meta property="og:image" content="media/event.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <a class="brand" href="#">CrusaderPope</a>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#screenshots">Screenshots</a>
+      <a href="#start">Get it</a>
+      <a class="gh" href="https://github.com/xwcg/CrusaderPope">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Explorer &amp; mod editor for Crusader Kings III</p>
+    <h1>Read the game.<br><em>Write your mod.</em></h1>
+    <p class="lede">CrusaderPope reads the game's own files and the mods you load, and shows them as something you can
+      browse, read and change &mdash; without opening a text editor for every little thing.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/xwcg/CrusaderPope/releases/latest">Download for Windows</a>
+      <a class="btn" href="https://github.com/xwcg/CrusaderPope">Source on GitHub</a>
+    </div>
+    <p class="note">Free and open source &middot; Beta &middot; Never changes the game's files</p>
+    <figure class="hero-shot">
+      <img src="media/event.png" alt="An event in CrusaderPope's Story view: illustration, text, conditions and options in plain language" width="1600" height="960">
+    </figure>
+  </div>
+</section>
+
+<section id="features" class="features">
+  <div class="wrap">
+    <h2>What it does</h2>
+    <div class="cols">
+      <div class="col">
+        <h3>Explore the game</h3>
+        <ul>
+          <li><b>Every definition in one searchable list</b> &mdash; events, decisions, traits, interactions, laws,
+            faiths, cultures, characters, titles, modifiers, scripted effects &hellip; with who uses what.</li>
+          <li><b>A readable Summary</b>: script turned into plain language (&ldquo;Gains 50 Prestige&rdquo;), events
+            as a timeline with their options, conditions and effects.</li>
+          <li><b>Source, References and Graph</b> views for when you need the script itself.</li>
+          <li><b>3D portraits</b> of historical characters, built from their DNA, and a model viewer.</li>
+          <li><b>A 2D and 3D map</b>: realms, cultures and faiths at any bookmark date, with the game's own terrain.</li>
+          <li>The game's <b>own shaders</b> (or a mod's), recompiled for WebGL.</li>
+          <li>Hover previews, pinnable cards, back and forward that remember tab and scroll position.</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>Work with mods</h3>
+        <ul>
+          <li><b>Edit in place, WYSIWYG</b>: the plain-language view is the editor. Click a line to change it; a
+            keyboard-driven picker knows the game's statements, scopes and values, and the script is written for you.</li>
+          <li><b>Every change is undoable</b>, and edited files are kept neatly formatted.</li>
+          <li><b>Who is who</b> in an event and <b>what fires it</b> &mdash; no more guessing which scope is which
+            character.</li>
+          <li>Localization edited where it shows, with the game's text codes insertable from a list, including
+            examples of what they return.</li>
+          <li>Launcher mods and playsets: what each mod adds, changes or removes, and where mods conflict.</li>
+          <li>Create, pack and unpack mods; playsets written back to the launcher (with backups).</li>
+          <li>Round-trip 3D models and textures with <b>Blender</b> (glTF; no animations yet).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="screenshots" class="shots">
+  <div class="wrap">
+    <h2>Screenshots</h2>
+    <div class="grid">
+      <figure><a href="media/event.png"><img src="media/event.png" alt="An event read as a story" loading="lazy" width="1600" height="960"></a>
+        <figcaption>An event read as a story: its text, who is who, its conditions and options</figcaption></figure>
+      <figure><a href="media/picker.png"><img src="media/picker.png" alt="The statement picker" loading="lazy" width="1600" height="960"></a>
+        <figcaption>Adding an effect with the keyboard-driven picker &mdash; the script is written for you</figcaption></figure>
+      <figure><a href="media/portrait.png"><img src="media/portrait.png" alt="A 3D portrait" loading="lazy" width="1600" height="960"></a>
+        <figcaption>A historical character with a 3D portrait built from their DNA</figcaption></figure>
+      <figure><a href="media/map.png"><img src="media/map.png" alt="The 3D map" loading="lazy" width="1600" height="960"></a>
+        <figcaption>The 3D map at a bookmark date, with the game's own terrain</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="start" class="start">
+  <div class="wrap">
+    <h2>Get it</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="n">1</span>
+        <h3>Download</h3>
+        <p>From the <a href="https://github.com/xwcg/CrusaderPope/releases/latest">releases page</a>: the setup
+          (<code>.exe</code>, no administrator rights needed) or the portable <code>.zip</code>.</p>
+      </div>
+      <div class="step">
+        <span class="n">2</span>
+        <h3>Start</h3>
+        <p>A short setup finds your Crusader Kings III installation and your mods folder by itself, and lets you pick
+          the graphics quality.</p>
+      </div>
+      <div class="step">
+        <span class="n">3</span>
+        <h3>Explore &amp; edit</h3>
+        <p>The first start reads the whole game, later ones load from a cache. Pick a mod to edit and change entries
+          right where you read them.</p>
+      </div>
+    </div>
+    <div class="req">
+      <h3>Requirements</h3>
+      <ul>
+        <li>Windows 10/11 (Linux and macOS are expected to work but not tested yet).</li>
+        <li><b>A legal copy of Crusader Kings III</b> &mdash; the tool reads the base game files and is useless without them.</li>
+        <li>A reasonably strong PC: the full index takes around 2 GB of memory, more with big mods.</li>
+      </ul>
+      <p>Running from source? See <a href="https://github.com/xwcg/CrusaderPope/blob/main/INSTALL.md">INSTALL.md</a>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="free">
+  <div class="wrap narrow">
+    <h2>Free, forever</h2>
+    <p>CrusaderPope is free and open source, and it will stay that way. Its license (GPL-3.0 with the Commons Clause)
+      forbids selling it &mdash; and anyone putting a fork behind a &ldquo;donation&rdquo; paywall may always get wet
+      shirt sleeves after washing their hands. Even with short sleeves.</p>
+    <p>It was built with AI (Anthropic's Claude), openly and plainly &mdash; and CrusaderPope itself will never include
+      any AI functions. The whole story is in the
+      <a href="https://github.com/xwcg/CrusaderPope#made-with-ai-yes-i-know-shame-on-me">README</a>.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>CrusaderPope is a fan-made tool, not affiliated with or endorsed by Paradox Interactive. Crusader Kings III and
+      its content belong to Paradox Interactive; the app reads your own copy of the game and does not include any of
+      its files.</p>
+    <p><a href="https://github.com/xwcg/CrusaderPope">GitHub</a> &middot;
+      <a href="https://github.com/xwcg/CrusaderPope/blob/main/LICENSE">License</a> &middot;
+      <a href="https://github.com/xwcg/CrusaderPope/releases">Releases</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

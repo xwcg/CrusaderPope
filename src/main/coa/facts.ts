@@ -9,7 +9,9 @@
  */
 import type { GameIndex } from '../indexer/gameIndex.ts';
 import { parse, type PNode } from '../indexer/parser.ts';
-import { T_CHARACTER, T_TITLE } from '../indexer/schema.ts';
+import { T_CHARACTER, T_FAITH, T_TITLE } from '../indexer/schema.ts';
+import { bodyOf as layoutBody, faithField, riteHistory } from '../indexer/layouts.ts';
+import { faithAt } from '../map/history-characters.ts';
 import { DATE_KEY, dateNum, HISTORY_DATE, lastAt, lastIndexAt, scalarOf, type Dated } from '../map/history.ts';
 
 /** title tiers by key prefix (tier_barony = 1 … tier_hegemony = 6) */
@@ -50,6 +52,8 @@ interface Person
     death?: number;
     culture: Dated<string>[];
     faith: Dated<string>[];
+    /** 1.20: `rite = x` (its faith depends on the date) */
+    rite: Dated<string>[];
     dynasty: Dated<string>[];
     house: Dated<string>[];
     /** trait changes in order: gained (true) or lost */
@@ -544,7 +548,7 @@ export class CoaFacts
 
         if (node && Array.isArray(node.v))
         {
-            const q: Person = { id, name: (e && this.idx.displayName(e)) ?? id, culture: [], faith: [], dynasty: [], house: [], traits: [] };
+            const q: Person = { id, name: (e && this.idx.displayName(e)) ?? id, culture: [], faith: [], rite: [], dynasty: [], house: [], traits: [] };
             const take = (c: PNode, date: number): void =>
             {
                 const v = scalarOf(c);
@@ -553,6 +557,8 @@ export class CoaFacts
                     q.culture.push({ date, v });
                 else if ((c.k === 'religion' || c.k === 'faith') && v)
                     q.faith.push({ date, v });
+                else if (c.k === 'rite' && v)
+                    q.rite.push({ date, v });
                 else if (c.k === 'dynasty' && v)
                     q.dynasty.push({ date, v });
                 else if (c.k === 'dynasty_house' && v)
@@ -578,7 +584,7 @@ export class CoaFacts
                     take(c, 0);
             }
 
-            for (const l of [q.culture, q.faith, q.dynasty, q.house, q.traits] as Dated<unknown>[][])
+            for (const l of [q.culture, q.faith, q.rite, q.dynasty, q.house, q.traits] as Dated<unknown>[][])
                 l.sort((a, b) => a.date - b.date);
 
             p = q;
@@ -616,7 +622,7 @@ export class CoaFacts
             }
 
             const dead = p.death !== undefined && p.death <= when;
-            out = { id, name: p.name, culture: lastAt(p.culture, when), faith: lastAt(p.faith, when), dynasty: lastAt(p.dynasty, when), house: lastAt(p.house, when), traits, alive: !dead };
+            out = { id, name: p.name, culture: lastAt(p.culture, when), faith: faithAt(p.faith, p.rite, when, (r, w) => riteHistory(this.idx).faithOf(r, w)), dynasty: lastAt(p.dynasty, when), house: lastAt(p.house, when), traits, alive: !dead };
 
             if (p.birth !== undefined && p.birth <= when)
                 out.age = Math.floor((Math.min(when, p.death ?? when) - p.birth) / 10000);
@@ -665,12 +671,17 @@ export class CoaFacts
         return c ?? undefined;
     }
 
-    /** Faiths of common/religion/religion_types: their religion, doctrines (the religion's too), icon. */
+    /**
+     * Faiths: their religion, doctrines (the religion's too, 1.20 the main rite's), icon — nested in their religion, or
+     * (1.20) in religion/faith_types (docs/game-structure.md, "Layouts that changed").
+     */
     faith(key: string): FaithInfo | undefined
     {
         if (!this.faiths)
         {
             this.faiths = new Map();
+            const religionDoctrines = new Map<string, string[]>();
+            const doctrinesOf = (body: PNode[]): string[] => body.flatMap((c) => (c.k === 'doctrine' && typeof c.v === 'string' ? [c.v] : c.k === 'doctrines' ? kids(c).filter((x) => x.k === null && typeof x.v === 'string').map((x) => x.v as string) : []));
 
             for (const religion of this.idx.names('religion/religion_types'))
             {
@@ -681,7 +692,8 @@ export class CoaFacts
                     continue;
 
                 this.families.set(religion, field(body, 'family'));
-                const doctrines = body.filter((c) => c.k === 'doctrine' && typeof c.v === 'string').map((c) => c.v as string);
+                const doctrines = doctrinesOf(body);
+                religionDoctrines.set(religion, doctrines);
 
                 for (const f of kids(body.find((c) => c.k === 'faiths')))
                 {
@@ -695,6 +707,24 @@ export class CoaFacts
                     if (head)
                         this.heads.add(head.replace(/^title:/, ''));
                 }
+            }
+
+            for (const name of this.idx.names(T_FAITH))
+            {
+                const body = layoutBody(this.idx, this.idx.get(T_FAITH, name));
+                const religion = faithField(body, 'religion');
+
+                if (this.faiths.has(name) || typeof religion?.v !== 'string')
+                    continue;
+
+                const rite = field(body, 'main_rite');
+                const riteDoctrines = rite ? doctrinesOf(layoutBody(this.idx, this.idx.get('religion/rite_types', rite))) : [];
+                const icon = faithField(body, 'icon');
+                this.faiths.set(name, { religion: religion.v, doctrines: new Set([...(religionDoctrines.get(religion.v) ?? []), ...riteDoctrines, ...doctrinesOf(body)]), icon: typeof icon?.v === 'string' ? icon.v : undefined });
+                const head = faithField(body, 'religious_head');
+
+                if (typeof head?.v === 'string')
+                    this.heads.add(head.v.replace(/^title:/, ''));
             }
         }
 

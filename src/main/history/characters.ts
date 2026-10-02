@@ -5,6 +5,7 @@
  */
 import { parse, type PNode } from '../indexer/parser.ts';
 import type { GameIndex } from '../indexer/gameIndex.ts';
+import { riteHistory } from '../indexer/layouts.ts';
 import { BOOKMARK_DATE, History, dateNum } from '../portraits/modifiers.ts';
 import type { CharacterFacets, CharacterFacetValue, CharacterFilter, CharacterHit, FamilyAncestor, FamilyDescendant, FamilyPerson, FamilyTree } from '../../shared/api.ts';
 
@@ -21,6 +22,8 @@ interface CharRecord
     death?: number;
     culture?: string;
     faith?: string;
+    /** 1.20: `rite = x` — the faith is its faith at the date */
+    rite?: string;
     traits: string[];
     dna?: string;
     /** dated changes in order: culture, faith, traits, spouses, nickname */
@@ -39,7 +42,7 @@ interface Facts
 }
 
 const TIERS: Record<string, number> = { barony: 1, county: 2, duchy: 3, kingdom: 4, empire: 5 };
-const TRACKED = new Set(['culture', 'religion', 'faith', 'trait', 'add_trait', 'remove_trait', 'add_spouse', 'add_matrilineal_spouse', 'remove_spouse', 'give_nickname']);
+const TRACKED = new Set(['culture', 'religion', 'faith', 'rite', 'trait', 'add_trait', 'remove_trait', 'add_spouse', 'add_matrilineal_spouse', 'remove_spouse', 'give_nickname']);
 
 function fmtDate(n: number | undefined): string | undefined
 {
@@ -118,6 +121,9 @@ export class CharacterTable
                         case 'faith':
                             r.faith = v;
                             break;
+                        case 'rite':
+                            r.rite = v;
+                            break;
                         case 'trait':
                             if (v)
                                 r.traits.push(v);
@@ -174,12 +180,18 @@ export class CharacterTable
         return (this.records = records);
     }
 
+    /** A character's faith: their rite's at the date (1.20), else as written. */
+    private faithOf(r: CharRecord, date: number): string | undefined
+    {
+        return (r.rite && riteHistory(this.idx).faithOf(r.rite, date)) || r.faith;
+    }
+
     private factsAt(r: CharRecord, date: number): Facts
     {
         const f: Facts = {
             alive: r.birth !== undefined && r.birth <= date && (r.death === undefined || r.death > date),
             culture: r.culture,
-            faith: r.faith,
+            faith: this.faithOf(r, date),
             traits: new Set(r.traits),
             spouses: []
         };
@@ -196,6 +208,8 @@ export class CharacterTable
                 f.culture = c.v;
             else if (c.k === 'religion' || c.k === 'faith')
                 f.faith = c.v;
+            else if (c.k === 'rite')
+                f.faith = riteHistory(this.idx).faithOf(c.v, date) ?? f.faith;
             else if (c.k === 'trait' || c.k === 'add_trait')
                 f.traits.add(c.v);
             else if (c.k === 'remove_trait')
@@ -323,9 +337,11 @@ export class CharacterTable
 
         for (const r of records.values())
         {
+            // (a rite's faith: at the bookmark the lists start with)
+            const faith = this.faithOf(r, BOOKMARK_DATE);
             count(cultures, r.culture);
-            count(faiths, r.faith);
-            count(religions, r.faith ? this.history.faith(r.faith)?.religion : undefined);
+            count(faiths, faith);
+            count(religions, faith ? this.history.faith(faith)?.religion : undefined);
 
             for (const t of r.traits)
                 count(traits, t);

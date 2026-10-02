@@ -6,7 +6,8 @@
 import type { GameIndex } from '../indexer/gameIndex.ts';
 import type { PNode } from '../indexer/parser.ts';
 import { T_CHARACTER } from '../indexer/schema.ts';
-import { dateNum, HISTORY_DATE, lastAt, scalarOf, type Dated } from './history.ts';
+import { riteHistory } from '../indexer/layouts.ts';
+import { dateNum, HISTORY_DATE, lastAt, lastIndexAt, scalarOf, type Dated } from './history.ts';
 
 export interface Holder
 {
@@ -16,6 +17,9 @@ export interface Holder
     death?: number;
     culture: Dated<string>[];
     faith: Dated<string>[];
+    /** 1.20: `rite = x` — wins over a faith of the same date; its faith depends on the date (`riteFaith`) */
+    rite: Dated<string>[];
+    riteFaith: (rite: string, when: number) => string | undefined;
     dynasty: Dated<string>[];
     house: Dated<string>[];
     /** their capital county (`capital = c_samarra`: 105 in vanilla) */
@@ -25,7 +29,7 @@ export interface Holder
 }
 
 /** character history key → Holder field (`religion` holds the faith) */
-const DATED: Record<string, 'culture' | 'faith' | 'dynasty' | 'house' | 'capital'> = { culture: 'culture', religion: 'faith', faith: 'faith', dynasty: 'dynasty', dynasty_house: 'house', capital: 'capital' };
+const DATED: Record<string, 'culture' | 'faith' | 'rite' | 'dynasty' | 'house' | 'capital'> = { culture: 'culture', religion: 'faith', faith: 'faith', rite: 'rite', dynasty: 'dynasty', dynasty_house: 'house', capital: 'capital' };
 
 export class HolderBook
 {
@@ -78,7 +82,8 @@ export class HolderBook
         if (!node || !Array.isArray(node.v))
             return null;
 
-        const h: Holder = { id, name: this.idx.displayName(e) ?? id, culture: [], faith: [], dynasty: [], house: [], capital: [], primary: [] };
+        const rites = riteHistory(this.idx);
+        const h: Holder = { id, name: this.idx.displayName(e) ?? id, culture: [], faith: [], rite: [], riteFaith: (r, w) => rites.faithOf(r, w), dynasty: [], house: [], capital: [], primary: [] };
         const take = (c: PNode, date: number): void =>
         {
             const v = scalarOf(c);
@@ -113,15 +118,30 @@ export class HolderBook
                 take(c, 0);
         }
 
-        for (const f of ['culture', 'faith', 'dynasty', 'house', 'capital', 'primary'] as const)
+        for (const f of ['culture', 'faith', 'rite', 'dynasty', 'house', 'capital', 'primary'] as const)
             h[f].sort((a, b) => a.date - b.date);
 
         return h;
     }
 }
 
+/**
+ * A character's faith at a date from their dated `religion` / `faith` and (1.20) `rite` statements: the later one — the
+ * rite at the same date —, a rite as its faith then.
+ */
+export function faithAt(faith: Dated<string>[], rite: Dated<string>[], when: number, riteFaith: (rite: string, when: number) => string | undefined): string | undefined
+{
+    const f = lastIndexAt(faith, when);
+    const r = lastIndexAt(rite, when);
+
+    if (r >= 0 && (f < 0 || rite[r].date >= faith[f].date))
+        return riteFaith(rite[r].v, when) ?? (f >= 0 ? faith[f].v : undefined);
+
+    return f >= 0 ? faith[f].v : undefined;
+}
+
 /** A holder's culture, faith, dynasty and house at a date. */
 export function holderAt(h: Holder, when: number): { culture?: string; faith?: string; dynasty?: string; house?: string; }
 {
-    return { culture: lastAt(h.culture, when), faith: lastAt(h.faith, when), dynasty: lastAt(h.dynasty, when), house: lastAt(h.house, when) };
+    return { culture: lastAt(h.culture, when), faith: faithAt(h.faith, h.rite, when, h.riteFaith), dynasty: lastAt(h.dynasty, when), house: lastAt(h.house, when) };
 }

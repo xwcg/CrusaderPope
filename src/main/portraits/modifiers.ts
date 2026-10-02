@@ -8,6 +8,7 @@
  * substitution. Triggers we cannot know (flags, variables, wars, court positions …) evaluate to false.
  */
 import { parse, type PNode } from '../indexer/parser.ts';
+import { riteHistory } from '../indexer/layouts.ts';
 import type { GameIndex } from '../indexer/gameIndex.ts';
 import { field, kids, scalar } from './assets.ts';
 
@@ -337,6 +338,7 @@ export class History
                 date = Math.min(birth + 300000, death ?? Infinity);
         }
 
+        const rite = scalar(field(body, 'rite'));
         const f: CharacterFacts = {
             id,
             historical: true,
@@ -346,7 +348,8 @@ export class History
             age: birth !== undefined ? Math.floor((Math.min(date, death ?? Infinity) - birth) / 10000) : 35,
             birthYear: birth !== undefined ? Math.floor(birth / 10000) : undefined,
             culture: scalar(field(body, 'culture')),
-            faith: scalar(field(body, 'religion')) ?? scalar(field(body, 'faith')),
+            // (1.20: the rite's faith at the date)
+            faith: (rite && riteHistory(this.idx).faithOf(rite, date)) ?? scalar(field(body, 'religion')) ?? scalar(field(body, 'faith')),
             traits: new Set(body.filter((c) => c.k === 'trait' && typeof c.v === 'string').map((c) => c.v as string)),
             dynasty: scalar(field(body, 'dynasty')) ?? scalar(field(body, 'dynasty_house')),
             titles: [],
@@ -372,6 +375,8 @@ export class History
                     f.culture = v;
                 else if (x.k === 'religion' || x.k === 'faith')
                     f.faith = v;
+                else if (x.k === 'rite')
+                    f.faith = riteHistory(this.idx).faithOf(v, date) ?? f.faith;
                 else if (x.k === 'trait' || x.k === 'add_trait')
                     f.traits.add(v);
                 else if (x.k === 'remove_trait')
@@ -1767,6 +1772,9 @@ export class PortraitModifiers
             // value: number, script value block (e.g. muscularity from prowess), a named script value or `@constant`,
             // `range = { a b }` or random
             const valueNode = field(c.v, 'value');
+            const cur = state.genes.get(gene);
+            // an accessory's `range` is walked by the DNA's own value of that gene when it has one (the hairstyle picked in
+            // the ruler designer or inherited stays when a culture's modifier swaps in its hairstyle list), else random
             const named = typeof valueNode?.v === 'string' && !/^-?[\d.]+$/.test(valueNode.v) ? valueNode.v : undefined;
             const value = Array.isArray(valueNode?.v)
                 ? this.eval.scriptValue(valueNode.v, { t: 'char', f: ctx.root }, ctx)
@@ -1775,9 +1783,8 @@ export class PortraitModifiers
                 : valueNode
                 ? parseFloat(String(valueNode.v)) || 0
                 : range.length >= 2
-                ? range[0] + rand() * (range[1] - range[0])
+                ? range[0] + (c.k === 'accessory' && cur && !cur.accessory ? cur.value : rand()) * (range[1] - range[0])
                 : rand();
-            const cur = state.genes.get(gene);
 
             if (c.k === 'accessory')
             {

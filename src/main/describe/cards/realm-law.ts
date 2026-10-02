@@ -1,5 +1,10 @@
-/** Realm cards: laws, law groups, succession elections and appointments (common/laws, succession_election, succession_appointment). */
+/**
+ * Realm cards: laws, law groups, succession elections and appointments (common/laws, common/law_groups,
+ * succession_election, succession_appointment). Laws in either layout: blocks in their group, or (1.20) on their own
+ * naming it (docs/game-structure.md, "Layouts that changed").
+ */
 import type { PNode } from '../../indexer/parser.ts';
+import { groupLaws, lawGroupType } from '../../indexer/layouts.ts';
 import type { Line } from '../../../shared/api.ts';
 import { capitalize, humanize, rich } from '../text.ts';
 import type { CardFn } from './types.ts';
@@ -78,15 +83,17 @@ function flagLine(c: RealmCard, n: PNode, set: string): Line
 }
 
 /**
- * A law (a block inside its law group, common/laws/_laws.info): its group and place there, succession rules, the
- * modifier on the ruler, its flags and settings, the conditions to have / pass / keep it, costs, effects, the AI.
+ * A law (a block inside its law group, or — 1.20 — naming it with `law_group_type`; common/laws/_laws.info): its group
+ * and place there, succession rules, the modifier on the ruler, its flags and settings, the conditions to have / pass /
+ * keep it, costs, effects, the AI.
  */
 const law: CardFn = (b, x) =>
 {
     const c = new RealmCard(b, x);
     const name = x.e.name;
-    const key = c.enclosing();
+    const key = lawGroupType(x.body) ?? c.enclosing();
     const group = key ? b.idx.get('law_groups', key) : undefined;
+    c.skip('law_group_type', 'index');
     // the in-game effects text (`<law>_effects`) when there is no description
     c.describe(`${name}_effects`);
     const gd = group && b.idx.defNode(group);
@@ -94,8 +101,8 @@ const law: CardFn = (b, x) =>
     if (group && gd)
     {
         const gb = b.body(gd.node);
-        const laws = gb.filter((n) => n.k && isBlock(n) && !GROUP_BLOCKS.has(n.k));
-        const i = laws.findIndex((n) => n.k === name);
+        const laws = groupLaws(b.idx, group, gb, GROUP_BLOCKS);
+        const i = laws.findIndex((n) => n.name === name);
         const cumulative = val(gb, 'cumulative') === 'yes';
 
         if (i < 0)
@@ -109,7 +116,7 @@ const law: CardFn = (b, x) =>
             c.fact('The default law');
 
         if (cumulative && i > 0)
-            c.fact('Also has the effects of ', b.d.ref(laws[i - 1].k!, ['laws']));
+            c.fact('Also has the effects of ', b.d.ref(laws[i - 1].name, ['laws']));
     }
 
     const succession = c.block('succession');
@@ -153,12 +160,15 @@ const law: CardFn = (b, x) =>
     return c.done();
 };
 
-/** A law group (common/laws/_laws.info): its laws in order, the default, whether they build on each other. */
+/**
+ * A law group (common/laws/_laws.info; 1.20: common/law_groups, its laws naming it): its laws in order, the default,
+ * whether they build on each other.
+ */
 const lawGroup: CardFn = (b, x) =>
 {
     const c = new RealmCard(b, x);
-    const laws = x.body.filter((n) => n.k && isBlock(n) && !GROUP_BLOCKS.has(n.k));
-    c.skip(...laws.map((n) => n.k!));
+    const laws = groupLaws(b.idx, x.e, x.body, GROUP_BLOCKS);
+    c.skip(...laws.map((n) => n.name));
     const def = val(x.body, 'default');
 
     if (laws.length)
@@ -166,7 +176,7 @@ const lawGroup: CardFn = (b, x) =>
 
     c.section(
         'Laws',
-        laws.map((n, i) => ({ text: rich(`${i + 1}. `, b.d.ref(n.k!, ['laws']), n.k === def ? ' — the default' : ''), tip: n.k!, src: c.anchor(n, 'other') }))
+        laws.map((n, i) => ({ text: rich(`${i + 1}. `, b.d.ref(n.name, ['laws']), n.name === def ? ' — the default' : ''), tip: n.name, src: n.node && c.anchor(n.node, 'other') }))
     );
     const flags = c.all('flag')
         .filter((n) => typeof n.v === 'string')

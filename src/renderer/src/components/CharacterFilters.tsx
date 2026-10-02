@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { CharacterFacets, CharacterFilter } from '../../../shared/api';
 import { api } from '../api';
 import { useRevision } from '../revision';
+import { Select } from './Select';
 
 /** the facets of an index revision (an update can bring other cultures, faiths, traits) */
 let facetsCache: { revision: number; facets: Promise<CharacterFacets>; } | null = null;
@@ -67,79 +68,79 @@ export function CharacterFilters(props: { value: CharacterFilter; onChange: (f: 
             </label>
             <label className="cf-field">
                 <span>Gender</span>
-                <select value={f.gender ?? ''} onChange={(e) => set({ gender: (e.target.value || undefined) as CharacterFilter['gender'] })}>
+                <Select value={f.gender ?? ''} onChange={(e) => set({ gender: (e.target.value || undefined) as CharacterFilter['gender'] })}>
                     <option value="">Any</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
-                </select>
+                </Select>
             </label>
             <label className="cf-field">
                 <span>Age</span>
                 <span className="cf-age">
-                    <select value={ageOp} onChange={(e) => setAge(e.target.value as '' | '<' | '>' | '=', ageText)}>
+                    <Select value={ageOp} onChange={(e) => setAge(e.target.value as '' | '<' | '>' | '=', ageText)}>
                         <option value="">Any</option>
                         <option value="<">Under</option>
                         <option value=">">Over</option>
                         <option value="=">Exactly</option>
-                    </select>
+                    </Select>
                     <input type="number" min={0} max={120} value={ageText} disabled={!ageOp} onChange={(e) => setAge(ageOp, e.target.value)} />
                 </span>
             </label>
             <label className="cf-field">
                 <span>Alive</span>
-                <select value={f.alive === undefined ? '' : f.alive ? 'yes' : 'no'} onChange={(e) => set({ alive: e.target.value === '' ? undefined : e.target.value === 'yes' })}>
+                <Select value={f.alive === undefined ? '' : f.alive ? 'yes' : 'no'} onChange={(e) => set({ alive: e.target.value === '' ? undefined : e.target.value === 'yes' })}>
                     <option value="">Any</option>
                     <option value="yes">Alive at the date</option>
                     <option value="no">Not alive then</option>
-                </select>
+                </Select>
             </label>
             <label className="cf-field">
                 <span>Religion</span>
-                <select value={f.religion ?? ''} onChange={(e) => set({ religion: e.target.value || undefined })}>
+                <Select value={f.religion ?? ''} onChange={(e) => set({ religion: e.target.value || undefined })}>
                     <option value="">Any</option>
                     {facets?.religions.map((r) => (
                         <option key={r.key} value={r.key}>
                             {r.label} ({r.count})
                         </option>
                     ))}
-                </select>
+                </Select>
             </label>
             <label className="cf-field">
                 <span>Faith</span>
-                <select value={f.faith ?? ''} onChange={(e) => set({ faith: e.target.value || undefined })}>
+                <Select value={f.faith ?? ''} onChange={(e) => set({ faith: e.target.value || undefined })}>
                     <option value="">Any</option>
                     {faiths.map((r) => (
                         <option key={r.key} value={r.key}>
                             {r.label} ({r.count})
                         </option>
                     ))}
-                </select>
+                </Select>
             </label>
             <label className="cf-field">
                 <span>Culture</span>
-                <select value={f.culture ?? ''} onChange={(e) => set({ culture: e.target.value || undefined })}>
+                <Select value={f.culture ?? ''} onChange={(e) => set({ culture: e.target.value || undefined })}>
                     <option value="">Any</option>
                     {facets?.cultures.map((r) => (
                         <option key={r.key} value={r.key}>
                             {r.label} ({r.count})
                         </option>
                     ))}
-                </select>
+                </Select>
             </label>
             <label className="cf-field">
                 <span>Trait</span>
-                <select value={f.trait ?? ''} onChange={(e) => set({ trait: e.target.value || undefined })}>
+                <Select value={f.trait ?? ''} onChange={(e) => set({ trait: e.target.value || undefined })}>
                     <option value="">Any</option>
                     {facets?.traits.map((r) => (
                         <option key={r.key} value={r.key}>
                             {r.label} ({r.count})
                         </option>
                     ))}
-                </select>
+                </Select>
             </label>
             <label className="cf-field">
                 <span>Rank</span>
-                <select value={f.rank ?? ''} onChange={(e) => set({ rank: (e.target.value || undefined) as CharacterFilter['rank'] })}>
+                <Select value={f.rank ?? ''} onChange={(e) => set({ rank: (e.target.value || undefined) as CharacterFilter['rank'] })}>
                     <option value="">Any</option>
                     <option value="ruler">Any ruler</option>
                     <option value="unlanded">Unlanded</option>
@@ -148,7 +149,7 @@ export function CharacterFilters(props: { value: CharacterFilter; onChange: (f: 
                     <option value="duchy">Duke / duchess</option>
                     <option value="county">Count / countess</option>
                     <option value="barony">Baron / baroness</option>
-                </select>
+                </Select>
             </label>
             <label className="cf-field">
                 <span>Dynasty</span>
@@ -156,11 +157,11 @@ export function CharacterFilters(props: { value: CharacterFilter; onChange: (f: 
             </label>
             <label className="cf-field">
                 <span>Look</span>
-                <select value={f.dna === undefined ? '' : f.dna ? 'yes' : 'no'} onChange={(e) => set({ dna: e.target.value === '' ? undefined : e.target.value === 'yes' })}>
+                <Select value={f.dna === undefined ? '' : f.dna ? 'yes' : 'no'} onChange={(e) => set({ dna: e.target.value === '' ? undefined : e.target.value === 'yes' })}>
                     <option value="">Any</option>
                     <option value="yes">Scripted DNA</option>
                     <option value="no">Generated</option>
-                </select>
+                </Select>
             </label>
             <div className="cf-actions">
                 <button

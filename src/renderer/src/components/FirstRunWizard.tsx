@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { GraphicsSettings, Settings } from '../../../shared/api';
 import { api } from '../api';
 import { GRAPHICS_PRESETS, resolveGraphics } from '../graphics';
+import { Select } from './Select';
 
 /**
  * The first start (Settings.setupDone false): the Crusader Kings III folders found on this machine (Steam's libraries,
@@ -106,14 +107,14 @@ export function FirstRunWizard(props: { onDone: () => void; }): React.JSX.Elemen
                     <h3>3. Language and graphics</h3>
                     <div className="row">
                         <label>
-                            Language{' '}
-                            <select value={s.language} onChange={(e) => setS({ ...s, language: e.target.value })}>
+                            Content language (the game's texts){' '}
+                            <Select value={s.language} onChange={(e) => setS({ ...s, language: e.target.value })}>
                                 {(langs.length ? langs : [s.language]).map((l) => (
                                     <option key={l} value={l}>
                                         {l.replace(/^l_/, '')}
                                     </option>
                                 ))}
-                            </select>
+                            </Select>
                         </label>
                     </div>
                     <GraphicsPresetChoice value={s.graphics} onChange={(g) => setS({ ...s, graphics: g })} />
@@ -161,23 +162,23 @@ export function GraphicsDetails(props: { value: GraphicsSettings | undefined; on
         <div className="graphics-details">
             <label>
                 Render resolution{' '}
-                <select value={g.renderScale} onChange={(e) => set({ renderScale: Number(e.target.value) })}>
+                <Select value={g.renderScale} onChange={(e) => set({ renderScale: Number(e.target.value) })}>
                     <option value={0.5}>50%</option>
                     <option value={0.75}>75%</option>
                     <option value={1}>100%</option>
                     <option value={1.5}>150% (supersampled)</option>
                     <option value={2}>200% (supersampled)</option>
-                </select>
+                </Select>
             </label>
             <label>
                 Texture filtering{' '}
-                <select value={g.anisotropy} onChange={(e) => set({ anisotropy: Number(e.target.value) })}>
+                <Select value={g.anisotropy} onChange={(e) => set({ anisotropy: Number(e.target.value) })}>
                     {[1, 2, 4, 8, 16].map((n) => (
                         <option key={n} value={n}>
                             {n === 1 ? 'basic' : `${n}× anisotropic`}
                         </option>
                     ))}
-                </select>
+                </Select>
             </label>
             <label className="check">
                 <input type="checkbox" checked={g.antialias} onChange={(e) => set({ antialias: e.target.checked })} /> Edge smoothing (MSAA)

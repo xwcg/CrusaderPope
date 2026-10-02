@@ -1,0 +1,278 @@
+/* Form controls, app-wide: buttons, text fields, dropdowns, checkboxes, radios, sliders. Element selectors only, so a
+   component's own class rules still win (the statement picker, the portrait toggles). Dropdowns open a list styled like
+   the statement picker's menus (components/Select.tsx). */
+
+:root {
+  color-scheme: dark;
+  --control-bg: #111216;
+  --control-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45);
+  --focus-ring: 0 0 0 2px rgba(201, 164, 92, 0.28);
+}
+
+/* ------------------------------------------------------------------ buttons */
+
+button {
+  background: linear-gradient(180deg, #282a33, #202229);
+  border-color: var(--border-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 1px 2px rgba(0, 0, 0, 0.35);
+  transition:
+    background 0.12s,
+    border-color 0.12s,
+    color 0.12s,
+    box-shadow 0.12s;
+}
+button:hover:not(:disabled) {
+  background: linear-gradient(180deg, #30333e, #272a33);
+}
+button:active:not(:disabled) {
+  background: #1c1e24;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+button:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+button.primary {
+  background: linear-gradient(180deg, #a07f45, #7d6337);
+  border-color: var(--accent);
+  color: #fff8e8;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+}
+button.primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #b08c4d, #8a6d3d);
+  border-color: #dcb872;
+}
+button.ghost {
+  background: transparent;
+  box-shadow: none;
+}
+
+/* ------------------------------------------------------------------ text fields */
+
+input:where(:not([type]), [type='text'], [type='search'], [type='number'], [type='email'], [type='url'], [type='password']),
+textarea {
+  font: inherit;
+  color: var(--text);
+  background: var(--control-bg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--control-shadow);
+  transition:
+    border-color 0.12s,
+    box-shadow 0.12s;
+}
+input:where(:not([type]), [type='text'], [type='search'], [type='number'], [type='email'], [type='url'], [type='password']):hover:not(:disabled, :focus),
+textarea:hover:not(:disabled, :focus) {
+  border-color: #4a4f5c;
+}
+input:where(:not([type]), [type='text'], [type='search'], [type='number'], [type='email'], [type='url'], [type='password']):focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent-dim);
+  box-shadow:
+    var(--control-shadow),
+    var(--focus-ring);
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-faint);
+}
+input:disabled,
+textarea:disabled,
+button.dd-btn:disabled {
+  opacity: 0.5;
+}
+::selection {
+  background: rgba(201, 164, 92, 0.35);
+}
+
+/* ------------------------------------------------------------------ dropdowns (Select.tsx: a button opening a picker menu) */
+
+.dd-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  min-height: 28px;
+  padding: 3px 9px;
+  text-align: left;
+  background: linear-gradient(180deg, #1d1f26, #16171c);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+.dd-btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, #23252d, #1b1c22);
+}
+.dd-btn.open {
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+.dd-value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dd-caret {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin: -3px 1px 0 0;
+  border-right: 1.5px solid var(--text-dim);
+  border-bottom: 1.5px solid var(--text-dim);
+  transform: rotate(45deg);
+  transition: transform 0.15s;
+}
+.dd-btn.open .dd-caret {
+  margin-top: 3px;
+  transform: rotate(225deg);
+  border-color: var(--accent);
+}
+/* the menu: the picker's (picker.css), over dialogs */
+.pk-menu.dd-menu {
+  z-index: 1100;
+  width: max-content;
+  min-width: 200px;
+  max-width: min(560px, calc(100vw - 16px));
+}
+.dd-menu .pk-row.dd-current .pk-label {
+  color: var(--accent);
+}
+.dd-menu .pk-row .pk-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dd-menu .pk-arrow {
+  color: var(--accent);
+}
+.dd-menu .dd-group {
+  height: 22px;
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  font-style: normal;
+}
+
+/* ------------------------------------------------------------------ checkboxes and radios */
+
+input[type='checkbox'],
+input[type='radio'] {
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 15px;
+  height: 15px;
+  margin: 0 3px 0 0;
+  padding: 0;
+  vertical-align: -3px;
+  background: var(--control-bg);
+  border: 1px solid #4a4f5c;
+  border-radius: 4px;
+  box-shadow: var(--control-shadow);
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    border-color 0.12s;
+}
+input[type='radio'] {
+  border-radius: 50%;
+}
+input[type='checkbox']:hover:not(:disabled),
+input[type='radio']:hover:not(:disabled) {
+  border-color: var(--accent-dim);
+}
+input[type='checkbox']:checked {
+  background: linear-gradient(180deg, #b08c4d, #8a6d3d);
+  border-color: var(--accent);
+}
+input[type='checkbox']:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid #1a1409;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+input[type='checkbox']:indeterminate::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 6px;
+  width: 7px;
+  height: 2px;
+  background: var(--accent);
+}
+input[type='radio']:checked {
+  border-color: var(--accent);
+}
+input[type='radio']:checked::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+input[type='checkbox']:focus-visible,
+input[type='radio']:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+input[type='checkbox']:disabled,
+input[type='radio']:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* ------------------------------------------------------------------ sliders */
+
+input[type='range'] {
+  appearance: none;
+  height: 18px;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+input[type='range']::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #3d4250, #2e323c);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #e8cd90, #a88442 70%);
+  border: 1px solid #5c4822;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  transition: transform 0.1s;
+}
+input[type='range']:hover::-webkit-slider-thumb {
+  transform: scale(1.12);
+}
+input[type='range']:focus-visible {
+  outline: none;
+}
+input[type='range']:focus-visible::-webkit-slider-thumb {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.6),
+    var(--focus-ring);
+}
+input[type='range']:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* number fields: quieter spin buttons */
+input[type='number']::-webkit-inner-spin-button {
+  opacity: 0.5;
+}

@@ -1,5 +1,5 @@
 /* The map's date control (components/map/DateControl.tsx): bookmarks, year slider, date entry. */
-.map-date > select {
+.map-date > .dd-btn {
   max-width: 190px;
 }
 .map-date-slider {

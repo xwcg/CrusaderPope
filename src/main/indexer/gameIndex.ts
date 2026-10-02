@@ -47,6 +47,7 @@ import {
     typeLabel,
     type DefEmit
 } from './schema.ts';
+import { doctrinesNameTheirGroup } from './layouts.ts';
 import type { EventBackgroundInfo, PortraitOptions, DefOrigin, DefSiteView, BracketLink, EntityDetail, EntityKey, EntityListItem, EventPreview, GalleryFile, GalleryFolder, GraphData, IndexStats, LineSource, LinkSpan, ModTouch, RefGroup, RefItem, SearchResult, TypeSummary } from '../../shared/api.ts';
 
 export interface FileInfo
@@ -3113,6 +3114,12 @@ export class GameIndex
     }
 
     /** The entries of `type` written inside the holder's winning definition (a law group's laws, a religion's faiths). */
+    /** How the loaded game lays out what changed between versions (layouts.ts) — mods/create.ts writes the same way. */
+    layouts(): { doctrinesNameTheirGroup: boolean; }
+    {
+        return { doctrinesNameTheirGroup: doctrinesNameTheirGroup(this) };
+    }
+
     childrenOf(type: string, holderType: string, holder: string): string[]
     {
         const h = this.get(holderType, holder);

@@ -482,6 +482,15 @@
     transform 0.15s,
     background 0.15s;
 }
+/* (a switch, not the app's checkbox: no box, no check mark) */
+.portrait-toggles input[type='checkbox'] {
+  border: none;
+  box-shadow: none;
+  vertical-align: middle;
+}
+.portrait-toggles input[type='checkbox']::after {
+  content: none;
+}
 .portrait-toggles input[type='checkbox']:checked {
   background: var(--accent-dim);
 }
@@ -947,4 +956,161 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ barbershop (Barbershop.tsx) */
+
+.portrait-shop {
+  padding: 1px 8px;
+  font-size: 12px;
+}
+/* portrait on the left, genes on the right; stacked on narrow windows (and at high display scaling) */
+.modal.barbershop {
+  width: min(1200px, calc(100vw - 24px));
+  max-width: none;
+  height: min(860px, calc(100vh - 24px));
+  display: flex;
+  gap: 16px;
+  padding: 14px 16px;
+}
+.barbershop-view {
+  flex: 1 1 50%;
+  min-width: 0;
+  display: flex;
+}
+.portrait.barbershop-portrait {
+  float: none;
+  margin: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.barbershop-portrait .portrait-box {
+  width: 100%;
+  height: auto;
+  flex: 1;
+  min-height: 220px;
+}
+.barbershop-side {
+  flex: 1 1 50%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.barbershop-side h2 {
+  margin-bottom: 4px;
+}
+.barbershop-subject {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  margin: 6px 0 10px;
+}
+.barbershop-age {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 180px;
+}
+.barbershop-age input {
+  flex: 1;
+}
+.barbershop-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.barbershop-groups button {
+  padding: 4px 10px;
+  background: none;
+  border: 1px solid var(--border);
+}
+.barbershop-groups button.active {
+  background: var(--bg-hover, rgba(255, 255, 255, 0.06));
+  border-color: var(--border-strong);
+}
+.barbershop-genes {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+.gene-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+.gene-row.unset .gene-label {
+  color: var(--text-dim);
+}
+.gene-label {
+  flex: 0 0 170px;
+}
+.gene-row input[type='range'] {
+  flex: 1;
+  min-width: 120px;
+}
+.gene-row .dd-btn {
+  max-width: 100%;
+}
+.gene-value {
+  width: 3ch;
+  text-align: right;
+  font-family: var(--font-code);
+  color: var(--text-dim);
+}
+.gene-palette {
+  position: relative;
+  width: min(256px, 100%);
+  aspect-ratio: 1;
+  cursor: crosshair;
+  touch-action: none;
+}
+.gene-palette img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+}
+.gene-palette-mark {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin: -7px 0 0 -7px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #000;
+  pointer-events: none;
+}
+.modal.barbershop .actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+@media (max-width: 760px) {
+  .modal.barbershop {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .barbershop-view {
+    flex: none;
+    height: 45vh;
+  }
+  .barbershop-side {
+    flex: none;
+  }
+  .barbershop-genes {
+    overflow: visible;
+  }
+  .gene-label {
+    flex-basis: 100%;
+  }
 }

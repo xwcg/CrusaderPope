@@ -4,7 +4,7 @@
  * requests are not stuck behind them) and kept until the index changes — menus open without waiting.
  */
 import type { FieldSuggestion, LocCodes, ModifierKeyInfo, NewEntryPlan, ScriptKeyInfo } from '../../../shared/api';
-import { STATEMENTS, type PickKind } from '../../../shared/scriptCatalog';
+import { STATEMENTS, preferKeys, type PickKind } from '../../../shared/scriptCatalog';
 import { api } from '../api';
 import { activeModId } from '../modStore';
 import type { PickerData, RefEntry } from './model';
@@ -176,7 +176,10 @@ function loadKeys(): Promise<unknown>
             .then(([effect, trigger]) =>
             {
                 if (keysLoading === mine)
+                {
                     keys = { effect, trigger };
+                    preferKeys([...effect, ...trigger].map((k) => k.key));
+                }
             })
             .catch(() =>
             {

@@ -4,6 +4,7 @@ import { api } from '../api';
 import { reportChange } from '../changes';
 import { errorText } from './ModDialogs';
 import '../styles/edit.css';
+import { Select } from './Select';
 
 /** The type list's context menu (right click on a type): "New <type>…". */
 export function TypeContextMenu(props: { type: TypeSummary; x: number; y: number; onNew: () => void; onClose: () => void; }): React.JSX.Element
@@ -136,14 +137,14 @@ function NestedFields(props: { type: TypeSummary; nested: NonNullable<NewEntryPl
             {siblings.length > 0 && (
                 <label>
                     <span>Start from</span>
-                    <select value={value.from} onChange={(e) => onChange({ ...value, from: e.target.value })}>
+                    <Select value={value.from} onChange={(e) => onChange({ ...value, from: e.target.value })}>
                         <option value="">Empty</option>
                         {siblings.map((x) => (
                             <option key={x} value={x}>
                                 A copy of {x}
                             </option>
                         ))}
-                    </select>
+                    </Select>
                 </label>
             )}
         </div>

@@ -4,13 +4,14 @@
  */
 import { ipcMain, nativeImage, shell } from 'electron';
 import { readFile } from 'node:fs/promises';
-import type { DuplicateEntryRequest, DuplicateRequest, EntryCreate, FireRequest, LineSource, MapEditRequest, NewEntryRequest, OverrideRequest, ScriptEditRequest } from '../../shared/api.ts';
+import type { DuplicateEntryRequest, DuplicateRequest, EntryCreate, FireRequest, LineSource, DnaSaveRequest, MapEditRequest, NewEntryRequest, OverrideRequest, ScriptEditRequest } from '../../shared/api.ts';
 import { createMod, deleteList, modLocation, modsState, packMod, saveList, selectList, setActive, thumbnailFile, unpackMod, writeList, type ModsHost } from './manager.ts';
 import { applyOverride, planOverride } from './edit.ts';
 import { editLoc, editScript, fireEvent, statementText, unfireEvent } from './scriptEdit.ts';
 import { forgetChange, undoChange } from './undo.ts';
 import { createEntries, createEntry, duplicateEntry, duplicateEvent, newEntryPlan } from './create.ts';
 import { mapEdit } from '../map/edit.ts';
+import { saveDna } from './dna.ts';
 
 export function registerModsIpc(host: ModsHost): void
 {
@@ -47,6 +48,7 @@ export function registerModsIpc(host: ModsHost): void
     handle('mods:duplicateEntry', (req: DuplicateEntryRequest) => duplicateEntry(host, req));
     // editing from the map (map/edit.ts)
     handle('mods:mapEdit', (req: MapEditRequest) => mapEdit(host, req));
+    handle('mods:saveDna', (req: DnaSaveRequest) => saveDna(host, req));
     // editing in place (scriptEdit.ts)
     handle('mods:scriptText', (at: LineSource) => statementText(host, at));
     handle('mods:editScript', (req: ScriptEditRequest) => editScript(host, req));

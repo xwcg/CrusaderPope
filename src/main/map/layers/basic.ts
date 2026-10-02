@@ -1,6 +1,7 @@
 /** The first map layers (docs/map.md): cultures, faiths, holdings at the date, terrain. */
 import { parse } from '../../indexer/parser.ts';
 import { T_FAITH } from '../../indexer/schema.ts';
+import { faithField, historyFaith } from '../../indexer/layouts.ts';
 import type { MapThing } from '../../../shared/api.ts';
 import { colorOf } from '../color.ts';
 import { scalarOf } from '../history.ts';
@@ -37,7 +38,8 @@ export function thingsOf(ctx: LayerCtx, type: string): { list: MapThing[]; at: M
             if (!node)
                 continue;
 
-            const c = Array.isArray(node.v) ? node.v.find((x) => x.k === 'color') : undefined;
+            // (a faith's colour: 1.20 writes it in its `faith_details`)
+            const c = !Array.isArray(node.v) ? undefined : type === T_FAITH ? faithField(node.v, 'color') : node.v.find((x) => x.k === 'color');
             let color = colorOf(c);
 
             if (!color && typeof c?.v === 'string')
@@ -74,8 +76,11 @@ export function mappedFrom(ctx: LayerCtx): Map<string, string>
     });
 }
 
-/** history/provinces keys of a county's culture and faith (`religion`, rarely `faith` — a later one of either wins) */
-const COUNTY_KEYS = { culture: ['culture'], faith: ['religion', 'faith'] };
+/**
+ * history/provinces keys of a county's culture and faith (`religion`, rarely `faith` — a later one of either wins; 1.20:
+ * `rite`, its faith at the date — it wins over a faith of the same date)
+ */
+const COUNTY_KEYS = { culture: ['culture'], faith: ['religion', 'faith', 'rite'] };
 
 /**
  * Per province at the date: its county's culture or faith key — of the county's first barony that has one, its own or
@@ -87,7 +92,17 @@ export function countyKeys(ctx: LayerCtx, what: 'culture' | 'faith'): (string | 
     return perDate(ctx, 'county:' + what, () =>
     {
         const mapped = mappedFrom(ctx);
-        const valueOf = (p: string): string | undefined => scalarOf(lastOf(ctx.provinces, p, COUNTY_KEYS[what], ctx.when)?.node);
+        const valueOf = (p: string): string | undefined =>
+        {
+            if (what === 'culture')
+                return scalarOf(lastOf(ctx.provinces, p, COUNTY_KEYS.culture, ctx.when)?.node);
+
+            const f = lastOf(ctx.provinces, p, ['religion', 'faith'], ctx.when);
+            const r = lastOf(ctx.provinces, p, ['rite'], ctx.when);
+            const n = r && (!f || r.date >= f.date) ? r : f;
+            const v = scalarOf(n?.node);
+            return n && v ? (historyFaith(ctx.idx, { ...n.node, v }, ctx.when) ?? (f && scalarOf(f.node))) : undefined;
+        };
         const out = new Array<string | undefined>(ctx.count).fill(undefined);
         ctx.tree.titles.forEach((t, ci) =>
         {

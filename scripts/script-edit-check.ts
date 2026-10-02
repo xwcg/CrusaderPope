@@ -668,6 +668,28 @@ try
         u = await undoChange(host, { mod: mod.id });
         const u2 = await undoChange(host, { mod: mod.id });
         check(u && !u.refused && u2 && !u2.refused && !existsSync(join(root, trA.rel)) && !existsSync(join(root, evA.rel)) && count() === n0, `the new trait and event undone: the journal as before (${count()} steps)`);
+
+        // the 1.20 layouts (docs/game-structure.md, "Layouts that changed"): a religion's new faith on its own in the
+        // mod's religion/faith_types, naming it; a doctrine put into a group: `doctrine_group_type` in its copy
+        if (idx.layouts().doctrinesNameTheirGroup)
+        {
+            before = folder();
+            const nf = await createEntries(host, [{ what: 'faith', key: 'edit_test_faith', fields: [['religion', 'christianity_religion']], loc: 'Test Faith' }]);
+            const ff = join(root, 'common/religion/faith_types/edit_test_faith_types.txt');
+            check(existsSync(ff) && /edit_test_faith = \{\s*faith_details = \{\s*religion = christianity_religion\s*\}\s*\}/.test(readFileSync(ff, 'utf8')), `a new faith (1.20): a block of its own naming its religion (${nf.notes.join('; ')})`);
+            u = await undoChange(host, { mod: mod.id });
+            check(u && !u.refused && same(before, folder()) && count() === n0, 'undone: the mod folder as before');
+            const dg = await createEntries(host, [{ what: 'doctrine_group_member', key: 'doctrine_polygamy', fields: [['group', 'doctrine_divorce']] }]);
+            const df = dg.files.find((f) => /doctrine_types/.test(f));
+            const block = df && /doctrine_polygamy = \{[\s\S]*?\n\}/.exec(readFileSync(df, 'utf8'))?.[0];
+            check(block && /doctrine_group_type = doctrine_divorce/.test(block) && block.match(/doctrine_group_type/g)?.length === 1, `a doctrine put into a group (1.20): its copy names the group, once (${dg.notes.join('; ')})`);
+
+            while (count() > n0)
+                u = await undoChange(host, { mod: mod.id });
+
+            check(same(before, folder()), 'undone: the mod folder as before');
+        }
+
         // a later change of the same file: named; another editor: said so; "Forget" lets the next undo through
         reindex();
         ev = story();

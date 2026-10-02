@@ -85,14 +85,27 @@ export function LineList({ lines, compact }: { lines: Line[]; compact?: boolean;
     if (!visible.length)
         return null;
 
+    // if / else if / else chains: their rows are bracketed together (the bracket runs through each member's block)
+    const chainOf = (i: number): string =>
+    {
+        const l = visible[i];
+        const cont = (x: Line | undefined): boolean => !!x && (x.icon === 'else' || (x.icon === 'if' && String(x.text[0]).startsWith('Otherwise')));
+
+        if (l.icon !== 'if' && l.icon !== 'else')
+            return '';
+
+        const first = !cont(l);
+        const last = !cont(visible[i + 1]);
+        return first && last ? ' chain chain-solo' : first ? ' chain chain-start' : last ? ' chain chain-end' : ' chain chain-mid';
+    };
     return (
         <ul className={'lines' + (compact ? ' compact' : '')}>
-            {visible.map((l, i) => <LineItem key={i} line={l} />)}
+            {visible.map((l, i) => <LineItem key={i} line={l} chain={chainOf(i)} />)}
         </ul>
     );
 }
 
-function LineItem({ line }: { line: Line; }): React.JSX.Element
+function LineItem({ line, chain = '' }: { line: Line; chain?: string; }): React.JSX.Element
 {
     const { showHidden } = useContext(ReadCtx);
     const follow = useContext(FollowCtx);
@@ -116,7 +129,7 @@ function LineItem({ line }: { line: Line; }): React.JSX.Element
         } :
         undefined;
     return (
-        <li className={'line' + (line.hidden ? ' hidden-line' : '') + (line.tone ? ' tone-' + line.tone : '') + (line.placeholder ? ' placeholder-line' : '')}>
+        <li className={'line' + chain + (line.hidden ? ' hidden-line' : '') + (line.tone ? ' tone-' + line.tone : '') + (line.placeholder ? ' placeholder-line' : '')}>
             <div
                 className={'line-row' + (key ? ' editable' : '') + (key && ed!.selected === key ? ' selected' : '')}
                 data-anchor={key}

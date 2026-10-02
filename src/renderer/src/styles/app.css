@@ -450,7 +450,7 @@ select:focus {
   flex: 1;
   min-width: 0;
 }
-.entity-list .head select {
+.entity-list .head .dd-btn {
   padding: 4px;
 }
 .vlist {
@@ -1206,7 +1206,7 @@ select:focus {
   font-size: 11px;
   color: var(--text-faint);
 }
-.cf-field select,
+.cf-field .dd-btn,
 .cf-field input {
   width: 100%;
   min-width: 0;
@@ -1216,7 +1216,7 @@ select:focus {
   display: flex;
   gap: 4px;
 }
-.cf-age select {
+.cf-age .dd-btn {
   flex: 1.2;
 }
 .cf-age input {

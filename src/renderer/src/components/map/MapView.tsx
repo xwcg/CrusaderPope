@@ -25,6 +25,7 @@ import { undoMapEdit } from './MapEdit';
 import { track } from '../../pending';
 import { hook } from '../../testApi';
 import '../../styles/map.css';
+import { Select } from '../Select';
 
 export const MAP_ROUTE = '@map';
 
@@ -593,7 +594,7 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
                         </button>
                     ))}
                 </div>
-                <select
+                <Select
                     className="map-style"
                     value={style}
                     onChange={(e) =>
@@ -606,7 +607,7 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
                     <option value="terrain">Terrain</option>
                     <option value="paper">Paper map</option>
                     <option value="plain">Plain</option>
-                </select>
+                </Select>
             </div>
             <div className="map-body">
                 {dim === '2d' ?

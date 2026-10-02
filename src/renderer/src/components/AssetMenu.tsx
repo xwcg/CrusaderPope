@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { AssetOverride, ImageSource, PickedImage } from '../../../shared/api';
 import { createPortal } from 'react-dom';
 import { imgUrl } from '../img';
@@ -31,6 +31,25 @@ export function AssetMenu(props: { path: string; pdxmesh?: string; navigate: Nav
     const [own, setOwn] = useState<AssetOverride | null>(null);
     const [confirm, setConfirm] = useState(false);
     const box = useRef<HTMLSpanElement>(null);
+    // the menu is drawn over everything (a portal, fixed): scrolling panes don't cut it off; kept inside the window
+    const pop = useRef<HTMLSpanElement>(null);
+    const [at, setAt] = useState<{ left: number; top: number; } | null>(null);
+
+    useLayoutEffect(() =>
+    {
+        const b = box.current?.getBoundingClientRect();
+        const p = pop.current;
+
+        if (!open || !b || !p)
+            return;
+
+        const w = p.offsetWidth;
+        const h = p.offsetHeight;
+        const left = Math.max(8, Math.min(b.right - w, window.innerWidth - w - 8));
+        const below = b.bottom + 4;
+        const top = below + h > window.innerHeight - 8 && b.top - 4 - h >= 8 ? b.top - 4 - h : Math.max(8, Math.min(below, window.innerHeight - h - 8));
+        setAt((o) => (o && o.left === left && o.top === top ? o : { left, top }));
+    });
 
     useEffect(() =>
     {
@@ -56,9 +75,16 @@ export function AssetMenu(props: { path: string; pdxmesh?: string; navigate: Nav
 
         const onDown = (e: MouseEvent): void =>
         {
-            if (!box.current?.contains(e.target as Node))
+            if (!box.current?.contains(e.target as Node) && !pop.current?.contains(e.target as Node))
                 setOpen(false);
         };
+        // (the menu stays where it opened: scrolling what is under it closes it)
+        const onScroll = (e: Event): void =>
+        {
+            if (!pop.current?.contains(e.target as Node))
+                setOpen(false);
+        };
+        window.addEventListener('scroll', onScroll, true);
         const onKey = (e: KeyboardEvent): void =>
         {
             if (e.key === 'Escape')
@@ -70,6 +96,8 @@ export function AssetMenu(props: { path: string; pdxmesh?: string; navigate: Nav
         {
             window.removeEventListener('mousedown', onDown);
             window.removeEventListener('keydown', onKey);
+            window.removeEventListener('scroll', onScroll, true);
+            setAt(null);
         };
     }, [open]);
 
@@ -227,25 +255,27 @@ export function AssetMenu(props: { path: string; pdxmesh?: string; navigate: Nav
             <button className={'am-btn' + (open ? ' on' : '')} title={mesh ? 'Export or replace this mesh' : 'Export or replace this texture'} disabled={busy} onClick={() => setOpen(!open)}>
                 {busy ? '…' : '⋯'}
             </button>
-            {open && (
-                <span className="am-pop">
-                    {items.map((i) => (
-                        <button key={i.label} className="am-item" title={i.disabled ?? i.title} disabled={!!i.disabled} onClick={i.go}>
-                            {i.label}
-                        </button>
-                    ))}
-                    {own?.file && (
-                        <button
-                            className={'am-item danger' + (confirm ? ' confirm' : '')}
-                            title={`Deletes ${own.file} (to the recycle bin): the game’s file counts again`}
-                            onClick={confirm ? removeOverride : () => setConfirm(true)}
-                        >
-                            {confirm ? `Really remove it from ${own.mod}? Click again` : `Remove the override from ${own.mod}…`}
-                        </button>
-                    )}
-                    {active.mod && !noMod && <small className="am-note">{own?.file ? `${own.mod} has its own ${base(own.rel)}` : `Replacing writes into ${active.mod.name}`}</small>}
-                </span>
-            )}
+            {open &&
+                createPortal(
+                    <span className="am-pop" ref={pop} onClick={(e) => e.stopPropagation()} style={at ? { left: at.left, top: at.top } : { visibility: 'hidden', left: 0, top: 0 }}>
+                        {items.map((i) => (
+                            <button key={i.label} className="am-item" title={i.disabled ?? i.title} disabled={!!i.disabled} onClick={i.go}>
+                                {i.label}
+                            </button>
+                        ))}
+                        {own?.file && (
+                            <button
+                                className={'am-item danger' + (confirm ? ' confirm' : '')}
+                                title={`Deletes ${own.file} (to the recycle bin): the game’s file counts again`}
+                                onClick={confirm ? removeOverride : () => setConfirm(true)}
+                            >
+                                {confirm ? `Really remove it from ${own.mod}? Click again` : `Remove the override from ${own.mod}…`}
+                            </button>
+                        )}
+                        {active.mod && !noMod && <small className="am-note">{own?.file ? `${own.mod} has its own ${base(own.rel)}` : `Replacing writes into ${active.mod.name}`}</small>}
+                    </span>,
+                    document.body
+                )}
             {cropping &&
                 createPortal(
                     <ImageCropDialog

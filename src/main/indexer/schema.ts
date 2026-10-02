@@ -384,8 +384,22 @@ export const CONTEXT_RULES: Record<string, string[]> = {
     give_nickname: ['nicknames'],
     has_nickname: ['nicknames'],
     has_doctrine: ['religion/doctrine_types'],
+    rite_has_doctrine: ['religion/doctrine_types'],
     doctrine: ['religion/doctrine_types'],
+    doctrines: ['religion/doctrine_types'],
     doctrine_types: ['religion/doctrine_types'],
+    fallback_doctrine: ['religion/doctrine_types'],
+    doctrine_group_type: ['religion/doctrine_group_types'],
+    tenets: ['religion/tenet_types'],
+    tenet: ['religion/tenet_types'],
+    fallback_tenet: ['religion/tenet_types'],
+    rite: ['religion/rite_types'],
+    main_rite: ['religion/rite_types'],
+    origin: [T_FAITH],
+    holy_site: ['religion/holy_site_types'],
+    holy_sites: ['religion/holy_site_types'],
+    eminent_holy_sites: ['religion/holy_site_types'],
+    law_group_type: ['law_groups'],
     has_cultural_tradition: ['culture/traditions'],
     add_culture_tradition: ['culture/traditions'],
     has_cultural_pillar: ['culture/pillars'],
@@ -440,6 +454,8 @@ export const PREFIX_TYPES: Record<string, string[]> = {
     culture_tradition: ['culture/traditions'],
     culture_innovation: ['culture/innovations'],
     doctrine: ['religion/doctrine_types'],
+    tenet: ['religion/tenet_types'],
+    rite: ['religion/rite_types'],
     government_type: ['governments'],
     activity_type: ['activities/activity_types'],
     struggle: ['struggle/struggles'],
@@ -660,11 +676,25 @@ export function extractDefs(area: string, type: string, ast: PNode[], emit: (d: 
             }
 
             return;
+        // (1.20: top-level faiths — docs/game-structure.md, "Layouts that changed")
+        case 'religion/faith_types':
+            for (const n of ast)
+                if (n.k && isBlock(n) && !n.k.startsWith('@'))
+                    emit({ type: T_FAITH, name: n.k, node: n });
+
+            return;
         case 'laws':
             for (const n of ast)
             {
                 if (!n.k || !isBlock(n) || n.k.startsWith('@'))
                     continue;
+
+                // (1.20: a law naming its group — the groups are in common/law_groups)
+                if (n.v.some((c) => c.k === 'law_group_type'))
+                {
+                    emit({ type: 'laws', name: n.k, node: n });
+                    continue;
+                }
 
                 emit({ type: 'law_groups', name: n.k, node: n });
 

@@ -200,6 +200,8 @@ export const SETTINGS_FIELDS: Record<string, FieldDef[]> = {
         entry('culture', 'Culture', 'culture/cultures', { k: 'c' }),
         entry('religion', 'Faith', 'faith', { k: 'r' }),
         entry('faith', 'Faith (written faith = …)', 'faith'),
+        // (1.20: a rite wins over the faith — its faith at the date)
+        entry('rite', 'Rite', 'religion/rite_types', { k: 'i' }),
         // (a character id typed — 70,000 of them; read as the character)
         { key: 'father', label: 'Father (character id)…', kind: 'text', ref: 'characters', k: 'a', read: 'Father: $' },
         { key: 'mother', label: 'Mother (character id)…', kind: 'text', ref: 'characters', k: 'm', read: 'Mother: $' },

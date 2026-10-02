@@ -1,6 +1,7 @@
 /** Map layers of religion (docs/map.md): the counties' religions and religion families at the date, holy sites. */
 import type { PNode } from '../../indexer/parser.ts';
 import { T_FAITH } from '../../indexer/schema.ts';
+import { faithField, faithHolySites } from '../../indexer/layouts.ts';
 import type { MapThing } from '../../../shared/api.ts';
 import { bodyOf, fieldOf, once, perCounty, Things, type LayerCtx, type LayerDef } from '../layers.ts';
 import { countyKeys, thingsOf } from './basic.ts';
@@ -19,8 +20,9 @@ interface Religions
 }
 
 /**
- * common/religion/religion_types: a religion's faiths are the blocks of its `faiths = { }`; its `family` names a
- * religion_family_types entry. Religions have no colour: they take their first faith's.
+ * common/religion/religion_types: a religion's faiths are the blocks of its `faiths = { }`, or (1.20) the faiths naming
+ * it in `faith_details = { religion = x }`; its `family` names a religion_family_types entry. Religions have no colour:
+ * they take their first faith's.
  */
 export function religions(ctx: LayerCtx): Religions
 {
@@ -35,11 +37,21 @@ export function religions(ctx: LayerCtx): Religions
 
         const religionOf = new Map<string, number>();
         const familyOf: number[] = [];
+        // (1.20: per religion, the faiths naming it)
+        const naming = new Map<string, string[]>();
+
+        for (const f of faiths.list)
+        {
+            const r = faithField(bodyOf(ctx, T_FAITH, f.key), 'religion');
+
+            if (typeof r?.v === 'string')
+                (naming.get(r.v) ?? naming.set(r.v, []).get(r.v)!).push(f.key);
+        }
 
         for (const r of thingsOf(ctx, 'religion/religion_types').list)
         {
             const body = bodyOf(ctx, 'religion/religion_types', r.key);
-            const own = body.filter((c) => c.k === 'faiths' && Array.isArray(c.v)).flatMap((c) => (c.v as PNode[]).filter((x) => x.k && Array.isArray(x.v)).map((x) => x.k!));
+            const own = [...body.filter((c) => c.k === 'faiths' && Array.isArray(c.v)).flatMap((c) => (c.v as PNode[]).filter((x) => x.k && Array.isArray(x.v)).map((x) => x.k!)), ...(naming.get(r.key) ?? [])];
             const first = own.map((k) => faiths.list[faiths.at.get(k) ?? -1]).find(Boolean);
             const i = rel.of(r.key, () => ({ name: r.name, color: first?.color, type: r.type }));
 
@@ -80,7 +92,7 @@ const religionFamily: LayerDef = {
 
 /**
  * Holy sites (common/religion/holy_site_types: `county = c_x`, `barony = b_y` — the barony the site is shown on, else
- * the county's capital) and the faiths naming them (`holy_site = <site>` in a faith). The whole county is the site on
+ * the county's capital) and the faiths naming them (`holy_site = <site>`, 1.20: `holy_sites` / `eminent_holy_sites`). The whole county is the site on
  * the map — one thing per county: vanilla has 20 counties with two or three sites (c_kufa: babylon, kufa, nadjaf),
  * named together and linked to the first; its colour is the religion's of the first faith naming one. Name: loc
  * `holy_site_<key>_name`.
@@ -95,9 +107,8 @@ const holySite: LayerDef = {
 
             for (const f of thingsOf(ctx, T_FAITH).list)
             {
-                for (const c of bodyOf(ctx, T_FAITH, f.key))
-                    if (c.k === 'holy_site' && typeof c.v === 'string')
-                        (holyTo.get(c.v) ?? holyTo.set(c.v, []).get(c.v)!).push(f.key);
+                for (const { name } of faithHolySites(bodyOf(ctx, T_FAITH, f.key)))
+                    (holyTo.get(name) ?? holyTo.set(name, []).get(name)!).push(f.key);
             }
 
             const sites = new Map<number, string[]>();

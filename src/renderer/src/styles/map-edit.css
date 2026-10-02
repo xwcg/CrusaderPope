@@ -39,7 +39,7 @@
   color: var(--text);
 }
 .map-edit input:not([type='color']),
-.map-edit select {
+.map-edit .dd-btn {
   box-sizing: border-box;
   max-width: 100%;
   min-width: 0;
@@ -91,7 +91,7 @@
   font-size: 12px;
   color: var(--text-dim);
 }
-.map-edit-when select {
+.map-edit-when .dd-btn {
   padding: 3px 6px;
   font-size: 12px;
 }

@@ -5,6 +5,7 @@ import { api } from '../api';
 import { AddModsDialog, ConfirmDialog, ModThumb, NewModDialog, PromptDialog, SOURCE_LABEL, StatusChip, SupportedChip, errorText, modWarning, type NewModTarget } from './ModDialogs';
 import { hook } from '../testApi';
 import '../styles/mods.css';
+import { Select } from './Select';
 
 /** Route type of the Mods page (App.tsx) — not an index type. */
 export const MODS_ROUTE = '@mods';
@@ -314,7 +315,7 @@ export function ModsView(props: { state: ModsState | null; setState: (s: ModsSta
                 </div>
                 <div className="ml-loaded">
                     <label>Loaded in the explorer</label>
-                    <select value={state.selected} disabled={!!busy} onChange={(e) => select(e.target.value)}>
+                    <Select value={state.selected} disabled={!!busy} onChange={(e) => select(e.target.value)}>
                         <option value="none">None — game only</option>
                         {!lists.some((l) => l.ref === state.selected) && state.selected !== 'none' && <option value={state.selected}>Missing list</option>}
                         {lists.some((l) => l.kind === 'playset') && (
@@ -347,7 +348,7 @@ export function ModsView(props: { state: ModsState | null; setState: (s: ModsSta
                                     ))}
                             </optgroup>
                         )}
-                    </select>
+                    </Select>
                     <IndexLine status={props.status} />
                 </div>
                 <div className="ml-scroll">

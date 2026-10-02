@@ -11,7 +11,7 @@ import type { PNode } from '../indexer/parser.ts';
 import type { Entity, GameIndex } from '../indexer/gameIndex.ts';
 import { compose, decompose, invert, m4, mul, qinv, qmul, sampleJoint, type AnimFile, type Bone, type M4, type MeshPart, type Quat, type V3 } from './mesh.ts';
 import { AssetLibrary, field, kids, scalar, splitTags, tagsMatch, type AssetInfo, type EntityDecl, type MeshDecl, type MeshSettings, type PortraitKind, type Range } from './assets.ts';
-import type { PortraitData, PortraitDecal, PortraitEntityReport, PortraitPart, PortraitReport, PortraitVariation } from '../../shared/api.ts';
+import type { DnaEditorData, DnaGene, DnaGeneInfo, PortraitData, PortraitDecal, PortraitEntityReport, PortraitPart, PortraitReport, PortraitVariation } from '../../shared/api.ts';
 import { bakeDecals, dataMip, transparentDecal, type Baked, type BlendMode, type DecalLayer } from './decals.ts';
 import type { Decoded } from '../images/dds.ts';
 import { BOOKMARK_DATE, freshRun, History, PortraitModifiers, type CharacterFacts, type GeneState, type GeneValue, type ScriptRun, type TraitEntry } from './modifiers.ts';
@@ -30,6 +30,10 @@ export interface PortraitOptions
     naked?: boolean;
     /** undressed adults wear the game's fig leaf (default); false leaves it off */
     figLeaf?: boolean;
+    /** the barbershop: genes over the subject's DNA, the age and sex shown */
+    genes?: DnaGene[];
+    age?: number;
+    female?: boolean;
 }
 
 /** Triggers the portrait modifiers use to undress a character (00_clothing_triggers.txt; should_show_nudity is the game setting). */
@@ -98,6 +102,10 @@ interface Subject
     facts?: CharacterFacts;
     seed: string;
     source: string;
+    /** the DNA's gene statements as written (both pairs; none for generated faces) */
+    geneNodes?: PNode[];
+    /** where the DNA is kept (the barbershop saves there) */
+    target?: DnaEditorData['target'];
 }
 
 interface Posed
@@ -238,10 +246,15 @@ export class PortraitBuilder
         return out;
     }
 
-    private dnaGenes(dna: Entity): Map<string, GeneValue>
+    private dnaGeneNodes(dna: Entity): PNode[]
     {
         const d = this.idx.defNode(dna);
-        return d ? this.parseGenes(kids(field(kids(field(kids(d.node), 'portrait_info')), 'genes'))) : new Map();
+        return d ? kids(field(kids(field(kids(d.node), 'portrait_info')), 'genes')) : [];
+    }
+
+    private dnaGenes(dna: Entity): Map<string, GeneValue>
+    {
+        return this.parseGenes(this.dnaGeneNodes(dna));
     }
 
     /** History character id → bookmark portrait (from the dump comment "# History database id:NNN"). */
@@ -287,7 +300,9 @@ export class PortraitBuilder
             genes: this.parseGenes(kids(field(body, 'genes'))),
             exact: true,
             seed: bm.name,
-            source: `Bookmark portrait "${bm.name}"`
+            source: `Bookmark portrait "${bm.name}"`,
+            geneNodes: kids(field(body, 'genes')),
+            target: { type: 'bookmark_portraits', name: bm.name }
         };
     }
 
@@ -305,7 +320,8 @@ export class PortraitBuilder
             const female = facts ? facts.female : [...genes.values()].some((g) => g.template?.includes('female'));
             const age = facts ? Math.max(2, Math.min(90, facts.age)) : 35;
             const source = `DNA "${e.name}"` + (user ? ` (worn by character ${user.name})` : '');
-            return { label: e.name, gender: female ? 'female' : 'male', age, genes, exact: false, culture: facts?.culture, facts, seed: user?.name ?? e.name, source };
+            const target = { type: 'dna_data' as const, name: e.name, character: user?.name };
+            return { label: e.name, gender: female ? 'female' : 'male', age, genes, exact: false, culture: facts?.culture, facts, seed: user?.name ?? e.name, source, geneNodes: this.dnaGeneNodes(e), target };
         }
 
         if (e.type !== 'characters')
@@ -329,13 +345,13 @@ export class PortraitBuilder
         const dna = dnaKey ? this.idx.get('dna_data', dnaKey) : undefined;
 
         if (dna)
-            return { label, gender, age, genes: this.dnaGenes(dna), exact: false, culture, facts, seed: e.name, source: `DNA "${dna.name}"` };
+            return { label, gender, age, genes: this.dnaGenes(dna), exact: false, culture, facts, seed: e.name, source: `DNA "${dna.name}"`, geneNodes: this.dnaGeneNodes(dna), target: { type: 'dna_data', name: dna.name, character: e.name } };
 
         const bm = this.bookmarkFor(e.name);
         const fromBookmark = bm && this.bookmarkSubject(bm, label);
 
         if (fromBookmark)
-            return { ...fromBookmark, gender, age, exact: false, culture, facts, seed: e.name };
+            return { ...fromBookmark, gender, age, exact: false, culture, facts, seed: e.name, target: this.newDnaTarget(e.name) };
 
         const eth = this.cultureEthnicity(culture, e.name);
         return {
@@ -347,7 +363,8 @@ export class PortraitBuilder
             culture,
             facts,
             seed: e.name,
-            source: eth ? `Generated from ethnicity "${eth}"` : 'Generated from the default ethnicity'
+            source: eth ? `Generated from ethnicity "${eth}"` : 'Generated from the default ethnicity',
+            target: this.newDnaTarget(e.name)
         };
     }
 
@@ -1036,9 +1053,149 @@ export class PortraitBuilder
         return { ...sink, label: data.label, gender: data.gender, age: data.age, source: data.source, tags: data.tags, modifiers: data.modifiers };
     }
 
-    async build(e: Entity, opts: PortraitOptions = {}, report?: PortraitReport): Promise<PortraitData | null>
+    // -------------------------------------------------------------------------
+    // Barbershop (docs/portraits.md, "Barbershop")
+    // -------------------------------------------------------------------------
+
+    /** A new dna_data key for a character that has none (`<id>_dna`, numbered when taken). */
+    private newDnaTarget(character: string): DnaEditorData['target']
+    {
+        let name = `${character}_dna`;
+
+        for (let i = 2; this.idx.get('dna_data', name); i++)
+            name = `${character}_dna_${i}`;
+
+        return { type: 'dna_data', name, character, create: true };
+    }
+
+    /** The subject with the barbershop's genes, age and sex (the first pair of each gene is the one shown). */
+    private withOverrides(subj: Subject | undefined, opts: PortraitOptions): Subject | undefined
+    {
+        if (!subj || (!opts.genes && opts.age === undefined && opts.female === undefined))
+            return subj;
+
+        const genes = new Map(subj.genes);
+
+        for (const g of opts.genes ?? [])
+            genes.set(g.gene, g.xy ? { value: 0, xy: [g.xy[0] / 255, g.xy[1] / 255] } : { template: g.template, value: g.value / 255 });
+
+        const gender: Gender = opts.female === undefined ? subj.gender : opts.female ? 'female' : 'male';
+        return { ...subj, genes, gender, age: opts.age ?? subj.age };
+    }
+
+    /** Gene statements as written: `gene = { "t" 12 "t2" 34 }`, colours `{ x y x2 y2 }`. */
+    private rawGenes(nodes: PNode[]): DnaGene[]
+    {
+        const out: DnaGene[] = [];
+
+        for (const g of nodes)
+        {
+            if (!g.k || !Array.isArray(g.v))
+                continue;
+
+            const v = g.v.filter((x) => x.k === null && typeof x.v === 'string').map((x) => x.v as string);
+            const n = (i: number): number => Math.round(parseFloat(v[i]) || 0);
+
+            if (/_color$/.test(g.k) && v.length >= 2)
+                out.push({ gene: g.k, value: 0, xy: [n(0), n(1)], xy2: v.length >= 4 ? [n(2), n(3)] : undefined });
+            else if (v.length >= 2)
+                out.push({ gene: g.k, template: v[0], value: n(1), template2: v[2], value2: v.length >= 4 ? n(3) : undefined });
+        }
+
+        return out;
+    }
+
+    /** The genes the ruler designer offers: every gene with a `group`, its templates and (accessory genes) their lists. */
+    private dnaCatalog(): DnaGeneInfo[]
+    {
+        const out: DnaGeneInfo[] = [];
+        const kinds: PortraitKind[] = ['male', 'female', 'boy', 'girl'];
+
+        for (const gene of this.idx.names('genes'))
+        {
+            const e = this.idx.get('genes', gene);
+            const d = e && this.idx.defNode(e);
+            const body = d ? kids(d.node) : [];
+            const group = scalar(field(body, 'group'));
+
+            if (!group)
+                continue;
+
+            const color = scalar(field(body, 'color'));
+            const tmpls = body.filter((c) => c.k && Array.isArray(c.v) && field(kids(c), 'index'));
+            const templates = tmpls.map((c) => ({ name: c.k!, label: this.idx.plainLoc(c.k!) ?? c.k!, visible: scalar(field(kids(c), 'visible')) !== 'no' }));
+            const info: DnaGeneInfo = {
+                gene,
+                label: this.idx.plainLoc(gene) ?? gene,
+                group,
+                groupLabel: this.idx.plainLoc(`RULER_DESIGNER_GROUP_${group}`) ?? group.replace(/_/g, ' '),
+                kind: color ? 'color' : 'morph',
+                palette: color ? `gfx/portraits/${color}_palette.dds` : undefined,
+                templates
+            };
+
+            if (!color)
+            {
+                // an accessory gene: its type blocks list weighted accessories (`N = accessory`)
+                const lists: NonNullable<DnaGeneInfo['accessories']> = {};
+
+                for (const kind of kinds)
+                {
+                    lists[kind] = {};
+
+                    for (const c of tmpls)
+                    {
+                        const items = this.typeBlock(kids(c), kind).filter((x) => x.k && /^\d+(\.\d+)?$/.test(x.k));
+                        const total = items.reduce((s, x) => s + (parseFloat(x.k!) || 0), 0);
+                        let at = 0;
+
+                        if (total > 0)
+                            lists[kind][c.k!] = items.map((x) =>
+                            {
+                                const from = at;
+                                at += parseFloat(x.k!) || 0;
+                                const accessory = typeof x.v === 'string' ? x.v : kids(x).map((y) => String(y.v)).join(' + ');
+                                // (not rounded: with more than 255 accessories some share a value, or have none)
+                                return { accessory, from: (from / total) * 255, to: (at / total) * 255 };
+                            });
+                    }
+                }
+
+                if (Object.values(lists).some((l) => Object.keys(l).length))
+                {
+                    info.kind = 'accessory';
+                    info.accessories = lists;
+                }
+            }
+
+            out.push(info);
+        }
+
+        return out;
+    }
+
+    /** The barbershop's data: the subject's DNA (both pairs), the genes on offer, where a save goes. */
+    dnaEditor(e: Entity): DnaEditorData | null
     {
         const subj = this.subject(e);
+
+        if (!subj?.target)
+            return null;
+
+        const genes = subj.geneNodes
+            ? this.rawGenes(subj.geneNodes)
+            : [...subj.genes].map(([gene, g]): DnaGene =>
+            {
+                const xy = g.xy && ([Math.round(g.xy[0] * 255), Math.round(g.xy[1] * 255)] as [number, number]);
+                const value = Math.round(g.value * 255);
+                return xy ? { gene, value: 0, xy, xy2: xy } : { gene, template: g.template, value, template2: g.template, value2: value };
+            });
+        return { label: subj.label, female: subj.gender === 'female', age: subj.age, source: subj.source, genes, catalog: this.dnaCatalog(), target: subj.target };
+    }
+
+    async build(e: Entity, opts: PortraitOptions = {}, report?: PortraitReport): Promise<PortraitData | null>
+    {
+        const subj = this.withOverrides(this.subject(e), opts);
 
         if (!subj)
             return null;
@@ -1077,7 +1234,7 @@ export class PortraitBuilder
         const allGenes: [string, GeneValue][] = [...genes, ...state.extra.map((x): [string, GeneValue] => [x.gene, x.g])];
 
         // accessories and the tags they set (tags switch body/hair blend shapes and accessory variants)
-        const worn: { gene: string; accessory: string; }[] = [];
+        const worn: PortraitData['accessories'] = [];
 
         if (opts.accessories !== false)
         {
@@ -1092,7 +1249,7 @@ export class PortraitBuilder
 
                 for (const acc of accs)
                     if (this.lib.accessory(acc))
-                        worn.push({ gene, accessory: acc });
+                        worn.push({ gene, accessory: acc, template: g?.accessory ? undefined : g?.template });
             }
         }
 

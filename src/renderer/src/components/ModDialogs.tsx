@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { ModInfo, ModsState, NewModRequest } from '../../../shared/api';
 import { descriptorTextProblem, folderFromName, modFolderProblem, supportedVersionFor, versionMatches } from '../../../shared/modRules';
 import { api } from '../api';
+import { Select } from './Select';
 
 // Pieces of the Mods view (ModsView.tsx): mod facts, thumbnails, dialogs.
 
@@ -373,7 +374,7 @@ export function NewModDialog(props: {
             </div>
             <div className="field">
                 <label>Add to a mod list</label>
-                <select value={target} onChange={(e) => setTarget(e.target.value)}>
+                <Select value={target} onChange={(e) => setTarget(e.target.value)}>
                     <option value="new">A new list “{name.trim() || 'the mod’s name'}” (the game plus this mod)</option>
                     {customs.map((l) => (
                         <option key={l.ref} value={l.ref}>
@@ -382,7 +383,7 @@ export function NewModDialog(props: {
                         </option>
                     ))}
                     <option value="">Don’t add it to a list</option>
-                </select>
+                </Select>
                 <span className="hint">The mod becomes the active mod (the one being edited). Launcher playsets can list it once the launcher has registered it.</span>
             </div>
             {(error || (problem && name.trim())) && <div className="mods-error">{error ?? problem}</div>}

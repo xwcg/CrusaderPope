@@ -24,6 +24,7 @@ import {
     printScript,
     statementById,
     statementsFor,
+    writtenKey,
     type ParamDef,
     type PickKind,
     type SNode,
@@ -795,6 +796,10 @@ function withPlaceholders(p: Pending, forDescribe: boolean): Record<string, stri
 function statementNodes(p: Pending, values: Record<string, string>): SNode[]
 {
     const nodes = parseSnippet(fillTemplate(p.def, values, { long: !!p.rest?.length }));
+
+    // (a key the game renamed: under the name the loaded script uses)
+    if (nodes[0]?.k)
+        nodes[0].k = writtenKey(nodes[0].k);
 
     // (a written statement's other fields stay in its block)
     if (p.rest?.length && nodes[0]?.kids)
@@ -3295,7 +3300,7 @@ function newRefMenu(s: State, data: PickerData, type: string, then: NewRefThen):
     const plan = data.newPlan?.(type);
     const list = data.list(type);
     const one = plan ? singularLabel(plan.label) : type;
-    const valid = type === 'events' ? /^[A-Za-z_][\w-]*\.\d+$/ : /^[A-Za-z_][A-Za-z0-9_.-]*$/;
+    const valid = type === 'events' ? /^[A-Za-z_][\w-]*\.\d+$/ : /^[A-Za-z0-9_][A-Za-z0-9_.-]*$/;
     const taken = (k: string): boolean => !!list?.some((e) => e.name === k) || !!s.creates?.some((c) => c.key === k);
     const pick = (key: string): Next => (plan?.name ? go({ ...s, view: { v: 'newRefName', type, key, then } }, key) : made(s, type, key, undefined, then));
     const items: Item[] = plan?.key && !taken(plan.key) ? [{ label: `${plan.key}`, hint: 'the next free id', sub: !!plan.name, go: () => pick(plan.key!) }] : [];

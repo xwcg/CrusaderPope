@@ -256,12 +256,15 @@
   background: rgba(201, 164, 92, 0.13);
   box-shadow: inset 2px 0 0 var(--accent);
 }
+/* (shown on hover without changing the row's height: the buttons overhang it instead of growing it) */
 .row-actions {
   display: none;
   flex: none;
   gap: 1px;
   align-self: flex-start;
+  height: 16px;
   margin-left: 6px;
+  overflow: visible;
 }
 .line-row.editable:hover > .row-actions,
 .line-row.selected > .row-actions,
@@ -284,7 +287,7 @@
 }
 .if-cond > .row-actions {
   margin-left: 4px;
-  vertical-align: middle;
+  vertical-align: top;
 }
 .if-cond:hover > .row-actions,
 .if-cond.selected > .row-actions {
@@ -305,9 +308,11 @@
   vertical-align: middle;
 }
 .row-actions button {
+  height: 18px;
+  margin-top: -1px;
   padding: 0 5px;
   font-size: 12px;
-  line-height: 18px;
+  line-height: 16px;
   color: var(--accent);
 }
 .row-actions button:nth-child(2) {
@@ -466,7 +471,7 @@
 .ie-scalar input[type='number'] {
   width: 110px;
 }
-.ie-scalar select {
+.ie-scalar .dd-btn {
   padding: 3px 5px;
   font-family: var(--font-code);
 }
@@ -725,10 +730,8 @@
   color: var(--accent);
 }
 .am-pop {
-  position: absolute;
-  top: calc(100% + 4px);
-  right: 0;
-  z-index: 60;
+  position: fixed;
+  z-index: 300;
   display: flex;
   flex-direction: column;
   min-width: 230px;
@@ -774,7 +777,7 @@
 }
 .tile:hover .tile-menu,
 .tex-tile:hover .tile-menu,
-.tile-menu:has(.am-pop) {
+.tile-menu:has(.am-btn.on) {
   opacity: 1;
 }
 .tile-menu .am-btn {

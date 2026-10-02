@@ -8,9 +8,11 @@
  *   overridden in the mod first when it is not the mod's already (its whole group, "Override in"), a missing
  *   `parameters` block is created — and its sentence as `doctrine_parameter_<key>` in the loc file.
  * - without the picker (the faith cards' placeholders, docs/readable-view.md): a localization text (`loc`); a new faith
- *   in a religion of the mod (`faith`: `<key> = { }` into its `faiths`, the block made when missing; its name); a
- *   doctrine put into a doctrine group (`doctrine_group_member`: into the group's `doctrine_types` — the group
- *   overridden in the mod first when it is the game's); a term of a faith or religion of the mod (`term`:
+ *   in a religion of the mod (`faith`: `<key> = { }` into its `faiths`, the block made when missing; its name — 1.20:
+ *   a faith of its own in the mod's religion/faith_types naming the religion); a doctrine put into a doctrine group
+ *   (`doctrine_group_member`: into the group's `doctrine_types` — the group overridden in the mod first when it is the
+ *   game's; 1.20: `doctrine_group_type = <group>` into the doctrine, overridden first); a term of a faith or religion
+ *   of the mod (`term`:
  *   `HighGodName = <owner>_high_god_name` into its `localization`, the block made when missing, and the text).
  * Also a brand-new entry of a type (the explorer's type list: right click → "New <type>…"): a template definition in
  * the mod's `<folder>/<mod>_<folder>.txt` (events: with their namespace line) and its localization.
@@ -27,7 +29,7 @@ import { applyEdit } from './scriptEdit.ts';
 import type { ModsHost } from './manager.ts';
 import { change, describeChange } from './undo.ts';
 
-const KEY = /^[A-Za-z_][A-Za-z0-9_.-]*$/;
+const KEY = /^[A-Za-z0-9_][A-Za-z0-9_.-]*$/;
 
 /** A text file of the mod: its text without byte order mark (null when missing). */
 function readText(file: string): { text: string; bom: boolean; } | null
@@ -117,8 +119,8 @@ function findDoctrine(nodes: PNode[], name: string): PNode | undefined
     return undefined;
 }
 
-/** `<key> = yes` into the doctrine's `parameters` (the block made when missing). */
-async function addDoctrineParameter(host: ModsHost, a: Active, key: string, doctrine: string): Promise<string>
+/** The mod's copy of a doctrine (overridden into the mod first when it is not the mod's): its file, text and node. */
+async function modDoctrine(host: ModsHost, doctrine: string): Promise<{ r: { file: string; rel: string; }; cur: { text: string; bom: boolean; }; node: PNode & { v: PNode[]; }; }>
 {
     const r = await applyOverride(host, { type: 'religion/doctrine_types', name: doctrine, mode: 'copy' });
     const cur = readText(r.file);
@@ -130,6 +132,14 @@ async function addDoctrineParameter(host: ModsHost, a: Active, key: string, doct
 
     if (!node || !Array.isArray(node.v))
         throw new Error(`The doctrine “${doctrine}” was not found in ${r.rel}.`);
+
+    return { r, cur, node: node as PNode & { v: PNode[]; } };
+}
+
+/** `<key> = yes` into the doctrine's `parameters` (the block made when missing). */
+async function addDoctrineParameter(host: ModsHost, a: Active, key: string, doctrine: string): Promise<string>
+{
+    const { r, cur, node } = await modDoctrine(host, doctrine);
 
     const params = node.v.find((c) => c.k === 'parameters' && Array.isArray(c.v));
 
@@ -264,6 +274,16 @@ async function makeEntries(host: ModsHost, creates: EntryCreate[]): Promise<{ fi
             if (await host.query?.('detail', 'faith', c.key))
                 throw new Error(`A faith “${c.key}” exists already.`);
 
+            // (1.20: faiths of their own, naming their religion — docs/game-structure.md, "Layouts that changed")
+            const info = await host.query<EntryInfo | null>?.('newEntryInfo', 'faith');
+
+            if (info?.folder && !info.nested)
+            {
+                const r = await newEntry(host, { type: 'faith', key: c.key, name: c.loc || humanize(c.key) }, { files, fields: { religion } });
+                notes.push(`New faith “${c.key}” of ${religion} in ${r.rel}`);
+                continue;
+            }
+
             const def = await modDefinition(host, a, 'religion/religion_types', religion);
             const faiths = (def.node.v as PNode[]).find((x) => x.k === 'faiths' && Array.isArray(x.v));
 
@@ -285,6 +305,26 @@ async function makeEntries(host: ModsHost, creates: EntryCreate[]): Promise<{ fi
 
             if (!group)
                 throw new Error(`Which group should “${c.key}” go into?`);
+
+            // (1.20: the doctrine names its group)
+            if ((await host.query<{ doctrinesNameTheirGroup: boolean; } | null>?.('layouts'))?.doctrinesNameTheirGroup)
+            {
+                const { r, cur, node } = await modDoctrine(host, c.key);
+                const def = { file: r.file, rel: r.rel, text: cur.text, bom: cur.bom, node };
+                const now = node.v.find((x) => x.k === 'doctrine_group_type');
+
+                if (now)
+                {
+                    const at = { file: r.file, rel: r.rel, line: now.line, s: now.s, e: now.e, kind: 'other' as const, hash: '' };
+                    write(host, r.file, (cur.bom ? '﻿' : '') + applyEdit(cur.text, { op: 'replace', at, text: `doctrine_group_type = ${group}` }).text);
+                }
+                else
+                    insertInto(host, def, node, `doctrine_group_type = ${group}`, node.v[0]);
+
+                files.add(r.file);
+                notes.push(`${c.key} is now in the doctrine group ${group}`);
+                continue;
+            }
 
             const r = await applyOverride(host, { type: 'religion/doctrine_group_types', name: group, mode: 'copy' });
             const cur = readText(r.file);
@@ -388,7 +428,7 @@ async function makeEntries(host: ModsHost, creates: EntryCreate[]): Promise<{ fi
 // ---------------------------------------------------------------------------
 
 /** A new definition's text and its localization, per type (the rest: an empty block, its name as `<key>`). */
-const TEMPLATES: Record<string, (key: string, name: string) => { text: string; loc: [string, string][]; }> = {
+const TEMPLATES: Record<string, (key: string, name: string, fields?: Record<string, string>) => { text: string; loc: [string, string][]; }> = {
     traits: (k, n) => ({ text: `${k} = {\n\tcategory = personality\n}`, loc: [[`trait_${k}`, n], [`trait_${k}_desc`, '']] }),
     opinion_modifiers: (k, n) => ({ text: `${k} = {\n\topinion = 10\n}`, loc: [[k, n]] }),
     modifiers: (k, n) => ({ text: `${k} = {\n}`, loc: [[k, n], [`${k}_desc`, '']] }),
@@ -412,10 +452,13 @@ const TEMPLATES: Record<string, (key: string, name: string) => { text: string; l
     // (a doctrine's name and description are `<key>_name` / `_desc`; it still needs a doctrine group — its card says so)
     'religion/doctrine_types': (k, n) => ({ text: `${k} = {\n}`, loc: [[`${k}_name`, n], [`${k}_desc`, '']] }),
     // (its card shows the rest to fill in: family, faiths, names …)
-    'religion/religion_types': (k, n) => ({ text: `${k} = {\n}`, loc: [[k, n]] })
+    'religion/religion_types': (k, n) => ({ text: `${k} = {\n}`, loc: [[k, n]] }),
+    // (1.20, a faith of its own: its religion in `faith_details` — the card shows the rest to fill in)
+    faith: (k, n, f) => ({ text: `${k} = {\n\tfaith_details = {\n${f?.religion ? `\t\treligion = ${f.religion}\n` : ''}\t}\n}`, loc: [[k, n]] })
 };
 
-const templateOf = (type: string): (key: string, name: string) => { text: string; loc: [string, string][]; } => TEMPLATES[type] ?? ((k, n) => ({ text: `${k} = {\n}`, loc: n ? [[k, n]] : [] }));
+type Template = (key: string, name: string, fields?: Record<string, string>) => { text: string; loc: [string, string][]; };
+const templateOf = (type: string): Template => TEMPLATES[type] ?? ((k, n) => ({ text: `${k} = {\n}`, loc: n ? [[k, n]] : [] }));
 
 /** Types a name in game makes no sense for (script only). */
 const NAMELESS = new Set(['scripted_effects', 'scripted_triggers', 'script_values', 'scripted_modifiers', 'on_action']);
@@ -502,7 +545,7 @@ export function createEntry(host: ModsHost, req: NewEntryRequest, opts: { files?
     });
 }
 
-async function newEntry(host: ModsHost, req: NewEntryRequest, opts: { files?: Set<string>; }): Promise<NewEntryResult>
+async function newEntry(host: ModsHost, req: NewEntryRequest, opts: { files?: Set<string>; fields?: Record<string, string>; }): Promise<NewEntryResult>
 {
     const a = await activeMod(host);
 
@@ -525,7 +568,7 @@ async function newEntry(host: ModsHost, req: NewEntryRequest, opts: { files?: Se
     if (await host.query?.('detail', req.type, key))
         throw new Error(`A ${plan.label.toLowerCase().replace(/s$/, '')} “${key}” exists already.`);
 
-    const t = templateOf(req.type)(key, req.name?.trim() || humanize(key.replace(/^.*\./, '')));
+    const t = templateOf(req.type)(key, req.name?.trim() || humanize(key.replace(/^.*\./, '')), opts.fields);
     const abs = modPath(a, plan.rel)!;
     let line = 1;
     {

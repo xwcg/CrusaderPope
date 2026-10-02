@@ -17,6 +17,7 @@ import { MODS_ROUTE } from './ModsView';
 import { OverrideButton } from './OverrideMenu';
 import { LineList, ReadCtx } from './rich';
 import '../styles/edit.css';
+import { Select } from './Select';
 
 /**
  * Editing in place (docs/mods.md, "Editing in place"): the readable view's lines whose statement is written in the
@@ -126,6 +127,8 @@ interface RowOps
     addInside?(at?: { x: number; y: number; }): void;
     /** an if / an iterator: add a condition to its limit */
     addCondition?(at?: { x: number; y: number; }): void;
+    /** an if / else_if: add the else of its chain */
+    addElse?(): void;
 }
 
 /** A section's add target: into its block, or a new block created where it belongs. */
@@ -263,6 +266,14 @@ export function useInPlaceEditing(entry: LineSource | undefined): {
                 add: (pos) => add({ key, req: { op: 'insert', at: src, where: 'after' }, kind, fields: src.fields, title: 'Add after this line' }, pos),
                 addInside: src.inner
                     ? (pos) => add({ key, req: { op: 'insert', at: src, where: 'inside' }, kind, fields: src.fields, scope: src.innerScope ?? src.scope, subject: src.subject, title: src.subject ?? 'inside the block' }, pos)
+                    : undefined,
+                // (an if / else_if: an empty else after its chain — its statements are added with ⤷＋)
+                addElse: src.ifKey
+                    ? () =>
+                    {
+                        const key = src.ifKey!.startsWith('trigger_') ? 'trigger_else' : 'else';
+                        void runScriptEdit({ op: 'insert', at: src, where: 'after', text: `${key} = {\n}` }, 'Added: else').catch(reportError('No else added'));
+                    }
                     : undefined,
                 // (an if / an iterator: a condition into its limit, about the iterator's item)
                 addCondition: line?.limitSrc
@@ -403,6 +414,8 @@ export function useInPlaceEditing(entry: LineSource | undefined): {
             (ops.addInside ?? ops.add)(at);
         else if ((e.key === 'c' || e.key === 'C') && ops.addCondition)
             ops.addCondition(at);
+        else if (e.key === 'E' && ops.addElse)
+            ops.addElse();
         else if (e.key === 'a' || e.key === 'Insert')
             ops.add(at);
         else
@@ -639,6 +652,11 @@ function RowActions({ src, ops, rows, onShown }: { src: LineSource; ops: RowOps;
             {ops.addCondition && (
                 <button className="ghost" title="Add a condition to its limit (C)" onClick={click((e) => ops.addCondition!(pos(e)))}>
                     ＋if
+                </button>
+            )}
+            {ops.addElse && (
+                <button className="ghost" title="Add an else: what happens when the conditions don't hold (Shift+E)" onClick={click(() => ops.addElse!())}>
+                    ＋else
                 </button>
             )}
         </span>
@@ -1066,13 +1084,13 @@ function ScalarForm(props: { scalar: Scalar; trigger: boolean; value: ValueKind;
             <code className="ie-key">{scalar.key}</code>
             {ops.length > 1 ?
                 (
-                    <select value={scalar.op} onChange={(e) => set({ op: e.target.value })}>
+                    <Select value={scalar.op} onChange={(e) => set({ op: e.target.value })}>
                         {ops.map((o) => (
                             <option key={o} value={o}>
                                 {o}
                             </option>
                         ))}
-                    </select>
+                    </Select>
                 ) :
                 <code className="ie-op">{scalar.op}</code>}
             <ValueInput value={scalar.value} kind={value} statement={scalar.key} trigger={props.trigger} onChange={(v) => set({ value: v })} onSave={props.onSave} />

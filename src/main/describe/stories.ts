@@ -4,6 +4,8 @@
 import type { PNode } from '../indexer/parser.ts';
 import type { Entity, GameIndex } from '../indexer/gameIndex.ts';
 import { descriptionCandidates, displayNameCandidates, typeLabel } from '../indexer/schema.ts';
+import { riteHistory } from '../indexer/layouts.ts';
+import { BOOKMARK_DATE } from '../portraits/modifiers.ts';
 import type {
     CardSection,
     CastMember,
@@ -2775,8 +2777,15 @@ export class StoryBuilder
         if (s('culture'))
             card.facts.push(rich('Culture: ', this.d.ref(s('culture')!, ['culture/cultures'])));
 
-        if (s('religion'))
-            card.facts.push(rich('Faith: ', this.d.ref(s('religion')!, ['faith'])));
+        // (1.20: the rite — it wins over a faith; its faith at the first bookmark)
+        const rite = s('rite');
+        const faith = (rite && riteHistory(this.idx).faithOf(rite, BOOKMARK_DATE)) || s('religion') || s('faith');
+
+        if (faith)
+            card.facts.push(rich('Faith: ', this.d.ref(faith, ['faith'])));
+
+        if (rite)
+            card.facts.push(rich('Rite: ', this.d.ref(rite, ['religion/rite_types'])));
 
         const own = card.src && { src: { ...card.src, kind: 'field' as const, fields: 'character_history' }, key: card.key.name, kind: 'field' as const };
         // who they are: name, sex, dynasty, house, culture, faith, parents, skills … (shared/fields/settings.ts `characters`)
@@ -2835,6 +2844,8 @@ export class StoryBuilder
                 case 'religion':
                 case 'faith':
                     return v ? [{ text: rich('Faith: ', this.d.ref(v, ['faith'])), tip }] : [];
+                case 'rite':
+                    return v ? [{ text: rich('Rite: ', this.d.ref(v, ['religion/rite_types'])), tip }] : [];
                 case 'employer':
                     return v ? [{ text: rich('At the court of ', person(v)), tip }] : [];
                 case 'dynasty':

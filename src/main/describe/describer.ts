@@ -63,6 +63,14 @@ const LOGIC_LABELS: Record<string, string> = {
     NAND: 'Not all of the following:'
 };
 
+/** An if's one logic group as its heading ("If any of these are true:"). */
+const IF_GROUP: Record<string, string> = {
+    [LOGIC_LABELS.AND]: 'all of these are true:',
+    [LOGIC_LABELS.OR]: 'any of these are true:',
+    [LOGIC_LABELS.NOR]: 'none of these are true:',
+    [LOGIC_LABELS.NAND]: 'not all of these are true:'
+};
+
 /** Keys that switch scope when used with a block (besides scope:x / var:x / chains). */
 const SCOPE_LINKS = new Set([
     'root',
@@ -214,6 +222,59 @@ const COMPARE_WORDS: Record<string, string> = {
 type LinePart = Partial<Line> & { text: Rich; };
 
 const NUMERIC = /^-?\d+(\.\d+)?$/;
+
+/** Whether the if / else_if chain continuing at `from` in the text ends in an else (else_ifs skipped, brace-matched). */
+function chainHasElse(src: string, from: number): boolean
+{
+    let i = from;
+    const skip = (): void =>
+    {
+        for (;;)
+        {
+            while (i < src.length && /\s/.test(src[i]))
+                i++;
+
+            if (src[i] !== '#')
+                return;
+
+            while (i < src.length && src[i] !== '\n')
+                i++;
+        }
+    };
+
+    for (;;)
+    {
+        skip();
+        const m = /^(trigger_)?else(_if)?\s*=\s*\{/.exec(src.slice(i, i + 40));
+
+        if (!m)
+            return false;
+
+        if (!m[2])
+            return true;
+
+        // (past the else_if's block: braces counted, strings and comments skipped)
+        i += m[0].length;
+
+        for (let depth = 1; i < src.length && depth > 0; i++)
+        {
+            const c = src[i];
+
+            if (c === '"')
+            {
+                for (i++; i < src.length && src[i] !== '"'; i++);
+            }
+            else if (c === '#')
+            {
+                for (; i < src.length && src[i] !== '\n'; i++);
+            }
+            else if (c === '{')
+                depth++;
+            else if (c === '}')
+                depth--;
+        }
+    }
+}
 
 export class Describer
 {
@@ -429,6 +490,9 @@ export class Describer
 
         if (ctx.rootType)
             a.root = ctx.rootType;
+
+        if (n.k && /^(trigger_)?(if|else_if)$/.test(n.k) && Array.isArray(n.v) && !chainHasElse(ctx.src, n.e))
+            a.ifKey = n.k;
 
         // (inside an iterator or a scope switch: another scope, someone else)
         if (a.inner)
@@ -912,11 +976,18 @@ export class Describer
         const prefix = kind === 'if' ? 'If ' : 'Otherwise, if ';
 
         // (the one condition in the line's text, its segments kept apart: the view edits it on its own — Line.condSegs)
-        if (conds.length === 1 && !conds[0].children?.length && !conds[0].conditions)
+        // (also a scripted trigger read through — collapsed: its name says what it checks)
+        if (conds.length === 1 && (!conds[0].children?.length || conds[0].collapsed) && !conds[0].conditions)
         {
             const cond = lowerFirst(conds[0].text);
             return { text: [prefix, ...cond, ':'], condSegs: [1, 1 + cond.length], icon: 'if', ifConds: conds, children, tip };
         }
+
+        // (one AND / OR / NOR / NAND around all of them: "If any of these are true:" with its conditions, not a group in a group)
+        const only = conds.length === 1 && conds[0].children?.length && !conds[0].collapsed && conds[0].text.length === 1 ? IF_GROUP[String(conds[0].text[0])] : undefined;
+
+        if (only)
+            return { text: [prefix + only], icon: 'if', conditions: conds[0].children, ifConds: conds, children, tip };
 
         return { text: [prefix + 'all of these are true:'], icon: 'if', conditions: conds, ifConds: conds, children, tip };
     }
@@ -1511,7 +1582,8 @@ export class Describer
                 this.withWhen(ctx, whenText)
             );
 
-            if (!kids.length)
+            // (an empty one is shown in a mod's files — it is being written: its statements are added with ⤷＋)
+            if (!kids.length && !ctx.file?.mod)
                 return null;
 
             return this.ifLine(k === 'else' ? 'else' : k === 'else_if' ? 'elseif' : 'if', conds, kids, tip);
@@ -1696,7 +1768,9 @@ export class Describer
                     icon: 'trait'
                 };
             }
+            // (1.20's name: it also touches spiritual fulfillment)
             case 'stress_impact':
+            case 'stress_and_fulfillment_impact':
                 return block ? this.stressImpact(block, ctx) : null;
             case 'add_opinion':
             case 'reverse_add_opinion':
@@ -2442,7 +2516,8 @@ const GROUP_ICONS = new Set(['if', 'else', 'scope', 'loop']);
 /** Drops empty groups and marks groups hidden when everything inside them is hidden. */
 function finalize(l: Line): Line | null
 {
-    if (l.children && l.children.length === 0 && GROUP_ICONS.has(l.icon ?? ''))
+    // (an empty if / else a mod writes stays: it is being written)
+    if (l.children && l.children.length === 0 && GROUP_ICONS.has(l.icon ?? '') && !((l.icon === 'if' || l.icon === 'else') && l.src?.mod))
         return null;
 
     if (l.children?.length && l.children.every((c) => c.hidden))

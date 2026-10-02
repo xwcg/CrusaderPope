@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import type { PortraitData, ShaderProgram } from '../../../shared/api';
+import type { PortraitData, PortraitRequest, ShaderProgram } from '../../../shared/api';
+import { Barbershop } from './Barbershop';
 import { api } from '../api';
 import { addGameLights, disposeScene, gameRenderer, geometry, loadEnvironment, loaded, material } from '../three/pdx';
 import { createGameScene, gameGeometry, gameMaterial, PORTRAIT_ENVIRONMENT, programFor, type GameScene } from '../three/gameShader';
@@ -383,8 +384,14 @@ class PortraitStage
     }
 }
 
-export function PortraitViewer(props: { type: string; name: string; }): React.JSX.Element | null
+/**
+ * A character's 3D portrait. `request`: genes, age and sex over its DNA (the barbershop's live preview, which also hides
+ * the Barbershop button); `className` sizes it from outside.
+ */
+export function PortraitViewer(props: { type: string; name: string; request?: PortraitRequest; className?: string; onData?: (d: PortraitData) => void; }): React.JSX.Element | null
 {
+    const [shop, setShop] = useState(false);
+    const requestKey = JSON.stringify(props.request ?? null);
     const mount = useRef<HTMLDivElement>(null);
     const [data, setData] = useState<PortraitData | null | undefined>(undefined);
     const [error, setError] = useState<string | null>(null);
@@ -424,7 +431,7 @@ export function PortraitViewer(props: { type: string; name: string; }): React.JS
         setError(null);
         setFetching(true);
         api
-            .portrait(props.type, props.name, { blendShapes: shapes, boneMorphs: bones, naked: !dressed, figLeaf })
+            .portrait(props.type, props.name, { ...props.request, blendShapes: shapes, boneMorphs: bones, naked: !dressed, figLeaf })
             .then((d) =>
             {
                 if (cancelled)
@@ -438,6 +445,9 @@ export function PortraitViewer(props: { type: string; name: string; }): React.JS
 
                 shown.current = key;
                 setData(d);
+
+                if (d)
+                    props.onData?.(d);
             })
             .catch((e: Error) =>
             {
@@ -451,7 +461,7 @@ export function PortraitViewer(props: { type: string; name: string; }): React.JS
         {
             cancelled = true;
         };
-    }, [props.type, props.name, shapes, bones, dressed, figLeaf, revision]);
+    }, [props.type, props.name, requestKey, shapes, bones, dressed, figLeaf, revision]);
 
     // the game's own shaders per part (compiled once per Effect; parts whose Effect fails keep the viewer's material)
     useEffect(() =>
@@ -534,7 +544,8 @@ export function PortraitViewer(props: { type: string; name: string; }): React.JS
     const swatch = (c: [number, number, number]): string => `rgb(${c.map((x) => Math.round(x * 255)).join(',')})`;
     const worn = data?.accessories.filter((a) => !/^(eye|teeth|eyelashes)_accessory$/.test(a.gene)).map((a) => `${a.gene}: ${a.accessory}`);
     return (
-        <div className="portrait">
+        <div className={'portrait' + (props.className ? ' ' + props.className : '')}>
+            {shop && <Barbershop type={props.type} name={props.name} onClose={() => setShop(false)} />}
             {big && <div className="portrait-backdrop" onClick={() => setBig(false)} />}
             <div className={'portrait-box' + (big ? ' big' : '')} ref={mount}>
                 {!onScreen && !waiting && <div className="portrait-empty">Sculpting the likeness…</div>}
@@ -578,6 +589,11 @@ export function PortraitViewer(props: { type: string; name: string; }): React.JS
                         <label title="Bone morphs: face and body proportions">
                             <input type="checkbox" checked={bones} onChange={(e) => setBones(e.target.checked)} /> Bone morphs
                         </label>
+                        {!props.request && !data.creature && (
+                            <button className="portrait-shop" title="Change this character's looks - face, hair, colours - and save the DNA into your mod" onClick={() => setShop(true)}>
+                                Barbershop…
+                            </button>
+                        )}
                         <label title="Render with the game's own shaders (gfx/FX effects compiled for WebGL), or with the viewer's approximation">
                             <input type="checkbox" checked={gameShaders} onChange={(e) => setGameShaders(e.target.checked)} /> Game shaders
                         </label>

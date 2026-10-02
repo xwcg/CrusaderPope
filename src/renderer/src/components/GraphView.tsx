@@ -6,6 +6,7 @@ import type { Navigate } from '../App';
 import { typeColor } from '../typeColors';
 import { TypeChip } from './common';
 import { useRevision } from '../revision';
+import { Select } from './Select';
 
 type Layout = 'flow' | 'concentric' | 'breadthfirst' | 'cose';
 
@@ -221,20 +222,20 @@ export function GraphView(props: { type: string; name: string; navigate: Navigat
             <div className="graph-toolbar">
                 <label>
                     Depth
-                    <select value={depth} onChange={(e) => setDepth(Number(e.target.value))}>
+                    <Select value={depth} onChange={(e) => setDepth(Number(e.target.value))}>
                         <option value={1}>1</option>
                         <option value={2}>2</option>
                         <option value={3}>3</option>
-                    </select>
+                    </Select>
                 </label>
                 <label>
                     Layout
-                    <select value={layout} onChange={(e) => setLayout(e.target.value as Layout)}>
+                    <Select value={layout} onChange={(e) => setLayout(e.target.value as Layout)}>
                         <option value="flow">Flow (in → out)</option>
                         <option value="concentric">Radial</option>
                         <option value="breadthfirst">Tree</option>
                         <option value="cose">Force</option>
-                    </select>
+                    </Select>
                 </label>
                 <span className="sep" />
                 <label>

@@ -60,7 +60,7 @@
 .map-date.idle {
   opacity: 0.5;
 }
-.map-date select,
+.map-date .dd-btn,
 .map-style {
   background: var(--bg-raised);
   color: var(--text);
@@ -69,7 +69,7 @@
   padding: 3px 6px;
   font-size: 13px;
 }
-.map-date select {
+.map-date .dd-btn {
   min-width: 96px;
   max-width: 270px;
   width: 100%;

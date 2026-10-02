@@ -16,6 +16,7 @@ import { MODS_ROUTE } from '../ModsView';
 import { MapEditChooser, type Choice } from './MapEditChooser';
 import { ancestorAt, hashColor } from './model';
 import '../../styles/map-edit.css';
+import { Select } from '../Select';
 
 /** The layers the map edits: the value is the county's (culture, faith, development) or the barony's (holding). */
 export const EDITABLE_LAYERS = new Set(['culture', 'faith', 'holding', 'development']);
@@ -235,10 +236,10 @@ export function WhenRow(props: { date: string; plan: MapEditResult | null | unde
         <div className="map-edit-when">
             {one ? <span>At {date} (changes the entry of that date)</span> : choice ?
                 (
-                    <select value={props.when} onChange={(e) => props.onWhen(e.target.value as When)} title="When the change happens (the history's dates)">
+                    <Select value={props.when} onChange={(e) => props.onWhen(e.target.value as When)} title="When the change happens (the history's dates)">
                         <option value="date">From {date} on</option>
                         <option value="current">{since}</option>
-                    </select>
+                    </Select>
                 ) :
                 <span title="Title history is dated: with nothing set before, the change goes from the map's date on">From {date} on</span>}
             {t && (

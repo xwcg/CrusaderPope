@@ -8,6 +8,7 @@ import { EditCtx } from './editCtx';
 import { errorText } from './ModDialogs';
 import { LineList, RichText } from './rich';
 import '../styles/edit.css';
+import { Select } from './Select';
 
 /**
  * Who is who in an event, and what fires it (docs/readable-view.md "Who's who", docs/mods.md "What fires an event"):
@@ -163,7 +164,7 @@ function MoodSelect(props: { value: string; options: PortraitOptions; onChange: 
     const { options: o } = props;
     const known = props.value && !props.value.startsWith('scripted:') && !o.animations.some((a) => a.name === props.value);
     return (
-        <select className="ww-select" value={props.value} title={props.title} onChange={(e) => props.onChange(e.target.value)}>
+        <Select className="ww-select" value={props.value} title={props.title} onChange={(e) => props.onChange(e.target.value)}>
             {props.none && <option value="">{props.none}</option>}
             {known && <option value={props.value}>{animLabel(props.value)}</option>}
             {GROUP_ORDER.map((g) => (
@@ -186,7 +187,7 @@ function MoodSelect(props: { value: string; options: PortraitOptions; onChange: 
                     ))}
                 </optgroup>
             )}
-        </select>
+        </Select>
     );
 }
 
@@ -264,7 +265,7 @@ function PortraitSettings({ p, who, editable }: { p: EventPortrait; who: string;
                 </label>
                 <label>
                     Camera{' '}
-                    <select
+                    <Select
                         className="ww-select"
                         value={p.camera ?? ''}
                         title="How the portrait is framed (camera)"
@@ -276,7 +277,7 @@ function PortraitSettings({ p, who, editable }: { p: EventPortrait; who: string;
                                 {animLabel(c.name)}
                             </option>
                         ))}
-                    </select>
+                    </Select>
                 </label>
                 <label>
                     Outfit {p.outfitTags.map((t) => (
@@ -287,7 +288,7 @@ function PortraitSettings({ p, who, editable }: { p: EventPortrait; who: string;
                             </button>
                         </span>
                     ))}
-                    <select className="ww-select" value="" title="Clothes for the portrait (outfit_tags): later tags win" onChange={(e) => e.target.value && setOutfit([...p.outfitTags, e.target.value])}>
+                    <Select className="ww-select" value="" title="Clothes for the portrait (outfit_tags): later tags win" onChange={(e) => e.target.value && setOutfit([...p.outfitTags, e.target.value])}>
                         <option value="">{p.outfitTags.length ? '＋' : 'As usual'}</option>
                         {o.outfits
                             .filter((x) => !p.outfitTags.includes(x.name))
@@ -296,7 +297,7 @@ function PortraitSettings({ p, who, editable }: { p: EventPortrait; who: string;
                                     {nameLabel(x.name)}
                                 </option>
                             ))}
-                    </select>
+                    </Select>
                 </label>
             </div>
             <div className="ww-pline">
@@ -370,14 +371,14 @@ function CastRow(props: {
             <div className="ww-side">
                 {editable ?
                     (
-                        <select className="ww-portrait" value={pos} title="Where they are shown in the event window" onChange={(e) => void setPortrait(story, code, e.target.value || null)}>
+                        <Select className="ww-portrait" value={pos} title="Where they are shown in the event window" onChange={(e) => void setPortrait(story, code, e.target.value || null)}>
                             <option value="">No portrait</option>
                             {POSITIONS.map(([p, l]) => (
                                 <option key={p} value={p}>
                                     {l} portrait
                                 </option>
                             ))}
-                        </select>
+                        </Select>
                     ) :
                     (
                         pos && <span className="ww-note">{POS_LABEL[pos]} portrait</span>

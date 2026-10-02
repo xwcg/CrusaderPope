@@ -23,7 +23,10 @@ export interface Settings
     setupDone?: boolean;
     /** CK3 install dir (the folder containing `game/`), or the `game` folder itself. */
     gameDir: string;
+    /** the content language: the game's localization shown (l_english …) */
     language: string;
+    /** the app's own texts (only 'en' so far; absent = en) */
+    appLanguage?: string;
     /** image decoding threads; 0 or absent = one per CPU core */
     imageWorkers?: number;
     /** keep the parsed index on disk and load it at startup while the game files are unchanged (absent = on) */
@@ -407,6 +410,8 @@ export interface LineSource
     subject?: string;
     /** the scope type `root` is when not a character (a doctrine's conditions and costs run for a faith) */
     root?: string;
+    /** an if / else_if (trigger_if / trigger_else_if): its key — "＋ else" adds the else of its chain */
+    ifKey?: string;
     /**
      * the statement is another definition's, read where it is called (an inlined scripted effect / trigger): that
      * definition — editing the line changes it for every caller; not the active mod's: overridden into it first
@@ -2110,6 +2115,67 @@ export interface PortraitRequest
     naked?: boolean;
     /** undressed adults wear the fig leaf unless false */
     figLeaf?: boolean;
+    /** the barbershop: genes set over the subject's DNA, and the age and sex to show */
+    genes?: DnaGene[];
+    age?: number;
+    female?: boolean;
+}
+
+/**
+ * One gene of a DNA (docs/portraits.md, "Barbershop"): both pairs as the files write them — template and value (0..255)
+ * for morph and accessory genes, a palette point (x y, 0..255) for colour genes. The first pair is the one shown.
+ */
+export interface DnaGene
+{
+    gene: string;
+    template?: string;
+    value: number;
+    template2?: string;
+    value2?: number;
+    /** colour genes: the palette points of both pairs */
+    xy?: [number, number];
+    xy2?: [number, number];
+}
+
+/** A gene the barbershop offers (common/genes: the genes with a `group`, as the game's ruler designer). */
+export interface DnaGeneInfo
+{
+    gene: string;
+    /** localized name (the gene key when there is none) */
+    label: string;
+    /** the ruler designer's group (face, eyes, nose, mouth, head_neck, ears, body, hair, beard …) and its name */
+    group: string;
+    groupLabel: string;
+    kind: 'color' | 'morph' | 'accessory';
+    /** colour genes: the palette image (gfx/portraits/<color>_palette.dds) */
+    palette?: string;
+    /** its templates; `visible` false: the ruler designer does not offer it */
+    templates: { name: string; label: string; visible: boolean; }[];
+    /** accessory genes: per portrait type (male, female, boy, girl) and template, what each value range (0..255) picks */
+    accessories?: Record<string, Record<string, { accessory: string; from: number; to: number; }[]>>;
+}
+
+/** What the barbershop edits: the subject, its DNA, the genes on offer and where a save goes. */
+export interface DnaEditorData
+{
+    label: string;
+    female: boolean;
+    age: number;
+    source: string;
+    genes: DnaGene[];
+    catalog: DnaGeneInfo[];
+    /**
+     * where the DNA is kept: a dna_data entry (`character`: the character wearing it) or a bookmark portrait; `create`:
+     * the character's face is generated or read from a bookmark dump — a save makes the dna_data entry `name` and sets
+     * the character's `dna`
+     */
+    target: { type: 'dna_data' | 'bookmark_portraits'; name: string; character?: string; create?: boolean; };
+}
+
+export interface DnaSaveRequest
+{
+    target: DnaEditorData['target'];
+    genes: DnaGene[];
 }
 
 export interface PortraitData
@@ -2122,7 +2188,7 @@ export interface PortraitData
     colors: { skin: [number, number, number]; hair: [number, number, number]; eyes: [number, number, number]; };
     parts: PortraitPart[];
     /** Accessories worn (gene → accessory) */
-    accessories: { gene: string; accessory: string; }[];
+    accessories: { gene: string; accessory: string; template?: string; }[];
     /** tags set by genes and accessories (e.g. "hat", "shrink_arms") */
     tags: string[];
     /** portrait modifiers applied, as "group.modifier" (empty for bookmark portraits) */
@@ -2526,6 +2592,8 @@ export interface RendererApi
     mapOverlays(): Promise<MapOverlaysInfo | null>;
     /** a change from the map in the active mod (a province's culture, a title's holder …) */
     mapEdit(req: MapEditRequest): Promise<MapEditResult>;
+    /** writes a barbershop DNA into the active mod: its entry overridden, or a new dna_data entry and the character's `dna` */
+    saveDna(req: DnaSaveRequest): Promise<ScriptEditResult>;
     /** characters by name, id, house or dynasty for the map's holder chooser — those alive at the date first */
     mapCharacters(q: string, date: string): Promise<MapCharacter[]>;
     /** the coat of arms of a title, dynasty or house (`kind`), or a coat_of_arms entry by key; a title's at the history date (y.m.d; none: the first bookmark's) */
@@ -2536,6 +2604,8 @@ export interface RendererApi
     logShader(entry: ShaderLogEntry): Promise<void>;
     portrait(type: string, name: string, opts?: PortraitRequest): Promise<PortraitData | null>;
     portraitReport(type: string, name: string, opts?: PortraitRequest): Promise<PortraitReport | null>;
+    /** the barbershop: the DNA of a character (dna_data entry, bookmark portrait) and the genes it can change */
+    dnaEditor(type: string, name: string): Promise<DnaEditorData | null>;
     characterFilter(filter: CharacterFilter): Promise<string[]>;
     characterFacets(): Promise<CharacterFacets>;
     familyTree(id: string): Promise<FamilyTree | null>;

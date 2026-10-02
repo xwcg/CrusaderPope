@@ -104,7 +104,41 @@ button.small {
 .lines .lines {
   margin-left: 18px;
   padding-left: 8px;
-  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
+}
+/* conditionals: each if / else if / else is one block — a gold bar along all of it and a faint tint; the members of
+   one chain join into one rounded group, a thin line between them */
+.line.chain {
+  padding-left: 7px;
+  border-left: 3px solid rgba(201, 164, 92, 0.5);
+  background: rgba(201, 164, 92, 0.035);
+}
+.line.chain > .lines {
+  border-left-color: transparent;
+}
+.line.chain-start,
+.line.chain-solo {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.line.chain-end,
+.line.chain-solo {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding-bottom: 2px;
+}
+.line.chain-mid,
+.line.chain-end {
+  border-top: 1px solid rgba(201, 164, 92, 0.14);
+}
+.line.chain-solo {
+  border-left-color: rgba(201, 164, 92, 0.32);
+}
+.line.chain + .line:not(.chain),
+.line:not(.chain) + .line.chain,
+.line.chain + .line.chain-start,
+.line.chain + .line.chain-solo {
+  margin-top: 5px;
 }
 .line-row {
   display: flex;
@@ -174,13 +208,19 @@ button.small {
   opacity: 0.55;
   font-style: italic;
 }
+/* (an if's conditions: their bullets line up with the heading's text — "If all of these are true:") */
 .line-conditions {
-  margin: 2px 0 4px 22px;
-  padding: 4px 10px;
+  margin: 2px 0 4px 12px;
+  padding: 4px 8px;
   border-left: 2px solid rgba(126, 167, 194, 0.4);
   background: rgba(126, 167, 194, 0.05);
   border-radius: 0 4px 4px 0;
   font-size: 12.5px;
+}
+.line-conditions > .lines {
+  margin-left: 0;
+  padding-left: 0;
+  border-left: none;
 }
 .lines.compact .line-row {
   padding: 1px 0;

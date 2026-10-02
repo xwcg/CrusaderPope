@@ -11,7 +11,8 @@ import type { Ctx } from '../describer.ts';
 import type { StoryBuilder } from '../stories.ts';
 import type { CardFn } from './types.ts';
 import { capitalize, formatNumber, humanize, rich, titleCase } from '../text.ts';
-import { block, bodyOf, colorSeg, dlcName, items, joined, paramLines, sample, scalar, scalars, statementLine, word } from './culture-util.ts';
+import { block, bodyOf, colorSeg, dlcName, items, joined, paramLines, sample, scalar, statementLine, word } from './culture-util.ts';
+import { faithDetails, faithField, faithHolySites, faithReligion, religionFaiths, tenetsOf } from '../../indexer/layouts.ts';
 
 const DOCTRINE = ['religion/doctrine_types'];
 
@@ -62,6 +63,20 @@ export function doctrineGroups(b: StoryBuilder): { list: DoctrineGroup[]; of: Ma
             of.set(d, g);
     }
 
+    // (1.20: the doctrine names its group — docs/game-structure.md, "Layouts that changed")
+    const byKey = new Map(list.map((g) => [g.key, g]));
+
+    for (const name of b.idx.names('religion/doctrine_types'))
+    {
+        const g = byKey.get(scalar(bodyOf(b, b.idx.get('religion/doctrine_types', name)), 'doctrine_group_type') ?? '');
+
+        if (g && !of.has(name))
+        {
+            g.doctrines.push(name);
+            of.set(name, g);
+        }
+    }
+
     const rank = (g: DoctrineGroup): number =>
     {
         const i = CATEGORY_ORDER.indexOf(g.category);
@@ -79,23 +94,30 @@ interface Held
     inherited: boolean;
     dlc?: string;
     fallback?: string;
+    /** where an inherited one comes from ("its religion", "its main rite") */
+    from?: string;
 }
 
-/** `doctrine = x` and `doctrine_selection_pair = { requires_dlc_flag = f doctrine = x fallback_doctrine = y }`. */
-function held(list: PNode[], inherited: boolean): Held[]
+/**
+ * `doctrine = x`, `doctrines = { x y }` (1.20) and `doctrine_selection_pair = { requires_dlc_flag = f doctrine = x
+ * fallback_doctrine = y }`.
+ */
+function held(list: PNode[], inherited: boolean, from?: string): Held[]
 {
     const out: Held[] = [];
 
     for (const c of list)
     {
         if (c.k === 'doctrine' && typeof c.v === 'string')
-            out.push({ name: c.v, node: c, inherited });
+            out.push({ name: c.v, node: c, inherited, from });
+        else if (c.k === 'doctrines' && Array.isArray(c.v))
+            out.push(...c.v.filter((x) => x.k === null && typeof x.v === 'string').map((x) => ({ name: x.v as string, node: x, inherited, from })));
         else if (c.k === 'doctrine_selection_pair' && Array.isArray(c.v))
         {
             const d = scalar(c.v, 'doctrine');
 
             if (d)
-                out.push({ name: d, node: c, inherited, dlc: scalar(c.v, 'requires_dlc_flag'), fallback: scalar(c.v, 'fallback_doctrine') });
+                out.push({ name: d, node: c, inherited, dlc: scalar(c.v, 'requires_dlc_flag'), fallback: scalar(c.v, 'fallback_doctrine'), from });
         }
     }
 
@@ -142,7 +164,8 @@ function doctrineSections(b: StoryBuilder, own: Held[], inherited: Held[], ctx: 
         return m;
     };
     const ownBy = by(own);
-    const inhBy = by(inherited);
+    // (inherited from several places — 1.20: main rite, then religion: the first that fills the group wins)
+    const inhBy = new Map([...by(inherited)].map(([g, hs]) => [g, hs.filter((h) => h.from === hs[0].from)]));
     const pick = (label: string, only: string[], title: string): LineAct | undefined => p.src && p.at ? { label, src: p.src, do: { kind: 'pick', at: p.at, fields: p.fields, field: 'doctrine', only, title } } : undefined;
     const gseg = (g: DoctrineGroup): RichSeg => b.d.entitySeg(g.e);
     const dseg = (h: Held): Rich =>
@@ -229,7 +252,7 @@ function doctrineSections(b: StoryBuilder, own: Held[], inherited: Held[], ctx: 
             else if (inh.length)
             {
                 for (const h of inh)
-                    lines.push({ text: rich(gseg(g), ': ', dseg(h), { text: ' · from its religion', kind: 'ph' }), tip: `doctrine = ${h.name}`, act: p.marks ? pick('change', g.doctrines, g.label) : undefined });
+                    lines.push({ text: rich(gseg(g), ': ', dseg(h), { text: ` · from ${h.from ?? 'its religion'}`, kind: 'ph' }), tip: `doctrine = ${h.name}`, act: p.marks ? pick('change', g.doctrines, g.label) : undefined });
             }
             else if (p.marks && g.everyFaith)
             {
@@ -261,7 +284,7 @@ function doctrineSections(b: StoryBuilder, own: Held[], inherited: Held[], ctx: 
         if (!have.length)
         {
             for (const h of inhBy.get(g.key) ?? [])
-                lines.push({ text: rich(gseg(g), ': ', dseg(h), { text: ' · from its religion', kind: 'ph' }), tip: `doctrine = ${h.name}` });
+                lines.push({ text: rich(gseg(g), ': ', dseg(h), { text: ` · from ${h.from ?? 'its religion'}`, kind: 'ph' }), tip: `doctrine = ${h.name}` });
         }
     }
 
@@ -343,26 +366,6 @@ function nameLines(b: StoryBuilder, e: Entity, src: LineSource | undefined, mark
     }
 
     return out;
-}
-
-/** The religion a faith is written in (faiths are nested in a religion's `faiths = { }`). */
-function religionOf(b: StoryBuilder, e: Entity): Entity | undefined
-{
-    const d = b.idx.winningDef(e);
-
-    if (!d)
-        return undefined;
-
-    for (const name of b.idx.names('religion/religion_types'))
-    {
-        const r = b.idx.get('religion/religion_types', name)!;
-        const rd = b.idx.winningDef(r);
-
-        if (rd && rd.file === d.file && rd.start <= d.start && d.end <= rd.end)
-            return r;
-    }
-
-    return undefined;
 }
 
 /**
@@ -613,7 +616,41 @@ function missingFact(card: EntityCard): void
         card.facts.push([{ text: `${n} to fill in`, kind: 'bad', tip: 'Marked below — each with what fills it in' }]);
 }
 
-const FAITH_SKIP = new Set(['doctrine', 'doctrine_selection_pair', 'holy_site', 'religious_head', 'color', 'icon', 'reformed_icon', 'localization', 'holy_order_names', 'reserved_male_names', 'reserved_female_names', ...LOOK_KEYS]);
+const FAITH_SKIP = new Set([
+    'doctrine',
+    'doctrine_selection_pair',
+    'holy_site',
+    'religious_head',
+    'color',
+    'icon',
+    'reformed_icon',
+    'localization',
+    'holy_order_names',
+    'reserved_male_names',
+    'reserved_female_names',
+    ...LOOK_KEYS,
+    // (1.20)
+    'faith_details',
+    'doctrines',
+    'tenets',
+    'tenet_selection_pair',
+    'holy_sites',
+    'eminent_holy_sites',
+    'main_rite',
+    'origin'
+]);
+
+/** A faith's tenets (1.20): its main rite's when the rite has some (the game takes those), else its own. */
+function tenetLines(b: StoryBuilder, body: PNode[], rite: PNode[] | undefined, ctx: Ctx): Line[]
+{
+    const seg = (t: { name: string; dlc?: string; fallback?: string; }): Rich => rich(b.d.ref(t.name, ['religion/tenet_types']), t.dlc ? rich(` with ${dlcName(t.dlc)}`, t.fallback ? rich(', else ', b.d.ref(t.fallback, ['religion/tenet_types'])) : '') : '');
+    const fromRite = rite ? tenetsOf(rite) : [];
+
+    if (fromRite.length)
+        return fromRite.map((t) => ({ text: rich(seg(t), { text: ' · from its main rite', kind: 'ph' }), icon: 'piety', tip: t.name }));
+
+    return tenetsOf(body).map((t) => statementLine(b, t.node, ctx, seg(t), undefined, { icon: 'piety' }));
+}
 
 /**
  * A faith (religion_types/_religion_types.info, `faiths = { … }`): its religion and head of faith, names in game,
@@ -622,33 +659,54 @@ const FAITH_SKIP = new Set(['doctrine', 'doctrine_selection_pair', 'holy_site', 
  */
 const faith: CardFn = (b, { e, body, card, ctx, own }) =>
 {
-    const religion = religionOf(b, e);
+    const religion = faithReligion(b.idx, e);
     const rbody = bodyOf(b, religion);
     const src = card.src;
     const marks = !!src?.mod;
+    // (1.20: settings in `faith_details`, a main rite with tenets and doctrines of its own)
+    const details = faithDetails(body);
+    const fbody = details ? [...body, ...details.v] : body;
+    const riteKey = scalar(body, 'main_rite');
+    const rite = riteKey ? bodyOf(b, b.idx.get('religion/rite_types', riteKey)) : undefined;
 
     if (religion)
         card.facts.push(rich('Religion: ', b.d.entitySeg(religion)));
 
-    const head = scalar(body, 'religious_head');
+    if (riteKey)
+        card.facts.push(rich('Main rite: ', b.d.ref(riteKey, ['religion/rite_types'])));
 
-    if (head)
-        card.facts.push(rich('Head of faith: ', b.d.ref(head, ['landed_titles'])));
+    const head = faithField(body, 'religious_head');
 
-    const sites = scalars(body, 'holy_site');
+    if (typeof head?.v === 'string')
+        card.facts.push(rich('Head of faith: ', b.d.ref(head.v, ['landed_titles'])));
+
+    const origin = scalar(body, 'origin');
+
+    if (origin)
+        card.facts.push(rich('Grew out of ', b.d.ref(origin, ['faith'])));
+
+    const sites = faithHolySites(body);
 
     if (sites.length)
         card.facts.push([`${sites.length} holy site${sites.length === 1 ? '' : 's'}`]);
 
     const settings = own('field', 'faith');
     card.sections.push({ title: 'Names in game', lines: nameLines(b, e, src, marks), noAdd: true });
-    card.sections.push(...doctrineSections(b, held(body, false), held(rbody, true), ctx, { src, at: settings, fields: 'faith', faith: true, marks }));
-    const siteLines = sites.map((c) => statementLine(b, c, ctx, [holySiteSeg(b, c.v as string)], 'faith', { icon: 'piety' }));
+    const tenets = tenetLines(b, body, rite, ctx);
+
+    if (tenets.length)
+        card.sections.push({ title: 'Tenets', lines: tenets, noAdd: true });
+
+    // (a group's doctrine: the faith's own, else its main rite's, else its religion's)
+    const inherited = [...(rite ? held(rite, true, 'its main rite') : []), ...held(rbody, true)];
+    card.sections.push(...doctrineSections(b, held(body, false), inherited, ctx, { src, at: settings, fields: 'faith', faith: true, marks }));
+    const siteLines = sites.map((h) => statementLine(b, h.node, ctx, rich(holySiteSeg(b, h.name), h.eminent ? { text: ' · eminent: global bonuses too', kind: 'ph' } : ''), 'faith', { icon: 'piety' }));
 
     if (!sites.length && marks)
         siteLines.push({ text: [{ text: 'No holy sites yet', kind: 'ph' }], placeholder: true, icon: 'piety', tip: 'Faiths usually have 5: they give their holders’ modifiers and are what great holy wars are for' });
 
-    const siteAdd: LineAct | undefined = src && settings ? { label: '＋ holy site', src, do: { kind: 'pick', at: settings, fields: 'faith', field: 'holy_site', title: 'Holy site' } } : undefined;
+    // (`holy_site = x` is the old layout's: a 1.20 faith lists them)
+    const siteAdd: LineAct | undefined = src && settings && !details ? { label: '＋ holy site', src, do: { kind: 'pick', at: settings, fields: 'faith', field: 'holy_site', title: 'Holy site' } } : undefined;
     card.sections.push({ title: 'Holy sites', lines: siteLines, src: settings, acts: siteAdd && [siteAdd], noAdd: true });
     const virtues = virtueLines(b, rbody.find((c) => c.k === 'traits'), ctx, true);
 
@@ -671,10 +729,10 @@ const faith: CardFn = (b, { e, body, card, ctx, own }) =>
         card.sections.push({ title: 'Reserved names', lines: reserved });
 
     const family = religion ? b.idx.get('religion/religion_family_types', scalar(rbody, 'family') ?? '') : undefined;
-    const look = [...colorLines(b, body, ctx, src, settings, marks), ...iconLines(b, e, body, ctx, 'gfx/interface/icons/faith', 'faith', src, settings, marks), ...settingLines(b, body, ctx, 'faith'), ...inheritedLook(body, rbody, 'religion')];
+    const look = [...colorLines(b, fbody, ctx, src, settings, marks), ...iconLines(b, e, fbody, ctx, 'gfx/interface/icons/faith', 'faith', src, settings, marks), ...settingLines(b, fbody, ctx, 'faith'), ...inheritedLook(fbody, rbody, 'religion')];
 
     if (family)
-        look.push(...inheritedLook([...body, ...rbody], bodyOf(b, family), 'family'));
+        look.push(...inheritedLook([...fbody, ...rbody], bodyOf(b, family), 'family'));
 
     card.sections.push({ title: 'Settings', lines: look, src: settings });
     missingFact(card);
@@ -707,20 +765,27 @@ const religion: CardFn = (b, { e, body, card, ctx, own }) =>
         card.facts.push(rich('Family: ', b.d.ref(family, ['religion/religion_family_types'])));
 
     const faithsNode = body.find((c) => c.k === 'faiths' && Array.isArray(c.v));
-    const faiths = faithsNode ? (faithsNode.v as PNode[]).filter((c) => c.k && Array.isArray(c.v)) : [];
-    card.facts.push([`${faiths.length} faith${faiths.length === 1 ? '' : 's'}`]);
+    const nested = faithsNode ? (faithsNode.v as PNode[]).filter((c) => c.k && Array.isArray(c.v)) : [];
+    // (1.20: the faiths naming it in religion/faith_types)
+    const named = religionFaiths(b.idx, e).filter((f) => !nested.some((n) => n.k === f.name));
+    const count = nested.length + named.length;
+    card.facts.push([`${count} faith${count === 1 ? '' : 's'}`]);
 
     if (scalar(body, 'pagan_roots') === 'yes')
         card.facts.push(['Pagan roots']);
 
     card.sections.push({ title: 'Names in game', lines: nameLines(b, e, src, marks), noAdd: true });
-    const faithLines = faiths.map((f) =>
+    const faithText = (name: string, fb: PNode[]): Rich =>
     {
-        const head = scalar(f.v as PNode[], 'religious_head');
-        return statementLine(b, f, ctx, rich(b.d.ref(f.k!, ['faith']), head ? rich({ text: ' · head of faith: ', kind: 'ph' }, b.d.ref(head, ['landed_titles'])) : ''), undefined, { icon: 'piety' });
-    });
+        const head = faithField(fb, 'religious_head');
+        return rich(b.d.ref(name, ['faith']), typeof head?.v === 'string' ? rich({ text: ' · head of faith: ', kind: 'ph' }, b.d.ref(head.v, ['landed_titles'])) : '');
+    };
+    const faithLines: Line[] = [
+        ...nested.map((f) => statementLine(b, f, ctx, faithText(f.k!, f.v as PNode[]), undefined, { icon: 'piety' })),
+        ...named.map((f): Line => ({ text: faithText(f.name, bodyOf(b, f)), icon: 'piety', tip: f.name }))
+    ];
 
-    if (!faiths.length && marks)
+    if (!count && marks)
         faithLines.push({ text: [{ text: 'No faith yet — a religion needs at least one', kind: 'ph' }], placeholder: true, tone: 'bad', icon: 'piety' });
 
     card.sections.push({ title: 'Faiths', lines: faithLines, acts: src ? [{ label: '＋ faith', src, do: { kind: 'faith', religion: e.name } }] : undefined, noAdd: true });
@@ -822,12 +887,16 @@ const doctrine: CardFn = (b, { e, body, card, ctx, own }) =>
     if (g)
         card.facts.push(rich('Group: ', b.d.entitySeg(g.e)));
 
-    const holders = b.idx.incomingSources(e).filter((s) => (s.entity.type === 'faith' || s.entity.type === 'religion/religion_types') && s.contexts.some((c) => c === 'doctrine' || c.endsWith('doctrine_selection_pair › doctrine')));
-    const faiths = holders.filter((s) => s.entity.type === 'faith').length;
-    const religions = holders.length - faiths;
+    // (1.20: `doctrines = { … }` lists; rites hold doctrines too)
+    const holders = b.idx.incomingSources(e).filter((s) => ['faith', 'religion/religion_types', 'religion/rite_types'].includes(s.entity.type) && s.contexts.some((c) => c === 'doctrine' || c === 'doctrines' || c.endsWith('doctrine_selection_pair › doctrine')));
+    const holding = (type: string, word: string): string | 0 =>
+    {
+        const n = holders.filter((s) => s.entity.type === type).length;
+        return n && `${n} ${word}${n === 1 ? '' : 's'}`;
+    };
 
     if (holders.length)
-        card.facts.push([`Held by ${[faiths && `${faiths} faith${faiths === 1 ? '' : 's'}`, religions && `${religions} religion${religions === 1 ? '' : 's'}`].filter(Boolean).join(' and ')} at the start`]);
+        card.facts.push([`Held by ${[holding('faith', 'faith'), holding('religion/religion_types', 'religion'), holding('religion/rite_types', 'rite')].filter(Boolean).join(' and ')} at the start`]);
 
     if (scalar(body, 'visible') === 'no')
         card.facts.push(['Hidden in the interface']);

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { IndexStatus, Settings } from '../../../shared/api';
 import { api } from '../api';
 import { GraphicsDetails, GraphicsPresetChoice } from './FirstRunWizard';
+import { Select } from './Select';
 
 export function SettingsDialog(props: { status: IndexStatus; onClose: () => void; }): React.JSX.Element
 {
@@ -80,14 +81,22 @@ export function SettingsDialog(props: { status: IndexStatus; onClose: () => void
                         {page === 'language' && (
                             <>
                                 <div className="field">
-                                    <label>Localization language</label>
-                                    <select value={s.language} onChange={(e) => setS({ ...s, language: e.target.value })}>
+                                    <label>App language</label>
+                                    <Select value={s.appLanguage ?? 'en'} onChange={(e) => setS({ ...s, appLanguage: e.target.value })} label="App language">
+                                        <option value="en">English</option>
+                                    </Select>
+                                    <span className="hint">The app's own menus, buttons and texts. Only English so far.</span>
+                                </div>
+                                <div className="field">
+                                    <label>Content language</label>
+                                    <Select value={s.language} onChange={(e) => setS({ ...s, language: e.target.value })}>
                                         {(langs.includes(s.language) ? langs : [s.language, ...langs]).map((l) => (
                                             <option key={l} value={l}>
                                                 {l}
                                             </option>
                                         ))}
-                                    </select>
+                                    </Select>
+                                    <span className="hint">The game's texts: names, descriptions, events - as the game shows them in this language.</span>
                                 </div>
                             </>
                         )}
@@ -104,14 +113,14 @@ export function SettingsDialog(props: { status: IndexStatus; onClose: () => void
                             <>
                                 <div className="field">
                                     <label>Texture decoding threads</label>
-                                    <select value={s.imageWorkers ?? 0} onChange={(e) => setS({ ...s, imageWorkers: Number(e.target.value) })}>
+                                    <Select value={s.imageWorkers ?? 0} onChange={(e) => setS({ ...s, imageWorkers: Number(e.target.value) })}>
                                         <option value={0}>Automatic — one per CPU core ({cores})</option>
                                         {Array.from({ length: Math.max(cores, 1) * 2 }, (_, i) => i + 1).map((n) => (
                                             <option key={n} value={n}>
                                                 {n}
                                             </option>
                                         ))}
-                                    </select>
+                                    </Select>
                                     <span className="hint">Images and 3D model textures decode in parallel on this many worker threads. Changing it restarts only the image workers.</span>
                                 </div>
                                 <div className="field">

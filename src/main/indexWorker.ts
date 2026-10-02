@@ -776,6 +776,7 @@ const handlers: Record<string, (...args: never[]) => unknown> = {
     // where a new entry of a type goes (mods/create.ts: the explorer's "New <type>…")
     newEntryInfo: (type: string, ns?: string) => index?.newEntryInfo(type, ns) ?? null,
     childrenOf: (type: string, holderType: string, holder: string) => index?.childrenOf(type, holderType, holder) ?? [],
+    layouts: () => index?.layouts() ?? null,
     // every user of one type (a card's "Used by" row in full)
     usageAll: (type: string, name: string, userType: string) =>
     {
@@ -827,6 +828,11 @@ const handlers: Record<string, (...args: never[]) => unknown> = {
     {
         const e = entityOf(type, name);
         return e && portraits ? portraits.build(e, opts) : null;
+    },
+    dnaEditor: (type: string, name: string) =>
+    {
+        const e = entityOf(type, name);
+        return e && portraits ? portraits.dnaEditor(e) : null;
     },
     portraitReport: (type: string, name: string, opts?: PortraitRequest) =>
     {

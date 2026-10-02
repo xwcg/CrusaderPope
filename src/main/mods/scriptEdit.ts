@@ -320,9 +320,14 @@ export function applyEdit(text: string, req: ScriptEditRequest): EditOutcome
     let { e } = req.at;
     const body = req.text ?? '';
 
-    // (after an if / else_if its else goes first: the new statement follows the whole chain — unless it is an else itself)
-    if (req.op === 'insert' && (req.where ?? 'after') === 'after' && !ELSE_KEY.test(parse(body)[0]?.k ?? ''))
+    // (after an if / else_if its else goes first: the new statement follows the whole chain — an else itself goes after
+    // the chain's else_ifs, and there is only one)
+    const bodyKey = req.op === 'insert' && (req.where ?? 'after') === 'after' ? parse(body)[0]?.k ?? '' : undefined;
+
+    if (bodyKey !== undefined && !ELSE_KEY.test(bodyKey))
         e = chainEnd(text, s, e);
+    else if (bodyKey === 'else' || bodyKey === 'trigger_else')
+        e = chainEnd(text, s, e, true);
 
     if (req.op === 'remove' || (req.op === 'replace' && !body.trim()))
     {
@@ -544,8 +549,11 @@ function siblingsAt(nodes: PNode[], s: number, e: number): { list: PNode[]; i: n
     return undefined;
 }
 
-/** Where the if / else chain of the statement at [s, e) ends (its last else); `e` when none follows it. */
-function chainEnd(text: string, s: number, e: number): number
+/**
+ * Where the if / else chain of the statement at [s, e) ends (its last else); `e` when none follows it. `beforeElse`:
+ * where an else goes — after the last else_if; refused when the chain has its else already.
+ */
+function chainEnd(text: string, s: number, e: number, beforeElse = false): number
 {
     const at = siblingsAt(parse(text), s, e);
 
@@ -555,7 +563,12 @@ function chainEnd(text: string, s: number, e: number): number
     let i = at.i;
 
     while (i + 1 < at.list.length && IF_KEY.test(at.list[i].k ?? '') && ELSE_KEY.test(at.list[i + 1].k ?? ''))
+    {
+        if (beforeElse && !IF_KEY.test(at.list[i + 1].k ?? ''))
+            throw new Error('This if has an else already.');
+
         i++;
+    }
 
     return at.list[i].e;
 }
@@ -765,7 +778,7 @@ export function checkEdit(text: string, req: ScriptEditRequest, out: EditOutcome
         throw new Error(`The edited definition (${newTop.k ?? '?'}) would not be balanced: ${scriptProblems(out.text.slice(newTop.s, newTop.e)).slice(0, 2).join('; ')}.`);
 }
 
-function lineAt(text: string, off: number): number
+export function lineAt(text: string, off: number): number
 {
     let n = 1;
 
@@ -890,7 +903,7 @@ export function editLocLine(text: string, req: ScriptEditRequest): { text: strin
 }
 
 /** A script file's text (without its byte order mark) — refused when it is not UTF-8 (rewriting it would damage it). */
-function readScript(file: string): { text: string; bom: boolean; raw: Buffer; }
+export function readScript(file: string): { text: string; bom: boolean; raw: Buffer; }
 {
     const raw = readFileSync(file);
     const all = raw.toString('utf8');
@@ -902,7 +915,7 @@ function readScript(file: string): { text: string; bom: boolean; raw: Buffer; }
     return { text: bom ? all.slice(1) : all, bom, raw };
 }
 
-async function active(host: ModsHost): Promise<Active>
+export async function active(host: ModsHost): Promise<Active>
 {
     const a = await activeMod(host);
 
@@ -913,7 +926,7 @@ async function active(host: ModsHost): Promise<Active>
 }
 
 /** Hands a written file to the index: incrementally where it can, else a re-index. */
-async function refresh(host: ModsHost, file: string): Promise<void>
+export async function refresh(host: ModsHost, file: string): Promise<void>
 {
     if (host.refreshFiles)
         await host.refreshFiles([file]);
@@ -1118,7 +1131,7 @@ function onActionFiles(a: Active): string[]
 }
 
 /** An anchor for a node of a file's text (the edits' `at`, made here instead of by the index). */
-function anchorIn(file: string, rel: string, text: string, n: PNode): LineSource
+export function anchorIn(file: string, rel: string, text: string, n: PNode): LineSource
 {
     const a: LineSource = { file, rel, line: n.line, s: n.s, e: n.e, kind: 'other', hash: textHash(text) };
 
@@ -1128,7 +1141,7 @@ function anchorIn(file: string, rel: string, text: string, n: PNode): LineSource
     return a;
 }
 
-const relIn = (a: Active, file: string): string => relative(a.root, file).replace(/\\/g, '/');
+export const relIn = (a: Active, file: string): string => relative(a.root, file).replace(/\\/g, '/');
 
 /** An event id (or an on_action's name) in an on_action's lists (a bare entry; `weight = entry`). */
 const isEntry = (x: PNode, event: string): boolean => x.v === event && (x.k === null || /^\d+(\.\d+)?$/.test(x.k));

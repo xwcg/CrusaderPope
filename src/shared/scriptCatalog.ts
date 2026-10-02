@@ -574,10 +574,11 @@ export const STATEMENTS: StatementDef[] = [
     E('add.nickname', 'add', 'Nickname', CH, 'give_nickname = $nick$', [ref('nick', 'Which nickname?', 'nicknames')], { k: 'n', words: 'give_nickname' }),
     E('add.perk', 'add', 'Perk', CH, 'add_perk = $perk$', [ref('perk', 'Which perk?', 'lifestyle_perks')], { words: 'add_perk' }),
     E('add.law', 'add', 'Realm law', CH, 'add_realm_law = $law$', [ref('law', 'Which law?', 'laws')], { words: 'add_realm_law' }),
+    // (written as stress_and_fulfillment_impact where the game uses that: RENAMED_KEYS)
     E('add.stress_if_trait', 'add', 'Stress if they have a trait', CH, 'stress_impact = { $trait$ = $value$ }', [
         ref('trait', 'Which trait?', 'traits'),
         num('value', 'How much stress?', [10, 20, 30, 50, -10, -20], { named: ['minor_stress_impact_gain', 'medium_stress_impact_gain', 'major_stress_impact_gain', 'minor_stress_impact_loss', 'medium_stress_impact_loss'] })
-    ], { words: 'stress_impact' }),
+    ], { words: 'stress_impact stress_and_fulfillment_impact' }),
 
     E('remove.trait', 'remove', 'Trait', CH, 'remove_trait = $trait$', [ref('trait', 'Which trait?', 'traits')], { k: 't', words: 'remove_trait' }),
     E('remove.opinion', 'remove', 'Opinion', CH, 'remove_opinion = { target = $target$ modifier = $modifier$ }', [who('target', 'Towards whom?'), ref('modifier', 'Which opinion?', 'opinion_modifiers')], { k: 'o', words: 'remove_opinion' }),
@@ -1032,6 +1033,33 @@ export function printScript(nodes: SNode[], depth = 0): string
 }
 
 /**
+ * Keys a later game version renamed: the catalog's name → the newer one (1.20: `stress_impact` →
+ * `stress_and_fulfillment_impact`, which also touches spiritual fulfillment). A written statement under either name is
+ * the catalog's (findStatement); one the picker writes takes the newer name when the loaded game's script uses it
+ * (`preferKeys`, from the key scan — the older game knows only the old one).
+ */
+export const RENAMED_KEYS: Record<string, string> = { stress_impact: 'stress_and_fulfillment_impact' };
+const OLDER_KEYS: Record<string, string> = Object.fromEntries(Object.entries(RENAMED_KEYS).map(([o, n]) => [n, o]));
+const preferred = new Map<string, string>();
+
+/** The effect / trigger keys the loaded script uses: the renamed ones it uses under their newer name are written so. */
+export function preferKeys(used: Iterable<string>): void
+{
+    const have = new Set(used);
+    preferred.clear();
+
+    for (const [o, n] of Object.entries(RENAMED_KEYS))
+        if (have.has(n))
+            preferred.set(o, n);
+}
+
+/** The name a statement of the catalog is written under (its newer one, when the game uses that). */
+export function writtenKey(key: string): string
+{
+    return preferred.get(key) ?? key;
+}
+
+/**
  * Fills a template: `$name$` → the value; a `[…]` group is dropped when a parameter inside is empty. `short`
  * replaces the template when every optional parameter is empty.
  */
@@ -1254,6 +1282,10 @@ export function findStatement(kind: PickKind, text: string, scope?: ScopeType): 
 
     if (nodes.length !== 1)
         return null;
+
+    // (a renamed key under its newer name: the catalog's statement)
+    if (nodes[0].k && OLDER_KEYS[nodes[0].k])
+        nodes[0].k = OLDER_KEYS[nodes[0].k];
 
     let best: { def: StatementDef; values: Record<string, string>; score: number; rest: SNode[]; } | null = null;
 

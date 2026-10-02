@@ -618,6 +618,7 @@ function registerIpc(): void
             'shaderPrograms',
             'portrait',
             'portraitReport',
+            'dnaEditor',
             'characterFilter',
             'characterFacets',
             'familyTree',
@@ -673,6 +674,8 @@ function registerIpc(): void
 
 function createWindow(): void
 {
+    // (test runs: CRUSADERPOPE_HIDDEN=1 keeps the window off screen — scripts/drive.mjs — and rendering at full speed)
+    const hidden = process.env.CRUSADERPOPE_HIDDEN === '1';
     const win = new BrowserWindow({
         width: 1600,
         height: 980,
@@ -685,10 +688,14 @@ function createWindow(): void
         webPreferences: {
             preload: join(__dirname, '../preload/index.js'),
             sandbox: false,
-            contextIsolation: true
+            contextIsolation: true,
+            backgroundThrottling: !hidden
         }
     });
-    win.once('ready-to-show', () => win.show());
+
+    if (!hidden)
+        win.once('ready-to-show', () => win.show());
+
     captureWebglConsole(win.webContents);
     win.webContents.setWindowOpenHandler(({ url }) =>
     {

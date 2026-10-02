@@ -8,6 +8,7 @@ import { CharacterFilters, activeCriteria } from './CharacterFilters';
 import { HideRemovedToggle, ModChip, ModStateFilter, ModToggle, type ModStateCounts } from './ModChip';
 import { isConflict, matchesState, shownWith, useHideRemoved, useModFilter } from '../modStore';
 import { EntryContextMenu } from './EntryMenu';
+import { Select } from './Select';
 
 type Sort = 'name' | 'refs' | 'file';
 
@@ -170,11 +171,11 @@ export function EntityList(props: {
                 </div>
                 <div className="row">
                     <input placeholder="Filter by key, name or file…" value={filter} onChange={(e) => setFilter(e.target.value)} />
-                    <select value={sort} onChange={(e) => setSort(e.target.value as Sort)} title="Sort">
+                    <Select value={sort} onChange={(e) => setSort(e.target.value as Sort)} title="Sort">
                         <option value="name">A–Z</option>
                         <option value="refs">Most used</option>
                         <option value="file">File</option>
-                    </select>
+                    </Select>
                     {isCharacters && (
                         <button className={'ghost small cf-toggle' + (criteria ? ' active' : '')} onClick={() => setShowFilters((v) => !v)} title="Filter by age, gender, faith, culture, rank …">
                             Filters{criteria ? ` (${criteria})` : ''}

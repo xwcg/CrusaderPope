@@ -6,6 +6,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { MapInfo } from '../../../../shared/api';
 import '../../styles/map-date.css';
+import { Select } from '../Select';
 
 /** y, y.m or y.m.d → y.m.d (month 1–12, day 1–31), else null */
 function parseDate(s: string): string | null
@@ -102,14 +103,14 @@ export function DateControl(props: { info: MapInfo; historical: boolean; onDate:
     return (
         <div className={'map-date' + (props.historical ? '' : ' idle') + (draft ? ' pending' : '')} title="Holders, realms, names, cultures, faiths and holdings are read from the history at this date">
             <span>At</span>
-            <select value={bookmark ? bookmark.date : ''} onChange={(e) => e.target.value && want(e.target.value)} title="The bookmarks' start dates">
+            <Select value={bookmark ? bookmark.date : ''} onChange={(e) => e.target.value && want(e.target.value)} title="The bookmarks' start dates">
                 {!bookmark && <option value="">Bookmarks…</option>}
                 {info.dates.map((d) => (
                     <option key={d.date} value={d.date}>
                         {d.date} — {d.label}
                     </option>
                 ))}
-            </select>
+            </Select>
             <input
                 className="map-date-slider"
                 type="range"

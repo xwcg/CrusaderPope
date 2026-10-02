@@ -9,6 +9,7 @@
 // { goto: 'target', settle?, timeout? } goes straight to a page and view and waits until it has loaded (the test API,
 // src/renderer/src/testApi.ts: 'events:court.8190#source', '@map?dim=3d&mode=culture&camera=1495,1385,12,0,38',
 // '@mods?list=@all', '@settings' …); CRUSADERPOPE_START=<target> opens one at start.
+// The launched app runs with its window hidden (CRUSADERPOPE_HIDDEN=1): screenshots still work; SHOW=1 shows it.
 // ATTACH=<port> (e.g. ATTACH=9333) drives the app `npm run dev` already runs (its remote-debugging port) instead of
 // launching the built one: no start, no index wait, the app stays open afterwards (CRUSADERPOPE_* env vars are the
 // running app's — start `npm run dev` with them).
@@ -43,6 +44,11 @@ const STEPS = JSON.parse(process.env.STEPS ?? 'null') ?? [
 // Electron into plain Node (no `app`, no window). Strip it.
 const env = { ...process.env };
 delete env.ELECTRON_RUN_AS_NODE;
+
+// the window stays hidden (nothing pops up, no stray clicks into a run); SHOW=1 shows it
+if (!process.env.SHOW)
+    env.CRUSADERPOPE_HIDDEN = '1';
+
 const attached = process.env.ATTACH ? await chromium.connectOverCDP(`http://127.0.0.1:${process.env.ATTACH}`) : null;
 const app = attached ? null : await electron.launch({ executablePath: electronBin, args: [APP_DIR], env, timeout: 60_000 });
 
@@ -257,10 +263,12 @@ for (const step of STEPS)
     }
     else if (step.select)
     {
-        // { select: { sel, value } } picks an option of a <select>
+        // { select: { sel, value } } picks an option of a dropdown (components/Select.tsx: its button opens a picker
+        // menu whose rows carry data-value)
         await page.locator(step.select.sel)
             .first()
-            .selectOption(step.select.value);
+            .click();
+        await page.locator(`.dd-menu [data-value="${step.select.value}"]`).click();
         await page.waitForTimeout(600);
     }
     else if (step.fill)
@@ -322,6 +330,12 @@ for (const step of STEPS)
             await page.locator(step.sel)
                 .first()
                 .screenshot({ path: f });
+        else if (app && env.CRUSADERPOPE_HIDDEN)
+        {
+            // (a hidden window paints only when something changes — Playwright would wait for a frame: Electron captures it)
+            const png = await app.evaluate(async ({ BrowserWindow }) => (await BrowserWindow.getAllWindows()[0].webContents.capturePage()).toPNG().toString('base64'));
+            fs.writeFileSync(f, Buffer.from(png, 'base64'));
+        }
         else
             await page.screenshot({ path: f });
 

@@ -128,9 +128,15 @@ try
     r = await applyOverride(host, { type: 'localization', name: 'trait_brave', mode: 'copy' });
     check(r.action === 'opened' && r.line === 2, 'loc key again: opened');
 
-    // --- nested definitions: a faith is copied with its religion; a gene inside a category block is not copyable
+    // --- nested definitions: a faith is copied with its religion (1.20: on its own, religion/faith_types); a gene
+    // inside a category block is not copyable
     const faith = src('faith', 'catholic');
-    check(faith.container?.type === 'religion/religion_types' && faith.copy?.key === faith.container.name, `faith catholic is copied inside ${faith.container?.name}`);
+
+    if (faith.container)
+        check(faith.container.type === 'religion/religion_types' && faith.copy?.key === faith.container.name, `faith catholic is copied inside ${faith.container.name}`);
+    else
+        check(faith.copy?.key === 'catholic', 'faith catholic is copied on its own (1.20 layout)');
+
     const gene = idx.names('genes')[0];
     const g = src('genes', gene);
     check(!g.copy && /inside the block/.test(g.copyProblem ?? ''), `gene ${gene}: ${g.copyProblem}`);

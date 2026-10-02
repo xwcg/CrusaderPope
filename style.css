@@ -7,6 +7,8 @@
   --muted: #a89c86;
   --gold: #d9a441;
   --gold-2: #f0c46a;
+  --crimson: #6e1a1f;
+  --crimson-2: #8d2329;
   --serif: "EB Garamond", Georgia, serif;
   --sans: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
@@ -45,6 +47,25 @@ nav { display: flex; gap: 20px; font-size: .92rem; }
 nav a { color: var(--muted); text-decoration: none; }
 nav a:hover { color: var(--gold-2); }
 nav .gh { color: var(--gold); }
+
+/* banner: a crimson ribbon with a seal */
+.banner {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  padding: 10px 16px; text-decoration: none; color: #f6e7c8;
+  background: linear-gradient(90deg, var(--crimson), var(--crimson-2) 50%, var(--crimson));
+  border-bottom: 1px solid var(--gold);
+  box-shadow: inset 0 1px 0 rgba(240, 196, 106, .35), 0 6px 18px rgba(0, 0, 0, .35);
+  font-family: var(--serif); font-size: 1.08rem; text-align: center;
+}
+.banner:hover { color: #fff; }
+.banner b { color: var(--gold-2); font-weight: 600; letter-spacing: .02em; }
+.banner .sep { color: var(--gold); margin: 0 4px; }
+.seal {
+  flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f3cf7c, var(--gold) 55%, #9a6d22);
+  color: var(--crimson); font-size: 1.15rem; line-height: 1;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, .25), 0 2px 6px rgba(0, 0, 0, .4);
+}
 
 /* hero */
 .hero {
@@ -126,6 +147,9 @@ footer p { max-width: 760px; margin: 0 auto 12px; }
   .show { gap: 24px; }
   .show.flip .show-text { order: 0; }
   nav a:not(.gh) { display: none; }
+  .banner { font-size: .95rem; justify-content: flex-start; text-align: left; }
+  .banner .sep { display: none; }
+  .banner b { display: block; }
   .hero { padding-top: 48px; }
   section { padding: 56px 0; }
 }

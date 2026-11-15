@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CrusaderPope</title>
-<meta name="description" content="A free explorer and WYSIWYG mod editor for Crusader Kings III. Read the game's script as plain language, edit mods in place, see 3D portraits and the map.">
+<meta name="description" content="A free explorer and WYSIWYG mod editor for Crusader Kings III. Bring older mods to 1.20, read the game's script as plain language, edit mods in place, see 3D portraits and the map.">
 <meta property="og:title" content="CrusaderPope">
 <meta property="og:description" content="A free explorer and WYSIWYG mod editor for Crusader Kings III.">
-<meta property="og:image" content="media/event.png">
+<meta property="og:image" content="shots/event.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -19,18 +19,19 @@
   <div class="wrap top-inner">
     <a class="brand" href="#">CrusaderPope</a>
     <nav>
+      <a href="#fix">Fix for 1.20</a>
       <a href="#features">Features</a>
-      <a href="#map">Map</a>
       <a href="#edit">Editing</a>
+      <a href="#map">Map</a>
       <a href="#start">Get it</a>
       <a class="gh" href="https://github.com/xwcg/CrusaderPope">GitHub</a>
     </nav>
   </div>
 </header>
 
-<a class="banner" href="#read">
+<a class="banner" href="#fix">
   <span class="seal" aria-hidden="true">&#10016;</span>
-  <span class="banner-text"><b>Supports By God Alone</b> <span class="sep">&middot;</span> ready for Crusader Kings III 1.20: rites, tenets, the new faiths and laws</span>
+  <span class="banner-text"><b>New in 0.3.0: Fix for 1.20</b> <span class="sep">&middot;</span> bring a mod made for an older version of Crusader Kings III to 1.20 on its own</span>
 </a>
 
 <section class="hero">
@@ -45,7 +46,7 @@
     </div>
     <p class="note">Free and open source &middot; Beta &middot; Never changes the game's files</p>
     <figure class="hero-shot">
-      <img src="media/event.png" alt="An event in CrusaderPope's Story view: illustration, text, conditions and options in plain language" width="1600" height="960">
+      <img src="shots/event.jpg" alt="An event in CrusaderPope's Story view: illustration, text, conditions and options in plain language" width="1600" height="960">
     </figure>
   </div>
 </section>
@@ -53,23 +54,32 @@
 <section id="features" class="features">
   <div class="wrap">
     <h2>What it does</h2>
+    <article class="show" id="fix">
+      <div class="show-text">
+        <p class="eyebrow">New in 0.3.0: Fix for 1.20</p>
+        <h3>Bring an older mod to 1.20, on its own</h3>
+        <p>Pick a mod made for an older version of the game and choose <b>Fix for 1.20…</b>. CrusaderPope reads the mod against the game, works out what 1.20 changed underneath it and writes a patch mod that loads right after it; the mod itself stays as it is. It won’t settle every edge case, and it tells you which ones are left; for nearly everything else it gets you most of the way there.</p>
+        <ul class="ticks"><li>What 1.20 renamed or moved is converted, also where the mod’s scripts, events, interface files and texts use it</li><li>The mod’s old copies of game files are brought up to date without touching its own values</li><li>The mod’s graphics are fitted into the game’s new shaders</li><li>A plan first; run it again after a game or mod update</li></ul>
+      </div>
+      <div class="show-media"><figure><a href="shots/fix.jpg"><img src="shots/fix.jpg" alt="The plan for A Game of Thrones, a mod made for 1.19: what it will do, before it starts" loading="lazy" width="1600" height="960"></a><figcaption>The plan for A Game of Thrones, a mod made for 1.19: what it will do, before it starts</figcaption></figure></div>
+    </article>
     <article class="show" id="read">
       <div class="show-text">
         <p class="eyebrow">Readable view</p>
         <h3>Script, turned into plain language</h3>
-        <p>Every entry gets a <b>Summary</b> that reads like the game itself: &ldquo;Gains 50 Prestige&rdquo;, &ldquo;If the character is an adult: &hellip;&rdquo;. Events become a timeline of their text, conditions and options; traits, decisions, interactions and titles show what they do, not how they are written.</p>
-        <ul class="ticks"><li>Events, decisions, traits, interactions, laws, faiths, cultures, characters, titles, modifiers, scripted effects &hellip;</li><li>Conditions shown as &ldquo;Only happens if&rdquo;, effects as what they change</li><li>Game icons and event illustrations right where they belong</li></ul>
+        <p>Every entry gets a <b>Summary</b> that reads like the game itself: “Gains 50 Prestige”, “If the vassal has the trait Brave: …”. Events become a timeline of their text, conditions and options; traits, decisions, interactions and titles show what they do, not how they are written.</p>
+        <ul class="ticks"><li>Events, decisions, traits, interactions, laws, faiths, rites, cultures, characters, titles, on_actions, scripted effects …</li><li>The game’s own effect texts with their values; conditions that say whom they are about</li><li>Game icons and event illustrations right where they belong</li></ul>
       </div>
-      <div class="show-media"><div class="tabs" role="tablist"><button role="tab" aria-selected="true">Event</button><button role="tab" aria-selected="false">Trait</button><button role="tab" aria-selected="false">Decision</button><button role="tab" aria-selected="false">Interaction</button><button role="tab" aria-selected="false">Faith</button><button role="tab" aria-selected="false">Rite</button><button role="tab" aria-selected="false">Title</button></div><figure><a href="media/event.png"><img src="media/event.png" alt="An event: illustration, text, conditions and options" loading="lazy" width="1600" height="960"></a><figcaption>An event: illustration, text, conditions and options</figcaption></figure><figure hidden><a href="shots/trait.jpg"><img src="shots/trait.jpg" alt="A trait: settings, opposites, compatibility and modifiers" loading="lazy" width="1600" height="960"></a><figcaption>A trait: settings, opposites, compatibility and modifiers</figcaption></figure><figure hidden><a href="shots/decision.jpg"><img src="shots/decision.jpg" alt="A decision: who can take it, what it costs, what it does" loading="lazy" width="1600" height="960"></a><figcaption>A decision: who can take it, what it costs, what it does</figcaption></figure><figure hidden><a href="shots/interaction.jpg"><img src="shots/interaction.jpg" alt="A character interaction, read as rules" loading="lazy" width="1600" height="960"></a><figcaption>A character interaction, read as rules</figcaption></figure><figure hidden><a href="shots/faith.jpg"><img src="shots/faith.jpg" alt="A faith in 1.20: its main rite, tenets and doctrines, and where each comes from" loading="lazy" width="1600" height="960"></a><figcaption>A faith in 1.20: its main rite, tenets and doctrines, and where each comes from</figcaption></figure><figure hidden><a href="shots/rite.jpg"><img src="shots/rite.jpg" alt="A rite (new in 1.20): its faith, tenets, doctrines and who practises it" loading="lazy" width="1600" height="960"></a><figcaption>A rite (new in 1.20): its faith, tenets, doctrines and who practises it</figcaption></figure><figure hidden><a href="shots/title.jpg"><img src="shots/title.jpg" alt="A landed title with its coat of arms, de jure land and history" loading="lazy" width="1600" height="960"></a><figcaption>A landed title with its coat of arms, de jure land and history</figcaption></figure></div>
+      <div class="show-media"><div class="tabs" role="tablist"><button role="tab" aria-selected="true">Event</button><button role="tab" aria-selected="false">Trait</button><button role="tab" aria-selected="false">Decision</button><button role="tab" aria-selected="false">Interaction</button><button role="tab" aria-selected="false">Faith</button><button role="tab" aria-selected="false">Rite</button><button role="tab" aria-selected="false">Title</button><button role="tab" aria-selected="false">On_action</button></div><figure><a href="shots/event.jpg"><img src="shots/event.jpg" alt="An event: illustration, text, who is who, conditions and options" loading="lazy" width="1600" height="960"></a><figcaption>An event: illustration, text, who is who, conditions and options</figcaption></figure><figure hidden><a href="shots/trait.jpg"><img src="shots/trait.jpg" alt="A trait: settings, opposites, compatibility and modifiers" loading="lazy" width="1600" height="960"></a><figcaption>A trait: settings, opposites, compatibility and modifiers</figcaption></figure><figure hidden><a href="shots/decision.jpg"><img src="shots/decision.jpg" alt="A decision: who can take it, what it costs, what it does" loading="lazy" width="1600" height="960"></a><figcaption>A decision: who can take it, what it costs, what it does</figcaption></figure><figure hidden><a href="shots/interaction.jpg"><img src="shots/interaction.jpg" alt="A character interaction, read as rules" loading="lazy" width="1600" height="960"></a><figcaption>A character interaction, read as rules</figcaption></figure><figure hidden><a href="shots/faith.jpg"><img src="shots/faith.jpg" alt="A faith in 1.20: its main rite, tenets and doctrines, and where each comes from" loading="lazy" width="1600" height="960"></a><figcaption>A faith in 1.20: its main rite, tenets and doctrines, and where each comes from</figcaption></figure><figure hidden><a href="shots/rite.jpg"><img src="shots/rite.jpg" alt="A rite (new in 1.20): its faith, tenets, doctrines and who practises it" loading="lazy" width="1600" height="960"></a><figcaption>A rite (new in 1.20): its faith, tenets, doctrines and who practises it</figcaption></figure><figure hidden><a href="shots/title.jpg"><img src="shots/title.jpg" alt="A landed title with its coat of arms, de jure land and history" loading="lazy" width="1600" height="960"></a><figcaption>A landed title with its coat of arms, de jure land and history</figcaption></figure><figure hidden><a href="shots/onaction.jpg"><img src="shots/onaction.jpg" alt="An on_action: each of its lists in its own place, with delays and chances" loading="lazy" width="1600" height="960"></a><figcaption>An on_action: each of its lists in its own place, with delays and chances</figcaption></figure></div>
     </article>
     <article class="show flip" id="links">
       <div class="show-text">
         <p class="eyebrow">Cross-references</p>
-        <h3>Who uses what &mdash; one hover away</h3>
+        <h3>Who uses what — one hover away</h3>
         <p>Every name is a link. Hover it for a preview card; middle-click pins the card so you can follow its links in turn. The <b>References</b> tab shows everything an entry uses and everything that uses it.</p>
         <ul class="ticks"><li>Back and forward (mouse buttons, Alt+arrows) return to the page, tab and scroll position you left</li><li><b>Who is who</b> in an event and <b>what fires it</b>: the on_actions, events and decisions that lead to it</li><li>One search across 500,000+ entries and localization keys (Ctrl+K)</li></ul>
       </div>
-      <div class="show-media"><div class="tabs" role="tablist"><button role="tab" aria-selected="true">Hover card</button><button role="tab" aria-selected="false">References</button></div><figure><a href="shots/hover.jpg"><img src="shots/hover.jpg" alt="Hover any link for a preview card" loading="lazy" width="1600" height="960"></a><figcaption>Hover any link for a preview card</figcaption></figure><figure hidden><a href="shots/refs.jpg"><img src="shots/refs.jpg" alt="An event's texts and the references in each of them" loading="lazy" width="1600" height="960"></a><figcaption>An event's texts and the references in each of them</figcaption></figure></div>
+      <div class="show-media"><div class="tabs" role="tablist"><button role="tab" aria-selected="true">Hover card</button><button role="tab" aria-selected="false">References</button></div><figure><a href="shots/hover.jpg"><img src="shots/hover.jpg" alt="A hover card, pinned with a middle click" loading="lazy" width="1600" height="960"></a><figcaption>A hover card, pinned with a middle click</figcaption></figure><figure hidden><a href="shots/refs.jpg"><img src="shots/refs.jpg" alt="An event’s texts and the references in each of them" loading="lazy" width="1600" height="960"></a><figcaption>An event’s texts and the references in each of them</figcaption></figure></div>
     </article>
     <article class="show" id="expert">
       <div class="show-text">
@@ -80,41 +90,50 @@
       </div>
       <div class="show-media"><div class="tabs" role="tablist"><button role="tab" aria-selected="true">Source</button><button role="tab" aria-selected="false">Graph</button></div><figure><a href="shots/source.jpg"><img src="shots/source.jpg" alt="The Source tab: the definition with its file and lines" loading="lazy" width="1600" height="960"></a><figcaption>The Source tab: the definition with its file and lines</figcaption></figure><figure hidden><a href="shots/graph.jpg"><img src="shots/graph.jpg" alt="The Graph tab: what triggers an event and what it touches" loading="lazy" width="1600" height="960"></a><figcaption>The Graph tab: what triggers an event and what it touches</figcaption></figure></div>
     </article>
-    <article class="show flip" id="portraits">
-      <div class="show-text">
-        <p class="eyebrow">3D portraits &amp; barbershop</p>
-        <h3>Historical characters, with their faces</h3>
-        <p>Characters are built in 3D from the game's own DNA, genes, clothes and shaders, next to their stats, traits, family and life events. The <b>Barbershop</b> changes a character's looks gene by gene &mdash; hairstyle, face, body, beard &mdash; and saves the DNA into your mod.</p>
-        <ul class="ticks"><li>The game's own shaders (or a mod's), recompiled for WebGL</li><li>Toggle clothing, facial features, morphs and barbershop looks</li><li>Galleries for every image and 3D model, coats of arms drawn as in the game</li></ul>
-      </div>
-      <div class="show-media"><div class="tabs" role="tablist"><button role="tab" aria-selected="true">Character</button><button role="tab" aria-selected="false">Barbershop</button><button role="tab" aria-selected="false">Portrait</button><button role="tab" aria-selected="false">Images</button></div><figure><a href="shots/character.jpg"><img src="shots/character.jpg" alt="King Harold, built from his DNA" loading="lazy" width="1600" height="960"></a><figcaption>King Harold, built from his DNA</figcaption></figure><figure hidden><a href="shots/barbershop.jpg"><img src="shots/barbershop.jpg" alt="The Barbershop: his looks gene by gene, saved into the mod" loading="lazy" width="1600" height="960"></a><figcaption>The Barbershop: his looks gene by gene, saved into the mod</figcaption></figure><figure hidden><a href="media/portrait.png"><img src="media/portrait.png" alt="A 3D portrait up close" loading="lazy" width="1600" height="960"></a><figcaption>A 3D portrait up close</figcaption></figure><figure hidden><a href="shots/gallery.jpg"><img src="shots/gallery.jpg" alt="The image gallery, folder by folder" loading="lazy" width="1600" height="960"></a><figcaption>The image gallery, folder by folder</figcaption></figure></div>
-    </article>
-    <article class="show" id="map">
-      <div class="show-text">
-        <p class="eyebrow">Map</p>
-        <h3>The world at any bookmark date</h3>
-        <p>A 2D and 3D map with realms, de jure hegemonies, cultures, faiths and holdings at any date you pick, drawn with the game's terrain, trees and buildings, or as a paper map.</p>
-        <ul class="ticks"><li>Slide through history; every realm, culture and faith listed with its share</li><li>&ldquo;Show on map&rdquo; from any title</li><li>Mostly a viewer for now &mdash; a map editor is for later</li></ul>
-      </div>
-      <div class="show-media"><div class="tabs" role="tablist"><button role="tab" aria-selected="true">Realms</button><button role="tab" aria-selected="false">Cultures</button><button role="tab" aria-selected="false">Faiths</button><button role="tab" aria-selected="false">3D</button><button role="tab" aria-selected="false">Terrain</button></div><figure><a href="shots/map-realm.jpg"><img src="shots/map-realm.jpg" alt="Realms in 1066, paper style" loading="lazy" width="1600" height="960"></a><figcaption>Realms in 1066, paper style</figcaption></figure><figure hidden><a href="shots/map-culture.jpg"><img src="shots/map-culture.jpg" alt="Cultures in 1066" loading="lazy" width="1600" height="960"></a><figcaption>Cultures in 1066</figcaption></figure><figure hidden><a href="shots/map-faith.jpg"><img src="shots/map-faith.jpg" alt="Faiths in 1066: each county by its rite and the faith that rite belongs to then" loading="lazy" width="1600" height="960"></a><figcaption>Faiths in 1066: each county by its rite and the faith that rite belongs to then</figcaption></figure><figure hidden><a href="media/map.png"><img src="media/map.png" alt="The 3D map with the game's own terrain" loading="lazy" width="1600" height="960"></a><figcaption>The 3D map with the game's own terrain</figcaption></figure><figure hidden><a href="shots/map-terrain.jpg"><img src="shots/map-terrain.jpg" alt="Arabia and the Gulf in 3D" loading="lazy" width="1600" height="960"></a><figcaption>Arabia and the Gulf in 3D</figcaption></figure></div>
-    </article>
     <article class="show flip" id="edit">
       <div class="show-text">
         <p class="eyebrow">Edit in place</p>
         <h3>The readable view is the editor</h3>
-        <p>Pick a mod to edit, then change entries right where you read them: click a line to change it, add a new one or remove it. A keyboard-driven picker knows the game's statements, scopes and values, and the app writes the Paradox script for you.</p>
-        <ul class="ticks"><li>&ldquo;Override in &lt;mod&gt;&rdquo; copies a game entry into your mod; new entries and duplicates work the same way</li><li>Localization edited where it shows, with text codes and examples of what they return</li><li>Every change undoable, edited files kept neatly formatted</li><li>Round-trip models and textures with Blender (glTF; no animations yet)</li></ul>
+        <p>Pick a mod to edit, then change entries right where you read them: click a line to change it, add a new one or remove it. A keyboard-driven picker knows the game’s statements, scopes and values, <b>explains every pick</b> in plain language, and writes the Paradox script for you.</p>
+        <ul class="ticks"><li>“Override in &lt;mod&gt;” copies a game entry into your mod; new entries and duplicates work the same way</li><li>The picker offers saved scopes and lists only where the script has them</li><li>Texts edited where they show, with text codes and examples of what they return</li><li>Every change undoable (and redoable); comments and layout of your script kept</li></ul>
       </div>
-      <div class="show-media"><figure><a href="media/picker.png"><img src="media/picker.png" alt="Adding an effect with the keyboard-driven picker" loading="lazy" width="1600" height="960"></a><figcaption>Adding an effect with the keyboard-driven picker</figcaption></figure></div>
+      <div class="show-media"><div class="tabs" role="tablist"><button role="tab" aria-selected="true">Your event</button><button role="tab" aria-selected="false">The picker</button></div><figure><a href="shots/edit.jpg"><img src="shots/edit.jpg" alt="Your own mod’s event, edited where you read it" loading="lazy" width="1600" height="960"></a><figcaption>Your own mod’s event, edited where you read it</figcaption></figure><figure hidden><a href="shots/picker.jpg"><img src="shots/picker.jpg" alt="Adding an effect with the keyboard-driven picker: every pick explained" loading="lazy" width="1600" height="960"></a><figcaption>Adding an effect with the keyboard-driven picker: every pick explained</figcaption></figure></div>
+    </article>
+    <article class="show" id="portraits">
+      <div class="show-text">
+        <p class="eyebrow">3D portraits &amp; barbershop</p>
+        <h3>Historical characters, with their faces</h3>
+        <p>Characters are built in 3D from the game’s own DNA, genes, clothes and shaders, next to their stats, traits, family and life events, at any date you pick. The <b>Barbershop</b> changes a character’s looks gene by gene and saves the DNA into your mod.</p>
+        <ul class="ticks"><li>The game’s own shaders (or a mod’s), recompiled for WebGL</li><li>Add life events, parents, siblings, twins and children</li><li>Galleries for every image and 3D model, coats of arms drawn as in the game</li></ul>
+      </div>
+      <div class="show-media"><div class="tabs" role="tablist"><button role="tab" aria-selected="true">Character</button><button role="tab" aria-selected="false">Barbershop</button><button role="tab" aria-selected="false">Images</button></div><figure><a href="shots/character.jpg"><img src="shots/character.jpg" alt="King Harold, built from his DNA" loading="lazy" width="1600" height="960"></a><figcaption>King Harold, built from his DNA</figcaption></figure><figure hidden><a href="shots/barbershop.jpg"><img src="shots/barbershop.jpg" alt="The Barbershop: his looks gene by gene, saved into the mod" loading="lazy" width="1600" height="960"></a><figcaption>The Barbershop: his looks gene by gene, saved into the mod</figcaption></figure><figure hidden><a href="shots/gallery.jpg"><img src="shots/gallery.jpg" alt="The image gallery, folder by folder" loading="lazy" width="1600" height="960"></a><figcaption>The image gallery, folder by folder</figcaption></figure></div>
+    </article>
+    <article class="show flip" id="map">
+      <div class="show-text">
+        <p class="eyebrow">Map</p>
+        <h3>The world at any bookmark date</h3>
+        <p>A 2D and 3D map with realms, de jure hegemonies, cultures, faiths and holdings at any date you pick, drawn with the game’s terrain, trees, water and buildings, or as a paper map.</p>
+        <ul class="ticks"><li>Slide through history; every realm, culture and faith listed with its share</li><li>Castles, cities and temples as they stand at the date; fog of war as the game draws it</li><li>Create and edit bookmarks</li></ul>
+      </div>
+      <div class="show-media"><div class="tabs" role="tablist"><button role="tab" aria-selected="true">Realms</button><button role="tab" aria-selected="false">Cultures</button><button role="tab" aria-selected="false">Faiths</button><button role="tab" aria-selected="false">3D</button><button role="tab" aria-selected="false">Close up</button></div><figure><a href="shots/map-realm.jpg"><img src="shots/map-realm.jpg" alt="Realms in 1066, paper style" loading="lazy" width="1600" height="960"></a><figcaption>Realms in 1066, paper style</figcaption></figure><figure hidden><a href="shots/map-culture.jpg"><img src="shots/map-culture.jpg" alt="Cultures in 1066" loading="lazy" width="1600" height="960"></a><figcaption>Cultures in 1066</figcaption></figure><figure hidden><a href="shots/map-faith.jpg"><img src="shots/map-faith.jpg" alt="Faiths in 1066: each county by its rite and the faith that rite belongs to then" loading="lazy" width="1600" height="960"></a><figcaption>Faiths in 1066: each county by its rite and the faith that rite belongs to then</figcaption></figure><figure hidden><a href="shots/map-3d.jpg"><img src="shots/map-3d.jpg" alt="The 3D map with the game’s own terrain" loading="lazy" width="1600" height="960"></a><figcaption>The 3D map with the game’s own terrain</figcaption></figure><figure hidden><a href="shots/map-close.jpg"><img src="shots/map-close.jpg" alt="Castles, churches, trees and rivers as the game draws them" loading="lazy" width="1600" height="960"></a><figcaption>Castles, churches, trees and rivers as the game draws them</figcaption></figure></div>
     </article>
     <article class="show" id="mods">
       <div class="show-text">
         <p class="eyebrow">Mods</p>
         <h3>Your playsets, and where mods collide</h3>
-        <p>CrusaderPope reads the launcher's mods and playsets and shows exactly what each loaded mod adds, changes or removes, and whether a mod's copy is the same as the game's, a duplicate the game won't pick, or a real conflict.</p>
-        <ul class="ticks"><li>Create mods, manage playsets, pack and unpack</li><li>Playsets written back to the launcher, with backups</li><li>Filters for all of it; entries a total conversion removes can be hidden</li></ul>
+        <p>CrusaderPope reads the launcher’s mods and playsets and shows exactly what each loaded mod adds, changes or removes, and whether a mod’s copy is the same as the game’s, a duplicate the game won’t pick, or a real conflict.</p>
+        <ul class="ticks"><li>Create, merge and delete mods, manage playsets, pack and unpack</li><li>Playsets written back to the launcher, with backups</li><li>Switching back to a mod list you used before takes seconds</li></ul>
       </div>
-      <div class="show-media"><figure><a href="shots/mods.jpg"><img src="shots/mods.jpg" alt="The Mods page: lists, load order and the mod you edit" loading="lazy" width="1600" height="960"></a><figcaption>The Mods page: lists, load order and the mod you edit</figcaption></figure></div>
+      <div class="show-media"><figure><a href="shots/mods.jpg"><img src="shots/mods.jpg" alt="The Mods page: the playset, its load order and the mod you edit" loading="lazy" width="1600" height="960"></a><figcaption>The Mods page: the playset, its load order and the mod you edit</figcaption></figure></div>
+    </article>
+    <article class="show flip" id="gui">
+      <div class="show-text">
+        <p class="eyebrow">Experimental</p>
+        <h3>Interface files and game saves</h3>
+        <p>A <b>GUI</b> tab browses the game’s windows, shows where they are used and previews them as the game draws them; widgets can be edited into your mod. The <b>Save</b> page opens a game save and changes its characters into a new save file.</p>
+        <ul class="ticks"><li>Both are experimental: check their results in the game</li></ul>
+      </div>
+      <div class="show-media"><figure><a href="shots/gui.jpg"><img src="shots/gui.jpg" alt="The GUI tab: the game’s windows and where they are used" loading="lazy" width="1600" height="960"></a><figcaption>The GUI tab: the game’s windows and where they are used</figcaption></figure></div>
     </article>
   </div>
 </section>
@@ -127,7 +146,7 @@
         <span class="n">1</span>
         <h3>Download</h3>
         <p>From the <a href="https://github.com/xwcg/CrusaderPope/releases/latest">releases page</a>: the setup
-          (<code>.exe</code>, no administrator rights needed) or the portable <code>.zip</code>.</p>
+          (<code>.exe</code>, no administrator rights needed) or the portable <code>.zip</code>; for Linux an AppImage or a <code>.deb</code>.</p>
       </div>
       <div class="step">
         <span class="n">2</span>
@@ -145,8 +164,8 @@
     <div class="req">
       <h3>Requirements</h3>
       <ul>
-        <li>Windows 10/11 (Linux and macOS are expected to work but not tested yet).</li>
-        <li><b>A legal copy of Crusader Kings III</b> &mdash; the tool reads the base game files and is useless without them.</li>
+        <li>Windows 10/11; Linux builds are new and little tested, macOS is untested.</li>
+        <li><b>A legal copy of Crusader Kings III</b> &mdash; the tool reads the base game files and is useless without them. Made for 1.20.1; the coming 1.21 isn't supported yet.</li>
         <li>A reasonably strong PC: the full index takes around 2 GB of memory, more with big mods.</li>
       </ul>
       <p>Running from source? See <a href="https://github.com/xwcg/CrusaderPope/blob/main/INSTALL.md">INSTALL.md</a>.</p>

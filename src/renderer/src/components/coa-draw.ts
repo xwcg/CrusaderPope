@@ -7,12 +7,12 @@
  * - `mask = { 1 }`: the emblem only where the pattern shows that colour (red minus green and blue, green minus blue, blue);
  * - every emblem's alpha × gfx/coat_of_arms/coa_mask_texture.dds's green × 2 at its place in the arms (worn paint:
  *   the texture's dark specks, 9 % of it under 0.5, let the field show through);
- * - every layer: overlay with the mask texture's blue at 20 % — done once over the whole (the same: per pixel the
+ * - every layer: overlay with the mask texture's blue at 20 %, done once over the whole (the same: per pixel the
  *   overlay is affine in the colour, so it commutes with the layers' blending);
  * - framed: the gui's shape mask (alpha) cuts the arms, shifted and scaled inside it (offset / scale), then the frame
- *   (realms: their government's banner — a shadow behind, the tier's bar above).
- * Textures come as ck3://img PNGs (patterns without alpha: it may be data). Everything is cached — finished pictures
- * by what they show, so arms that stay the same at another date are not drawn again —; the caches are dropped when
+ *   (realms: their government's banner, a shadow behind, the tier's bar above).
+ * Textures come as ck3://img PNGs (patterns without alpha: it may be data). Everything is cached (finished pictures
+ * by what they show, so arms that stay the same at another date are not drawn again); the caches are dropped when
  * the index revision changes (another mod list may show other files under the same paths).
  */
 import type { CoaDesign, CoaEmblem, CoaFrame, CoaInfo, CoaKind } from '../../../shared/api';
@@ -20,6 +20,7 @@ import { api } from '../api';
 import { track } from '../pending';
 import { imgUrl } from '../img';
 
+import { tr } from '../../../shared/i18n';
 const FALLBACK = '#cccac8';
 const MASK_TEXTURE = 'gfx/coat_of_arms/coa_mask_texture.dds';
 
@@ -63,7 +64,7 @@ function remember<T>(m: Map<string, T>, key: string, make: () => T, max: number)
     return v;
 }
 
-/** An entry's arms at a history date (a title's; none: the first bookmark's) — asked once per date unless they never change. */
+/** An entry's arms at a history date (a title's; none: the first bookmark's), asked once per date unless they never change. */
 export function coaInfo(kind: CoaKind, name: string, date?: string): Promise<CoaInfo | null>
 {
     const id = kind + ':' + name;
@@ -411,26 +412,29 @@ function drawCell(g: CanvasRenderingContext2D, strip: HTMLImageElement, index: n
 }
 
 /**
- * The arms at `px` pixels: the design, the mask texture's shading, and — with a frame — cut to the frame's shape with
+ * The arms at `px` pixels: the design, the mask texture's shading, and, with a frame, cut to the frame's shape with
  * the frame over it (gui_coatofarms.shader: uv = (p − 0.5) / scale + 0.5 + offset, clamped; alpha × the mask's alpha;
- * modify_texture overlay; the frame cell drawn over its square), in a `box`-pixel square: the frame's, or — with a bar
- * on top (realms) — the frame's at the bottom and the bar above it; a shadow (`under`) behind.
+ * modify_texture overlay; the frame cell drawn over its square), in a `box`-pixel square: the frame's, or (with a bar
+ * on top, realms) the frame's at the bottom and the bar above it; a shadow (`under`) behind.
  */
 async function paint(info: CoaInfo, box: number): Promise<HTMLCanvasElement>
 {
     const f: CoaFrame | undefined = info.frame;
-    const fs = box / (1 - (f?.top?.dy ?? 0));
+    // (the frame at the bottom: above it the bar of its tier, above that a crown; room for what reaches highest)
+    const above = Math.max(-(f?.top?.dy ?? 0), f?.crown ? f.crown.aspect + f.crown.gap : 0);
+    const fs = box / (1 + above);
     const [fx, fy] = [(box - fs) / 2, box - fs];
     const px = Math.max(8, Math.round(fs / (f?.ratio ?? 1)));
     const strip = (path: string | undefined): Promise<HTMLImageElement | null> | null => (path ? image(imgUrl(path, Math.min(2048, texSize(box) * 8))) : null);
-    const [arms, shade, mask, over, frame, under, top] = await Promise.all([
+    const [arms, shade, mask, over, frame, under, top, crown] = await Promise.all([
         drawDesign(info.design, px),
         texels(MASK_TEXTURE, texSize(px)),
         f ? texels(f.mask, texSize(px)) : null,
         f?.overlay ? texels(f.overlay, texSize(px)) : null,
         strip(f?.frame),
         strip(f?.under),
-        strip(f?.top?.texture)
+        strip(f?.top?.texture),
+        strip(f?.crown?.texture)
     ]);
     const a = ctx2d(arms).getImageData(0, 0, px, px);
     const out = canvas(box, box);
@@ -477,8 +481,12 @@ async function paint(info: CoaInfo, box: number): Promise<HTMLCanvasElement>
         }
     }
 
+    // (behind: a realm's shadow at the frame's size; an unheld title's glow larger, cut at the picture's edge)
     if (under)
-        drawCell(g, under, 0, fx, fy, fs);
+    {
+        const us = fs * (f?.underRatio ?? 1);
+        drawCell(g, under, 0, fx - (us - fs) / 2, fy - (us - fs) / 2, us);
+    }
 
     const shaped = canvas(px, px);
     ctx2d(shaped).putImageData(res, 0, 0);
@@ -490,6 +498,16 @@ async function paint(info: CoaInfo, box: number): Promise<HTMLCanvasElement>
     if (top)
         drawCell(g, top, f!.top!.index, fx, fy + f!.top!.dy * fs, fs);
 
+    // the crown: a cell `aspect` as high as wide, `gap` above the frame's top
+    if (crown?.naturalHeight)
+    {
+        const c = f!.crown!;
+        const cw = crown.naturalHeight / c.aspect;
+        const cells = Math.max(1, Math.round(crown.naturalWidth / cw));
+        g.imageSmoothingQuality = 'high';
+        g.drawImage(crown, Math.min(c.index, cells - 1) * cw, 0, cw, crown.naturalHeight, fx, fy - (c.aspect + c.gap) * fs, fs, c.aspect * fs);
+    }
+
     return out;
 }
 
@@ -498,7 +516,7 @@ export function coaPicture(info: CoaInfo, box: number): Promise<HTMLCanvasElemen
 {
     return remember(pictures, `${box}|${coaSignature(info)}`, () => paint(info, box), 400);
 } /**
- * Test hook (scripts/drive.mjs `eval`, then a shot of `#coa-sheet`): a sheet of arms over the page —
+ * Test hook (scripts/drive.mjs `eval`, then a shot of `#coa-sheet`): a sheet of arms over the page, as
  * `__coaSheet(['title:k_france', 'title:k_england@1178.10.1', 'dynasty:699'], 160)` (`@date`: a title's at that
  * history date); resolves with the time it took and what was missing.
  */
@@ -540,5 +558,5 @@ export function coaPicture(info: CoaInfo, box: number): Promise<HTMLCanvasElemen
         cell.append(id.slice(id.indexOf(':') + 1));
         sheet.append(cell);
     });
-    return `${ids.length} arms in ${Math.round(performance.now() - t0)} ms; none: ${missing.join(' ') || '-'}`;
+    return tr('{idsCount} arms in {round} ms; none: {missing}', { idsCount: ids.length, round: Math.round(performance.now() - t0), missing: missing.join(' ') || '-' });
 };

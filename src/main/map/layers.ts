@@ -1,6 +1,6 @@
 /**
- * The map's layers (docs/map.md): every map mode other than realms and de jure titles — cultures, faiths, terrain,
- * holdings … Each is a LayerDef building a MapLayer (shared/api.ts) for the map's date; the renderer shows every layer
+ * The map's layers (docs/map.md): every map mode other than realms and de jure titles (cultures, faiths, terrain,
+ * holdings …). Each is a LayerDef building a MapLayer (shared/api.ts) for the map's date; the renderer shows every layer
  * it gets as a mode (buttons, colours, borders, labels, side panel row).
  */
 import type { GameIndex } from '../indexer/gameIndex.ts';
@@ -37,6 +37,8 @@ export interface LayerCtx
     texts(dir: string): string[];
     /** data a layer computes once per index (not per date): kept across dates */
     cache: Map<string, unknown>;
+    /** a loaded save's counties (docs/saves.md): their culture, faith and development, in place of history */
+    save?: { culture: Map<string, string>; faith: Map<string, string>; development: Map<string, number>; holding: Map<number, string>; special: Map<number, string>; duchy: Map<number, string>; };
 }
 
 export interface LayerDef

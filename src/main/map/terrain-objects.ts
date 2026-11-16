@@ -1,6 +1,6 @@
 /**
  * Trees and other map objects for the 3D map (docs/map.md, "3D map"). gfx/map/map_object_data/**.txt lists them:
- * `object={ name layer pdxmesh clamp_to_water_level count transform="x y z qx qy qz qw sx sy sz …" }` — one line per
+ * `object={ name layer pdxmesh clamp_to_water_level count transform="x y z qx qy qz qw sx sy sz …" }`, one line per
  * instance in game coordinates (x east, z north from the map's bottom edge; y an offset over the ground; rotations
  * about y only), generated forests in generated/ (vanilla ~550 k instances of 43 meshes, AGOT ~2.1 M of 226 with its
  * roads, ports and cities). Layers (layers.txt, game_object_layers.txt) fade out at a zoom step (`fade_out`: vanilla
@@ -15,11 +15,12 @@ import type { GameFiles } from '../mods/gamefiles.ts';
 import type { MapTerrainInfo } from '../../shared/api.ts';
 import { parse, type PNode } from '../indexer/parser.ts';
 import { loadMesh } from '../portraits/mesh.ts';
+import { entityMeshes, holdingRules } from './holdings.ts';
 
 type ObjectsInfo = NonNullable<MapTerrainInfo['objects']>;
 
 /** Bumped when the files change shape. */
-export const OBJECTS_VERSION = 4;
+export const OBJECTS_VERSION = 11;
 /** map pixels per side of an instance cell (what the renderer culls by) */
 const CELL = 128;
 /** floats per vertex: position, normal, tangent (xyz + handedness), uv */
@@ -28,8 +29,8 @@ const VERTEX = 12;
 const INSTANCE = 5;
 /** layers that are not drawn: lake surfaces (water: the map's own), table props of the zoomed-out map */
 const SKIP_LAYER = /^(lake_layer|map_table_layer)/;
-/** shaders not drawn as meshes: water surfaces, decal planes (bridges' dirt on the ground) */
-const SKIP_SHADER = /water|lake|river|^decal/i;
+/** shaders not drawn as meshes: water surfaces, decal planes (bridges' dirt on the ground), collision boxes (holdings) */
+const SKIP_SHADER = /water|lake|river|^decal|collision/i;
 
 /** A mesh part for the thread: vertex streams and its material. */
 export interface PartInput
@@ -57,6 +58,10 @@ export interface ObjectsInput
     models: Record<string, PartInput[]>;
     /** layer → the zoom step it fades out at */
     fades: Record<string, number>;
+    /** meshes whose instances come per date (holdings: MapData.holdings), a group each, no instances of its own */
+    dynamic?: string[];
+    /** `entity = "…"` objects (animals): the entity's pdxmesh and scale */
+    entities?: Record<string, [string, number]>;
 }
 
 const kids = (n: PNode | undefined): PNode[] => (n && Array.isArray(n.v) ? n.v : []);
@@ -92,7 +97,7 @@ const lodOf = (shape: string): number => Number(/LOD_?(\d+)/i.exec(shape)?.[1] ?
  * Where the objects' pdxmeshes are declared: every .asset under gfx/models whose pdxmesh names are wanted, parsed.
  * Texture and mesh references are relative to the asset's folder or game paths, else found by file name.
  */
-function resolveModels(vfs: GameFiles, wanted: Set<string>): Record<string, PartInput[]>
+export function resolveModels(vfs: GameFiles, wanted: Set<string>): Record<string, PartInput[]>
 {
     const models: Record<string, PartInput[]> = {};
     let byName: Map<string, string> | undefined;
@@ -170,12 +175,20 @@ function resolveModels(vfs: GameFiles, wanted: Set<string>): Record<string, Part
             const out: PartInput[] = [];
             const seen = new Map<string, number>();
 
-            for (const p of parts)
+            // a shape without a level of detail in its name takes the one of the next shape that has it (the holdings:
+            // mesh_01Shape, LOD_0|decal_plane…, mesh_02Shape, LOD_1|…: mesh_02 is level 1)
+            const lods = parts.map((p) => (/LOD_?\d+/i.test(p.shape) ? lodOf(p.shape) : -1));
+
+            for (let i = lods.length - 2; i >= 0; i--)
+                if (lods[i] < 0)
+                    lods[i] = lods[i + 1];
+
+            for (const [pi, p] of parts.entries())
             {
                 const index = seen.get(p.shape) ?? 0;
                 seen.set(p.shape, index + 1);
 
-                if (lodOf(p.shape) !== 0)
+                if (Math.max(0, lods[pi]) !== 0 || /\|collision\|/i.test(p.shape))
                     continue;
 
                 // meshsettings pair up with a shape by name and index (a shape's sub-meshes)
@@ -197,7 +210,7 @@ function resolveModels(vfs: GameFiles, wanted: Set<string>): Record<string, Part
                     positions,
                     normals: p.normals,
                     tangents: p.tangents,
-                    // (atlas shaders — `standard_atlas`: bridges, buildings — read their textures at the second UV set)
+                    // (atlas shaders, `standard_atlas`: bridges, buildings, read their textures at the second UV set)
                     uvs: /atlas/i.test(shader) && p.uvs2 ? p.uvs2 : p.uvs,
                     indices: p.indices,
                     textures: {
@@ -228,8 +241,10 @@ export function objectsInput(vfs: GameFiles, dir: string): { key: string; input:
     if (!files.length)
         return null;
 
+    // (the holdings' models: what common/buildings' assets name; their files are part of the key)
+    const rulesFiles = [...vfs.list('common/buildings', { ext: /\.txt$/i }), ...vfs.list('common/holdings', { ext: /\.txt$/i })];
     const key = createHash('sha1')
-        .update(JSON.stringify([OBJECTS_VERSION, ...files.map((f) => [vfs.where(f), vfs.stat(f).size, vfs.stat(f).mtime])]))
+        .update(JSON.stringify([OBJECTS_VERSION, ...[...files, ...rulesFiles].map((f) => [vfs.where(f), vfs.stat(f).size, vfs.stat(f).mtime])]))
         .digest('hex')
         .slice(0, 16);
     return {
@@ -239,12 +254,31 @@ export function objectsInput(vfs: GameFiles, dir: string): { key: string; input:
             const texts = files.map((f) => vfs.read(f)).filter((b): b is Buffer => !!b);
             const wanted = new Set<string>();
 
+            const entityNames = new Set<string>();
+
             for (const b of texts)
+            {
                 for (const m of b.toString('latin1').matchAll(/pdxmesh\s*=\s*"([^"]+)"/g))
                     wanted.add(m[1]);
 
+                for (const m of b.toString('latin1').matchAll(/\bentity\s*=\s*"([^"]+)"/g))
+                    entityNames.add(m[1]);
+            }
+
+            // (entity objects: animals; effects have no mesh, sound emitters a debug cube: test_object_mesh)
+            const scales = new Map<string, number>();
+            const entities = Object.fromEntries([...entityMeshes(vfs, entityNames, 'gfx/models', scales)].filter(([, m]) => !/^test_/i.test(m)).map(([e, m]): [string, [string, number]] => [e, [m, scales.get(e) ?? 1]]));
+
+            for (const [m] of Object.values(entities))
+                wanted.add(m);
+
+            const dynamic = holdingRules(vfs).meshes;
+
+            for (const m of dynamic)
+                wanted.add(m);
+
             const models = resolveModels(vfs, wanted);
-            return { key, dir, files: texts.map((b) => new Uint8Array(b.buffer, b.byteOffset, b.byteLength)), models, fades: layerFades(vfs) };
+            return { key, dir, files: texts.map((b) => new Uint8Array(b.buffer, b.byteOffset, b.byteLength)), models, fades: layerFades(vfs), dynamic: dynamic.filter((m) => models[m]), entities };
         }
     };
 }
@@ -312,13 +346,13 @@ function numbers(text: string, at: number, end: number): Float64Array
 
 /**
  * The object blocks of a map_object_data file with a pdxmesh and a transform (blocks hold no other braces). Commented
- * out ones are skipped: an `object={` after a `#` on its line (mods switch the game's objects off so — AGOT's
+ * out ones are skipped: an `object={` after a `#` on its line (mods switch the game's objects off so: AGOT's
  * changan_building.txt, whose transform's closing `"}` stays uncommented on the next line), and commented lines inside a
  * block count for nothing.
  */
-function objectsOf(text: string): { mesh: string; layer: string; clamp: boolean; t: Float64Array; }[]
+function objectsOf(text: string, entities: Record<string, [string, number]> = {}): { mesh: string; scale: number; layer: string; clamp: boolean; t: Float64Array; }[]
 {
-    const out: { mesh: string; layer: string; clamp: boolean; t: Float64Array; }[] = [];
+    const out: { mesh: string; scale: number; layer: string; clamp: boolean; t: Float64Array; }[] = [];
     const re = /\bobject\s*=\s*\{/g;
     const tr = /transform\s*=\s*"/g;
 
@@ -339,13 +373,14 @@ function objectsOf(text: string): { mesh: string; layer: string; clamp: boolean;
 
         const tEnd = text.indexOf('"', tr.lastIndex);
         const head = text.slice(start, t.index).replace(/#[^\n]*/g, '');
-        const mesh = /pdxmesh\s*=\s*"([^"]*)"/.exec(head)?.[1];
+        const entity = entities[/\bentity\s*=\s*"([^"]*)"/.exec(head)?.[1] ?? ''];
+        const mesh = /pdxmesh\s*=\s*"([^"]*)"/.exec(head)?.[1] ?? entity?.[0];
         re.lastIndex = tEnd < 0 ? text.length : tEnd;
 
         if (!mesh || tEnd < 0)
             continue;
 
-        out.push({ mesh, layer: /layer\s*=\s*"([^"]*)"/.exec(head)?.[1] ?? '', clamp: /clamp_to_water_level\s*=\s*yes/.test(head), t: numbers(text, tr.lastIndex, tEnd) });
+        out.push({ mesh, scale: entity?.[1] ?? 1, layer: /layer\s*=\s*"([^"]*)"/.exec(head)?.[1] ?? '', clamp: /clamp_to_water_level\s*=\s*yes/.test(head), t: numbers(text, tr.lastIndex, tEnd) });
     }
 
     return out;
@@ -357,13 +392,13 @@ export function buildObjects(input: ObjectsInput): ObjectsInfo
     const { key, dir, models, fades } = input;
     const decoder = new TextDecoder('latin1');
     // instances per (model, layer, clamp)
-    const groups = new Map<string, { model: string; fade: number; clamp: boolean; data: number[]; }>();
+    const groups = new Map<string, { model: string; fade: number; clamp: boolean; data: number[]; dynamic?: boolean; }>();
     let maxX = 0;
     let maxZ = 0;
 
     for (const bytes of input.files)
     {
-        for (const o of objectsOf(decoder.decode(bytes)))
+        for (const o of objectsOf(decoder.decode(bytes), input.entities))
         {
             if (SKIP_LAYER.test(o.layer) || !models[o.mesh])
                 continue;
@@ -381,12 +416,16 @@ export function buildObjects(input: ObjectsInput): ObjectsInfo
                 if (!Number.isFinite(x + y + z + qy + qw + sx))
                     continue;
 
-                g.data.push(x, y, z, 2 * Math.atan2(qy, qw), (sx + sy + sz) / 3);
+                g.data.push(x, y, z, 2 * Math.atan2(qy, qw), ((sx + sy + sz) / 3) * o.scale);
                 maxX = Math.max(maxX, x);
                 maxZ = Math.max(maxZ, z);
             }
         }
     }
+
+    // the holdings' models: a group each, instances set per date (the building layer's fade, on the water level)
+    for (const m of input.dynamic ?? [])
+        groups.set(`${m}|building_layer|dynamic`, { model: m, fade: fades.building_layer ?? 9, clamp: true, data: [], dynamic: true });
 
     // (an instance reaching over a quarter of the map is no object on it: a sky dome around the whole map)
     const span = Math.max(maxX, maxZ) / 4;
@@ -520,7 +559,7 @@ export function buildObjects(input: ObjectsInput): ObjectsInfo
                 sorted[to + k] = grp.data[i * INSTANCE + k];
         }
 
-        groupList.push({ model: names.indexOf(grp.model), fade: grp.fade, clamp: grp.clamp, start: instanceCount, count: n, cells: g * cols * rows });
+        groupList.push({ model: names.indexOf(grp.model), fade: grp.fade, clamp: grp.clamp, start: instanceCount, count: n, cells: g * cols * rows, ...(grp.dynamic ? { dynamic: true } : {}) });
         instanceChunks.push(sorted);
         instanceCount += n;
         g++;

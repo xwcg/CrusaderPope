@@ -1,0 +1,122 @@
+[
+  {
+    "kind": "on_action",
+    "key": "wedding_ceremony_ongoing_event_pulse",
+    "label": "Wedding ceremony pulse",
+    "summary": "Script-fired pulse that may start a random event for a ruler during a wedding ceremony.",
+    "details": "Going by its name, it is fired while a wedding ceremony is going on; the input does not show who fires it. It only runs for a character who is a ruler and does not have the flag `busy_in_ceremony_event`. Vanilla then picks at random from about two dozen wedding events (ep2_wedding), plus one Japan yearly event. The entry weighted 200 with no event means nothing happens. Two events (1080 and 1100) are listed twice, so they are twice as likely as the others.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action",
+    "key": "wedding_wnight_ongoing_event_pulse",
+    "label": "Wedding night pulse",
+    "summary": "Script-fired pulse that may start a random wedding night event, marked in vanilla as for people who are not the newlyweds.",
+    "details": "It is skipped for a character with the flag `busy_in_wnight_event`. Vanilla's comments on its events say \"non-spouse\": someone gets very drunk, jealousy of the new spouse, a family chat, befriending the other family, or using a murder plan during the wedding night. Nothing happens with weight 150 (the empty entry), and the whole pulse has `chance_to_happen = 100`.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action",
+    "key": "wedding_wnight_spouse_event_pulse",
+    "label": "Wedding night spouse pulse",
+    "summary": "Script-fired pulse that may start a random wedding night event, marked in vanilla as for the newlyweds.",
+    "details": "It is skipped for a character with the flag `busy_in_wnight_event`. Vanilla's comments on its events say \"spouse\": shy spouses bonding, a confession, a memento, a bed catching fire, insecurities, or the bedding ceremony. Nothing happens with weight 150 (the empty entry). Event 1300 is listed twice, so it is twice as likely.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action",
+    "key": "wet_nurse_pulse",
+    "label": "Wet nurse pulse",
+    "summary": "Script-fired pulse that may start an event where a wet nurse tells the character about a milestone of their child.",
+    "details": "It needs the DLC that vanilla checks with `has_bp2_dlc_trigger`, and a character whose court has a holder of the wet nurse court position. The four events are the child's first words, first steps, first fallen teeth and first time dressing alone, each weight 50, against 1000 for no event. So an event happens in about one pulse in six (200 of 1200).",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action",
+    "key": "wounded_recovery_pulse",
+    "label": "Wounded recovery pulse",
+    "summary": "Script-fired pulse that may start an event where a hurt character recovers from a wound.",
+    "details": "It only runs for a character who has the wounded trait or an infected or gangrenous wound. The recovery events cover wounded, severely wounded and near death, and one for an infected wound that is no longer infected. Nothing happens with weight 300 (the empty entry). The yearly health pulse fires this four times a year.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action",
+    "key": "yearly_culture_pulse",
+    "label": "Yearly culture pulse",
+    "summary": "Fired by the game's code once a year for a culture.",
+    "details": "The root is the culture. A culture gets it on the same day every year. Vanilla only uses it for a 5 percent chance of one event, which its comment describes as the head of the faith asking you to remove a tradition you should not have.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action",
+    "key": "yearly_global_pulse",
+    "label": "Yearly global pulse",
+    "summary": "Fired by the game's code every January 1st, with no root.",
+    "details": "Nothing is the root, so it runs without a character or title. Vanilla uses it for world-wide yearly work: a random game rule effect that its comment ties to the Black Plague, enabling the Daoxue rite from 1050 on, spawning historical characters (unless the game rule turns them off), and the Norse culture split between 950 and 990. A Visigothic culture split is also written but switched off. The definition shown here is cut short, so more may follow.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action",
+    "key": "yearly_health_pulse",
+    "label": "Yearly health pulse",
+    "summary": "Script-fired yearly pulse for a character's health, ageing ailments and chance of harm.",
+    "details": "A comment in vanilla says it is fired from the random yearly pulse for everyone. It sets up four chances a year to recover from wounds, and rolls events such as becoming infirm or the mind, eyes, heart or bones weakening, plus a small chance of a harm event. The chance of no event is 75 for characters aged 50 or under who have no age-related ailment trait, or who have the reduced-ailment flag, and 25 for everyone else. The definition shown here is cut short, so more may follow.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action",
+    "key": "yearly_holy_order_pulse",
+    "label": "Yearly holy order pulse",
+    "summary": "Fired by the game's code once a year for every holy order.",
+    "details": "The game's documentation lists no root, but vanilla's comments say the root is the holy order and that the founder, the leader (holder of the order's title), the capital province, the title and the rite are available as saved scopes. Vanilla uses it so a leader may pick up the order's tenet, and so a monastic leader with enough gold may get busy spreading beliefs or raising development. The definition shown here is cut short, so more may follow.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action",
+    "key": "yearly_playable_pulse",
+    "label": "Yearly playable pulse",
+    "summary": "Fired by the game's code once a year for every playable character (count rank and up).",
+    "details": "The root is the character. Vanilla's script calls effects named for the AI budget and for syncing a hedonistic obesity modifier, and has a block for the Mandala government: an AI chance of becoming a Mandala god-king, and spawning ritual contracts for the realm. The definition shown here is cut short, so more may follow.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action",
+    "key": "yearly_struggle_playable_pulse",
+    "label": "Yearly struggle pulse",
+    "summary": "Fired by the game's code once a year for each character involved in a struggle, or an interloper in it.",
+    "details": "The struggle that is pulsing is saved as `scope:struggle`. Vanilla leaves its effect empty. The game's documentation says there is no root, but vanilla's comment says the root is the character.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": true
+  },
+  {
+    "kind": "on_action",
+    "key": "zoroastrian_arrival_events",
+    "label": "Zoroastrian pilgrimage arrival",
+    "summary": "Script-fired pulse that may start a pilgrimage event for a Zoroastrian character in an activity at a certain county.",
+    "details": "It needs a character of the Zoroastrian religion whose activity is held in the county of Baduspan (Ushi-darena in vanilla's comment). It then picks between two pilgrimage events with equal weight: the Ushi-darena event, and meeting the Mystic again.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  }
+]

@@ -7,22 +7,23 @@ import { DuplicateEntryDialog, DuplicateEventDialog, singular } from './NewEntry
 import { errorText } from './ModDialogs';
 import '../styles/edit.css';
 
+import { tr } from '../../../shared/i18n';
 /** Copies a text and says so briefly. */
 function copy(text: string, what: string): void
 {
     void navigator.clipboard.writeText(text).then(
         () =>
         {
-            const id = pushNotice({ kind: 'info', text: `Copied ${what}: ${text}` });
+            const id = pushNotice({ kind: 'info', text: tr('Copied {what}: {text}', { what, text }) });
             setTimeout(() => dismissNotice(id), 2500);
         },
-        (e) => pushNotice({ kind: 'error', text: 'Not copied: ' + errorText(e) })
+        (e) => pushNotice({ kind: 'error', text: tr('Not copied: ') + errorText(e) })
     );
 }
 
 /**
- * The entry list's context menu (right click on an entry — docs/app-architecture.md, "Explorer"): Open; Duplicate…
- * (into the active mod: events under a new id, others under a new key — NewEntry.tsx); Copy ID, the script reference
+ * The entry list's context menu (right click on an entry; docs/app-architecture.md, "Explorer"): Open; Duplicate…
+ * (into the active mod: events under a new id, others under a new key; NewEntry.tsx); Copy ID, the script reference
  * (`trait:brave`, when the type has a prefix), the name in game, the file location; Open in VS Code, Reveal the file
  * (the winning definition, looked up when chosen).
  */
@@ -80,7 +81,7 @@ export function EntryContextMenu(props: { type: TypeSummary; item: EntityListIte
     };
     const noFile = (): void =>
     {
-        pushNotice({ kind: 'info', text: `${item.name} has no definition in a file.` });
+        pushNotice({ kind: 'info', text: tr('{name} has no definition in a file.', { name: item.name }) });
     };
 
     if (dialog === 'duplicate')
@@ -93,24 +94,20 @@ export function EntryContextMenu(props: { type: TypeSummary; item: EntityListIte
         <div className="ctx-menu" ref={box} style={pos} onContextMenu={(e) => e.preventDefault()}>
             <div className="am-note">{item.name}</div>
             <button className="am-item" onClick={run(() => props.navigate({ type: type.id, name: item.name }))}>
-                Open
-            </button>
-            <button className="am-item" disabled={removed || item.defs === 0} title={`A copy under a new ${type.id === 'events' ? 'id' : 'key'} in the active mod, to change freely`} onClick={() => setDialog('duplicate')}>
-                Duplicate {singular(type.label)}…
-            </button>
+                {tr('Open')}</button>
+            <button className="am-item" disabled={removed || item.defs === 0} title={tr('A copy under a new {keyWord} in the active mod, to change freely', { keyWord: type.id === 'events' ? 'id' : 'key' })} onClick={() => setDialog('duplicate')}>
+                {tr('Duplicate {singular}…', { singular: singular(type.label) })}</button>
             <div className="am-sep" />
-            <button className="am-item" onClick={run(() => copy(item.name, 'the ID'))}>
-                Copy ID
-            </button>
+            <button className="am-item" onClick={run(() => copy(item.name, tr('the ID')))}>
+                {tr('Copy ID')}</button>
             {type.refPrefix && (
-                <button className="am-item" title="How script names it" onClick={run(() => copy(`${type.refPrefix}:${item.name}`, 'the reference'))}>
-                    Copy reference <code>{type.refPrefix}:…</code>
+                <button className="am-item" title={tr('How script names it')} onClick={run(() => copy(`${type.refPrefix}:${item.name}`, tr('the reference')))}>
+                    {tr('Copy reference')}{' '}<code>{type.refPrefix}:…</code>
                 </button>
             )}
             {item.display && (
-                <button className="am-item" onClick={run(() => copy(item.display!, 'the name'))}>
-                    Copy name in game
-                </button>
+                <button className="am-item" onClick={run(() => copy(item.display!, tr('the name')))}>
+                    {tr('Copy name in game')}</button>
             )}
             <button
                 className="am-item"
@@ -120,13 +117,12 @@ export function EntryContextMenu(props: { type: TypeSummary; item: EntityListIte
                     const w = await where();
 
                     if (w)
-                        copy(`${w.rel}:${w.line}`, 'the location');
+                        copy(`${w.rel}:${w.line}`, tr('the location'));
                     else
                         noFile();
                 })}
             >
-                Copy file location
-            </button>
+                {tr('Copy file location')}</button>
             <div className="am-sep" />
             <button
                 className="am-item"
@@ -141,8 +137,7 @@ export function EntryContextMenu(props: { type: TypeSummary; item: EntityListIte
                         noFile();
                 })}
             >
-                Open in VS Code
-            </button>
+                {tr('Open in VS Code')}</button>
             <button
                 className="am-item"
                 disabled={item.defs === 0}
@@ -156,8 +151,7 @@ export function EntryContextMenu(props: { type: TypeSummary; item: EntityListIte
                         noFile();
                 })}
             >
-                Reveal file
-            </button>
+                {tr('Reveal file')}</button>
         </div>
     );
 }

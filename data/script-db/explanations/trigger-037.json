@@ -1,0 +1,445 @@
+[
+ {
+  "kind": "trigger",
+  "key": "tenet_popularity",
+  "label": "Tenet popularity",
+  "summary": "Compares how popular a given tenet is within the faith.",
+  "details": "Runs on a faith. The tenet to look at is given as the target. There is also a short form that puts the tenet in brackets, such as `tenet_popularity(tenet:some_tenet) == 10`.",
+  "fields": [
+    { "name": "target", "text": "The tenet whose popularity is checked.", "values": "a tenet, for example a saved scope that holds one", "required": true },
+    { "name": "value", "text": "The popularity to compare with.", "values": "a comparison with a number, for example `> 1`", "required": true }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "tenets_doctrines_unknown_to_faith",
+  "label": "Unknown tenets and doctrines",
+  "summary": "Compares how many tenets and doctrines the character knows that the faith does not know.",
+  "details": "Runs on a character. A doctrine counts as unknown to the faith when no rite practices it. Vanilla uses it once, with `>= 5`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "terrain",
+  "label": "Terrain",
+  "summary": "Whether the province has the given terrain type.",
+  "details": "Runs on a province. Write the terrain key, such as `hills` or `forest`. Vanilla uses it about 2,700 times; the most common values are farmlands, desert_mountains, hills, mountains and desert.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "tgp_china_legacy_track_perks",
+  "label": "China legacy perks",
+  "summary": "Compares how many perks the dynasty has in a legacy track that, going by the key's name, is the China one.",
+  "details": "Runs on a dynasty. The game's documentation only says \"perks in the lifestyle\" and does not name the track; the key name points to the China legacy track. The same wording is used for the Japan and Southeast Asia versions.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "tgp_japan_legacy_track_perks",
+  "label": "Japan legacy perks",
+  "summary": "Compares how many perks the dynasty has in a legacy track that, going by the key's name, is the Japan one.",
+  "details": "Runs on a dynasty. The game's documentation only says \"perks in the lifestyle\" and does not name the track; the key name points to the Japan legacy track.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "tgp_southeast_asia_legacy_track_perks",
+  "label": "Southeast Asia legacy perks",
+  "summary": "Compares how many perks the dynasty has in a legacy track that, going by the key's name, is the Southeast Asia one.",
+  "details": "Runs on a dynasty. The game's documentation only says \"perks in the lifestyle\" and does not name the track; the key name points to the Southeast Asia legacy track.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "tier",
+  "label": "Title tier",
+  "summary": "Compares the tier of the title, from barony (1) up to hegemony (6).",
+  "details": "Runs on a title. The game asks you to use the named values (`tier_county`, `tier_duchy`, `tier_kingdom`, `tier_empire` and so on) and not raw numbers. Vanilla writes it as a plain name (`tier = tier_county`), as a comparison (`>= tier_duchy`) or as a block with `value`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "tier_difference",
+  "label": "Title tier difference",
+  "summary": "Compares how far the character's highest title tier is above or below the target character's.",
+  "details": "The difference is the character's highest held title tier minus the target's, and lies between -5 and 5. A baron checked against a king gives -3, so `value = -3` is true. A positive value means the character ranks higher than the target.",
+  "fields": [
+    { "name": "target", "text": "The other character to compare with.", "values": "a character, for example `scope:recipient`", "required": true },
+    { "name": "value", "text": "The difference to compare with.", "values": "a number, or a comparison such as `>= 1`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "time_after_diarch_designated",
+  "label": "Time since diarch designated",
+  "summary": "Compares how much time has passed since the character's diarch was designated.",
+  "details": "Give the time in `days`, `months` or `years`. Vanilla uses it twice, both with `years >= 10`. The documented usage line spells the key as time_after_designated_diarch, which differs from the real key; the real key is the one above.",
+  "fields": [
+    { "name": "days / months / years", "text": "The amount of time, in that unit.", "values": "a comparison with a number, for example `>= 10`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "time_in_prison",
+  "label": "Time in prison",
+  "summary": "Compares how long the character has been imprisoned.",
+  "details": "Give the time in `days`, `months` or `years`. Vanilla also uses `weeks`, which the game's documentation does not list.",
+  "fields": [
+    { "name": "days / months / years", "text": "The amount of time, in that unit.", "values": "a comparison with a number, for example `> 1`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "time_in_prison_type",
+  "label": "Time in current prison type",
+  "summary": "Compares how long the character has been imprisoned with their current type of imprisonment.",
+  "details": "Unlike `time_in_prison`, the clock covers only the current type of imprisonment. Give the time in `days`, `months` or `years`. Vanilla uses it with `years`.",
+  "fields": [
+    { "name": "days / months / years", "text": "The amount of time, in that unit.", "values": "a comparison with a number, for example `> 5`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "time_of_year",
+  "label": "Time of year",
+  "summary": "Whether today's date lies between two dates of the year.",
+  "details": "Both dates are included. Write them as month.day (`11.1`) or just the month. If the start is later than the end, the span wraps over the new year, so October to March covers February. Leaving out the start means the beginning of the year, leaving out the end means the end of the year. The input lists no scope for it.",
+  "fields": [
+    { "name": "min", "text": "First date of the span.", "values": "month.day or month, for example `11.1`", "default": "the beginning of the year" },
+    { "name": "max", "text": "Last date of the span.", "values": "month.day or month, for example `2.29`", "default": "the end of the year" }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "time_since_contract_taken",
+  "label": "Days since contract taken",
+  "summary": "Compares how many days have passed since the task contract was accepted.",
+  "details": "Runs on a task contract. The value is in days. Vanilla uses it three times, each with `> 360`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "time_since_death",
+  "label": "Time since death",
+  "summary": "Compares how long ago the character died.",
+  "details": "Runs on a character. Give the time in `days`, `months` or `years`. Vanilla uses it with `years`, such as `years >= 80`.",
+  "fields": [
+    { "name": "days / months / years", "text": "The amount of time, in that unit.", "values": "a comparison with a number, for example `>= 80`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "time_to_hook_expiry",
+  "label": "Days until hook expires",
+  "summary": "Compares how many days are left until the character's hook on the target runs out.",
+  "details": "A hook is a hold one character has over another. The remaining time is counted in days. Vanilla uses it once, with `target = prev` and `value < 90`.",
+  "fields": [
+    { "name": "target", "text": "The character the hook is held on.", "values": "a character", "required": true },
+    { "name": "value", "text": "The days left to compare with.", "values": "a comparison with a number, for example `> 50`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "title_create_faction_type_chance",
+  "label": "Chance to create faction",
+  "summary": "Compares the chance that the title creates a faction of the given type against the target.",
+  "details": "Runs on a title. The chance is compared with a script value. The documented example names a type for \"an ongoing faction\" and a target character. The input shows no vanilla use, so the exact meaning of the number rests on the game's documentation alone.",
+  "fields": [
+    { "name": "type", "text": "The faction type.", "values": "a faction type", "required": true },
+    { "name": "target", "text": "The character the faction would be against.", "values": "a character", "required": true },
+    { "name": "value", "text": "The chance to compare with.", "values": "a comparison with a number or script value, such as `>= 0`", "required": true }
+  ],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "title_held_years",
+  "label": "Years title held",
+  "summary": "Compares how many years the title has been held.",
+  "details": "If the title is not validly held, the value is 0. Vanilla compares it with plain numbers, such as `>= 10`, and twice with a named script value.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "title_is_a_faction_member",
+  "label": "Title in a faction",
+  "summary": "Whether the title is a member of a faction.",
+  "details": "Write `yes` to require membership and `no` to require that it is not a member.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "title_join_faction_chance",
+  "label": "Chance to join faction",
+  "summary": "Compares the chance that the title joins the given faction.",
+  "details": "Runs on a title. The faction must be an ongoing one. The chance is compared with a script value.",
+  "fields": [
+    { "name": "faction", "text": "The ongoing faction that would be joined.", "values": "a faction", "required": true },
+    { "name": "value", "text": "The chance to compare with.", "values": "a comparison with a number or script value, such as `>= 0`", "required": true }
+  ],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "title_law_group_at_maximum_level",
+  "label": "Law group at maximum",
+  "summary": "Whether the title has the highest level of the given title law group.",
+  "details": "Runs on a title. The input gives no usage line, so how the law group is written is not shown here; the game's documentation only says it is \"the title law group given\".",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "title_law_group_at_minimum_level",
+  "label": "Law group at minimum",
+  "summary": "Whether the title has the lowest level of the given title law group.",
+  "details": "Runs on a title. The input gives no usage line, so how the law group is written is not shown here; the game's documentation only says it is \"the title law group given\".",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "title_will_leave_sub_realm_on_succession",
+  "label": "Title leaves sub-realm",
+  "summary": "Whether the title would pass out of the given character's sub-realm when its holder dies.",
+  "details": "It is true when the first heir lives outside that sub-realm and the highest title they would inherit from the holder is not above their current tier. The character to check against is the value written after the key. Vanilla uses it once, with `root`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "total_active_artifact_rarity_sum",
+  "label": "Holy site artifact rarity",
+  "summary": "Compares the summed rarity of the artifacts enshrined in the holy site that count as active.",
+  "details": "Rarity levels are numbers (Common is 1, and so on up). Only artifacts whose `is_holy_trigger` passes are counted, and the holy site must suit the faith that controls the county. Vanilla uses it once, with `0`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "total_army_damage",
+  "label": "Army damage",
+  "summary": "Compares the army's total damage stat at its current location.",
+  "details": "Runs on an army. The value depends on where the army is, because the location affects it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "total_army_pursuit",
+  "label": "Army pursuit",
+  "summary": "Compares the army's total pursuit stat at its current location.",
+  "details": "Runs on an army. The value depends on where the army is, because the location affects it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "total_army_screen",
+  "label": "Army screen",
+  "summary": "Compares the army's total screen stat at its current location.",
+  "details": "Runs on an army. The value depends on where the army is, because the location affects it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "total_army_siege_value",
+  "label": "Army siege value",
+  "summary": "Compares the army's total siege value stat at its current location.",
+  "details": "Runs on an army. The value depends on where the army is, because the location affects it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "total_army_toughness",
+  "label": "Army toughness",
+  "summary": "Compares the army's total toughness stat at its current location.",
+  "details": "Runs on an army. The value depends on where the army is, because the location affects it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "total_infected_provinces",
+  "label": "Infected provinces",
+  "summary": "Compares how many provinces the epidemic has infected in total over its whole life.",
+  "details": "Runs on an epidemic. It counts every province ever infected, not only the ones infected now. For example `total_infected_provinces >= 20`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "trait_base_spiritual_fulfillment",
+  "label": "Trait base fulfillment",
+  "summary": "Compares the base spiritual fulfillment that a trait gives under the rite.",
+  "details": "Runs on a rite. The number is positive for a virtue, negative for a sin and 0 for a neutral trait. It ignores the character and any personal tenets. There is also a short form, `\"trait_base_spiritual_fulfillment(scope:some_trait)\" < 0`.",
+  "fields": [
+    { "name": "target", "text": "The trait to look at.", "values": "a trait, for example a saved scope that holds one", "required": true },
+    { "name": "value", "text": "The fulfillment to compare with.", "values": "a comparison with a number, for example `< 0`", "required": true }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "trait_compatibility",
+  "label": "Trait compatibility",
+  "summary": "Compares the summed trait compatibility between the character and another character.",
+  "details": "The game's documentation describes it as a sum of trait compatibility values between the two characters. Vanilla compares it with named values such as `medium_positive_trait_compatibility` or `medium_negative_trait_compatibility` and not with raw numbers, which suggests a higher sum means a better match.",
+  "fields": [
+    { "name": "target", "text": "The other character.", "values": "a character, for example `scope:owner`", "required": true },
+    { "name": "value", "text": "The compatibility to compare with.", "values": "a comparison, for example `>= medium_positive_trait_compatibility`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "trait_is_sin",
+  "label": "Trait is a sin",
+  "summary": "Whether the faith's main rite counts the given trait as a sin.",
+  "details": "Runs on a faith. Write the trait key, such as `lustful`. For a single rite, see `trait_is_sin_rite`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "trait_is_sin_rite",
+  "label": "Sin",
+  "summary": "Whether the rite counts the given trait as a sin.",
+  "details": "Runs on a rite. The status can come from the rite's core tenets or from the tenets the parent faith approved. Write a trait key, such as `trait:vengeful`, or a saved scope. Vanilla uses it a lot, mostly with `lustful`, `greedy` and `drunkard`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "trait_is_virtue",
+  "label": "Trait is a virtue",
+  "summary": "Whether the faith's main rite counts the given trait as a virtue.",
+  "details": "Runs on a faith. Write the trait key. For a single rite, see `trait_is_virtue_rite`. The input shows no vanilla use of this one.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "trait_is_virtue_rite",
+  "label": "Virtue",
+  "summary": "Whether the rite counts the given trait as a virtue.",
+  "details": "Runs on a rite. The status can come from the rite's core tenets or from the tenets the parent faith approved. Write a trait key, such as `trait:vengeful`, or a saved scope. Vanilla uses it a lot, mostly with `lustful`, `generous` and `compassionate`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "trait_rank",
+  "label": "Trait rank",
+  "summary": "Compares the level the character has in a trait group.",
+  "details": "The value is 0 if the character has no trait of that group. It cannot compare with another character's level; use `has_trait_rank` for that. There is also a short form, `\"trait_rank(erudite)\" > 1`.",
+  "fields": [
+    { "name": "target", "text": "The trait group to look at.", "values": "a trait, for example `erudite`", "required": true },
+    { "name": "value", "text": "The level to compare with.", "values": "a comparison with a number, for example `> 1`", "required": true }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "travel_danger_type",
+  "label": "Travel danger type",
+  "summary": "Whether the province's danger, for the given travel plan, is of a given kind.",
+  "details": "Give the travel plan and then either a danger type or a terrain. Vanilla mostly uses the travel plan `root.current_travel_plan`. The danger types seen in vanilla include siege, county_control, occupation, battle and army.",
+  "fields": [
+    { "name": "travel_plan", "text": "The travel plan the danger is checked for.", "values": "a travel plan, for example `root.current_travel_plan`", "required": true },
+    { "name": "type", "text": "The kind of danger to check for.", "values": "a danger type key, for example `siege`" },
+    { "name": "terrain", "text": "A terrain to check as the danger instead of a type.", "values": "a terrain key, for example `jungle`" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "travel_danger_value",
+  "label": "Travel danger value",
+  "summary": "Compares the province's danger value for the given travel plan.",
+  "details": "Runs on a province. The documented example gives the travel plan as the target and compares the danger with a number.",
+  "fields": [
+    { "name": "target", "text": "The travel plan the danger is measured for.", "values": "a travel plan, for example `scope:some_travel_plan`", "required": true },
+    { "name": "value", "text": "The danger to compare with.", "values": "a comparison with a number, for example `> 1`", "required": true }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "travel_leader_cost",
+  "label": "Travel leader cost",
+  "summary": "Compares what the character would cost as a travel leader.",
+  "details": "The game's documentation does not say in which unit the cost is given.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "travel_leader_safety",
+  "label": "Travel leader safety",
+  "summary": "Compares the safety aptitude of the character's current travel leader.",
+  "details": "Safety aptitude is how well the leader keeps the party safe on the road; this is read from the key's name, since the game's documentation gives only the short line.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ }
+]

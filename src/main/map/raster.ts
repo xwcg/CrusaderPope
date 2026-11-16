@@ -1,7 +1,7 @@
 /**
  * The province map (docs/map.md): every pixel of map_data/provinces.png has the colour of one province in
  * map_data/definition.csv (`id;r;g;b;name;x;`). Built once per version of those files (on a thread of its own:
- * mapWorker.ts) into a raster of province ids — Uint16, row-major, top row first — and each province's pixel count,
+ * mapWorker.ts) into a raster of province ids (Uint16, row-major, top row first) and each province's pixel count,
  * centre and bounds, kept on disk: `<key>.bin` (the ids, served to the renderer as ck3://map/<key>.bin) and
  * `<key>.json` (the rest).
  */
@@ -59,7 +59,7 @@ export function parseDefinitions(csv: string): {
 
 /**
  * The rows of a PNG as RGB(A) bytes, one callback per row (8-bit RGB / RGBA without interlacing are unfiltered row by
- * row — provinces.png is 9216 × 4608 RGB; anything else is decoded whole).
+ * row (provinces.png is 9216 × 4608 RGB); anything else is decoded whole).
  */
 function eachRow(png: Uint8Array, init: (width: number, height: number) => void, row: (bytes: Uint8Array, y: number, channels: number) => void): void
 {

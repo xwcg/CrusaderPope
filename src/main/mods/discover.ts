@@ -44,6 +44,30 @@ export function gameVersion(gameDir: string): string | undefined
 const isDir = (p: string | undefined): p is string => !!p && existsSync(p) && statSync(p).isDirectory();
 const isFile = (p: string | undefined): p is string => !!p && existsSync(p) && statSync(p).isFile();
 
+/**
+ * The supported version of a mod: the launcher's .mod file says it first, but a mod that updated itself (a workshop item the
+ * launcher's file has not caught up with) says a newer one in its own descriptor.mod; that one counts then.
+ */
+function supportedOf(outer: string | undefined, inner: string | undefined): string | undefined
+{
+    const num = (v: string | undefined): [number, number] | undefined =>
+    {
+        const m = /^v?(\d+)\.(\d+)/i.exec(v?.trim() ?? '');
+        return m ? [Number(m[1]), Number(m[2])] : undefined;
+    };
+    const a = num(outer);
+    const b = num(inner);
+
+    if (a && b && (b[0] > a[0] || (b[0] === a[0] && b[1] > a[1])))
+        return inner;
+
+    // (a wildcard names no game: a concrete version of the mod's own file is better)
+    if (!a && b && outer?.includes('*'))
+        return inner;
+
+    return outer !== undefined && outer !== '' ? outer : inner;
+}
+
 function readDescriptorFile(file: string): ModDescriptor | undefined
 {
     try
@@ -137,7 +161,7 @@ function modFrom(id: string, d: ModDescriptor, loc: { root?: string; archive?: s
         id,
         name: pick(d.name, inner?.name) || id,
         version: pick(d.version, inner?.version),
-        supportedVersion: pick(d.supportedVersion, inner?.supportedVersion),
+        supportedVersion: supportedOf(d.supportedVersion, inner?.supportedVersion),
         tags: d.tags.length ? d.tags : (inner?.tags ?? []),
         root,
         archive,

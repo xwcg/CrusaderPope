@@ -1,0 +1,472 @@
+[
+ {
+  "kind": "effect",
+  "key": "change_county_control",
+  "label": "County control",
+  "summary": "Raises or lowers the county control of a title by an amount.",
+  "details": "County control is how firmly the holder controls the county. A negative amount lowers it. On a title above county rank (duchy, kingdom, empire) the change is applied to every county below it. Vanilla often uses named values such as `medium_county_control_gain` or `minor_county_control_loss`, and sometimes a block with `value` and `multiply`.",
+  "fields": [
+    { "name": "value", "text": "How much county control to add; negative takes it away.", "values": "a number, a named script value, or a block with value and multiply" },
+    { "name": "multiply", "text": "Optional factor applied to the value (vanilla uses it with `value = ... multiply = -5` to turn a gain into a loss).", "values": "a number or a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_county_fertility",
+  "label": "County fertility",
+  "summary": "Raises or lowers the fertility of a county by an amount.",
+  "details": "The game's documentation gives a decimal example (5.5). It works on a county title. Vanilla mostly uses named values such as `medium_county_fertility_gain` and `medium_county_fertility_loss`, and in a few places a range written as two numbers in braces.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_cultural_acceptance",
+  "label": "Cultural acceptance",
+  "summary": "Changes the cultural acceptance between the scoped culture and a target culture.",
+  "details": "The game's documentation does not say which of the two cultures is the one accepting, so check that before relying on the direction. A negative value is meant to lower acceptance (vanilla uses loss values). The description is the text shown when hovering over the acceptance tooltip in the culture window.",
+  "fields": [
+    { "name": "target", "text": "The other culture in the acceptance.", "values": "a culture, such as `culture:russian`, `root.culture` or a saved scope", "required": true },
+    { "name": "value", "text": "How much acceptance changes; negative lowers it.", "values": "a number or a script value", "required": true },
+    { "name": "desc", "text": "The text shown for this change in the acceptance tooltip of the culture window.", "values": "a localization key or dynamic description", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "change_current_court_grandeur",
+  "label": "Court grandeur",
+  "summary": "Raises or lowers the current court grandeur of a character who has a royal court.",
+  "details": "The result is kept between the game's minimum and maximum court grandeur, so it can never go past either end. A negative amount lowers grandeur. Vanilla mostly uses named values such as `minor_court_grandeur_gain` and `medium_court_grandeur_loss`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_current_weight",
+  "label": "Weight",
+  "summary": "Changes the current weight of the character.",
+  "details": "The game's documentation example is `change_current_weight = 20`. Vanilla uses plain numbers, positive and negative (for example 20, 50, -25, -50). The game's documentation does not say what unit the number is in.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_de_jure_drift_progress",
+  "label": "De jure drift progress",
+  "summary": "Changes how far the scoped title has progressed in drifting de jure towards the target title.",
+  "details": "Going by the documented template, the scoped title is the drifting one and the target is the title it drifts to. Vanilla uses it only 5 times, so the exact effect of the progress is not shown in the input. The game's documentation names the amount field `values`, but all five vanilla uses write `value`, so write `value`.",
+  "fields": [
+    { "name": "target", "text": "The title that the scoped title is drifting towards.", "values": "a title, such as `root.primary_title` or a saved scope", "required": true },
+    { "name": "value", "text": "How much the progress changes; negative moves it back.", "values": "a number or a named script value", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "change_development_level",
+  "label": "Development level",
+  "summary": "Raises or lowers the development level of a title.",
+  "details": "On a title above county rank, the change is applied to every county below it. A negative amount lowers the level (vanilla uses -1, -2 and so on). Vanilla also uses a block that computes the amount from development levels, for example `subtract = development_level multiply = 0.2 floor = yes`.",
+  "fields": [
+    { "name": "value", "text": "The number of levels to change by.", "values": "a number or a script value; negative lowers" },
+    { "name": "add / subtract / multiply / divide", "text": "Steps that build the amount from a base value, as in other script values.", "values": "a number, a variable or a script value" },
+    { "name": "floor", "text": "Rounds the computed amount down to a whole number.", "values": "yes or no" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_development_progress",
+  "label": "Development progress",
+  "summary": "Raises or lowers the progress towards the next development level of a title.",
+  "details": "On a title above county rank, the change is applied to every county below it. A negative amount lowers the progress. There is a separate `change_development_progress_with_overflow` that the game's documentation says rolls extra progress into new levels; this one's documentation says nothing about what happens at the edges. Vanilla mostly uses named values such as `medium_development_progress_gain` and `major_development_progress_loss`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_development_progress_with_overflow",
+  "label": "Development progress (overflow)",
+  "summary": "Raises or lowers the progress towards the next development level of a title, and lets extra progress roll over into new levels.",
+  "details": "On a title above county rank, the change is applied to every county below it. The documented example: adding 100 to a county that needs 50 more progress raises its level by 1 and leaves 50 progress towards the next level. Vanilla uses plain numbers such as -50, 10 and 25, and a few named values.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_diarchy_swing",
+  "label": "Diarchy swing",
+  "summary": "Shifts the scales of power of the character's active diarchy by an amount.",
+  "details": "The game's documentation example is `change_diarchy_swing = -5`. The input shows no vanilla use, and the game's documentation does not say which direction a positive or negative number pushes the scale.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "change_doctrine",
+  "label": "Doctrine",
+  "summary": "Adds a doctrine to the faith.",
+  "details": "If the faith already has a doctrine from the same group, the new one replaces it. It runs on a faith and takes the name of a doctrine.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_fervor",
+  "label": "Fervor",
+  "summary": "Raises or lowers the fervor of the faith by an amount.",
+  "details": "A negative value lowers fervor. In all 146 vanilla uses it is written as a block with a `value` and a `desc`; the game's documentation shows only the short form `change_fervor = script value`. The description is a text key vanilla gives for each change.",
+  "fields": [
+    { "name": "value", "text": "How much fervor changes; negative lowers it.", "values": "a number or a named script value such as `major_fervor_gain`", "required": true },
+    { "name": "desc", "text": "A text key naming the reason for the change.", "values": "a localization key" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_first_name",
+  "label": "First name",
+  "summary": "Changes the character's first name.",
+  "details": "There are two forms. Give a dynamic description to set the name from text (vanilla uses a localization key and, once, a plain name). Or give a block with `template_character` to copy the first name from another character.",
+  "fields": [
+    { "name": "template_character", "text": "The character whose first name is copied.", "values": "a character, such as `root` or a saved scope" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_global_variable",
+  "label": "Change global variable",
+  "summary": "Changes a numeric global variable by adding, subtracting, multiplying, dividing and so on.",
+  "details": "A global variable is one that is not tied to any character or title. The game's documentation says the allowed operations are add, subtract, multiply, divide, modulo, min and max, and that the amount can be a fixed number, a script value or a saved value. The game's documentation text calls the effect `change_variable` with an `operation` field; vanilla writes the operation itself as the field, for example `add = 1`.",
+  "fields": [
+    { "name": "name", "text": "The name of the global variable to change.", "values": "a variable name", "required": true },
+    { "name": "add / subtract / multiply / divide / modulo / min / max", "text": "The operation, with the amount as its value.", "values": "a number, a script value or a saved value; vanilla uses add and subtract" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_government",
+  "label": "Government",
+  "summary": "Changes the government type of a ruler.",
+  "details": "It takes the name of a government type, such as `feudal_government` or `clan_government`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_herd",
+  "label": "Herd",
+  "summary": "Adds herd to a domicile, or removes it with a negative amount.",
+  "details": "It runs on a domicile (a character's home base). Vanilla uses named values such as `medium_herd_gain` and `minor_herd_loss`, and blocks that compute the amount, for example from another domicile's herd.",
+  "fields": [
+    { "name": "value", "text": "The starting amount of herd to change by.", "values": "a number or a script value" },
+    { "name": "add / subtract / multiply / divide", "text": "Steps that build the amount, as in other script values.", "values": "a number, a variable or a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_house_relation_level",
+  "label": "House relation level",
+  "summary": "Moves a house relation up or down between its levels.",
+  "details": "The steps can be whole or fractional, and negative steps move the relation down. The notification is shown by default if a player's house is involved.",
+  "fields": [
+    { "name": "steps", "text": "How many levels to move; fractions are allowed.", "values": "a number such as 1, 0.67 or -1", "required": true },
+    { "name": "description", "text": "Why the latest change happened.", "values": "a localization key or dynamic description", "required": true },
+    { "name": "notification", "text": "Whether to show a message when a player's house is involved.", "values": "yes or no", "default": "yes" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_influence",
+  "label": "Influence",
+  "summary": "Raises or lowers the influence of a character.",
+  "details": "A negative amount lowers it. Vanilla mostly uses named values such as `medium_influence_gain` and `minor_influence_loss`, often as a block with `value` and `multiply`, for example scaled by the tier of a governance contract.",
+  "fields": [
+    { "name": "value", "text": "How much influence to change by; negative lowers it.", "values": "a number or a named script value" },
+    { "name": "multiply", "text": "Optional factor applied to the value.", "values": "a number or a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_influence_and_experience",
+  "label": "Influence and experience",
+  "summary": "Changes the influence of a character; whether experience changes with it is unclear.",
+  "details": "The game's documentation says it changes influence \"without experience\", which sounds like the opposite of the key's name, and the neighbouring `change_influence_no_experience` has a doc saying it changes influence and experience. The input shows no vanilla use, so which of the two docs is right is not clear.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "change_influence_experience",
+  "label": "Influence experience",
+  "summary": "Changes the influence experience of a character.",
+  "details": "The game's documentation says only this. The input shows no vanilla use and no example of the value.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "change_influence_level",
+  "label": "Influence level",
+  "summary": "Changes the influence level of a character.",
+  "details": "Vanilla uses it once, with the number 1.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_influence_no_experience",
+  "label": "Influence (no experience)",
+  "summary": "Changes the influence of a character, positive or negative; whether experience changes with it is unclear.",
+  "details": "The game's documentation says it changes \"influence and experience\", which contradicts the key's name, and the neighbouring `change_influence_and_experience` has a doc saying it works without experience. The input shows no vanilla use, so which documentation is right is not clear.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "change_inspiration_progress",
+  "label": "Inspiration progress",
+  "summary": "Changes the progress of the inspiration in scope by a whole number.",
+  "details": "A negative number moves the progress back. Vanilla uses small numbers such as 1, 2 and -1, and occasionally 20 or 100.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_liege",
+  "label": "Change liege",
+  "summary": "Makes another character the liege of the scoped character, using a prepared change record.",
+  "details": "The change is a title and vassal change object created earlier in the script, and this effect adds the liege change to it. Vanilla always passes a saved change, such as `scope:change`. The game's documentation text is garbled, so this reading comes mostly from the field names and the vanilla uses.",
+  "fields": [
+    { "name": "liege", "text": "The character who becomes the new liege.", "values": "a character, such as `root` or `scope:actor`", "required": true },
+    { "name": "change", "text": "The title and vassal change this liege change is added to.", "values": "a saved scope holding a change created earlier, such as `scope:change`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "change_local_variable",
+  "label": "Change local variable",
+  "summary": "Changes a numeric local variable by adding, subtracting, multiplying, dividing and so on.",
+  "details": "A local variable is a working value; vanilla uses it for things like `current_value` and counters inside one piece of script. The game's documentation says the allowed operations are add, subtract, multiply, divide, modulo, min and max, and that the amount can be a fixed number, a script value or a saved value. The game's documentation text calls the effect `change_variable` with an `operation` field; vanilla writes the operation itself as the field, for example `add = 1`.",
+  "fields": [
+    { "name": "name", "text": "The name of the local variable to change.", "values": "a variable name", "required": true },
+    { "name": "add / subtract / multiply / divide / modulo / min / max", "text": "The operation, with the amount as its value.", "values": "a number, a script value or a saved value; vanilla uses add and subtract" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_maa_regiment_size",
+  "label": "Regiment size (change)",
+  "summary": "Changes the size of a men-at-arms regiment by an amount.",
+  "details": "A negative amount makes it smaller, and troops beyond the new size are deleted. When it grows, the new troops start missing and have to reinforce over time, unless `reinforce = yes` is given. It can be written as a plain value or a block with `size` and `reinforce`.",
+  "fields": [
+    { "name": "size", "text": "How much the regiment size changes by.", "values": "a number or a script value; negative shrinks it", "required": true },
+    { "name": "reinforce", "text": "Whether new troops arrive at once instead of having to reinforce.", "values": "yes or no", "default": "no" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_maa_troops_count",
+  "label": "Regiment troops (change)",
+  "summary": "Changes the number of troops a men-at-arms regiment currently has.",
+  "details": "The count cannot go above the regiment's maximum. A negative amount takes troops away. This changes the current troops, not the regiment's size. Vanilla uses it for damage (for example a share of `maa_current_troops_count` times a negative fraction) and for replenishing.",
+  "fields": [
+    { "name": "value", "text": "How many troops to add; negative removes them.", "values": "a number or a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_merit",
+  "label": "Merit",
+  "summary": "Raises or lowers the merit of a character, together with the matching experience.",
+  "details": "The experience changes in proportion, whether the change is positive or negative. Vanilla mostly uses named values such as `minor_merit_gain` and `medium_merit_value`, often as a block with `value` and `multiply`.",
+  "fields": [
+    { "name": "value", "text": "How much merit to change by; negative lowers it.", "values": "a number or a named script value" },
+    { "name": "multiply", "text": "Optional factor applied to the value.", "values": "a number or a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_merit_experience",
+  "label": "Merit experience",
+  "summary": "Changes the merit experience of a character.",
+  "details": "The game's documentation says only this. The input shows no vanilla use and no example of the value.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "change_merit_level",
+  "label": "Merit level",
+  "summary": "Changes the merit level of a character by whole levels.",
+  "details": "Vanilla uses small numbers, mostly negative (-1, -2) and once 1.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_merit_no_experience",
+  "label": "Merit (no experience)",
+  "summary": "Changes the merit of a character without changing the experience.",
+  "details": "Compare `change_merit`, which always changes the matching experience too. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_opportunities",
+  "label": "Scheme opportunities",
+  "summary": "Raises or lowers the number of opportunities available to a scheme.",
+  "details": "A negative amount removes opportunities. Vanilla mostly uses plain numbers such as 2, -2 and -1, and in a few places a block that computes the amount, for example the negative of a scheme agent's charges.",
+  "fields": [
+    { "name": "value", "text": "The number of opportunities to change by.", "values": "a number or a script value; negative removes them" },
+    { "name": "multiply / subtract / divide / ceiling / max", "text": "Steps that build the amount, as in other script values.", "values": "a number, a script value, or yes for ceiling" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_phase",
+  "label": "Phase",
+  "summary": "Changes a situation sub-region from its current phase to a chosen phase.",
+  "details": "It can be written as just the phase name or as a block with `phase`. Vanilla uses it for situations such as the dynastic cycle and the steppe seasons.",
+  "fields": [
+    { "name": "phase", "text": "The phase the sub-region switches to.", "values": "a phase of the situation, such as `situation_dynastic_cycle_phase_chaos`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_prison_type",
+  "label": "Prison type",
+  "summary": "Changes how the imprisoned character is held.",
+  "details": "The scoped character is the prisoner. The game's documentation says it accepts any static modifier and points to the imprison effect. Vanilla uses `dungeon` and `house_arrest`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_provisions",
+  "label": "Provisions",
+  "summary": "Adds provisions to a domicile, or removes them with a negative amount.",
+  "details": "It runs on a domicile (a character's home base). Vanilla uses named values such as `minor_provisions_loss` and `medium_provisions_gain`, and blocks that compute the amount, for example the gap up to `max_provisions`.",
+  "fields": [
+    { "name": "value", "text": "The starting amount of provisions to change by.", "values": "a number or a script value" },
+    { "name": "multiply / subtract / divide", "text": "Steps that build the amount, as in other script values.", "values": "a number, a variable or a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_realm_law_level",
+  "label": "Realm law level",
+  "summary": "Moves the realm's law in a law group a number of steps up or down the group's list of laws.",
+  "details": "It applies the normal costs and effects of changing a law. Going past the end of the list lands on the last law at that end. Laws that are not valid are not skipped. The input does not state which kind of thing it runs on.",
+  "fields": [
+    { "name": "law_group", "text": "The group of laws to move in.", "values": "a law group, such as `church_authority`", "required": true },
+    { "name": "change", "text": "How many steps to move; negative moves the other way.", "values": "a number such as 1 or -2", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_realm_law_level_skip_effects",
+  "label": "Realm law level (no effects)",
+  "summary": "Moves the realm's law in a law group a number of steps, without paying its cost or running its effects.",
+  "details": "It skips the cost, the effects of passing the new law and the effects of revoking the current one. Going past the end of the list lands on the last law at that end, and invalid laws are not skipped. The input shows no vanilla use.",
+  "fields": [
+    { "name": "law_group", "text": "The group of laws to move in.", "values": "a law group", "required": true },
+    { "name": "change", "text": "How many steps to move; negative moves the other way.", "values": "a number such as 1 or -2", "required": true }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_rite_divergence",
+  "label": "Rite divergence",
+  "summary": "Swaps tenets and doctrines of a rite until its divergence has changed by about the given amount.",
+  "details": "The effect picks the swaps itself. Negative values work too. By default it uses the tenets and doctrines known to the head of the rite (the game's documentation also calls this the head of the faith), tries doctrines first and changes at most one tenet.",
+  "fields": [
+    { "name": "value", "text": "The amount the divergence should change by; negative lowers it.", "values": "a number or a script value", "required": true },
+    { "name": "min_value", "text": "The least change that is still acceptable; must be closer to 0 than value.", "values": "a number", "default": "0" },
+    { "name": "override_tenets_first", "text": "Whether tenets are changed before doctrines.", "values": "yes or no", "default": "no" },
+    { "name": "include_unknown", "text": "Whether any tenet and doctrine may be picked, not only those the character knows.", "values": "yes or no", "default": "no" },
+    { "name": "character", "text": "The character whose known tenets and doctrines (and fulfillment) are used to judge the change.", "values": "a character", "default": "the head of the rite, if any" },
+    { "name": "max_tenets", "text": "The most tenets the effect may swap.", "values": "a number", "default": "1" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_rite_doctrine",
+  "label": "Rite doctrine",
+  "summary": "Adds a doctrine to the rite.",
+  "details": "If the rite already has a doctrine from the same group, the new one replaces it without an error. It takes the name of a doctrine.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_spiritual_fulfillment",
+  "label": "Spiritual fulfillment",
+  "summary": "Raises or lowers the spiritual fulfillment of a playable character.",
+  "details": "It does nothing if the total, before the character's modifiers are applied, is 0 or fractional. A negative amount lowers it. Vanilla mostly uses named values such as `minor_spiritual_fulfillment_value` and `medium_spiritual_fulfillment_loss`, sometimes as a block with `value` and `multiply`.",
+  "fields": [
+    { "name": "value", "text": "How much to change by; negative lowers it.", "values": "a number or a named script value" },
+    { "name": "multiply", "text": "Optional factor applied to the value.", "values": "a number or a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

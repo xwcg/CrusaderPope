@@ -1,6 +1,6 @@
 /**
  * Decals (eyebrows, stubble, complexion, wrinkles, baldness, makeup, scars …) baked into the head and body textures
- * on the CPU — the per-pixel work of jomini/portrait_decals.fxh done once: layers sorted by priority blend in UV space
+ * on the CPU: the per-pixel work of jomini/portrait_decals.fxh done once: layers sorted by priority blend in UV space
  * with weight = decal strength × the decal's alpha, before or after the skin colour; normals are overlaid the same
  * way. See docs/portraits.md.
  */
@@ -89,7 +89,7 @@ export function transparentDecal(img: Decoded): boolean
 
 /**
  * Whether a texture's 16×16 mip is no picture of it: more than 10 of its texels depart from the 32×32 mip's box average
- * (by more than a quarter in some channel) — a mip painted over with values for shaders to read (docs/shaders.md,
+ * (by more than a quarter in some channel): a mip painted over with values for shaders to read (docs/shaders.md,
  * "Data decals"). Pictures depart at 5 texels at most (sharp details, the mip filter: the game's 272 decal textures and
  * a total conversion's 558); painted mips at 16 or more.
  */

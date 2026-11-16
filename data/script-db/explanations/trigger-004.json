@@ -1,0 +1,413 @@
+[
+ {
+  "kind": "trigger",
+  "key": "can_title_create_faction",
+  "label": "Can create faction",
+  "summary": "Whether the title can create a faction of the given type against the given character.",
+  "details": "Runs on a title. The `target` is the character the faction would be aimed at. Vanilla uses it once, with the populist faction and a saved liege as the target.",
+  "fields": [
+   { "name": "type", "text": "The kind of faction to check.", "values": "a faction type key, for example populist_faction", "required": true },
+   { "name": "target", "text": "The character the faction would be against.", "values": "a character, for example scope:target_liege", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_title_join_faction",
+  "label": "Can join faction",
+  "summary": "Whether the title is allowed to join the given faction.",
+  "details": "Runs on a title and takes a faction. Vanilla uses it once, with a faction saved as a scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_upgrade_maa",
+  "label": "Can be upgraded",
+  "summary": "Whether this men-at-arms regiment can be upgraded.",
+  "details": "Runs on a regiment. Write `yes` to require that it can be upgraded, `no` to require that it cannot. Vanilla mostly uses `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_vassals_be_attacked",
+  "label": "Vassals can be attacked",
+  "summary": "Whether the ruler has the modifier named `can_vassals_be_attacked`.",
+  "details": "Runs on a character. The game's documentation only says it checks for that modifier and does not explain what the modifier does. Vanilla writes it as `yes` in both of its uses.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "category",
+  "label": "Artifact category",
+  "summary": "Whether the artifact belongs to the given category.",
+  "details": "Runs on an artifact. Vanilla uses the categories `court` and `inventory`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "ce1_heroic_track_perks",
+  "label": "Heroic track perks",
+  "summary": "Whether the dynasty has this many perks on the heroic track.",
+  "details": "Runs on a dynasty and compares a number with `>=`, `=` and so on. Vanilla asks for at least 3, 4 or 5. The game's documentation is a copy of the one for the legitimacy legacy track and mentions 'the lifestyle'; the key name points to a heroic legacy track, which is why this label says so.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "ce1_legitimacy_legacy_track_perks",
+  "label": "Legitimacy track perks",
+  "summary": "Whether the dynasty has this many perks on the legitimacy legacy track.",
+  "details": "Runs on a dynasty and compares a number with `>=`, `=` and so on. Vanilla uses it once, asking for at least 3. The game's documentation is the same sentence as for the heroic track and says 'the lifestyle'; the track is taken from the key name.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "cease_tribute_payments_ai_chance",
+  "label": "Stop tribute AI chance",
+  "summary": "Whether the AI chance value of the 'cease tribute payments' interaction, worked out for the character, passes the comparison.",
+  "details": "Runs on a character and compares a number. The value is the interaction's own ai_chance (how likely the AI is to choose it). Vanilla mostly checks `> 10`, and once `> 0`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "character_has_commander_trait_scope_does_not",
+  "label": "Has commander trait the other lacks",
+  "summary": "Whether the character has a commander trait that the given other character does not have.",
+  "details": "Takes a character on the right side, for example `prev` or a saved scope such as `scope:teacher`. Vanilla uses it six times, mostly with `prev`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "character_is_land_realm_neighbor",
+  "label": "Is land realm neighbor",
+  "summary": "Whether the character is a realm neighbor of the given character.",
+  "details": "Realm neighbor means they are independent or share the same liege, and their realms border each other. Unlike `character_is_realm_neighbor`, the game's documentation does not mention crossing sea zones; going by the key name this is the land-only version, which is an inference.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "character_is_realm_neighbor",
+  "label": "Is realm neighbor",
+  "summary": "Whether the character is a realm neighbor of the given character.",
+  "details": "Realm neighbor means they are independent or share the same liege, and their realms border each other. This version also counts neighbors across two sea zones. Vanilla uses it often, with saved scopes such as `scope:recipient` or `scope:holder`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "character_men_at_arms_expense_gold_relative",
+  "label": "Men-at-arms gold cost ratio",
+  "summary": "Compares the character's men-at-arms gold expenses, as a share of their income, with a number.",
+  "details": "A value of 1.0 means the costs equal all of the income. The game's documentation says it is calculated like the AI's minimum and ideal men-at-arms gold expense values and mentions 'unraised' costs, without explaining further. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "character_men_at_arms_expense_prestige_relative",
+  "label": "Men-at-arms prestige cost ratio",
+  "summary": "Compares the character's men-at-arms prestige expenses, as a share of their income, with a number.",
+  "details": "A value of 1.0 means the costs equal all of the income. The game's documentation says it is calculated like the AI's minimum and ideal men-at-arms prestige expense values and mentions 'unraised' costs, without explaining further. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "character_men_at_arms_expense_treasury_relative",
+  "label": "Men-at-arms treasury cost ratio",
+  "summary": "Compares the character's men-at-arms treasury expenses, as a share of their income, with a number.",
+  "details": "A value of 1.0 means the costs equal all of the income. The game's documentation says it is calculated like the AI's minimum and ideal men-at-arms treasury expense values and mentions 'unraised' costs, without explaining further. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "character_treasury_budget_capacity",
+  "label": "Treasury budget capacity",
+  "summary": "Compares the size of the character's current treasury budget capacity (the spendable treasury) with a number.",
+  "details": "The game's documentation says it is the capacity of the budget that is currently enacted. Vanilla does not use it as a trigger; it only appears as a value inside `character_treasury_new_budget_capacity`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "character_treasury_new_budget_capacity",
+  "label": "New treasury budget capacity",
+  "summary": "Compares the size of the character's new treasury budget capacity (the spendable treasury right now) with a value.",
+  "details": "It differs from `character_treasury_budget_capacity`, which is about the budget currently enacted. Vanilla writes it as a block with `value` and `multiply`, using `character_treasury_budget_capacity` times 1.3 or 2.0; the input does not show how the block is read, so the exact reading is not certain.",
+  "fields": [
+   { "name": "value", "text": "The value to compare against; vanilla gives the name of the current budget capacity.", "values": "a script value name", "required": false },
+   { "name": "multiply", "text": "A factor applied to the value; vanilla uses 1.3 and 2.0.", "values": "a number", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "clerical_region_size",
+  "label": "Clerical region size",
+  "summary": "Compares the number of counties in the existing clerical region with a number.",
+  "details": "Runs on a title (the region's title). Vanilla mostly checks `> 0`, and once compares it with a minimum size value.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "cohesion",
+  "label": "Cohesion",
+  "summary": "Compares the confederation's (or bloc's) current total cohesion with a number.",
+  "details": "Runs on a confederation. Vanilla uses thresholds such as 25, 50 and 75.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "combined_building_level",
+  "label": "Combined building level",
+  "summary": "Compares the total levels of the normal buildings in the province with a number.",
+  "details": "Duchy buildings and buildings still under construction do not count. The capital building does count. Vanilla uses it once, asking for at least 3.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "combined_military_strength",
+  "label": "Combined military strength",
+  "summary": "Compares the current combined military power of the confederation (or bloc) with a number.",
+  "details": "Runs on a confederation. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "completely_controls",
+  "label": "Completely controls title",
+  "summary": "Whether the character controls all counties and baronies inside the given title's de jure area.",
+  "details": "No hostile occupation may be present either. Takes a title, for example `title:d_sicily` or a saved scope. Vanilla uses it very often.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "completely_controls_region",
+  "label": "Completely controls region",
+  "summary": "Whether the character controls all counties and baronies inside the given geographical region.",
+  "details": "No hostile occupation may be present either. Takes the key of a region, for example `world_europe_south_italy`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "contribution_id",
+  "label": "Contribution type",
+  "summary": "Whether the contribution is of the given type.",
+  "details": "Runs on a great project contribution. The type is given by its key, for example `great_ballista`. Vanilla also passes a template placeholder (`$CONTRIBUTION$`) here.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "contribution_is_funded",
+  "label": "Funded",
+  "summary": "Whether the contribution has already been funded.",
+  "details": "Runs on a great project contribution. `yes` requires it to be funded, `no` requires that it is not.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "contribution_is_required",
+  "label": "Required",
+  "summary": "Whether the contribution must be funded before the great project can start.",
+  "details": "Runs on a great project contribution. Vanilla uses it with `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "controls_holy_site",
+  "label": "Controls holy site",
+  "summary": "Whether the faith controls the given holy site.",
+  "details": "Runs on a faith. Written with the key of the holy site. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "controls_holy_site_with_parameter",
+  "label": "Controls holy site with parameter",
+  "summary": "Whether the faith controls an active holy site that has the given parameter.",
+  "details": "Runs on a faith. The parameter is written as a name. Vanilla uses names such as `jerusalem_conversion_bonus` and `wadi_el_milk_conversion_resistance_bonus`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "council_task_monthly_progress",
+  "label": "Council task monthly progress",
+  "summary": "Compares the character's monthly progress on their assigned council task with a number.",
+  "details": "Runs on a character. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "county_control",
+  "label": "County control",
+  "summary": "Compares the county's county control (how firmly the holder controls the county) with a number.",
+  "details": "Runs on a county title. Vanilla often compares with 100 or 90, or with named values such as `full_county_control` and `low_county_control`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "county_fertility",
+  "label": "County fertility",
+  "summary": "Compares the county's fertility with a number.",
+  "details": "Runs on a county title. Vanilla compares with plain numbers and with named levels such as `bad_county_fertility_level`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "county_has_province_with_terrain",
+  "label": "County has terrain",
+  "summary": "Whether the county contains a province of the given terrain type.",
+  "details": "Runs on a county title. Vanilla and the documented example put several `terrain` lines in one block, for example mountains and desert_mountains. The game's documentation does not say whether one or all of them must be present.",
+  "fields": [
+   { "name": "terrain", "text": "A terrain type to look for; the line can be repeated.", "values": "a terrain key, for example hills or mountains", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "county_holder_opinion",
+  "label": "County opinion of holder",
+  "summary": "Compares the county's opinion of its holder with a number.",
+  "details": "Runs on a county title. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "county_opinion",
+  "label": "County opinion",
+  "summary": "Compares the county's opinion of its current count with a number.",
+  "details": "Runs on a county title. The number can be negative. Vanilla often compares with 0 or with negative limits such as `<= -25`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "county_opinion_target",
+  "label": "County opinion of character",
+  "summary": "Compares the county's opinion of the given character with a value.",
+  "details": "Runs on a county title. Unlike `county_opinion`, the character is not the current count but the one you name as `target`. Vanilla does not use it.",
+  "fields": [
+   { "name": "target", "text": "The character whose standing in the county is checked.", "values": "a character", "required": true },
+   { "name": "value", "text": "The number to compare with, written with `>`, `<`, `=` and so on.", "values": "a comparison such as `value >= 10`", "required": true }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "court_grandeur_base",
+  "label": "Base court grandeur",
+  "summary": "Compares the character's base court grandeur value with a number.",
+  "details": "A character who has no base value gets the game's minimum grandeur value. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "court_grandeur_current",
+  "label": "Current court grandeur",
+  "summary": "Compares the character's current court grandeur value with a number.",
+  "details": "A character who has no current value gets the game's minimum grandeur value. Vanilla compares it with plain numbers, with the minimum expected grandeur, and with the grandeur of another character (`prev`).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "court_grandeur_current_level",
+  "label": "Court grandeur level",
+  "summary": "Compares the character's current court grandeur level with a number.",
+  "details": "A character who has no level gets 0. Vanilla uses it a lot, with plain levels such as `>= 4` or `>= 10`, an exact level, or the minimum expected level.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "court_grandeur_minimum_expected",
+  "label": "Expected court grandeur",
+  "summary": "Compares the minimum court grandeur value expected of the character with a number.",
+  "details": "A character who has no such value gets the game's minimum grandeur value. Vanilla does not use it as a trigger, but compares against it in `court_grandeur_current`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "court_grandeur_minimum_expected_level",
+  "label": "Expected court grandeur level",
+  "summary": "Compares the minimum court grandeur level expected of the character with a number.",
+  "details": "A character who has no such level gets 0. Vanilla does not use it as a trigger, but compares against it in `court_grandeur_current_level`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "court_positions_currently_available",
+  "label": "Court positions available",
+  "summary": "Compares the number of court positions the character can currently employ with a number.",
+  "details": "Runs on a character. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ }
+]

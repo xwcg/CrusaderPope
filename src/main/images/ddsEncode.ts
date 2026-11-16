@@ -28,7 +28,7 @@ const SRGB_DXGI = new Set([29, 72, 75, 78, 91, 93, 99]);
 
 /**
  * What a texture replacing `original` is written as: its own format where encodable, else BGRA8. `pixels`: the
- * original decoded — a BC1 keeps 1-bit alpha only when the original had transparent pixels.
+ * original decoded. A BC1 keeps 1-bit alpha only when the original had transparent pixels.
  */
 export function ddsTargetFor(original: DdsInfo | undefined, buf?: Uint8Array, pixels?: RgbaImage): DdsTarget
 {
@@ -458,7 +458,7 @@ function colorBlock(block: Uint8Array, out: Uint8Array, off: number, punchThroug
 
     if (c0 === c1 && !three)
     {
-        // one colour: all index 0 (c0 > c1 is not needed then — both decode as 4-colour equal endpoints)
+        // one colour: all index 0 (c0 > c1 is not needed then: both decode as 4-colour equal endpoints)
         bestIdx.fill(0);
     }
 

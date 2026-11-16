@@ -272,6 +272,30 @@ input[type='range']:disabled {
   cursor: default;
 }
 
+/* Slider.tsx: the input with its default's pip under the track (double click: back to it) */
+.slider {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+.slider > input[type='range'] {
+  width: 100%;
+}
+.slider-pip {
+  position: absolute;
+  bottom: -1px;
+  width: 2px;
+  height: 5px;
+  margin-left: -1px;
+  border-radius: 1px;
+  background: var(--text-faint);
+  pointer-events: none;
+}
+.slider-pip.at {
+  background: var(--accent-dim);
+}
+
 /* number fields: quieter spin buttons */
 input[type='number']::-webkit-inner-spin-button {
   opacity: 0.5;

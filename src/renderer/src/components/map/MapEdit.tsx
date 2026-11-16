@@ -1,6 +1,6 @@
 /**
- * Editing from the map (docs/map.md, "Editing from the map"): the side panel's editors of a province's layers — a
- * county's culture, faith and development, a barony's holding (the title editor: MapEditTitle.tsx) — written into
+ * Editing from the map (docs/map.md, "Editing from the map"): the side panel's editors of a province's layers (a
+ * county's culture, faith and development, a barony's holding; the title editor: MapEditTitle.tsx), written into
  * the active mod by the main process (src/main/map/edit.ts: history at the map's date), reported in the change bar
  * with Undo; main's map undo stack stays reachable (the panel's Undo, Ctrl+Z on the map page, a refusal's action). The
  * map reads its data again once the index has the change.
@@ -10,7 +10,7 @@ import type { MapEditRequest, MapEditResult, MapInfo, MapLayer } from '../../../
 import type { Navigate } from '../../App';
 import { api } from '../../api';
 import { reportChange } from '../../changes';
-import { useActiveMod } from '../../modStore';
+import { useActiveMod, useLoadedMods } from '../../modStore';
 import { errorText } from '../ModDialogs';
 import { MODS_ROUTE } from '../ModsView';
 import { MapEditChooser, type Choice } from './MapEditChooser';
@@ -18,24 +18,30 @@ import { ancestorAt, hashColor } from './model';
 import '../../styles/map-edit.css';
 import { Select } from '../Select';
 
+import { tr, trn } from '../../../../shared/i18n';
 /** The layers the map edits: the value is the county's (culture, faith, development) or the barony's (holding). */
 export const EDITABLE_LAYERS = new Set(['culture', 'faith', 'holding', 'development']);
 
 export type When = 'date' | 'current';
 
-/** The map can be edited: an editable active mod in the loaded list (`mod`: its name) — else why not. */
+/** The map can be edited: an editable active mod in the loaded list (`mod`: its name), else why not. */
 export function useMapEditing(): { mod?: string; why?: string; }
 {
     const a = useActiveMod();
+    // (a loaded save: its map is edited; the save changes, docs/saves.md)
+    const save = useLoadedMods().find((m) => m.id.startsWith('save:'));
+
+    if (save)
+        return { mod: save.name };
 
     if (!a.mod)
-        return { why: 'To change the map in your own mod, set an active mod (Mods page: “New mod…”, or a mod’s ⋯ → Set as active mod).' };
+        return { why: tr('To change the map in your own mod, set an active mod (Mods page: “New mod…”, or a mod’s ⋯ → Set as active mod).') };
 
     if (!a.mod.editable)
-        return { why: `The active mod ${a.mod.name} cannot be edited here (only unpacked mods in your mod folder can) — choose another one on the Mods page.` };
+        return { why: tr('The active mod {name} cannot be edited here (only unpacked mods in your mod folder can) — choose another one on the Mods page.', { name: a.mod.name }) };
 
     if (!a.loaded)
-        return { why: `The active mod ${a.mod.name} is not in the mod list loaded in the explorer — load a list with it to change the map.` };
+        return { why: tr('The active mod {name} is not in the mod list loaded in the explorer — load a list with it to change the map.', { name: a.mod.name }) };
 
     return { mod: a.mod.name };
 }
@@ -44,7 +50,7 @@ export function useMapEditing(): { mod?: string; why?: string; }
 // Running edits, main's undo stack
 // ---------------------------------------------------------------------------
 
-/** What this page's edits said, oldest first — the newest part of main's undo stack (older ones: main's own words). */
+/** What this page's edits said, oldest first: the newest part of main's undo stack (older ones: main's own words). */
 const edits: string[] = [];
 
 /** Main's map undo stack as the page knows it: how many edits can be undone, what the next undo takes back. */
@@ -86,8 +92,8 @@ export function useMapUndo(): { count: number; next?: string; }
     );
 }
 
-const UNDO = { label: 'Undo', run: (): void => void undoMapEdit() };
-const UNDO_LAST = { label: 'Undo last map edit', run: (): void => void undoMapEdit() };
+const UNDO = { label: tr('Undo'), run: (): void => void undoMapEdit() };
+const UNDO_LAST = { label: tr('Undo last map edit'), run: (): void => void undoMapEdit() };
 
 /** Runs a map edit and reports it in the change bar (with Undo); the reason when it was refused, else null. */
 export async function runEdit(req: MapEditRequest, text: string): Promise<string | null>
@@ -107,8 +113,8 @@ export async function runEdit(req: MapEditRequest, text: string): Promise<string
     {
         tookStack(r);
         // (the edits before it can still be undone)
-        reportChange({ kind: 'error', text: `Not changed: ${text}`, details: [r.message ?? 'Refused'], actions: undoable.count ? [UNDO_LAST] : undefined });
-        return r.message ?? 'Refused';
+        reportChange({ kind: 'error', text: tr('Not changed: {text}', { text }), details: [r.message ?? tr('Refused')], actions: undoable.count ? [UNDO_LAST] : undefined });
+        return r.message ?? tr('Refused');
     }
 
     edits.push(text);
@@ -134,19 +140,19 @@ export async function undoMapEdit(): Promise<void>
     if (!r.ok)
     {
         tookStack(r);
-        return reportChange({ kind: 'error', text: 'Not undone', details: [r.message ?? 'Refused'] });
+        return reportChange({ kind: 'error', text: tr('Not undone'), details: [r.message ?? tr('Refused')] });
     }
 
     const said = edits.pop();
     tookStack(r);
     reportChange({
         kind: 'info',
-        text: said ? `Undone: ${said}` : (r.message ?? 'Undone'),
+        text: said ? tr('Undone: {said}', { said }) : (r.message ?? tr('Undone')),
         mod: r.mod?.name,
         where: r.file && `${r.rel}:${r.line}`,
         file: r.file,
         line: r.line,
-        details: undoable.count ? [`${undoable.count} earlier map edit${undoable.count > 1 ? 's' : ''} can be undone — next: ${undoable.next}`] : undefined,
+        details: undoable.count ? [trn('{n} earlier map edit can be undone — next: {next}', '{n} earlier map edits can be undone — next: {next}', undoable.count, { next: undoable.next })] : undefined,
         actions: undoable.count ? [UNDO] : undefined
     });
 }
@@ -157,15 +163,15 @@ export function MapEditHint(props: { date: string; navigate: Navigate; }): React
     const e = useMapEditing();
     const u = useMapUndo();
     const undo = u.count > 0 && (
-        <button className="ghost small map-edit-undo" onClick={() => void undoMapEdit()} title={`Undo the last map edit (Ctrl+Z) — ${u.count} can be undone`}>
-            ↶ Undo: {u.next}
+        <button className="ghost small map-edit-undo" onClick={() => void undoMapEdit()} title={tr('Undo the last map edit (Ctrl+Z) — {count} can be undone', { count: u.count })}>
+            {tr('↶ Undo: {next}', { next: u.next })}
         </button>
     );
 
     if (e.mod)
         return (
-            <div className="map-edit-foot" title="Culture, faith, development, holding, holder and liege are history at the map's date; the colour is the title's definition">
-                ✎ on a row changes it in <b>{e.mod}</b> · at {props.date}
+            <div className="map-edit-foot" title={tr('Culture, faith, development, holding, holder and liege are history at the map\'s date; the colour is the title\'s definition')}>
+                {tr('✎ on a row changes it in')}{' '}<b>{e.mod}</b> {' '}{tr('· at {date}', { date: props.date })}
                 {undo}
             </div>
         );
@@ -175,8 +181,7 @@ export function MapEditHint(props: { date: string; navigate: Navigate; }): React
             <div className="map-edit-foot-row">
                 <span>✎ {e.why}</span>
                 <button className="ghost small" onClick={() => props.navigate({ type: MODS_ROUTE })}>
-                    Mods page
-                </button>
+                    {tr('Mods page')}</button>
             </div>
             {undo}
         </div>
@@ -221,7 +226,7 @@ const sameDate = (a: string, b: string): boolean =>
 /**
  * "From <date> on" (a dated block) or the statement in effect at the date ("from the start" when it is undated,
  * "since <its date>"; a de jure liege's development: the county's own from its date); and the file the change goes to.
- * `undated`: history/provinces — without a statement in effect a change can go from the start (title history is
+ * `undated`: history/provinces. Without a statement in effect a change can go from the start (title history is
  * dated only: then it goes from the date on).
  */
 export function WhenRow(props: { date: string; plan: MapEditResult | null | undefined; when: When; onWhen: (w: When) => void; undated: boolean; }): React.JSX.Element
@@ -231,21 +236,21 @@ export function WhenRow(props: { date: string; plan: MapEditResult | null | unde
     const t = plan?.target;
     const one = cur?.date && sameDate(cur.date, date);
     const choice = !one && (!!cur || props.undated);
-    const since = cur ? (cur.title ? `Since ${cur.date} (${cur.title} sets it then: this county’s own from then)` : cur.date ? `Since ${cur.date} (changes the entry of then)` : 'From the start (changes the undated entry)') : 'From the start';
+    const since = cur ? (cur.title ? tr('Since {date} ({title} sets it then: this county’s own from then)', { date: cur.date, title: cur.title }) : cur.date ? tr('Since {date} (changes the entry of then)', { date: cur.date }) : tr('From the start (changes the undated entry)')) : tr('From the start');
     return (
         <div className="map-edit-when">
-            {one ? <span>At {date} (changes the entry of that date)</span> : choice ?
+            {one ? <span>{tr('At {date} (changes the entry of that date)', { date })}</span> : choice ?
                 (
-                    <Select value={props.when} onChange={(e) => props.onWhen(e.target.value as When)} title="When the change happens (the history's dates)">
-                        <option value="date">From {date} on</option>
+                    <Select value={props.when} onChange={(e) => props.onWhen(e.target.value as When)} title={tr('When the change happens (the history\'s dates)')}>
+                        <option value="date">{tr('From {date} on', { date })}</option>
                         <option value="current">{since}</option>
                     </Select>
                 ) :
-                <span title="Title history is dated: with nothing set before, the change goes from the map's date on">From {date} on</span>}
+                <span title={tr('Title history is dated: with nothing set before, the change goes from the map\'s date on')}>{tr('From {date} on', { date })}</span>}
             {t && (
                 <div className="map-edit-target" title={t.rel}>
                     → {t.rel.slice(t.rel.lastIndexOf('/') + 1)}
-                    {t.from ? ` (copied from ${t.from === 'Game' ? 'the game' : t.from} first)` : t.created ? ' (new file)' : ''}
+                    {t.from ? tr(' (copied from {from} first)', { from: t.from === 'Game' ? tr('the game') : t.from }) : t.created ? tr(' (new file)') : ''}
                 </div>
             )}
             {plan && !plan.ok && <div className="map-edit-error">{plan.message}</div>}
@@ -264,7 +269,7 @@ export function whenOf(plan: MapEditResult | null | undefined, when: When, undat
 // ---------------------------------------------------------------------------
 
 /** A county's provinces in title order: its capital barony's first (history/provinces writes culture and faith there). */
-function countyProvinces(info: MapInfo, county: number): number[]
+export function countyProvinces(info: MapInfo, county: number): number[]
 {
     const out: number[] = [];
 
@@ -280,7 +285,7 @@ function countyProvinces(info: MapInfo, county: number): number[]
 }
 
 /** A title's de jure lieges at the date, lowest first. */
-function liegesOf(info: MapInfo, t: number): string[]
+export function liegesOf(info: MapInfo, t: number): string[]
 {
     const out: string[] = [];
 
@@ -326,7 +331,7 @@ export function MapLayerEdit(props: { info: MapInfo; layer: MapLayer; p: number;
             setHoldings([
                 ...list.map((h) => ({ key: h.name, name: h.display ?? h.name, color: color(h.name) })),
                 { key: 'none', name: 'No holding', color: color('none'), hint: 'none' },
-                { key: 'auto', name: 'Automatic', color: color('auto'), hint: 'auto: the game fills the county' }
+                { key: 'auto', name: 'Automatic', color: color('auto'), hint: tr('auto: the game fills the county') }
             ]);
         });
         return () =>
@@ -338,7 +343,7 @@ export function MapLayerEdit(props: { info: MapInfo; layer: MapLayer; p: number;
     const choices = useMemo(() => (kind === 'holding' ? holdings : (layer.things ?? []).map((x) => ({ key: x.key, name: x.name, color: x.color ?? hashColor(x.key) }))), [kind, holdings, layer]);
 
     if (!title)
-        return <div className="map-edit">No {kind === 'holding' ? 'barony' : 'county'} here.</div>;
+        return <div className="map-edit">{tr('No')}{' '}{kind === 'holding' ? 'barony' : 'county'} {' '}{tr('here.')}</div>;
 
     const undated = kind !== 'development';
     const at = whenOf(plan, when, undated);
@@ -347,7 +352,7 @@ export function MapLayerEdit(props: { info: MapInfo; layer: MapLayer; p: number;
     {
         setBusy(true);
         setError(null);
-        const why = await runEdit({ kind, title: title.key, provinces, lieges, value, date: info.date, when: at }, `${layer.row} of ${title.name}: ${name}${at === 'date' ? ` from ${info.date}` : ''}`);
+        const why = await runEdit({ kind, title: title.key, provinces, lieges, value, date: info.date, when: at }, tr('{row} of {name}: {name2}{onDate}', { row: layer.row, name: title.name, name2: name, onDate: at === 'date' ? tr(' from {date}', { date: info.date }) : '' }));
         setBusy(false);
 
         if (why)
@@ -359,14 +364,14 @@ export function MapLayerEdit(props: { info: MapInfo; layer: MapLayer; p: number;
     return (
         <div className="map-edit">
             <div className="map-edit-head">
-                {layer.row} of <b>{title.name}</b>
-                {kind === 'culture' || kind === 'faith' ? <span className="map-dim">(written on its capital)</span> : kind === 'development' ? <span className="map-dim">(sets it: change_development_level)</span> : null}
+                {tr('{row} of', { row: layer.row })}{' '}<b>{title.name}</b>
+                {kind === 'culture' || kind === 'faith' ? <span className="map-dim">{tr('(written on its capital)')}</span> : kind === 'development' ? <span className="map-dim">{tr('(sets it: change_development_level)')}</span> : null}
             </div>
             <WhenRow date={info.date} plan={plan} when={when} onWhen={setWhen} undated={undated} />
             {kind === 'development' ?
                 (
                     <div className="map-edit-field">
-                        <span className="map-edit-label">Level</span>
+                        <span className="map-edit-label">{tr('Level')}</span>
                         <input
                             className="map-edit-number"
                             type="number"
@@ -384,23 +389,22 @@ export function MapLayerEdit(props: { info: MapInfo; layer: MapLayer; p: number;
                                     props.onClose();
                             }}
                         />
-                        <span className="map-edit-value map-dim">{Number.isFinite(v) ? `now ${v}` : ''}</span>
+                        <span className="map-edit-value map-dim">{Number.isFinite(v) ? tr('now {v}', { v }) : ''}</span>
                         <button className="small" disabled={busy || !levelOk || Number(level) === v} onClick={() => void set(level.trim(), level.trim())}>
-                            Set
-                        </button>
+                            {tr('Set')}</button>
                     </div>
                 ) :
                 (
                     <MapEditChooser
                         choices={choices}
                         current={v >= 0 ? layer.things?.[v]?.key : undefined}
-                        placeholder={`Find a ${layer.row.toLowerCase()}…`}
+                        placeholder={tr('Find a {row}…', { row: layer.row.toLowerCase() })}
                         busy={busy}
                         onPick={(c) => void set(c.key, c.name)}
                         onCancel={props.onClose}
                     />
                 )}
-            {busy && <div className="map-edit-busy">Writing into the mod…</div>}
+            {busy && <div className="map-edit-busy">{tr('Writing into the mod…')}</div>}
             {error && <div className="map-edit-error">{error}</div>}
         </div>
     );

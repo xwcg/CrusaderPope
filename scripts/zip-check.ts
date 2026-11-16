@@ -1,8 +1,8 @@
 // Checks the zip writer and reader (src/main/mods/zip.ts) against independent readers: .NET's ZipFile (PowerShell) and
 // Windows' bsdtar (System32\tar.exe). Every entry's bytes are compared by SHA-1.
 // Usage: node --experimental-strip-types --no-warnings scripts/zip-check.ts [big] [keep]
-//   big: also a 70,000-entry zip (ZIP64 count) and a 8.6 GB one (4.3 GB of zeros deflated — ZIP64 sizes —, 4.3 GB of
-//   noise stored — the entry after it starts past 4 GB); ~5 min, ~9 GB of temp disk, removed afterwards.
+//   big: also a 70,000-entry zip (ZIP64 count) and a 8.6 GB one (4.3 GB of zeros deflated, for ZIP64 sizes; 4.3 GB of
+//   noise stored, so the entry after it starts past 4 GB); ~5 min, ~9 GB of temp disk, removed afterwards.
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';

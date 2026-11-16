@@ -1,6 +1,6 @@
 /**
  * Editing in place (docs/mods.md, "Editing in place"): what the readable view's rows need from the editing
- * controller (components/InPlaceEdit.tsx) — kept apart so rich.tsx can use it without importing the editor.
+ * controller (components/InPlaceEdit.tsx), kept apart so rich.tsx can use it without importing the editor.
  */
 import { createContext, type ReactNode } from 'react';
 import type { Line, LineAct, LineSource, SectionSource } from '../../../shared/api';
@@ -28,6 +28,8 @@ export interface LineEditing
     offer(src: LineSource, line?: Line): ReactNode;
     /** the in-place editor, when it is open under this row */
     editor(key: string): ReactNode;
+    /** opens the row's script editor (the text as written); `why`: a notice for the change bar, what the picker could not do */
+    editScript(src: LineSource, why?: string): void;
     /**
      * "＋ Add …" for a section (also empty or not written yet); `template`: the script editor opens with it instead of
      * the statement picker (a new option)

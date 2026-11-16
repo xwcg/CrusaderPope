@@ -1,13 +1,15 @@
 // One mod on top of the game through discovery, layering and a full index build: files per folder (from the mod,
 // hidden), index stats and ModTouch states per type. Tests total conversions quickly.
 // Usage: MOD=<id or name part> node --experimental-strip-types --experimental-sqlite --max-old-space-size=8000 scripts/mod-check.ts
+// The index: scripts/fast-index.ts (parse threads, cached in %TEMP%/ckp-index-cache; FRESH=1 builds it anew).
 import { writeSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
-import { GameIndex, resolveGameDir } from '../src/main/indexer/gameIndex.ts';
+import { resolveGameDir } from '../src/main/indexer/gameIndex.ts';
 import { GameFiles } from '../src/main/mods/gamefiles.ts';
 import { readModsState } from '../src/main/mods/manager.ts';
 import { defaultInstall } from './ck3-install.ts';
+import { fastIndex } from './fast-index.ts';
 
 const log = (s: string): void => void writeSync(1, s + '\n');
 const gameDir = resolveGameDir(defaultInstall())!;
@@ -25,8 +27,7 @@ for (const dir of ['common', 'common/culture', 'common/religion', 'common/traits
 }
 
 const t = Date.now();
-const idx = new GameIndex(vfs, 'english');
-idx.build();
+const idx = await fastIndex(vfs, { cache: true });
 log(`index: ${JSON.stringify(idx.stats)} in ${Date.now() - t} ms`);
 
 for (const type of ['traits', 'culture/cultures', 'religion/religion_types', 'faith', 'landed_titles', 'characters', 'events'])

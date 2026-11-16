@@ -1,0 +1,2109 @@
+[
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.GetLine",
+  "label": "Line number",
+  "summary": "The line number of this line in the script profiler's file view.",
+  "details": "The script profiler is an engine debug tool that measures how long script takes. Returns a whole number.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:255"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.GetMaxTimeInclusive",
+  "label": "Longest time, inclusive",
+  "summary": "Going by its name, the longest time one run of this script line took in the script profiler, counting the script it calls.",
+  "details": "Returns a decimal number. In profilers 'inclusive' usually means the time of nested calls is counted too; that reading rests on the name. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.GetMinTimeInclusive",
+  "label": "Shortest time, inclusive",
+  "summary": "Going by its name, the shortest time one run of this script line took in the script profiler, counting the script it calls.",
+  "details": "Returns a decimal number. The counterpart of GetMaxTimeInclusive. Vanilla never uses it; the game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.GetPerFrameTimeExclusive",
+  "label": "Time per frame, exclusive",
+  "summary": "Going by its name, the time this script line takes per drawn frame in the script profiler, leaving out the script it calls.",
+  "details": "Returns a decimal number. 'Exclusive' usually means the time of nested calls is not counted; that rests on the name. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.GetPerFrameTimeInclusive",
+  "label": "Time per frame, inclusive",
+  "summary": "Going by its name, the time this script line takes per drawn frame in the script profiler, counting the script it calls.",
+  "details": "Returns a decimal number. Compare GetPerFrameTimeExclusive, which leaves nested calls out. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.GetPerTickTimeExclusive",
+  "label": "Time per tick, exclusive",
+  "summary": "Going by its name, the time this script line takes per game tick (one step of the game's simulation) in the script profiler, leaving out the script it calls.",
+  "details": "Returns a decimal number. Vanilla never uses it; the game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.GetPerTickTimeInclusive",
+  "label": "Time per tick, inclusive",
+  "summary": "Going by its name, the time this script line takes per game tick in the script profiler, counting the script it calls.",
+  "details": "Returns a decimal number. Compare GetPerTickTimeExclusive. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.GetText",
+  "label": "Line text",
+  "summary": "The script text of this line in the script profiler's file view.",
+  "details": "Vanilla shows it next to the line number and timing. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:336"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.GetTiming",
+  "label": "Timing",
+  "summary": "Going by its name, a measured time of this script line in the script profiler.",
+  "details": "Returns a decimal number. Which of the profiler's measures it is, the game does not say. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.GetTooltip",
+  "label": "Line tooltip",
+  "summary": "The tooltip text of this line in the script profiler's file view.",
+  "details": "Vanilla uses it as the tooltip of the line's text; what it holds, the game does not show.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:340"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.GetTotalTimeExclusive",
+  "label": "Total time, exclusive",
+  "summary": "Going by its name, all the time this script line took during the profiler's capture, leaving out the script it calls.",
+  "details": "Returns a decimal number. Vanilla never uses it; the game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.GetTotalTimeInclusive",
+  "label": "Total time, inclusive",
+  "summary": "Going by its name, all the time this script line took during the profiler's capture, counting the script it calls.",
+  "details": "Returns a decimal number. Compare GetTotalTimeExclusive. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.HasSamples",
+  "label": "Has samples",
+  "summary": "Whether the script profiler recorded any measurements for this file line.",
+  "details": "Vanilla shows the line's timing and its buttons (show in call graph, open in script or code editor) only when this is yes.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:268"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.OpenInCodeEditor",
+  "label": "Open in code editor",
+  "summary": "Opens this script line in a code editor, from the script profiler's file view.",
+  "details": "Vanilla calls it from a button with the tooltip \"Open in code editor\", next to one for the script editor (OpenInScriptEditor); how the two editors differ, the game does not say. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:324"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.OpenInScriptEditor",
+  "label": "Open in script editor",
+  "summary": "Opens this script line in the script editor, from the script profiler's file view.",
+  "details": "Vanilla calls it from a button with the tooltip \"Open in script editor\", next to one for a code editor (OpenInCodeEditor); how the two differ, the game does not say. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:305"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.Select",
+  "label": "Show in call graph",
+  "summary": "Shows this script line in the script profiler's call graph.",
+  "details": "Vanilla calls it from a button with the tooltip \"Show in call graph\", shown only for lines with samples. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:286"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerFileLine.Self",
+  "label": "Profiler line itself",
+  "summary": "Going by its name, this script line entry of the script profiler itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types (for example Character.Self passed as an argument); those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.AccessSelf",
+  "label": "Access profiler itself",
+  "summary": "A function on the script profiler window (a debug tool) that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.GetCaptureTime",
+  "label": "Capture length",
+  "summary": "How long the script profiler's capture lasts, in seconds.",
+  "details": "Vanilla shows it with one decimal and \" s\" after it, labelled \"Capture length:\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:66"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.GetCapturedFrames",
+  "label": "Captured frames",
+  "summary": "How many frames the script profiler's capture covers.",
+  "details": "Vanilla shows it labelled \"Captured frames:\". Returns a whole number.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:82"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.GetCapturedSamples",
+  "label": "Captured samples",
+  "summary": "How many measurements the script profiler's capture holds.",
+  "details": "Vanilla shows it labelled \"Captured samples:\" once capturing has stopped, and \"---\" while it runs.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:115"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.GetCapturedTicks",
+  "label": "Captured ticks",
+  "summary": "How many game ticks (steps of the game's simulation) the script profiler's capture covers.",
+  "details": "Vanilla shows it labelled \"Captured ticks:\". Returns a whole number.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:98"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.GetCurrentEntry",
+  "label": "Current entry",
+  "summary": "The entry the script profiler's call graph currently shows.",
+  "details": "Vanilla shows it under \"Current\" between the callers and callees, with its short description, call count and timing, and buttons to open its file in the profiler's file view, the script editor or a code editor when it has a file location. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:498"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.GetCurrentEntryChildren",
+  "label": "Callees",
+  "summary": "The entries the current entry calls, in the script profiler's call graph.",
+  "details": "Vanilla fills the \"Callees\" list from it; each row shows its description and timing and can be clicked to select it. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:634"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.GetCurrentEntryParents",
+  "label": "Callers",
+  "summary": "The entries that call the current entry, in the script profiler's call graph.",
+  "details": "Vanilla fills the \"Callers\" list from it; each row shows its description and timing and can be clicked to select it. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:438"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.GetFileLines",
+  "label": "File lines",
+  "summary": "The lines of the script file the script profiler's file view shows.",
+  "details": "Vanilla fills the file view from it; each line shows its number, timing and text (ScriptProfilerFileLine). The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:245"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.GetFileSearchList",
+  "label": "File picker",
+  "summary": "The searchable list of script files to pick from in the script profiler.",
+  "details": "Vanilla uses it for the picker after the \"File:\" label. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:188"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.GetModeSearchList",
+  "label": "Show picker",
+  "summary": "The searchable list behind the script profiler's \"Show:\" choice.",
+  "details": "Vanilla uses it for the picker after the \"Show:\" label. What the choices are, the game does not show. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:147"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.GetNextFile",
+  "label": "Next file",
+  "summary": "The next script file the script profiler can switch to.",
+  "details": "Vanilla uses it as the tooltip of the next file button (enabled by HasNextFile, clicking calls OpenNextFile). The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:175"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.GetPreviousFile",
+  "label": "Previous file",
+  "summary": "The previous script file the script profiler can switch back to.",
+  "details": "Vanilla uses it as the tooltip of the previous file button (enabled by HasPreviousFile, clicking calls OpenPreviousFile). The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:163"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.HasNextFile",
+  "label": "Has next file",
+  "summary": "Whether there is a next script file for the script profiler to switch to.",
+  "details": "Vanilla enables the next file button by it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:174"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.HasPreviousFile",
+  "label": "Has previous file",
+  "summary": "Whether there is a previous script file for the script profiler to switch back to.",
+  "details": "Vanilla enables the previous file button by it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:162"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.IsCapturing",
+  "label": "Is capturing",
+  "summary": "Whether the script profiler is capturing measurements right now.",
+  "details": "Vanilla enables the start button only when it is not capturing, and the stop and restart buttons only while it is; the sample count shows \"---\" during a capture.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:20"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.OpenFileInCodeEditor",
+  "label": "Open file in code editor",
+  "summary": "Opens the script file the profiler shows in a code editor.",
+  "details": "Vanilla calls it from a button with the tooltip \"Open in code editor\", next to one for the script editor; how the two differ, the game does not say. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:205"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.OpenFileInScriptEditor",
+  "label": "Open file in script editor",
+  "summary": "Opens the script file the profiler shows in the script editor.",
+  "details": "Vanilla calls it from a button with the tooltip \"Open in script editor\", next to one for a code editor; how the two differ, the game does not say. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:194"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.OpenNextFile",
+  "label": "Open next file",
+  "summary": "Switches the script profiler's file view to the next script file.",
+  "details": "Vanilla calls it from the next file button, enabled by HasNextFile. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:176"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.OpenPreviousFile",
+  "label": "Open previous file",
+  "summary": "Switches the script profiler's file view back to the previous script file.",
+  "details": "Vanilla calls it from the previous file button, enabled by HasPreviousFile. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:164"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.RestartCapture",
+  "label": "Restart capture",
+  "summary": "Restarts the script profiler's capture.",
+  "details": "Vanilla calls it from a button with the tooltip \"Restart capture\", enabled only while a capture runs. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:46"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.SelectEdge",
+  "label": "Show edges",
+  "summary": "Makes the script profiler's call graph show its edges.",
+  "details": "Vanilla calls it from a button with the tooltip \"Show edges\" next to \"Show roots\" (SelectRoot). What the edges are, the game does not explain. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:380"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.SelectRoot",
+  "label": "Show roots",
+  "summary": "Makes the script profiler's call graph show its roots, the entries at the top of the calls.",
+  "details": "Vanilla calls it from a button with the tooltip \"Show roots\", next to \"Show edges\" (SelectEdge). Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:369"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.Self",
+  "label": "Profiler itself",
+  "summary": "Going by its name, the script profiler window itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types (for example Character.Self passed as an argument); those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.StartCapture",
+  "label": "Start capture",
+  "summary": "Starts the script profiler's capture of how long script takes.",
+  "details": "Vanilla calls it from a button with the tooltip \"Start capture\", enabled only when no capture runs. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:22"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptProfilerGui.StopCapture",
+  "label": "Stop capture",
+  "summary": "Stops the script profiler's capture.",
+  "details": "Vanilla calls it from a button with the tooltip \"Stop capture\", enabled only while a capture runs. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/script_profiler/script_profiler.gui:34"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerInspector.AccessEffectResult",
+  "label": "Effect result",
+  "summary": "The result of the effect tried out in the script runner, a debug tool for running script.",
+  "details": "Returns a ScriptRunnerResult; vanilla shows it below the effect box, with the Yes/No result, its tooltip and the debug output.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:266"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerInspector.AccessEventTargets",
+  "label": "Saved scopes setup",
+  "summary": "The saved scopes (named objects the tried-out script can refer to) set up in the script runner.",
+  "details": "Returns an EventTargetSetupContext. Vanilla shows its scopes and scope lists under \"Saved Scopes\", which the tooltips describe as the references available while the script runs.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:99"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerInspector.AccessSelf",
+  "label": "Access runner itself",
+  "summary": "A function on the script runner debug tool that, going by its name, hands back the tool itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerInspector.AccessTriggerResult",
+  "label": "Trigger result",
+  "summary": "The result of the trigger (condition) checked in the script runner debug tool.",
+  "details": "Returns a ScriptRunnerResult; vanilla shows it below the trigger box, with \"Result: Yes\" or \"No\", its tooltip and the debug output.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:190"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerInspector.GetEffect",
+  "label": "Effect text",
+  "summary": "The effect script typed into the script runner, as text.",
+  "details": "Vanilla shows it in the \"Effect\" box; SetEffect stores an edit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:220"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerInspector.GetTrigger",
+  "label": "Trigger text",
+  "summary": "The trigger (condition) script typed into the script runner, as text.",
+  "details": "Vanilla shows it in the \"Trigger\" box; SetTrigger stores an edit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:165"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerInspector.ParseEffect",
+  "label": "Parse effect",
+  "summary": "Reads the typed effect and updates its tooltip without running it.",
+  "details": "Vanilla calls it from the \"Parse\" button, whose tooltip says the effect is parsed and the tooltip updated but not run. Unlike RunEffect, the game state stays as it is. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:244"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerInspector.RunEffect",
+  "label": "Run effect",
+  "summary": "Runs the effect typed into the script runner and updates its tooltip.",
+  "details": "Vanilla calls it from the \"Run\" button and on Return in the effect box. Its tooltip warns that this changes the game state. The outcome shows through AccessEffectResult. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:260"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerInspector.RunTrigger",
+  "label": "Run trigger",
+  "summary": "Checks the trigger typed into the script runner in the current scope.",
+  "details": "Vanilla calls it from the \"Run\" button and on Return in the trigger box; the button's tooltip says it runs the trigger, sets up the tooltip and prints debug information. The outcome shows through AccessTriggerResult. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:183"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerInspector.Self",
+  "label": "Script runner itself",
+  "summary": "Going by its name, the script runner debug tool itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types (for example Character.Self passed as an argument); those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerInspector.SetEffect",
+  "label": "Set effect text",
+  "summary": "Stores the effect script typed into the script runner's effect box.",
+  "details": "Vanilla calls it when editing the box is finished or Return is pressed. It takes no argument (the text comes from the box) and returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:224"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerInspector.SetTrigger",
+  "label": "Set trigger text",
+  "summary": "Stores the trigger script typed into the script runner's trigger box.",
+  "details": "Vanilla calls it when editing the box is finished or Return is pressed. It takes no argument (the text comes from the box) and returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:169"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerInspector.ShouldModifyEventTargets",
+  "label": "Effect sets saved scopes",
+  "summary": "Whether an effect run in the script runner may change the saved scopes set up there.",
+  "details": "Vanilla shows it as the check box \"Let effect modify saved scopes:\". Its tooltip says that when checked, changes an effect (not a trigger) makes to the saved scopes replace the earlier setup, so scopes can be set from an effect. ToggleModifyEventTargets switches it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:122"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerInspector.ToggleModifyEventTargets",
+  "label": "Toggle effect sets scopes",
+  "summary": "Switches on or off whether effects run in the script runner may change its saved scopes.",
+  "details": "Vanilla calls it when the \"Let effect modify saved scopes:\" check box is clicked; ShouldModifyEventTargets reads the setting. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:134"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerResult.AccessSelf",
+  "label": "Access result itself",
+  "summary": "A function on a result of the script runner debug tool that, going by its name, hands back the result itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerResult.GetResult",
+  "label": "Debug output",
+  "summary": "The debug output of a script runner run, as text.",
+  "details": "Vanilla shows it under \"Debug Output\", and as the result line (trimmed) with itself as tooltip when the run has no tooltip of its own.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:59"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerResult.GetTooltip",
+  "label": "Result tooltip",
+  "summary": "The tooltip text of a script runner run, the game's description of the tried-out script.",
+  "details": "Vanilla shows it as the tooltip of the \"Result: Yes/No. Hover me for a tooltip.\" line, only when the run has a tooltip (IsMissingTooltip is no).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:7"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerResult.HasResult",
+  "label": "Has output",
+  "summary": "Whether a script runner run has debug output to show.",
+  "details": "Vanilla shows the \"Debug Output\" part only when this is yes.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:30"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerResult.IsBoolResultTrue",
+  "label": "Result is yes",
+  "summary": "Whether a script runner run came out yes, as when a tried-out trigger holds.",
+  "details": "Vanilla shows \"Result: Yes\" in green or \"No\" in red by it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:13"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerResult.IsMissingTooltip",
+  "label": "Tooltip missing",
+  "summary": "Whether a script runner run produced no tooltip text.",
+  "details": "When yes, vanilla shows the debug output as the result line instead of the Yes/No line with its tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:19"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerResult.IsOutputVisible",
+  "label": "Output shown",
+  "summary": "Going by its name, whether the output of a script runner result is shown or folded away.",
+  "details": "Returns yes or no; ToggleOutputVisible switches it. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerResult.IsValid",
+  "label": "Result exists",
+  "summary": "Whether there is a script runner result to show.",
+  "details": "Vanilla shows the result part of the script runner only when this is yes.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/object_explorer/script_runner_inspector.gui:4"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerResult.Self",
+  "label": "Result itself",
+  "summary": "Going by its name, the script runner result itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types (for example Character.Self passed as an argument); those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptRunnerResult.ToggleOutputVisible",
+  "label": "Show or hide output",
+  "summary": "Going by its name, shows or hides the output of a script runner result.",
+  "details": "An action for a button; it returns nothing. IsOutputVisible reads the current state. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptedGui.AccessSelf",
+  "label": "Access scripted GUI itself",
+  "summary": "A function on a scripted GUI (a script-defined block from common/scripted_guis that the interface can check and run) that, going by its name, hands back the scripted GUI itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptedGui.BuildTooltip",
+  "label": "Scripted GUI tooltip",
+  "summary": "Going by its name, a tooltip text built from the scripted GUI for the given script context.",
+  "details": "It takes one argument; going by the vanilla uses of the other ScriptedGui functions, that is the script context (often made with GuiScope.SetRoot( … ).End). What the tooltip contains, the game does not document; compare ExecuteTooltip, IsShownTooltip and IsValidTooltip. Vanilla never uses it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Going by the other ScriptedGui functions, the script context to build the tooltip for.",
+    "values": "a GUI scope, such as GuiScope.SetRoot( GetPlayer.MakeScope ).End",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptedGui.Execute",
+  "label": "Run scripted GUI",
+  "summary": "Runs the scripted GUI's effect for the given script context, used as a button's click action.",
+  "details": "A scripted GUI's effect block holds the script that runs. Vanilla puts it in onclick, for example ScriptedGui.Execute( GreatHolyWarWindow.GetScope ) in the great holy war window, or with a context built by GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope( 'child', Character.MakeScope ).End in the interaction menu. It returns nothing.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The script context: who is root and which other saved scopes the effect can use.",
+    "values": "a GUI scope, such as GuiScope.SetRoot( GetPlayer.MakeScope ).AddScope( 'child', Character.MakeScope ).End, or a window's GetScope",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/scripted_guis/00_religion.txt:62"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptedGui.ExecuteTooltip",
+  "label": "Run tooltip",
+  "summary": "Going by its name, a tooltip text describing what running the scripted GUI's effect would do for the given script context.",
+  "details": "It takes one argument, the script context as for Execute. That it describes the effect rests on the name. Vanilla never uses it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The script context, as for Execute.",
+    "values": "a GUI scope, such as GuiScope.SetRoot( GetPlayer.MakeScope ).End",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptedGui.IsShown",
+  "label": "Scripted GUI is shown",
+  "summary": "Whether the scripted GUI's is_shown conditions hold for the given script context.",
+  "details": "Returns yes or no. Vanilla uses it to show or hide an element (visible = …), for example ScriptedGui.IsShown( GreatHolyWarWindow.GetScope ) in the great holy war window. The conditions sit in the scripted GUI's is_shown block.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The script context the conditions are checked in.",
+    "values": "a GUI scope, such as GuiScope.SetRoot( GetPlayer.MakeScope ).End, or a window's GetScope",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/scripted_guis/00_religion.txt:4"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptedGui.IsShownTooltip",
+  "label": "Shown conditions tooltip",
+  "summary": "Going by its name, a tooltip text listing the scripted GUI's is_shown conditions for the given script context.",
+  "details": "It takes one argument, the script context as for IsShown. Vanilla never uses it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The script context, as for IsShown.",
+    "values": "a GUI scope",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptedGui.IsValid",
+  "label": "Scripted GUI is valid",
+  "summary": "Whether the scripted GUI's is_valid conditions hold for the given script context.",
+  "details": "Returns yes or no. Vanilla uses it to enable a button (enabled = … in the great holy war window) or to show an element (visible = … in the faith window, with a context of a tenet as root and the faith added as 'faith'). The conditions sit in the scripted GUI's is_valid block.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The script context the conditions are checked in.",
+    "values": "a GUI scope, such as GuiScope.SetRoot( TenetType.MakeScope ).AddScope( 'faith', Faith.MakeScope ).End",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/scripted_guis/00_religion.txt:18"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptedGui.IsValidTooltip",
+  "label": "Valid conditions tooltip",
+  "summary": "A text about the scripted GUI's is_valid conditions, checked for the script objects given in brackets.",
+  "details": "Vanilla's rite creation window shows it as a text: GetScriptedGui('pam_know_doctrine').IsValidTooltip(...), with the player as root and the doctrine added as a scope. That the text lists the conditions rests on the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptedGui.Self",
+  "label": "Scripted GUI itself",
+  "summary": "The scripted GUI itself, to hand to another function.",
+  "details": "Vanilla passes it as an argument in the great holy war window, for example GreatHolyWarWindow.PledgeToGreatHolyWar( ScriptedGui.Self, GreatHolyWarWindow.GetScope ) on a click and GreatHolyWarWindow.GetPledgeTooltip( ScriptedGui.Self, … ) as a tooltip. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptedRelation.AccessSelf",
+  "label": "Access relation itself",
+  "summary": "A function on a scripted relation type (friend, rival, lover and so on, from common/scripted_relations) that, going by its name, hands back the relation type itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptedRelation.GetDescription",
+  "label": "Relation description",
+  "summary": "Going by its name, a description text of this relation between two characters.",
+  "details": "It takes two arguments, presumably the two characters, as GetReasonFor and HasRelationBetween do. Vanilla never uses it on this type; GetDescription after other types (Building and so on) is only a hint.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Presumably the character who has the relation.",
+    "values": "a character",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "Presumably the character the relation is towards.",
+    "values": "a character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptedRelation.GetName",
+  "label": "Relation name",
+  "summary": "The name of the relation type.",
+  "details": "Vanilla shows it as the title of the relation icon's tooltip on portraits.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/portraits.gui:3074"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptedRelation.GetReasonFor",
+  "label": "Reason for relation",
+  "summary": "Going by its name, the text giving the reason why the first character has this relation with the second.",
+  "details": "Not named on this type in vanilla, but the messages about a new friend, best friend, rival or nemesis use GetRelation( 'friend' ).GetReasonFor( LEFT_CHARACTER.Self, RIGHT_CHARACTER.Self ) as their text, and GetRelation gives a scripted relation in the portrait GUI. That it is a reason text rests on the name and that hint.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Going by vanilla's message, the first character of the pair.",
+    "values": "a character, such as LEFT_CHARACTER.Self",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "Going by vanilla's message, the second character of the pair.",
+    "values": "a character, such as RIGHT_CHARACTER.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/messages_l_english.yml:493",
+   "vanilla: gui/shared/portraits.gui:3102"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptedRelation.HasRelationBetween",
+  "label": "Has relation between",
+  "summary": "Whether this relation exists between the two characters given.",
+  "details": "Returns yes or no. Vanilla uses it to show a relation icon on portraits only when it applies: HasRelationBetween( GetPlayer, Character.Self ) for the player and the portrayed character, and in the character window with CharacterWindow.GetCharacter first. That the first character is the one who has the relation towards the second is a guess from that order of use.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The first character of the pair (vanilla puts the player or the character window's character here).",
+    "values": "a character, such as GetPlayer",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The second character of the pair.",
+    "values": "a character, such as Character.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/portraits.gui:3036"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ScriptedRelation.Self",
+  "label": "Relation itself",
+  "summary": "Going by its name, the scripted relation type itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types (for example Character.Self passed as an argument); those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SearchListNodeWindow.AccessSelf",
+  "label": "Access node window itself",
+  "summary": "A function on a search list node window that, going by its name, hands back the window itself.",
+  "details": "What a search list node window is, the game does not document; going by the name and its other functions, an entry of a searchable list, probably in the debug tools. PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SearchListNodeWindow.CanEditEntry",
+  "label": "Entry can be edited",
+  "summary": "Going by its name, whether this entry of a search list can be edited now.",
+  "details": "Returns yes or no. Compare IsEntryEditingSupported. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SearchListNodeWindow.GetEntryTooltip",
+  "label": "Entry tooltip",
+  "summary": "Going by its name, the tooltip text of this entry of a search list.",
+  "details": "Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SearchListNodeWindow.IsEntryEditingSupported",
+  "label": "Entry editing supported",
+  "summary": "Going by its name, whether entries of this search list can be edited at all.",
+  "details": "Returns yes or no. Compare CanEditEntry. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SearchListNodeWindow.OnEntryEditClick",
+  "label": "Edit entry",
+  "summary": "Going by its name, the click action that starts editing this entry of a search list.",
+  "details": "It returns nothing. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SearchListNodeWindow.Self",
+  "label": "Node window itself",
+  "summary": "Going by its name, the search list node window itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types (for example Character.Self passed as an argument); those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Secret.AccessSelf",
+  "label": "Access secret itself",
+  "summary": "A function on a secret (something a character hides, such as an affair, which others can find out and use) that, going by its name, hands back the secret itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Secret.Custom",
+  "label": "Custom text",
+  "summary": "Going by its name, the text of the named custom localization (a script-defined text that picks its wording by conditions) for this secret.",
+  "details": "It takes one argument, the key of the custom localization. Vanilla never uses it on secrets; Custom after other types, such as Character.Custom( 'AIEconomicPersonality' ), is how such texts are called and only a hint here.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the custom localization.",
+    "values": "a custom localization key in quotes",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Secret.GetCategoryName",
+  "label": "Secret category",
+  "summary": "The name of the secret's category, shown as the heading of a secret's tooltip.",
+  "details": "Vanilla uses it as the title of the intrigue window's secret tooltip, above the secret's description. What the categories are, the input does not show.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Secret.GetDesc",
+  "label": "Secret description",
+  "summary": "The description text of the secret.",
+  "details": "Not named on this type in vanilla's lines here, but the intrigue window's secret tooltip shows IntrigueWindowSecretItem.GetSecret.GetDesc, which leads to a secret; that is a strong hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Secret.GetName",
+  "label": "Secret name",
+  "summary": "The name of the secret.",
+  "details": "Vanilla's effect texts about learning secrets use it, as in \"Learns of [someone's] [secret name] Secret\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Secret.GetNameNoTooltip",
+  "label": "Secret name, plain",
+  "summary": "The name of the secret without a hover tooltip of its own.",
+  "details": "Vanilla uses it as a text in the shared tooltips (cooltip.gui). Going by the name, it is the form without the hover tooltip that GetName carries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Secret.GetOwner",
+  "label": "Secret owner",
+  "summary": "Going by its name, the character who has (and hides) the secret.",
+  "details": "Vanilla never names it on this type; GetOwner after other types (a travel plan, a scheme) is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Secret.GetTargetCharacter",
+  "label": "Secret target",
+  "summary": "Going by its name, the other character the secret is about, such as the lover in a secret affair.",
+  "details": "Not every secret has one; HasTargetCharacter checks that first. Vanilla never names it on this type. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Secret.GetTooltipDesc",
+  "label": "Secret tooltip text",
+  "summary": "The description of the secret as written for its tooltip.",
+  "details": "Vanilla uses it as the tooltip of a secret in the intrigue window and as a text in the shared tooltips. How it differs from GetDesc, the game does not say.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Secret.GetType",
+  "label": "Secret type",
+  "summary": "The type (kind) of the secret.",
+  "details": "Vanilla reads the type's icon from it: Secret.GetType.GetIcon, in the intrigue window and in tooltips. The game documents no return type; the use with GetIcon points to a secret type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Secret.HasTargetCharacter",
+  "label": "Has target character",
+  "summary": "Going by its name, whether the secret is about another character as well.",
+  "details": "Returns yes or no. Check it before GetTargetCharacter. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Secret.IsValid",
+  "label": "Secret exists",
+  "summary": "Whether there is a secret to show here.",
+  "details": "Returns yes or no. Vanilla uses it in the intrigue window to show a secret's element only when the secret exists, once together with a check that the secret is not spent.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Secret.MakeScope",
+  "label": "Secret as script object",
+  "summary": "The secret as a general script object, so its variables and other script-side functions can be read.",
+  "details": "Vanilla's embezzlement secret texts read SECRET.MakeScope.Var('embezzlement_stake').GetValue to show how much gold was embezzled.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Secret.Self",
+  "label": "Secret itself",
+  "summary": "The secret itself, to hand to another function.",
+  "details": "Vanilla passes it in the intrigue window to the checks of the blackmail interaction, for example Character.IsPlayerInteractionWithTargetSecretValid( 'blackmail_interaction', Secret.Self ); a warning icon is shown when that check fails, with the reason as its tooltip. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SecretType.AccessSelf",
+  "label": "Access secret type itself",
+  "summary": "A function on a secret type (a kind of secret, from common/secret_types) that, going by its name, hands back the secret type itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SecretType.GetDesc",
+  "label": "Secret type description",
+  "summary": "The description text of the kind of secret.",
+  "details": "Vanilla shows it as a text in the shared tooltips (cooltip.gui).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SecretType.GetIcon",
+  "label": "Secret type icon",
+  "summary": "The icon picture of the kind of secret.",
+  "details": "Vanilla uses it as a texture in the shared tooltips, and through Secret.GetType.GetIcon in the intrigue window. The game documents no return type; its use as a texture shows it is an image.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SecretType.GetName",
+  "label": "Secret type name",
+  "summary": "Going by its name, the name of the kind of secret, as a text that shows a tooltip when hovered.",
+  "details": "Vanilla never names it on this type; GetName is used on many types. Compare GetNameNoTooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SecretType.GetNameNoTooltip",
+  "label": "Secret type name, plain",
+  "summary": "The name of the kind of secret without a hover tooltip of its own.",
+  "details": "Vanilla uses it as a text in the shared tooltips (cooltip.gui). Going by the name, it is the form without the hover tooltip that GetName carries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SecretType.HasIcon",
+  "label": "Has icon",
+  "summary": "Going by its name, whether the kind of secret has an icon picture.",
+  "details": "Vanilla never names it on this type; the shared tooltips use HasIcon on other types (Law, GameConceptTooltip) to show an icon only when there is one, which is a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SecretType.Self",
+  "label": "Secret type itself",
+  "summary": "Going by its name, the kind of secret itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types (for example Character.Self passed as an argument); those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectMenAtArmsOriginView.AccessSelf",
+  "label": "Access view itself",
+  "summary": "A function on the view for choosing where men-at-arms (professional regiments) come from that, going by its name, hands back the view itself.",
+  "details": "The view is the window of gui/window_select_men_at_arms_origin.gui. PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectMenAtArmsOriginView.Close",
+  "label": "Close",
+  "summary": "Closes the window for choosing the men-at-arms origin.",
+  "details": "Vanilla puts it on the window's close button (onclick). It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectMenAtArmsOriginView.GetRegiment",
+  "label": "Regiment",
+  "summary": "Going by its name, the men-at-arms regiment whose origin is being chosen in this window.",
+  "details": "Vanilla never names it on this type; GetRegiment after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectMenAtArmsOriginView.Self",
+  "label": "View itself",
+  "summary": "Going by its name, the window for choosing the men-at-arms origin itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types (for example Character.Self passed as an argument); those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectParticleUserDataDialog.AccessSelf",
+  "label": "Access dialog itself",
+  "summary": "A function on the dialog for choosing particle user data (a part of the game's graphics tools) that, going by its name, hands back the dialog itself.",
+  "details": "What the dialog does, the game does not document; the name points to the tools for particle effects. PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectParticleUserDataDialog.DataModel",
+  "label": "Dialog list",
+  "summary": "Going by its name, the list of items the particle user data dialog shows to choose from.",
+  "details": "Vanilla never uses it. The game documents no return type and nothing more.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectParticleUserDataDialog.Self",
+  "label": "Dialog itself",
+  "summary": "Going by its name, the particle user data dialog itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types (for example Character.Self passed as an argument); those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectPlanProjectLocationView.AccessSelf",
+  "label": "Access view itself",
+  "summary": "A function on the view for choosing where to build a planned great project that, going by its name, hands back the view itself.",
+  "details": "The view is used in gui/window_plan_great_project.gui. PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectPlanProjectLocationView.Close",
+  "label": "Close",
+  "summary": "Closes the view for choosing a great project's location.",
+  "details": "Vanilla puts it on a close button (onclick) in the window for planning a great project. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectPlanProjectLocationView.GetProjectType",
+  "label": "Project type",
+  "summary": "The type of great project whose location is being chosen.",
+  "details": "Vanilla shows its name with GetProjectType.GetNameForPlayer in the window for planning a great project. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectPlanProjectLocationView.Self",
+  "label": "View itself",
+  "summary": "Going by its name, the view for choosing a great project's location itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types (for example Character.Self passed as an argument); those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectPuppetWindow.AccessSelf",
+  "label": "Access window itself",
+  "summary": "A function on the window for choosing a puppet that, going by its name, hands back the window itself.",
+  "details": "The window is gui/window_puppet_selection.gui. PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectPuppetWindow.Close",
+  "label": "Close",
+  "summary": "Closes the window for choosing a puppet.",
+  "details": "Vanilla puts it on the window's close button (onclick). It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_puppet_selection.gui:33"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectPuppetWindow.GetListItems",
+  "label": "Puppet candidates",
+  "summary": "The list of characters the puppet selection window offers.",
+  "details": "Vanilla uses it as the data behind the window's list; each entry is read with CharacterListItem functions, such as GetCharacter, GetSkillItems and GetText( 'acceptance' ). The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_puppet_selection.gui:38"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectPuppetWindow.Self",
+  "label": "Window itself",
+  "summary": "Going by its name, the puppet selection window itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types (for example Character.Self passed as an argument); those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectRaiseTroopsAtLocationView.AccessSelf",
+  "label": "Access view itself",
+  "summary": "A function on the view for choosing where to raise troops that, going by its name, hands back the view itself.",
+  "details": "The view is the window of gui/window_select_raise_troops_at_location.gui. PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectRaiseTroopsAtLocationView.Close",
+  "label": "Close",
+  "summary": "Closes the view for choosing where to raise troops.",
+  "details": "Vanilla puts it on the window's close button (onclick). It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectRaiseTroopsAtLocationView.IsRaiseTypeMenAtArms",
+  "label": "Raising men-at-arms",
+  "summary": "Going by its name, whether this view is raising men-at-arms (professional regiments) only.",
+  "details": "Returns yes or no. Compare IsRaiseTypeRegular and IsRaiseTypeRaid. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectRaiseTroopsAtLocationView.IsRaiseTypeRaid",
+  "label": "Raising raid army",
+  "summary": "Going by its name, whether this view is raising a raiding army.",
+  "details": "Returns yes or no. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectRaiseTroopsAtLocationView.IsRaiseTypeRegular",
+  "label": "Raising regular army",
+  "summary": "Going by its name, whether this view is raising a normal army.",
+  "details": "Returns yes or no. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectRaiseTroopsAtLocationView.Self",
+  "label": "View itself",
+  "summary": "Going by its name, the view for choosing where to raise troops itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types (for example Character.Self passed as an argument); those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectScopeObjectEntry.AccessSelf",
+  "label": "Access entry itself",
+  "summary": "A function on an entry of a decision's selection list (a character, artifact, holy site and so on that the player can pick) that, going by its name, hands back the entry itself.",
+  "details": "PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectScopeObjectEntry.GetScopeObject",
+  "label": "Selectable object",
+  "summary": "The game object this selection entry stands for, as a general script object.",
+  "details": "Vanilla's decision widgets turn it into the right kind: GetScopeObject.GetCharacter for a character, GetScopeObject.Artifact for an artifact, GetScopeObject.HolySite for a holy site.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectScopeObjectEntry.GetTooltip",
+  "label": "Entry tooltip",
+  "summary": "The tooltip text of an entry in a decision's selection list.",
+  "details": "Vanilla uses it as the tooltip of each entry in the decision widgets for picking a character, artifact or holy site.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectScopeObjectEntry.IsEnabled",
+  "label": "Entry can be picked",
+  "summary": "Whether this entry of a decision's selection list can be picked.",
+  "details": "Returns yes or no. Vanilla uses it to enable or grey out each entry in the decision widgets for picking a character, artifact or holy site.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectScopeObjectEntry.IsSelected",
+  "label": "Entry is selected",
+  "summary": "Whether this entry of a decision's selection list is the one picked.",
+  "details": "Returns yes or no. Vanilla uses it to show the entry's button as pressed (down = …) in the decision widgets for picking a character, artifact or holy site.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectScopeObjectEntry.Self",
+  "label": "Entry itself",
+  "summary": "The selection entry itself, to hand to another function.",
+  "details": "Vanilla passes it on a click to the decision widget: DecisionViewWidgetSelectScopeObject.OnSelect( SelectScopeObjectEntry.Self ), which picks this entry. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectTitleTroopAssignmentView.AccessSelf",
+  "label": "Access view itself",
+  "summary": "A function on the view for assigning troops to titles that, going by its name, hands back the view itself.",
+  "details": "The view is the window of gui/window_select_title_troop_assignment.gui. PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectTitleTroopAssignmentView.Close",
+  "label": "Close",
+  "summary": "Closes the view for assigning troops to titles.",
+  "details": "Vanilla puts it on the window's close button (onclick). It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectTitleTroopAssignmentView.GetHiredTitles",
+  "label": "Titles troops come from",
+  "summary": "The list of titles shown under 'troops from' in the tooltip of the hovered title in the troop assignment view.",
+  "details": "Vanilla shows that line only when the list is not empty and draws a small coat of arms for each title in it. That the list holds the titles whose troops serve the hovered title rests on the name and that heading.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:10102",
+   "vanilla: gui/shared/cooltip.gui:10113"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectTitleTroopAssignmentView.GetHoveredTitle",
+  "label": "Hovered title",
+  "summary": "The title the mouse is over in the troop assignment view.",
+  "details": "Vanilla uses it as the subject of the map tooltip there and names it in the hint 'Right-click to transfer troops to …'. Check IsHoveringValidTitle first. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:10059",
+   "vanilla: localization/english/gui/hired_troops_view_l_english.yml:97"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectTitleTroopAssignmentView.GetTitle",
+  "label": "Title",
+  "summary": "Going by its name, the title whose troops this view is assigning.",
+  "details": "Vanilla never names it on this type; GetTitle after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectTitleTroopAssignmentView.IsAdministrativeTitle",
+  "label": "Is administrative title",
+  "summary": "Going by its name, whether the hovered title in the troop assignment view is an administrative title.",
+  "details": "Returns yes or no. Vanilla's map tooltip shows one layout when it is yes and another when it is no. What makes a title administrative here rests on the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:10064"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectTitleTroopAssignmentView.IsHoveringValidTitle",
+  "label": "Hovering valid title",
+  "summary": "Whether the mouse is over a valid title in the troop assignment view.",
+  "details": "Returns yes or no. Vanilla shows the hovered title's map tooltip only then. What counts as valid, the game does not say.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:10058"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectTitleTroopAssignmentView.IsSelectingTitleForTransfer",
+  "label": "Choosing transfer target",
+  "summary": "Going by its name, whether the player is now choosing the title to move troops to in the troop assignment view.",
+  "details": "Returns yes or no. Vanilla's map tooltip shows a different hint line depending on it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:10147",
+   "vanilla: gui/shared/cooltip.gui:10155"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectTitleTroopAssignmentView.Self",
+  "label": "View itself",
+  "summary": "Going by its name, the view for assigning troops to titles itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types (for example Character.Self passed as an argument); those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectTitleTroopAssignmentView.TransferIsValid",
+  "label": "Transfer is possible",
+  "summary": "Whether troops can be moved to the hovered title in the troop assignment view.",
+  "details": "Returns yes or no. Vanilla adds the hint 'Right-click to transfer troops to …' to the click tooltip only when it is yes.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/hired_troops_view_l_english.yml:98"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectTool.AccessSelf",
+  "label": "Access tool itself",
+  "summary": "A function on the select tool of the game's internal editor tools that, going by its name, hands back the tool itself.",
+  "details": "What the select tool does, the game does not document. PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectTool.IsHideSelection",
+  "label": "Selection hidden",
+  "summary": "Whether the map object editor's select tool hides its selection graphics.",
+  "details": "Part of the engine's map editing tools. Vanilla binds the \"Hide the selection graphics\" button to it, reached as MapObjectTool.SelectTool; SetHideSelection changes it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/map_editor/mapobjects.gui:206"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectTool.Self",
+  "label": "Select tool itself",
+  "summary": "Going by its name, the select tool of the internal editor tools itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types (for example Character.Self passed as an argument); those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SelectTool.SetHideSelection",
+  "label": "Hide selection",
+  "summary": "Sets whether the map object editor's select tool hides its selection graphics.",
+  "details": "Vanilla's \"Hide the selection graphics\" button calls it with the opposite of IsHideSelection, so it flips the setting. It takes yes or no and returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/map_editor/mapobjects.gui:207"
+  ],
+  "uncertain": false
+ }
+]

@@ -92,7 +92,7 @@ function graph(px: Uint8Array, w: number, h: number): { pix: Int32Array; nb: Int
 
 /**
  * The rivers as sequences of pixels (compact indices): chains between pixels that are no plain line pixel (ends,
- * junctions), joined at junctions — the two ends that go on the straightest, not counting ends whose first pixel is a
+ * junctions), joined at junctions: the two ends that go on the straightest, not counting ends whose first pixel is a
  * source, join or split (a tributary or branch: it ends at the junction pixel, on the river it meets). A closed loop
  * repeats its first pixel at its end.
  */
@@ -299,7 +299,7 @@ function smooth(p: Float64Array, dim: number, closed: boolean, sigma: number, k:
 
 /**
  * The widths along a river through a running median (MEDIAN pixels each side): the painted widths flicker between
- * neighbouring classes (vanilla `4334333343444346474777`) — the majority is kept, steps stay where they are.
+ * neighbouring classes (vanilla `4334333343444346474777`): the majority is kept, steps stay where they are.
  */
 function median(cls: Uint8Array): Uint8Array
 {
@@ -378,7 +378,7 @@ function simplify(p: Float64Array, tol: number): Uint8Array
 }
 
 /** Traces, smooths and simplifies the rivers of rivers.png's indices (one level per tolerance, finest first). */
-export function riverLines(px: Uint8Array, w: number, h: number, tolerances: number[]): RiverLevel[]
+export function riverLines(px: Uint8Array, w: number, h: number, tolerances: number[], fades: [number, number] = [0, 0]): RiverLevel[]
 {
     const g = graph(px, w, h);
     const seqs = trace(px, w, g).filter((s) => s.length >= 2);
@@ -389,9 +389,12 @@ export function riverLines(px: Uint8Array, w: number, h: number, tolerances: num
         for (let i = 1; i < s.length - 1; i++)
             inner.set(s[i], [r, i]);
     });
-    // per river: its points smoothed and its widths — an end on another river's pixel left out (joined below)
-    const own = seqs.map((seq) =>
+    // per river: its points smoothed and its widths, an end on another river's pixel left out (joined below)
+    const own = seqs.map((traced) =>
     {
+        // (from its source downstream: the 3D map's flow runs along the points; a source at the far end turns it round)
+        const rev = px[g.pix[traced[traced.length - 1]]] === 0 && px[g.pix[traced[0]]] !== 0;
+        const seq = rev ? [...traced].reverse() : traced;
         const closed = seq[0] === seq[seq.length - 1];
         const joins = (k: number): [number, number] | undefined => (closed || seq.length < 4 ? undefined : inner.get(k));
         const head = joins(seq[0]);
@@ -427,15 +430,47 @@ export function riverLines(px: Uint8Array, w: number, h: number, tolerances: num
         }
 
         const loop = closed && n > 3;
-        return { from: head ? 1 : 0, pts: smooth(raw, 2, loop, SIGMA, K), cls: smooth(Float64Array.from(median(cls)), 1, loop, WIDTH_SIGMA, WIDTH_K), head, tail };
+        const pts = smooth(raw, 2, loop, SIGMA, K);
+        const wid = smooth(Float64Array.from(median(cls)), 1, loop, WIDTH_SIGMA, WIDTH_K);
+
+        // the ends' fades (NRivers): a source (index 0) fades in over FADE_IN_DISTANCE, a free end (a mouth, an unmarked
+        // end) out over FADE_OUT_DISTANCE; a tributary's or branch's end on another river (a join or split) does not:
+        // the width goes towards nothing (below the narrowest class: fractions of it, overlay-data riverWidth)
+        if (!loop && n > 1)
+        {
+            const fadeOf = (k: number, joined: boolean): number => (joined ? 0 : px[g.pix[k]] === 0 ? fades[0] : px[g.pix[k]] === 1 || px[g.pix[k]] === 2 ? 0 : fades[1]);
+            const ends: [number, number][] = [[fadeOf(seq[0], !!head), 0], [fadeOf(seq[seq.length - 1], !!tail), n - 1]];
+
+            for (const [dist, from] of ends)
+            {
+                if (!dist)
+                    continue;
+
+                const step = from ? -1 : 1;
+                let along = 0;
+
+                for (let i = from; i >= 0 && i < n && along < dist; i += step)
+                {
+                    if (i !== from)
+                        along += Math.hypot(pts[i * 2] - pts[(i - step) * 2], pts[i * 2 + 1] - pts[(i - step) * 2 + 1]);
+
+                    wid[i] *= Math.min(1, along / dist);
+                }
+            }
+        }
+
+        return { from: head ? 1 : 0, pts, cls: wid, head, tail, rev, len: seq.length };
     });
     /** the point of a river's smoothed line nearest to (x, y), within LOOK pixels of its pixel `at` (index in its sequence) */
     const nearest = ([r, at]: [number, number], x: number, y: number): [number, number] =>
     {
         const o = own[r];
         const n = o.cls.length;
-        const i0 = Math.max(0, Math.min(n - 1, at - o.from - LOOK));
-        const i1 = Math.max(0, Math.min(n - 1, at - o.from + LOOK));
+        // (`inner` counts along the river as traced: a river turned round to run from its source counts from the other
+        // end; without this a tributary joined a point near the far end, drawing a long straight line across the map)
+        const k = (o.rev ? o.len - 1 - at : at) - o.from;
+        const i0 = Math.max(0, Math.min(n - 1, k - LOOK));
+        const i1 = Math.max(0, Math.min(n - 1, k + LOOK));
         let best: [number, number] = [o.pts[i0 * 2], o.pts[i0 * 2 + 1]];
         let bd = Infinity;
 
@@ -492,7 +527,8 @@ export function riverLines(px: Uint8Array, w: number, h: number, tolerances: num
                 if (keep[i])
                 {
                     xs.push(p[i * 3], p[i * 3 + 1]);
-                    cs.push(Math.max(STEPS, Math.min(255, Math.round((p[i * 3 + 2] / WIDTH_WEIGHT) * STEPS))));
+                    // (below one class: a fading end, at least 1, a sliver)
+                    cs.push(Math.max(1, Math.min(255, Math.round((p[i * 3 + 2] / WIDTH_WEIGHT) * STEPS))));
                     count++;
                 }
 

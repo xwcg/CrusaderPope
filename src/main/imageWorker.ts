@@ -16,6 +16,7 @@ import { encodePng } from './images/png.ts';
 import { GameFiles, type GameFile } from './mods/gamefiles.ts';
 import type { ModInfo } from '../shared/api.ts';
 
+import { tr } from '../shared/i18n.ts';
 interface Req
 {
     id: number;
@@ -32,12 +33,12 @@ interface Req
     face?: number;
     /** one channel as opaque grey ('r' 'g' 'b' 'a'), or 'rgb' without alpha */
     ch?: string;
-    /** the picture a mod's replace_path removed (the file the path had before — GameFiles.former) */
+    /** the picture a mod's replace_path removed (the file the path had before, GameFiles.former) */
     removed?: boolean;
 }
 
 let vfs: GameFiles | null = null;
-/** resolved game paths (lower case; `!` + path: removed pictures) — the worker restarts with every index build */
+/** resolved game paths (lower case; `!` + path: removed pictures); the worker restarts with every index build */
 const resolved = new Map<string, GameFile | null>();
 let cacheDir = '';
 
@@ -68,7 +69,7 @@ async function bytesOf(f: GameFile): Promise<Buffer>
     const buf = f.abs ? await readFile(f.abs) : vfs?.read(f);
 
     if (!buf)
-        throw new Error('Could not read ' + f.rel);
+        throw new Error(tr('Could not read ') + f.rel);
 
     return buf;
 }
@@ -92,7 +93,7 @@ async function image(rel: string, w: number, face = 0, ch = '', removed = false)
     const f = resolve(rel, removed);
 
     if (!f || !vfs)
-        throw new Error('Image not found: ' + rel);
+        throw new Error(tr('Image not found: ') + rel);
 
     // PNGs are served as they are
     if (/\.png$/i.test(f.rel))
@@ -105,7 +106,7 @@ async function image(rel: string, w: number, face = 0, ch = '', removed = false)
         // which file (disk path, or archive › entry of a packed mod) and its version: a mod's image never reuses the
         // game's thumbnail of the same path
         const st = vfs.stat(f);
-        // (ctime too: a file overwritten by a copy keeps its old modification time — and often its size)
+        // (ctime too: a file overwritten by a copy keeps its old modification time, and often its size)
         const key = createHash('sha1').update(`${vfs.where(f)}|${st.size}|${st.mtime}|${st.ctime ?? ''}|${w}|${face}${ch ? '|' + ch : ''}`).digest('hex');
         cacheFile = join(cacheDir, key.slice(0, 2), key + '.png');
 
@@ -120,7 +121,7 @@ async function image(rel: string, w: number, face = 0, ch = '', removed = false)
     }
 
     if (!/\.dds$/i.test(f.rel))
-        throw new Error('Unsupported image type: ' + rel);
+        throw new Error(tr('Unsupported image type: ') + rel);
 
     const raw = await decodeDds(await bytesOf(f), w, face);
 
@@ -173,7 +174,10 @@ async function info(rel: string): Promise<Record<string, unknown>>
     const abs = vfs.where(f);
     const bytes = vfs.stat(f).size;
 
-    if (/\.dds$/i.test(f.rel))
+    // (a PNG under a .dds name is read as the PNG it is)
+    const lead = await head(f, 24);
+
+    if (/\.dds$/i.test(f.rel) && !(lead.length >= 24 && lead.readUInt32BE(0) === 0x89504e47))
     {
         const i = parseDds(await head(f, 148));
         return { found: true, abs, bytes, width: i.width, height: i.height, mips: i.mips, format: formatLabel(i), cube: i.isCube };

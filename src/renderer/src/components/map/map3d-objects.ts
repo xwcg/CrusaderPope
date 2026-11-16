@@ -16,6 +16,8 @@ const VERTEX = 12;
 const INSTANCE = 5;
 /** instances of a group drawn at most */
 const CAP = 200_000;
+/** a holdings group's instances drawn at most (one model's holdings in view: a few hundred) */
+const DYNAMIC_CAP = 8000;
 
 /** A 1 × 1 texture standing in until a part's own is loaded. */
 function pixel(rgba: number[], srgb = false): THREE.DataTexture
@@ -39,6 +41,8 @@ interface Group
     shown: boolean;
     /** the cells last copied in (c0 c1 r0 r1; empty when hidden) */
     cells: string;
+    /** a holdings group (`dynamic`): its instances at the map's date (setHoldings) */
+    dyn?: Float32Array;
 }
 
 export class MapObjects
@@ -87,7 +91,7 @@ export class MapObjects
 
         for (const g of info.groups)
         {
-            const data = new Float32Array(Math.min(g.count, CAP) * INSTANCE);
+            const data = new Float32Array((g.dynamic ? DYNAMIC_CAP : Math.min(g.count, CAP)) * INSTANCE);
             const buffer = new THREE.InstancedInterleavedBuffer(data, INSTANCE).setUsage(THREE.DynamicDrawUsage);
             const fade = { value: 1 };
             const meshes = info.models[g.model].parts.map((pi) =>
@@ -206,7 +210,7 @@ export class MapObjects
     }
 
     /**
-     * Leaves out vegetation (models with tree-shaded parts — trees, bushes, grass) where `drop` says so at its map point
+     * Leaves out vegetation (models with tree-shaded parts: trees, bushes, grass) where `drop` says so at its map point
      * (x, y: map pixels, y from the top); objects set on the water level (`clamp_to_water_level`) stay. The game's
      * placement is made for its own water and rivers: where this map draws water or a river line, a tree would stand in it.
      */
@@ -223,7 +227,7 @@ export class MapObjects
 
             for (let i = g.info.start * INSTANCE; i < end; i += INSTANCE)
             {
-                // (a scale of 0: nothing drawn — the cells keep their ranges)
+                // (a scale of 0: nothing drawn; the cells keep their ranges)
                 if (this.instances[i + 4] && drop(this.instances[i], this.height - this.instances[i + 2]))
                 {
                     this.instances[i + 4] = 0;
@@ -240,7 +244,23 @@ export class MapObjects
     }
 
     /**
-     * The instances in view: `rect` = the ground in view (map x0 z0 x1 z1), `zoom` the camera's zoom step — a group
+     * The holdings at the map's date (api.mapHoldings: per mesh its instances), into the groups marked `dynamic`, by
+     * their model's name; copied in on the next update.
+     */
+    setHoldings(byMesh: Record<string, number[]>): void
+    {
+        for (const g of this.groups)
+            if (g.info.dynamic)
+            {
+                g.dyn = Float32Array.from(byMesh[this.info.models[g.info.model].name] ?? []);
+                g.cells = 'stale';
+            }
+
+        this.onChange();
+    }
+
+    /**
+     * The instances in view: `rect` = the ground in view (map x0 z0 x1 z1), `zoom` the camera's zoom step. A group
      * shows until its layer's step, fading over the last one.
      */
     update(rect: [number, number, number, number], zoom: number): void
@@ -266,7 +286,21 @@ export class MapObjects
             g.cells = cells;
             let n = 0;
 
-            if (f > 0)
+            // a holdings group: its instances at the date that stand in the ground in view (z counts from the bottom)
+            if (g.info.dynamic)
+            {
+                const d = g.dyn;
+                const cap = g.data.length / INSTANCE;
+
+                for (let i = 0; f > 0 && d && i + 4 < d.length && n < cap; i += INSTANCE)
+                {
+                    const y = this.height - d[i + 2];
+
+                    if (d[i] >= rect[0] - 8 && d[i] <= rect[2] + 8 && y >= rect[1] - 8 && y <= rect[3] + 8)
+                        g.data.set(d.subarray(i, i + INSTANCE), (n++) * INSTANCE);
+                }
+            }
+            else if (f > 0)
             {
                 const cap = g.data.length / INSTANCE;
 

@@ -6,24 +6,26 @@
  *
  * Usage: node --experimental-strip-types --no-warnings --max-old-space-size=6000 scripts/blender-check.ts [out dir]
  * env: BLENDER=<blender.exe> (default: Blender 4.5), MESHES=<game path,…>, EDIT=1 (also the edit test: scale an
- * object, move vertices, paint the diffuse red — its mod is left in <out>/mod for the app)
+ * object, move vertices, paint the diffuse red; its mod is left in <out>/mod for the app)
+ * The vanilla index: scripts/fast-index.ts (parse threads, cached in %TEMP%/ckp-index-cache; FRESH=1 builds it anew).
  */
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { resolveGameDir } from '../src/main/gameDir.ts';
-import { GameIndex } from '../src/main/indexer/gameIndex.ts';
 import { GameFiles } from '../src/main/mods/gamefiles.ts';
 import { PortraitBuilder } from '../src/main/portraits/portrait.ts';
 import { ModelBrowser } from '../src/main/portraits/models.ts';
-import { loadMesh, type MeshFile } from '../src/main/portraits/mesh.ts';
+import { loadMesh, mul, type MeshFile } from '../src/main/portraits/mesh.ts';
 import { exportMesh } from '../src/main/blender/exportMesh.ts';
+import { readAccessor, readGltf, worldMatrices } from '../src/main/blender/gltf.ts';
 import { importMesh } from '../src/main/blender/importMesh.ts';
 import { decodeTexture, normalFromGltf, normalToGltf, propertiesFromOrm, propertiesToOrm } from '../src/main/blender/textures.ts';
 import { decodePng, encodePng } from '../src/main/images/png.ts';
 import { encodeDds } from '../src/main/images/ddsEncode.ts';
 import { defaultInstall } from './ck3-install.ts';
+import { fastIndex } from './fast-index.ts';
 
 const install = defaultInstall();
 const blender = process.env.BLENDER ?? 'C:/Program Files/Blender Foundation/Blender 4.5/blender.exe';
@@ -46,7 +48,13 @@ const MESHES = (
             // skinned clothing (portrait attachment with pattern)
             'gfx/models/portraits/m_clothes/byzantine/nob_01/m_clothing_secular_byzantine_nob_01.mesh',
             // several skinned shapes, each with its skeleton
-            'gfx/models/pets/avians/falcons/ep2_falcon_peregrine_01.mesh'
+            'gfx/models/pets/avians/falcons/ep2_falcon_peregrine_01.mesh',
+            // partly used rigs: hair and beards store zeros for the facial bones they do not weight (inverse bind matrices)
+            'gfx/models/portraits/f_hair/byzantine/f_hair_byzantine_01/f_hair_byzantine_01.mesh',
+            'gfx/models/portraits/m_beards/ep2_western/m_beard_ep2_western_01/m_beard_ep2_western_01.mesh',
+            // blend shape targets that carry a skeleton after the mesh (female body: breast shapes, fat, old …), collapsed targets (heads)
+            'gfx/models/portraits/female_body/female_body.mesh',
+            'gfx/models/portraits/female_head/female_head.mesh'
         ].join(',')
 )
     .split(',')
@@ -63,8 +71,7 @@ const check = (ok: unknown, what: string): void =>
 };
 
 console.log('building the vanilla index …');
-const idx = new GameIndex(new GameFiles(gameDir), 'english');
-idx.build();
+const idx = await fastIndex(new GameFiles(gameDir), { cache: true });
 const pb = new PortraitBuilder(idx);
 const models = new ModelBrowser(idx, pb.lib);
 const readGame = (path: string): Uint8Array | undefined => idx.vfs.read(path, { engine: true });
@@ -164,6 +171,31 @@ for (const mesh of MESHES)
         `exported ${plan.mesh} in ${Date.now() - t0} ms: ${c.shapes} shapes, ${c.primitives} primitives, ${c.vertices} vertices, ${c.triangles} triangles, ${c.joints} joints, ${c.materials} materials, ${c.textures} textures${r.warnings.length ? '\n  ! ' + r.warnings.join('\n  ! ') : ''}`
     );
     exported.push({ mesh: plan.mesh, dir, gltf: join(dir, base(plan.mesh) + '.gltf') });
+
+    // every joint of a skin: node world × inverse bind matrix = identity (the rest pose; Blender's importer guesses
+    // a bind pose from the matrices otherwise and moves vertices: hair stores zeros for the bones it does not weight)
+    const gf = readGltf(join(dir, base(plan.mesh) + '.gltf'));
+    const { world } = worldMatrices(gf.doc, (a, b) => Array.from(mul(Float64Array.from(a), Float64Array.from(b))));
+    let worst = 0;
+    let joints = 0;
+
+    for (const skin of gf.doc.skins ?? [])
+    {
+        const ibm = skin.inverseBindMatrices !== undefined ? readAccessor(gf, skin.inverseBindMatrices).values : undefined;
+
+        skin.joints.forEach((j, k) =>
+        {
+            const p = mul(Float64Array.from(world[j] ?? [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]), ibm ? ibm.subarray(k * 16, k * 16 + 16) : Float64Array.from([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]));
+
+            for (let i = 0; i < 16; i++)
+                worst = Math.max(worst, Math.abs(p[i] - (i % 5 === 0 ? 1 : 0)));
+
+            joints++;
+        });
+    }
+
+    if (joints)
+        check(worst < 1e-4, `${base(plan.mesh)}: node world × inverse bind matrix = identity for all ${joints} joints (worst Δ ${worst.toExponential(1)})`);
 }
 
 // ---------------------------------------------------------------------------
@@ -201,7 +233,7 @@ if (run.status !== 0)
 check(run.status === 0, `Blender exited with ${run.status}`);
 // warnings while importing (between IMPORT and RESULT) and while exporting; Blender's exporter warns about every
 // metallic-roughness map ("More than one shader node tex image used for a texture": roughness and metallic are two
-// sockets of the one image node) — harmless, counted apart
+// sockets of the one image node): harmless, counted apart
 const importWarnings: string[] = [];
 const exportWarnings: string[] = [];
 let benign = 0;
@@ -295,7 +327,7 @@ function vertices(m: MeshFile, shape: string): Vtx[]
 }
 
 /**
- * `blend`: blend shape targets — judged on positions and normals (what the engine morphs); their UVs and tangents are
+ * `blend`: blend shape targets, judged on positions and normals (what the engine morphs); their UVs and tangents are
  * the new base's (vanilla targets differ from their base there: byzantine clothes in u1, 26 of the male head's in u0
  * with tangents flipped).
  */
@@ -327,6 +359,23 @@ function compare(a: MeshFile, b: MeshFile, blend = false): { ok: boolean; lines:
         const ba = bounds(va);
         const bb = bounds(vb);
         const size = Math.max(...[0, 1, 2].map((k) => ba[k * 2 + 1] - ba[k * 2]), 1e-6);
+
+        if (blend && size < 1e-3)
+        {
+            // a target that puts every vertex at one place (the female head's no_portrait: all at (0, -1000, 0), the head
+            // is gone): vertices cannot be matched by place, and float32 at 1000 is only exact to 6e-5, so judged on the
+            // triangles and the place every vertex has (Blender may split vertices: the count is free)
+            const at = va[0].p;
+            const off = Math.max(...vb.map((v) => Math.hypot(v.p[0] - at[0], v.p[1] - at[1], v.p[2] - at[2])));
+            const good = tris(a) === tris(b) && off < 2e-3;
+
+            if (!good)
+                ok = false;
+
+            lines.push(`${good ? '  ' : '! '}${shape}: collapsed to one place (${at.map((x) => x.toFixed(1)).join(', ')}): triangles ${tris(a)} → ${tris(b)}, vertices ${va.length} → ${vb.length}, place Δ ${off.toExponential(1)}`);
+            continue;
+        }
+
         const boundsDiff = Math.max(...ba.map((x, i) => Math.abs(x - bb[i]))) / size;
         // each result vertex against the closest original vertex at the same place (Blender re-splits and re-orders)
         const grid = new Map<string, Vtx[]>();
@@ -386,7 +435,7 @@ function compare(a: MeshFile, b: MeshFile, blend = false): { ok: boolean; lines:
         }
 
         const tShare = tPairs ? tSame / tPairs : 1;
-        // (blend shape targets: positions and normals — the engine's morph; vanilla targets' UVs and tangents are not
+        // (blend shape targets: positions and normals (the engine's morph); vanilla targets' UVs and tangents are not
         // always the base's, the import writes the base's UVs and tangents for the target's shape)
         const good = tris(a) === tris(b) && boundsDiff < 1e-4 && !unmatched && maxP < 1e-4 && maxN < 1e-3 && maxW < 0.02 && (blend || (maxUv < 1e-3 && maxUv2 < 1e-3 && tShare > 0.9));
 
@@ -514,7 +563,7 @@ if (editJob)
     const a = loadMesh(readGame(e.mesh)!);
     const b = loadMesh(r.writes.find((w) => w.rel === plan.mesh)!.data);
     const shape = editJob.edit.scale[0] as string;
-    /** extent of the edited shape (`first`: of the file's first shape — blend shape targets name theirs otherwise) */
+    /** extent of the edited shape (`first`: of the file's first shape; blend shape targets name theirs otherwise) */
     const ext = (m: MeshFile, first = false): number[] =>
     {
         const lo = [Infinity, Infinity, Infinity];
@@ -567,5 +616,5 @@ if (editJob)
     console.log(`mod for the app: ${root}`);
 }
 
-console.log(failures ? `${failures} FAILED` : 'all ok', '— output in', out);
+console.log(failures ? `${failures} FAILED` : 'all ok', `(output in ${out})`);
 process.exitCode = failures ? 1 : 0;

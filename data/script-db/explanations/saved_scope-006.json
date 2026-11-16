@@ -1,0 +1,834 @@
+[
+{
+"kind": "saved_scope",
+"key": "regular",
+"label": "Regular",
+"summary": "A name the game's code may save under scope:regular; vanilla script never uses it and the game documents nothing more.",
+"details": "",
+"fields": [],
+"sources": [
+"doc",
+"vanilla"
+],
+"uncertain": true
+},
+{
+"kind": "saved_scope",
+"key": "removed_doctrines",
+"label": "Removed doctrines",
+"summary": "The list of doctrines that a change to a holy order's rite took away.",
+"details": "A comment in vanilla's religion on_actions says it goes with a list of added ones (added_doctrines). You loop over it with every_in_list, using list = removed_doctrines.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/on_action/religion_on_actions.txt:712"
+],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "removed_tenets",
+"label": "Removed tenets",
+"summary": "The list of tenets that a change to a holy order's rite took away.",
+"details": "A comment in vanilla's religion on_actions says it goes with a list of added ones (added_tenets). You loop over it with every_in_list, using list = removed_tenets.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/on_action/religion_on_actions.txt:711"
+],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "replacement",
+"label": "Replacement character",
+"summary": "The character who takes the place of a dead participant in a great holy war.",
+"details": "Vanilla's comment on the great holy war on_action says it is the replacement character, with the replaced character as the root. The great holy war events use it to look at the replacement's faith and to run effects on them.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/on_action/religion_on_actions.txt:1745"
+],
+"uncertain": false
+},
+{
+  "kind": "saved_scope",
+  "key": "replacing",
+  "label": "Replaced tradition",
+  "summary": "The culture tradition being replaced, when a culture picks a new tradition in place of an old one.",
+  "details": "The game gives it while checking whether a tradition may be picked, written as a flag with the tradition's key (`scope:replacing = culture_tradition:tradition_monogamous`). It is not there when nothing is replaced, never when pillars are checked, and never in the check for hybrid cultures. Vanilla's tradition files use it to stop a swap, for example away from a given tradition.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/culture/_cultural_traits.info:46",
+   "vanilla: common/culture/_cultural_traits.info:58"
+  ],
+  "uncertain": false
+ },
+{
+"kind": "saved_scope",
+"key": "returned",
+"label": "Returned",
+"summary": "A name the game's code may save under scope:returned; vanilla script never uses it and the game documents nothing more.",
+"details": "",
+"fields": [],
+"sources": [
+"doc",
+"vanilla"
+],
+"uncertain": true
+},
+{
+"kind": "saved_scope",
+"key": "revoked",
+"label": "Revoked",
+"summary": "A name the game's code may save under scope:revoked; vanilla script never uses it and the game documents nothing more.",
+"details": "",
+"fields": [],
+"sources": [
+"doc",
+"vanilla"
+],
+"uncertain": true
+},
+{
+"kind": "saved_scope",
+"key": "rite",
+"label": "Holy order rite",
+"summary": "The rite of a holy order, in the holy order on_actions and the religion on_actions that change a rite.",
+"details": "Vanilla's comments name it as the rite of the Holy Order. The rite-updated on_action saves its root (the rite being changed) under this name.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/on_action/holy_order_on_actions.txt:7",
+"vanilla: common/on_action/religion_on_actions.txt:721"
+],
+"uncertain": false
+},
+{
+  "kind": "saved_scope",
+  "key": "ruler",
+  "label": "Ruler",
+  "summary": "A ruler the script works with; who it is changes with the place.",
+  "details": "The game gives it in decisions with a title picker (the character taking the decision, while root is the title being judged) and in the royal court scene (the character who owns the court). Vanilla's own script saves rulers under it too, for example in holy order and East Europe decisions (164 uses).",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/decisions/_decisions.info:309",
+   "vanilla: gfx/court_scene/character_roles/_roles.info:2",
+   "vanilla: common/scripted_animations/_scripted_animations.info:13"
+  ],
+  "uncertain": true
+ },
+{
+"kind": "saved_scope",
+"key": "ruler_designer",
+"label": "Ruler designer type",
+"summary": "The type of ruler being made in the ruler designer, written as a flag.",
+"details": "Vanilla's ruler designer on_action lists the possible values and compares it with flags such as flag:landless_adventurer. A clothing trigger checks that it exists, to tell the designer apart from normal play.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/on_action/ruler_designer.txt:3"
+],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "safety_aptitude",
+"label": "Safety aptitude",
+"summary": "A number the game gives to the cost of hiring a travel leader: the leader's travel safety.",
+"details": "The only vanilla use is in the scripted costs file, next to `speed_aptitude`.",
+"fields": [],
+"sources": ["doc", "vanilla", "vanilla: common/scripted_costs/00_costs.txt:682", "vanilla: common/scripted_costs/_scripted_costs.info:108"],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "save_file_fix",
+"label": "Save file fix",
+"summary": "A name the game's code may save under scope:save_file_fix; vanilla script never uses it and the game documents nothing more.",
+"details": "",
+"fields": [],
+"sources": [
+"doc",
+"vanilla"
+],
+"uncertain": true
+},
+{
+  "kind": "saved_scope",
+  "key": "scheme",
+  "label": "Scheme",
+  "summary": "The scheme (a plot such as murder or seduction) that the script is about.",
+  "details": "The game makes it for every scheme and gives it in scheme types, scheme pulse actions and agent types, next to `scope:owner` and `scope:target`. It stays reachable through an unbroken chain of events that starts at the scheme. When a scheme is only previewed before it starts, it is not set. Vanilla uses it more than 3,000 times.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/schemes/scheme_types/_schemes.info:145",
+   "vanilla: common/schemes/scheme_types/_schemes.info:28",
+   "vanilla: common/schemes/pulse_actions/_pulse_actions.info:8",
+   "vanilla: common/schemes/agent_types/_agent_types.info:17"
+  ],
+  "uncertain": false
+ },
+{
+"kind": "saved_scope",
+"key": "score",
+"label": "Score",
+"summary": "A number; when the AI chooses a province for an activity, the game gives the province's calculated score under this name.",
+"details": "Vanilla's hunt and tour activities read it.",
+"fields": [],
+"sources": ["doc", "vanilla", "vanilla: common/activities/activity_types/hunt.txt:5327", "vanilla: common/activities/activity_types/_activity_type.info:515"],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "script",
+"label": "Script",
+"summary": "A name the game's code may save under scope:script; vanilla script never uses it and the game documents nothing more.",
+"details": "",
+"fields": [],
+"sources": [
+"doc",
+"vanilla"
+],
+"uncertain": true
+},
+{
+  "kind": "saved_scope",
+  "key": "second",
+  "label": "Second",
+  "summary": "The second thing an activity's pulse action saves to show it in the activity window; what it holds depends on the action.",
+  "details": "Whatever a pulse action's effect saves as `scope:first` or `scope:second` can be shown in the activity's notice about the action. Vanilla uses it over 3,000 times, and each action saves its own thing.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/activities/pulse_actions/_pulse_actions.info:21"
+  ],
+  "uncertain": true
+ },
+{
+  "kind": "saved_scope",
+  "key": "secondary_actor",
+  "label": "Secondary actor",
+  "summary": "A second character on the acting side of a character interaction, such as the person getting married on the actor's side.",
+  "details": "The game gives it in interactions that have such a second party, next to `scope:actor`; a redirect effect may swap it for another character. In marriage interactions it is the actor's side character who actually gets married. Vanilla uses it 793 times, for example in education and marriage interactions.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/character_interactions/_character_interactions.info:309",
+   "vanilla: common/character_interactions/_character_interactions.info:621"
+  ],
+  "uncertain": false
+ },
+{
+  "kind": "saved_scope",
+  "key": "secondary_recipient",
+  "label": "Secondary recipient",
+  "summary": "A second character on the receiving side of a character interaction, such as another ruler's child asked in marriage.",
+  "details": "The game gives it in interactions that have such a second party, next to `scope:recipient`; a redirect effect may swap it. In a marriage interaction it is the one who gets married, while the recipient is the ruler who accepts or refuses. Interactions can also read values from it for their texts (for example a ransom cost). Vanilla uses it about 2,600 times.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/character_interactions/_character_interactions.info:311",
+   "vanilla: common/character_interactions/_character_interactions.info:327",
+   "vanilla: common/character_interactions/_character_interactions.info:621"
+  ],
+  "uncertain": false
+ },
+{
+"kind": "saved_scope",
+"key": "secret_exposer",
+"label": "Secret exposer",
+"summary": "The character who exposes a secret, in vanilla's secret effects and triggers.",
+"details": "Vanilla's secret effects compare it with the secret's owner, so it can be the owner or somebody else.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/scripted_effects/00_secret_effects.txt:1131",
+"vanilla: common/scripted_effects/00_bastard_effects.txt:706"
+],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "secret_owner",
+"label": "Secret owner",
+"summary": "The character the secret belongs to, in vanilla's secret effects, triggers and secret types.",
+"details": "Vanilla uses it more than 200 times, including in the bastard secrets.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla"
+],
+"uncertain": false
+},
+{
+  "kind": "saved_scope",
+  "key": "secret_target",
+  "label": "Secret target",
+  "summary": "The other character a secret is about, if it has one, such as the lover in a lover secret.",
+  "details": "Secret types get it from the game next to `scope:secret_owner`, the one the secret is about; not every secret has one. Vanilla's secret effects and travel on_actions save it too, for example while a blackmailer is involved (133 uses).",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/secret_types/_secret_types.info:12",
+   "vanilla: common/on_action/travel_on_actions.txt:388"
+  ],
+  "uncertain": false
+ },
+{
+"kind": "saved_scope",
+"key": "selected_doctrines",
+"label": "Selected doctrines",
+"summary": "A name the game's code may save under scope:selected_doctrines; vanilla script never uses it and the game documents nothing more.",
+"details": "",
+"fields": [],
+"sources": [
+"doc",
+"vanilla"
+],
+"uncertain": true
+},
+{
+"kind": "saved_scope",
+"key": "selected_item",
+"label": "Selected item",
+"summary": "The item the player picked in a decision, saved so the decision can use it.",
+"details": "Vanilla's religious decisions use it as the rite to give the character (set_character_rite), and the holy site decisions check that it exists. What kind of item it is depends on the decision.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/decisions/10_religious_decisions.txt:2200",
+"vanilla: common/decisions/50_holy_site_decisions.txt:22"
+],
+"uncertain": false
+},
+{
+  "kind": "saved_scope",
+  "key": "situation",
+  "label": "Situation",
+  "summary": "The situation (a long-running world event with phases and participants) that the script is about.",
+  "details": "The game itself gives it in situation types: when a character joins or leaves, when it checks whether a character may join or stay in a group, and when a phase starts in a sub-region. Vanilla also uses it in the natural disaster great projects and their values (133 uses).",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/situation/situations/_situations.info:160",
+   "vanilla: common/situation/situations/_situations.info:172",
+   "vanilla: common/situation/situations/_situations.info:247"
+  ],
+  "uncertain": false
+ },
+{
+"kind": "saved_scope",
+"key": "situation_participant_group",
+"label": "Situation participant group",
+"summary": "A group of participants in a situation, saved before an effect that works on it.",
+"details": "A vanilla comment says the scripted effect requires it to be saved beforehand. The dynastic cycle decisions save it.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/scripted_effects/10_dlc_tgp_scripted_effects.txt:410",
+"vanilla: common/decisions/dlc_decisions/tgp/tgp_dynastic_cycle_decisions.txt:459"
+],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "situation_sub_region",
+"label": "Situation sub-region",
+"summary": "A sub-region of a situation, such as one area of a natural disaster or the Silk Road.",
+"details": "Vanilla's scripted effects run on it and check its current phase, for example phase_exceptional_bounty.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/scripted_effects/10_dlc_tgp_silk_road_scripted_effects.txt:612"
+],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "special",
+"label": "Special",
+"summary": "A name the game's code may save under scope:special; vanilla script never uses it and the game documents nothing more.",
+"details": "",
+"fields": [],
+"sources": [
+"doc",
+"vanilla"
+],
+"uncertain": true
+},
+{
+  "kind": "saved_scope",
+  "key": "special_guests",
+  "label": "Special guests",
+  "summary": "The list of the special guests (characters filling a special guest role) of an activity.",
+  "details": "The game gives this list in an activity type's special guest checks, where a guest is picked and where it is decided who may fill the role, next to `scope:host` and one saved character per special guest type. Vanilla's own script does not read it as `scope:special_guests`; its activity types define `special_guests` blocks instead.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/activities/activity_types/_activity_type.info:637",
+   "vanilla: common/activities/activity_types/_activity_type.info:786"
+  ],
+  "uncertain": false
+ },
+{
+"kind": "saved_scope",
+"key": "special_option",
+"label": "Special option",
+"summary": "The special choice made for an activity, written as a flag such as flag:coronation_type_anointment.",
+"details": "Vanilla's coronation and debate activities compare it with flags like flag:debate_type_leadership to pick their behavior.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/activities/activity_types/coronation.txt:53",
+"vanilla: common/activities/activity_types/debate.txt:281"
+],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "speed_aptitude",
+"label": "Speed aptitude",
+"summary": "A number the game gives to the cost of hiring a travel leader: the leader's travel speed.",
+"details": "The only vanilla use is in the scripted costs file, next to `safety_aptitude`.",
+"fields": [],
+"sources": ["doc", "vanilla", "vanilla: common/scripted_costs/00_costs.txt:675", "vanilla: common/scripted_costs/_scripted_costs.info:107"],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "sponsor",
+"label": "Sponsor",
+"summary": "The sponsor of something, saved by vanilla's unity decisions and the faith on_actions.",
+"details": "In vanilla's pam on_actions a comment calls it the former sponsor title, so there it is a title, not a character. The unity decisions save it for localization text.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/on_action/dlc/pam/pam_on_actions.txt:549",
+"vanilla: common/decisions/00_unity_decisions.txt:1306"
+],
+"uncertain": true
+},
+{
+"kind": "saved_scope",
+"key": "spouse",
+"label": "Spouse",
+"summary": "The spouse of the character the script is about.",
+"details": "Vanilla uses it in marriage and concubinage on_actions and in yearly on_actions. Going by its name, it is the married partner.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla"
+],
+"uncertain": true
+},
+{
+"kind": "saved_scope",
+"key": "stepped_down",
+"label": "Stepped down",
+"summary": "A name the game's code may save under scope:stepped_down; vanilla script never uses it and the game documents nothing more.",
+"details": "",
+"fields": [],
+"sources": [
+"doc",
+"vanilla"
+],
+"uncertain": true
+},
+{
+  "kind": "saved_scope",
+  "key": "story",
+  "label": "Story",
+  "summary": "The story cycle (a long-running story tied to a character) that the script belongs to.",
+  "details": "The game itself gives it in story cycles: when the story starts, ends or its owner dies, in its effect groups, and for its icon and background. There it is the same as the root. Vanilla uses it more than 1,300 times.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:7",
+   "vanilla: common/story_cycles/_story_cycles.info:17",
+   "vanilla: common/story_cycles/_story_cycles.info:30"
+  ],
+  "uncertain": false
+ },
+{
+"kind": "saved_scope",
+"key": "struggle",
+"label": "Struggle",
+"summary": "A struggle, saved in war on_actions and compared with flags in the chronicles.",
+"details": "The chronicles compare it with flags such as flag:iberian_struggle, so there it is a flag naming the struggle. The war on_actions save it with save_scope_as.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/legends/chronicles/00_chronicles.txt:1381",
+"vanilla: common/on_action/war_on_actions.txt:454"
+],
+"uncertain": true
+},
+{
+  "kind": "saved_scope",
+  "key": "subject",
+  "label": "Subject",
+  "summary": "The subject of a contract; in subject contracts and men-at-arms types, the subject under a liege.",
+  "details": "In subject contracts the game gives the subject in the contract under this name, next to `scope:liege` (`scope:vassal` is the same, kept for old scripts). Men-at-arms types get it when checking access through a subject. Vanilla's own script also uses the name for other things, such as in the artifact court custom localization and the poetry effects (203 uses).",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/subject_contracts/contracts/_subject_contracts.info:32",
+   "vanilla: common/men_at_arms_types/_men_at_arms_types.info:27"
+  ],
+  "uncertain": true
+ },
+{
+"kind": "saved_scope",
+"key": "succession",
+"label": "Succession",
+"summary": "A name the game's code may save under scope:succession; vanilla script never uses it and the game documents nothing more.",
+"details": "",
+"fields": [],
+"sources": [
+"doc",
+"vanilla"
+],
+"uncertain": true
+},
+{
+"kind": "saved_scope",
+"key": "suzerain",
+"label": "Suzerain",
+"summary": "The overlord of a tributary, in the government types and the start-up setup of tributaries.",
+"details": "Vanilla's game start saves it and passes it to the tributary setup as SUZERAIN.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/on_action/game_start.txt:2629",
+"vanilla: common/scripted_effects/00_tributary_setup_effects.txt:60"
+],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "swapped_position",
+"label": "Swapped council position",
+"summary": "Probably the council position that was swapped; vanilla only checks whether it exists.",
+"details": "Both vanilla uses (council position rules and a TGP scripted effect) only check that it exists. The input does not show what is saved.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/council_positions/00_council_positions.txt:847"
+],
+"uncertain": true
+},
+{
+"kind": "saved_scope",
+"key": "swear_fealty",
+"label": "Swear fealty",
+"summary": "A name the game's code may save under scope:swear_fealty; vanilla script never uses it and the game documents nothing more.",
+"details": "",
+"fields": [],
+"sources": [
+"doc",
+"vanilla"
+],
+"uncertain": true
+},
+{
+  "kind": "saved_scope",
+  "key": "target",
+  "label": "Target",
+  "summary": "The target of whatever is running; what it is changes with the place.",
+  "details": "The game gives a target under this name in many places, each different: the character an activity intent targets, a casus belli's target title, the target of a scheme (a character or a title), the title being judged in an interaction's title list, and the character the AI should target in an interaction. Vanilla uses it more than 8,500 times, so check where it is set.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/activities/intents/_intents.info:17",
+   "vanilla: common/casus_belli_types/_casus_belli.info:74",
+   "vanilla: common/character_interactions/_character_interactions.info:766",
+   "vanilla: common/schemes/pulse_actions/_pulse_actions.info:10"
+  ],
+  "uncertain": true
+ },
+{
+  "kind": "saved_scope",
+  "key": "target_character",
+  "label": "Target character",
+  "summary": "The character a council task or interaction is aimed at.",
+  "details": "In council tasks the game gives the targeted character under this name in the task's effects. Vanilla also saves it in religious interactions and other places (462 uses).",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/council_tasks/_council_tasks.info:56"
+  ],
+  "uncertain": false
+ },
+{
+"kind": "saved_scope",
+"key": "target_fertility",
+"label": "Target fertility",
+"summary": "The total current fertility of the main migration target.",
+"details": "A comment in vanilla's migration interactions describes it this way. It is a number.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/character_interactions/09_mpo_interactions.txt:3216"
+],
+"uncertain": false
+},
+{
+  "kind": "saved_scope",
+  "key": "target_title",
+  "label": "Target title",
+  "summary": "The title a scheme is aimed at, when it targets a title.",
+  "details": "In schemes the game gives it only when the scheme targets a title (otherwise it does not exist), next to `scope:target`. Vanilla's casus belli types also read it (193 uses, for example civil wars), and the notes do not say what it is there.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/schemes/scheme_types/_schemes.info:65",
+   "vanilla: common/schemes/pulse_actions/_pulse_actions.info:10"
+  ],
+  "uncertain": true
+ },
+{
+"kind": "saved_scope",
+"key": "target_titles",
+"label": "Target titles",
+"summary": "The list of titles that are being granted in an offer.",
+"details": "Vanilla's grant title rules say it lists all titles in the offer. Loop over it with every_in_list.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/scripted_rules/01_grant_title_rules.txt:36"
+],
+"uncertain": false
+},
+{
+  "kind": "saved_scope",
+  "key": "tax_collector",
+  "label": "Tax collector",
+  "summary": "The tax collector of a tax slot (a slot with an owner and vassals in it), or the one being considered for it.",
+  "details": "The game gives it in tax obligations and tax slot types, next to `scope:tax_slot` and `scope:liege` (the slot's owner), and in subject contracts. Vanilla's clan contract reads the collector's aptitude for the slot from it.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/tax_slots/obligations/_tax_obligation.info:4",
+   "vanilla: common/tax_slots/obligations/_tax_obligation.info:48",
+   "vanilla: common/subject_contracts/contracts/_subject_contracts.info:36",
+   "vanilla: common/subject_contracts/contracts/clan.txt:7"
+  ],
+  "uncertain": false
+ },
+{
+  "kind": "saved_scope",
+  "key": "tax_slot",
+  "label": "Tax slot",
+  "summary": "The tax slot (a slot with an owner and a tax collector that vassals are placed in) that a vassal is in or might be put in.",
+  "details": "The game gives it in tax obligations (their checks, AI weight and the effects when an obligation is set or removed) and in subject contracts, next to `scope:liege` and `scope:tax_collector`. Vanilla's own script does not read it.",
+  "fields": [],
+  "sources": [
+   "vanilla: common/tax_slots/obligations/_tax_obligation.info:2",
+   "vanilla: common/tax_slots/obligations/_tax_obligation.info:57",
+   "vanilla: common/subject_contracts/contracts/_subject_contracts.info:35"
+  ],
+  "uncertain": false
+ },
+{
+"kind": "saved_scope",
+"key": "tenet",
+"label": "Tenet",
+"summary": "The tenet that the script is about, in religion on_actions and holy order values.",
+"details": "Vanilla uses it 57 times, in religion on_actions and holy order values. Which tenet it is depends on where it is saved.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla"
+],
+"uncertain": true
+},
+{
+"kind": "saved_scope",
+"key": "tenet_to_add",
+"label": "Tenet to add",
+"summary": "The tenet that is about to be added to a faith.",
+"details": "Vanilla's religion scripted effects save it, then check that it exists and how popular that tenet is.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/scripted_effects/11_dlc_pam_scripted_effects.txt:775",
+"vanilla: common/scripted_effects/pam_effects.txt:8469"
+],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "tenet_to_remove",
+"label": "Tenet to remove",
+"summary": "The tenet that is about to be removed from a faith.",
+"details": "Vanilla's religion scripted effects save it, and a clergy event checks that it exists.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/scripted_effects/11_dlc_pam_scripted_effects.txt:920",
+"vanilla: events/dlc/pam/pam_clergy_events.txt:88"
+],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "text_target",
+"label": "Text target",
+"summary": "A name the game's code may save under scope:text_target; vanilla script never uses it and the game documents nothing more.",
+"details": "",
+"fields": [],
+"sources": [
+"doc",
+"vanilla"
+],
+"uncertain": true
+},
+{
+"kind": "saved_scope",
+"key": "their_language_counties",
+"label": "Counties in their language",
+"summary": "A number: how many counties in the AI's realm have a culture with the target's court language.",
+"details": "A comment in vanilla's culture values and rules says so. It is compared with total_counties.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/script_values/00_culture_values.txt:681"
+],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "timeout",
+"label": "Timeout",
+"summary": "A name the game's code may save under scope:timeout; vanilla script never uses it and the game documents nothing more.",
+"details": "",
+"fields": [],
+"sources": [
+"doc",
+"vanilla"
+],
+"uncertain": true
+},
+{
+  "kind": "saved_scope",
+  "key": "title",
+  "label": "Title",
+  "summary": "The title that the script is about; which one changes with the place.",
+  "details": "The game gives a title under this name in several places: the title a ruler grants in government rules, the title a law is changed on, the title picked in a decision's title list, and the title under election in elective succession. Vanilla's own script saves others, for example in the coat of arms templates (956 uses), so check where it is set.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/governments/_governments.info:751",
+   "vanilla: common/laws/_laws.info:175",
+   "vanilla: common/decisions/_decisions.info:398",
+   "vanilla: common/succession_election/_succession_election.info:76"
+  ],
+  "uncertain": true
+ },
+{
+"kind": "saved_scope",
+"key": "title_maa_cap",
+"label": "Title men-at-arms cap",
+"summary": "The current regiment cap for men-at-arms that come from titles.",
+"details": "A comment in vanilla's rules says so. The rule compares it with the personal cap.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/scripted_rules/00_rules.txt:1464"
+],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "title_maa_maintenance",
+"label": "Title men-at-arms maintenance",
+"summary": "The total current maintenance cost, in any currency, of men-at-arms that come from titles.",
+"details": "A comment in vanilla's rules says so. The rule compares it with the personal maintenance.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/scripted_rules/00_rules.txt:1462"
+],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "title_tier_rank",
+"label": "Title tier rank",
+"summary": "An integer that says how high a title's tier is.",
+"details": "A comment in vanilla's AI values describes it as an integer. The value there is read directly from it.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/script_values/00_ai_values.txt:3124"
+],
+"uncertain": false
+},
+{
+"kind": "saved_scope",
+"key": "top_lease_liege",
+"label": "Top lease liege",
+"summary": "A name the game's code may save under scope:top_lease_liege; vanilla script never uses it and the game documents nothing more.",
+"details": "",
+"fields": [],
+"sources": [
+"doc",
+"vanilla"
+],
+"uncertain": true
+},
+{
+"kind": "saved_scope",
+"key": "top_liege",
+"label": "Top liege",
+"summary": "The highest liege of a character, saved at game start for rulers with an administrative government.",
+"details": "Vanilla's game start saves it in its administrative setup. The input does not show the other uses.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/on_action/game_start.txt:6115"
+],
+"uncertain": true
+},
+{
+"kind": "saved_scope",
+"key": "total_counties",
+"label": "Total counties",
+"summary": "A number: how many counties are in the AI's realm.",
+"details": "A comment in vanilla's culture values and rules says so. It is the whole that their_language_counties is compared with.",
+"fields": [],
+"sources": [
+"doc",
+"vanilla",
+"vanilla: common/script_values/00_culture_values.txt:682"
+],
+"uncertain": false
+}
+]

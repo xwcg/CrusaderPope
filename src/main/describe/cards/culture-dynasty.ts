@@ -9,6 +9,7 @@ import { weightLines } from './weight.ts';
 import { humanize, locToRich, rich } from '../text.ts';
 import { block, bodyOf, dynastyWord, filledLoc, scalar, scalars, statementLine, word } from './culture-util.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 /** A dynasty's or house's name as the game writes it: prefix (`dynnp_de` → "de ") and name (`dynn_Villeneuve`), loc keys. */
 function houseName(b: StoryBuilder, body: PNode[]): string | undefined
 {
@@ -36,8 +37,8 @@ function houseSeg(b: StoryBuilder, type: string, key: string): RichSeg
 
 const COA_GROUPS: Record<string, string> = { christian: 'Christian', muslim: 'Muslim', zoroastrian_group: 'Zoroastrian' };
 
-/** The settings of a dynasty or house (common/dynasties, common/dynasty_houses) as lines, anchored as fields of `fields`. */
-function houseLines(b: StoryBuilder, body: PNode[], ctx: Ctx, fields: string): Line[]
+/** The settings of a dynasty or house (common/dynasties, common/dynasty_houses) as lines, anchored as fields of `fields`; `mod` is the entry's mod. */
+function houseLines(b: StoryBuilder, body: PNode[], ctx: Ctx, fields: string, mod: string | undefined): Line[]
 {
     const out: Line[] = [];
 
@@ -50,20 +51,26 @@ function houseLines(b: StoryBuilder, body: PNode[], ctx: Ctx, fields: string): L
         let text: Rich | undefined;
 
         if (c.k === 'name')
-            text = rich('Name: ', { text: dynastyWord(b, v), kind: 'value', tip: v });
+            text = rich(tr('Name: '), { text: dynastyWord(b, v), kind: 'value', tip: v });
         else if (c.k === 'prefix')
-            text = rich('Prefix: ', { text: dynastyWord(b, v).trim(), kind: 'value', tip: v });
+            text = rich(tr('Prefix: '), { text: dynastyWord(b, v).trim(), kind: 'value', tip: v });
         else if (c.k === 'culture')
-            text = rich('Culture: ', b.d.ref(v, ['culture/cultures']));
+            text = rich(tr('Culture: '), b.d.ref(v, ['culture/cultures']));
         else if (c.k === 'dynasty')
-            text = rich('Dynasty: ', houseSeg(b, 'dynasties', v));
+            text = rich(tr('Dynasty: '), houseSeg(b, 'dynasties', v));
         else if (c.k === 'motto')
-            text = rich('Motto: “', b.d.loc(v) ?? [{ text: v, kind: 'code' }], '”');
+            text = rich(tr('Motto: “'), b.d.loc(v) ?? [{ text: v, kind: 'code' }], '”');
         else if (c.k === 'forced_coa_religiongroup')
             text = [`Coat of arms in the ${COA_GROUPS[v] ?? humanize(v)} style`];
 
+        // (loc keys: "✎ text" changes the text. A motto's key is the house's own, nearly always: 4 of vanilla's 143
+        // are used twice. A name's key is shared often (dynn_Li_674E by 314 dynasties and houses), a prefix's nearly
+        // always (dynnp_de by 629), so a name offers it only when the entry's own mod has the key, and a prefix never:
+        // changing the statement's value picks another one.)
+        const locKey = c.k === 'motto' || (c.k === 'name' && !!mod && b.idx.locEntry(v)?.mod === mod) ? v : undefined;
+
         if (text)
-            out.push(statementLine(b, c, ctx, text, fields));
+            out.push(statementLine(b, c, ctx, text, fields, locKey ? { locKey } : {}));
     }
 
     return out;
@@ -75,7 +82,7 @@ function houseFacts(b: StoryBuilder, e: Entity, body: PNode[], card: EntityCard,
     const members = b.idx.incomingSources(e).filter((s) => s.entity.type === 'characters' && s.contexts.some((c) => c === type || c.endsWith(' › ' + type))).length;
 
     if (members)
-        card.facts.push([`${members} historical member${members === 1 ? '' : 's'}`]);
+        card.facts.push([tr('{members} historical member{value}', { members, value: members === 1 ? '' : 's' })]);
 
     const motto = scalar(body, 'motto');
 
@@ -85,7 +92,7 @@ function houseFacts(b: StoryBuilder, e: Entity, body: PNode[], card: EntityCard,
     const coa = b.idx.get('coat_of_arms/coat_of_arms', e.name);
 
     if (coa)
-        card.facts.push(rich({ ...(b.d.entitySeg(coa) as Exclude<RichSeg, string>), text: 'Coat of arms' }));
+        card.facts.push(rich({ ...(b.d.entitySeg(coa) as Exclude<RichSeg, string>), text: tr('Coat of arms') }));
 }
 
 const HOUSE_SKIP = new Set(['name', 'prefix', 'culture', 'dynasty', 'motto', 'forced_coa_religiongroup']);
@@ -101,15 +108,15 @@ const dynasty: CardFn = (b, { e, body, card, ctx, own }) =>
     const culture = scalar(body, 'culture');
 
     if (culture)
-        card.facts.push(rich('Culture: ', b.d.ref(culture, ['culture/cultures'])));
+        card.facts.push(rich(tr('Culture: '), b.d.ref(culture, ['culture/cultures'])));
 
     houseFacts(b, e, body, card, 'dynasty');
     const houses = b.idx.incomingSources(e).filter((s) => s.entity.type === 'dynasty_houses' && s.contexts.includes('dynasty'));
 
     if (houses.length)
-        card.sections.push({ title: 'Houses', lines: houses.map((s) => ({ text: [houseSeg(b, 'dynasty_houses', s.entity.name)], icon: 'note' })) });
+        card.sections.push({ title: tr('Houses'), lines: houses.map((s) => ({ text: [houseSeg(b, 'dynasty_houses', s.entity.name)], icon: 'note' })) });
 
-    card.sections.push({ title: 'Settings', lines: houseLines(b, body, ctx, 'dynasties'), src: own('field', 'dynasties') });
+    card.sections.push({ title: tr('Settings'), lines: houseLines(b, body, ctx, 'dynasties', card.src?.mod), src: own('field', 'dynasties') });
     b.genericSections(e, body, card, ctx, own, HOUSE_SKIP);
     return true;
 };
@@ -125,10 +132,10 @@ const house: CardFn = (b, { e, body, card, ctx, own }) =>
     const dyn = scalar(body, 'dynasty');
 
     if (dyn)
-        card.facts.push(rich('House of the dynasty ', houseSeg(b, 'dynasties', dyn)));
+        card.facts.push(rich(tr('House of the dynasty '), houseSeg(b, 'dynasties', dyn)));
 
     houseFacts(b, e, body, card, 'dynasty_house');
-    card.sections.push({ title: 'Settings', lines: houseLines(b, body, ctx, 'dynasty_houses'), src: own('field', 'dynasty_houses') });
+    card.sections.push({ title: tr('Settings'), lines: houseLines(b, body, ctx, 'dynasty_houses', card.src?.mod), src: own('field', 'dynasty_houses') });
     b.genericSections(e, body, card, ctx, own, HOUSE_SKIP);
     return true;
 };
@@ -150,6 +157,8 @@ const motto: CardFn = (b, { e, body, card, ctx, own }) =>
 {
     const inserts = scalars(body, 'insert');
     const raw = filledLoc(b, 'motto_' + e.name);
+    // (its text: `motto_<key>`, no name candidate of the type; "✎" on the title changes it, `$1$` … as written)
+    card.titleKey = 'motto_' + e.name;
 
     if (raw)
     {
@@ -168,18 +177,18 @@ const motto: CardFn = (b, { e, body, card, ctx, own }) =>
     }
 
     card.sections.push({
-        title: 'Words filled in',
+        title: tr('Words filled in'),
         lines: inserts.map((c, i) =>
         {
             const ex = examples(b, c.v as string);
-            return statementLine(b, c, ctx, rich(`${i + 1}: `, b.d.ref(c.v as string, ['dynasty_house_motto_inserts']), ex.length ? { text: ` — e.g. ${ex.join(', ')}`, kind: 'ph' } : ''), 'dynasty_house_mottos', { icon: 'note' });
+            return statementLine(b, c, ctx, rich(`${i + 1}: `, b.d.ref(c.v as string, ['dynasty_house_motto_inserts']), ex.length ? { text: ` (e.g. ${ex.join(', ')})`, kind: 'ph' } : ''), 'dynasty_house_mottos', { icon: 'note' });
         }),
         src: own('field', 'dynasty_house_mottos')
     });
     const trigger = body.find((c) => c.k === 'trigger' && Array.isArray(c.v));
 
     if (trigger)
-        card.sections.push({ title: 'Only for house founders who', lines: b.d.triggers(trigger.v as PNode[], ctx), src: b.blockSection(trigger, 'trigger', ctx) });
+        card.sections.push({ title: tr('Only for house founders who'), lines: b.d.triggers(trigger.v as PNode[], ctx), src: b.blockSection(trigger, 'trigger', ctx) });
 
     card.sections.push(weightSection(b, body, ctx));
     b.genericSections(e, body, card, ctx, own, new Set(['insert', 'trigger', 'weight']));
@@ -192,29 +201,29 @@ function weightSection(b: StoryBuilder, body: PNode[], ctx: Ctx): CardSection
     const w = body.find((c) => c.k === 'weight');
 
     if (!w)
-        return { title: 'How likely', lines: [{ text: ['Weight 1000 (not set)'], icon: 'chance' }] };
+        return { title: tr('How likely'), lines: [{ text: [tr('Weight 1000 (not set)')], icon: 'chance' }] };
 
     if (typeof w.v === 'string')
-        return { title: 'How likely', lines: [statementLine(b, w, ctx, rich('Weight ', b.d.valueSeg(w.v, ctx)), undefined, { icon: 'chance' })] };
+        return { title: tr('How likely'), lines: [statementLine(b, w, ctx, rich(tr('Weight '), b.d.valueSeg(w.v, ctx)), undefined, { icon: 'chance' })] };
 
-    return { title: 'How likely', lines: weightLines(b, w.v, ctx), src: b.blockSection(w, 'field', ctx, 'script_value') };
+    return { title: tr('How likely'), lines: weightLines(b, w.v, ctx), src: b.blockSection(w, 'field', ctx, 'script_value') };
 }
 
 /** A group of motto words (dynasty_house_motto_inserts/_inserts.info): each word (`motto_<key>`) with its founder's conditions and weight. */
 const mottoInsert: CardFn = (b, { e, body, card, ctx, own }) =>
 {
     const words = body.filter((c) => c.k && Array.isArray(c.v));
-    card.facts.push([`${words.length} word${words.length === 1 ? '' : 's'}`]);
+    card.facts.push([tr('{length} word{value}', { length: words.length, value: words.length === 1 ? '' : 's' })]);
     card.sections.push({
-        title: 'Words',
+        title: tr('Words'),
         lines: words.map((c) =>
         {
             const kids = c.v as PNode[];
             const trigger = block(kids, 'trigger');
-            const l: Line = { text: [word(b, 'motto_' + c.k)], icon: 'note', tip: c.k!, conditions: trigger ? b.d.triggers(trigger, ctx) : undefined };
+            const l: Line = { text: [word(b, 'motto_' + c.k)], icon: 'note', tip: c.k!, locKey: 'motto_' + c.k, conditions: trigger ? b.d.triggers(trigger, ctx) : undefined };
 
             if (kids.some((x) => x.k === 'weight'))
-                l.children = [{ text: ['How likely:'], icon: 'chance', children: weightSection(b, kids, ctx).lines, collapsed: true }];
+                l.children = [{ text: [tr('How likely:')], icon: 'chance', children: weightSection(b, kids, ctx).lines, collapsed: true }];
 
             const src = b.d.anchor(c, ctx, 'other', false);
 
@@ -228,7 +237,7 @@ const mottoInsert: CardFn = (b, { e, body, card, ctx, own }) =>
     return true;
 };
 
-/** A dynasty legacy track (dynasty_legacies/_dynasty_legacies.info: a container of perks — dynasty_perks `legacy = <key>`). */
+/** A dynasty legacy track (dynasty_legacies/_dynasty_legacies.info: a container of perks, dynasty_perks `legacy = <key>`). */
 const legacy: CardFn = (b, { e, body, card, ctx, own }) =>
 {
     const perks = b.idx
@@ -236,9 +245,9 @@ const legacy: CardFn = (b, { e, body, card, ctx, own }) =>
         .filter((s) => s.entity.type === 'dynasty_perks' && s.contexts.includes('legacy'))
         .map((s) => s.entity)
         .sort((x, y) => (b.idx.winningDef(x)?.file ?? 0) - (b.idx.winningDef(y)?.file ?? 0) || (b.idx.winningDef(x)?.start ?? 0) - (b.idx.winningDef(y)?.start ?? 0));
-    card.facts.push([`${perks.length} perk${perks.length === 1 ? '' : 's'}`]);
+    card.facts.push([tr('{length} perk{value}', { length: perks.length, value: perks.length === 1 ? '' : 's' })]);
     card.sections.push({
-        title: 'Perks',
+        title: tr('Perks'),
         lines: perks.map((p, i) =>
         {
             const stats = b.d.modifierStats(p);
@@ -253,17 +262,17 @@ const legacy: CardFn = (b, { e, body, card, ctx, own }) =>
 const nickname: CardFn = (b, { e, body, card, ctx, own }) =>
 {
     const nick = b.d.loc(e.name) ?? [humanize(e.name.replace(/^nick_/, ''))];
-    const name: RichSeg = { text: 'Name', kind: 'ph' };
-    card.facts.push(scalar(body, 'is_prefix') === 'yes' ? rich('Reads “', nick, ' ', name, '”') : rich('Reads “', name, ' ', nick, '”'));
+    const name: RichSeg = { text: tr('Name'), kind: 'ph' };
+    card.facts.push(scalar(body, 'is_prefix') === 'yes' ? rich(tr('Reads “'), nick, ' ', name, '”') : rich(tr('Reads “'), name, ' ', nick, '”'));
 
     if (scalar(body, 'is_bad') === 'yes')
-        card.facts.push([{ text: 'A bad nickname', kind: 'bad' }]);
+        card.facts.push([{ text: tr('A bad nickname'), kind: 'bad' }]);
 
     const lines = b.fieldLines('nicknames', body, ctx);
     const src = own('field', 'nicknames');
 
     if (lines.length || src)
-        card.sections.push({ title: 'Settings', lines, src });
+        card.sections.push({ title: tr('Settings'), lines, src });
 
     b.genericSections(e, body, card, ctx, own, new Set(['is_prefix', 'is_bad']));
     return true;

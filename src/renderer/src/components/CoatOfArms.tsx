@@ -7,7 +7,7 @@ import '../styles/coa.css';
 /**
  * A landed title's, dynasty's or house's coat of arms (`name`: its key; dynasties by id) as the game's interface shows
  * it, in its frame, `size` CSS pixels square (the frame included; kind `coa` has none). Nothing when there are none.
- * `date` (y.m.d): the history date a title's arms are shown at (the map's: a game started then — holders' house arms,
+ * `date` (y.m.d): the history date a title's arms are shown at (the map's: a game started then, holders' house arms,
  * dynamic definitions); none: the first bookmark's. A new date only redraws when the arms differ.
  */
 export function CoatOfArms(props: { kind: CoaKind; name: string; size: number; className?: string; date?: string; }): React.JSX.Element | null

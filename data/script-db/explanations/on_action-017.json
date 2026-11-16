@@ -1,0 +1,251 @@
+[
+ {
+  "kind": "on_action", "key": "on_ward_arrive_at_home", "label": "Ward arrives home",
+  "summary": "Going by its name, runs when a ward arrives back home; vanilla uses it to send a message to their liege and return the ward to court.",
+  "details": "The ward is saved as `scope:ward`. If a guardian is stored in the variable `guardian_educated`, it is saved as `scope:guardian`, and the stored realm as `scope:realm`. If the ward has a guardian and a liege, the liege gets an interface message showing both and the ward returns to court. If there is only a liege, the liege gets a shorter message and the ward returns to court. Both variables are then removed. Script fires it, not the game's code.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "on_ward_depart_for_guardian", "label": "Ward leaves for guardian",
+  "summary": "An empty hook that is meant for a ward setting out to their guardian; vanilla puts nothing in it.",
+  "details": "Mods can add effects here. The input does not show what fires it or what it is about; going by its name, it is about a ward travelling to a guardian.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "on_ward_depart_for_home", "label": "Ward leaves for home",
+  "summary": "An empty hook that is meant for a ward setting out for their own home; vanilla puts nothing in it.",
+  "details": "Mods can add effects here. The input does not show what fires it or what it is about; going by its name, it is about a ward travelling home. Its counterpart for the arrival, `on_ward_arrive_at_home`, does have content.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "on_ward_depart_travel_planner_exit", "label": "Ward leaves travel planner",
+  "summary": "An empty hook that is meant for a ward leaving the travel planner; vanilla puts nothing in it.",
+  "details": "Mods can add effects here. The input does not show what fires it; the meaning rests on its name only.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "on_yearly_common_events", "label": "Yearly common events",
+  "summary": "Going by its name, a yearly roll per character: a 50% chance of picking one event from a pool of general life events.",
+  "details": "If the 50% chance succeeds, one event is picked by weight. An empty entry with weight 1000 makes up about half of the total weight, so about half of the successful rolls still fire nothing. Vanilla's pool holds, for example, the break-up with one of too many lovers, forgetting a language, and a ward owing you. Script fires it; it runs on a character.",
+  "fields": [{ "name": "chance_to_happen", "text": "Chance in percent that any event is rolled at all.", "values": "a number, vanilla uses 50" }],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_yearly_events", "label": "Yearly events",
+  "summary": "Going by its name, a yearly roll per character: a 25% chance of picking one event from the game's big pool of yearly events.",
+  "details": "The pool covers tutoring, scandals, gifts from vassals, stress events, trait events and story starters such as the Party Baron cycle. An empty entry with weight 200 means some rolls fire nothing. The definition text given here is cut off after the first trait events, so the full list is longer. Runs on a character.",
+  "fields": [{ "name": "chance_to_happen", "text": "Chance in percent that any event is rolled at all.", "values": "a number, vanilla uses 25" }],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_yearly_invisible_events", "label": "Yearly invisible events",
+  "summary": "Going by its name, a yearly roll per character: a 5% chance of picking an event in which a courtier learns another courtier's secret.",
+  "details": "The two events in vanilla are a minor secret (weight 100) and a major secret (weight 50). An empty entry with weight 150 means some rolls fire nothing. Runs on a character.",
+  "fields": [{ "name": "chance_to_happen", "text": "Chance in percent that any event is rolled at all.", "values": "a number, vanilla uses 5" }],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_yearly_tutorial_events", "label": "Yearly tutorial events",
+  "summary": "Going by its name, a yearly roll that would fire a tutorial event for a human player, but vanilla switches it off.",
+  "details": "Its condition starts with `always = no`, so it never passes as shipped. The comment next to it says it is to be made generally available once Ruler Objectives are ready. Besides that it asks for a human player and the global variable `tutorial_completed`. Runs on a character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_admin_eunuch_effect_events", "label": "Eunuch demands",
+  "summary": "Event pool of the administrative eunuch story cycle: events where the eunuch demands posts, offers a favour or shares something.",
+  "details": "Only for characters who are playable rulers and available. The events are demands for a regent, regency, governorship, patriarchate, council seat, court position or a marriage, plus a boon, a secret and a scheme the eunuch shares. Going by its name and file, a story cycle fires it. Note: vanilla lists `ep3_story_cycle_admin_eunuch.2061` twice, with two different comments.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_admin_eunuch_reaction_events", "label": "Eunuch reactions",
+  "summary": "Event pool of the administrative eunuch story cycle: events involving the eunuch's influence on the ruler's family and court.",
+  "details": "Only for characters who are playable rulers and available. The events include a protege or student eunuch, a rival eunuch, affair accusations, a manipulated heir and a coup. An empty entry with weight 150 means some rolls fire nothing. Going by its name and file, a story cycle fires it.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_black_death_events", "label": "Black Death events",
+  "summary": "Event pool of the Black Death: picks one of eight epidemic events, after a short random wait.",
+  "details": "The events `epidemic_events.5901` to `5908` all have the same weight. The delay is 4 to 8 days, so that they do not always fire on the same day. Runs on a character. Going by its name, the Black Death story fires it.",
+  "fields": [{ "name": "delay", "text": "Random wait before the chosen event fires.", "values": "days = { 4 8 } in vanilla" }],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_cat_events", "label": "Pet cat events",
+  "summary": "Event pool for a ruler's pet cat: small events such as the cat charming a vassal, easing stress or making a mess.",
+  "details": "Only runs while the character is not imprisoned. It also holds two events for owning both a dog and a cat. Going by its name and file, the cat story cycle fires it.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_conqueror_events", "label": "Conqueror events",
+  "summary": "Event pool for conquerors: gifts and armies offered by vassals, happy glory hounds and small feed messages.",
+  "details": "An empty entry with weight 50 means some rolls fire nothing. The minor feed events include a small gift from a county, a good knight joining, an angry vassal being impressed, gold from a courtier and a siege engineer. Runs on a character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_dog_events", "label": "Pet dog events",
+  "summary": "Event pool for a ruler's pet dog: walks, runaways, charming vassals, and warning about schemes.",
+  "details": "Only for characters who are playable rulers and available. It also holds the two events for owning both a dog and a cat, shared with the cat pool. Going by its name and file, the dog story cycle fires it.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_doppelganger_events", "label": "Doppelganger events",
+  "summary": "Event pool for a character with a doppelganger: life swaps, the double claiming to be the real person, and similar.",
+  "details": "Only runs while the character is not imprisoned. Vanilla's events also include falling in love with the double and finding out you are long lost twins. Going by its name and file, a story cycle fires it.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_eagle_events", "label": "Pet eagle events",
+  "summary": "Event pool for a ruler's hunting eagle: kills, going missing, injury, training and teaching a child.",
+  "details": "Only runs while the character is not imprisoned and has an available eagle (`has_available_eagle_trigger`). Going by its name and file, the eagle story cycle fires it.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_foreign_raised_reformer_events", "label": "Foreign-raised reformer events",
+  "summary": "Going by its name, an event pool for a foreign-raised ruler reforming their realm: choices about the reforms plus feed messages on how the realm reacts.",
+  "details": "Only for characters who are not imprisoned and are playable rulers. The feed messages cover upset nobles, zealots and priests, taxes, vassal attitudes and legitimacy loss. An empty entry with weight 10 means some rolls fire nothing. Going by its name and file, a story cycle fires it.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_futuwaa_lodges_events", "label": "Futuwaa lodge events",
+  "summary": "Event pool for futuwaa lodges: three events.",
+  "details": "The weights are low on purpose. A vanilla comment says they rise with the number of futuwaa members you have. An empty entry with weight 100 means some rolls fire nothing. Runs on a character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_harrying_aetheling_events", "label": "Harrying: Anglo-Saxon lords",
+  "summary": "Event pool for the Anglo-Saxon lords in England during the Harrying of the North.",
+  "details": "Only 10% of rolls fire an event (`chance_of_no_event = 90`), and the wait is 60 to 90 days. Four events of equal weight. Runs on a character.",
+  "fields": [{ "name": "chance_of_no_event", "text": "Chance in percent that nothing fires.", "values": "a number, vanilla uses 90" }, { "name": "delay", "text": "Random wait before the chosen event fires.", "values": "days = { 60 90 } in vanilla" }],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_harrying_hereward_events", "label": "Harrying: Hereward",
+  "summary": "Event pool for Hereward the Wake during the Harrying of the North.",
+  "details": "Only 10% of rolls fire an event, and the wait is 60 to 90 days. It holds six story events and one more from a different event file, `ep3_laamps.7001`. Runs on a character.",
+  "fields": [{ "name": "chance_of_no_event", "text": "Chance in percent that nothing fires.", "values": "a number, vanilla uses 90" }, { "name": "delay", "text": "Random wait before the chosen event fires.", "values": "days = { 60 90 } in vanilla" }],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_harrying_owner_events", "label": "Harrying: the king",
+  "summary": "Event pool for William, the Norman king of England, during the Harrying of the North.",
+  "details": "Only 10% of rolls fire an event, and the wait is 60 to 90 days. Four events of equal weight. Runs on a character.",
+  "fields": [{ "name": "chance_of_no_event", "text": "Chance in percent that nothing fires.", "values": "a number, vanilla uses 90" }, { "name": "delay", "text": "Random wait before the chosen event fires.", "values": "days = { 60 90 } in vanilla" }],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_hostage_loyalty_events", "label": "Hostage loyalty events",
+  "summary": "Event pool for a ruler who keeps a hostage: spying, children being mean, trait compatibility and similar.",
+  "details": "Only runs while the character is not imprisoned. An empty entry with weight 25 means some rolls fire nothing. Going by its name and file, a story cycle fires it.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_house_feud_events", "label": "House feud events",
+  "summary": "Event pool for the head of a house that is in a feud with another house.",
+  "details": "Needs the content checked by `has_bp1_dlc_trigger`, an available adult, the character being a house head, and one of the house's relations being a feud. Events cover jealousy, scorn, the death count, ending the feud, and a liege trying to stop it. The event `bp1_house_feud.0830` (no enemies left) has the very high weight 5000. Runs on a character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_hunt_mystical_animal_events", "label": "Mystical animal hunt events",
+  "summary": "Event pool for the hunt for a mystical animal: dreams, sightings, search parties and finally losing the chase.",
+  "details": "The last entry, `hunt_mystical_animal.9002` (weight 1), is a fallback that says someone else got the animal when it has gone on too long. Runs on a character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_madrasas_events", "label": "Madrasa events",
+  "summary": "Event pool for madrasas: two events.",
+  "details": "The weights are low on purpose. A vanilla comment says they rise with the number of madrasa pupils you have. An empty entry with weight 100 means some rolls fire nothing. Runs on a character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_respected_liege_events", "label": "Respected liege events",
+  "summary": "An empty hook for the respected liege story cycle; vanilla puts nothing in it.",
+  "details": "The game documents no root for it. Mods can add effects or events. The input does not show what fires it; the meaning rests on its name and file only.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "ongoing_rock_events", "label": "Pet rock events",
+  "summary": "Event pool for a ruler's pet rock: stress relief, polishing, baths, losing it and meeting other rock owners.",
+  "details": "Only runs while the character is not imprisoned. Going by its name and file, the pet rock story cycle fires it.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_sibling", "label": "Sibling events",
+  "summary": "Event pool about a character's siblings: bonuses a sibling gives, vassal complaints, and acts that depend on the sibling's traits.",
+  "details": "Only 25% of rolls pass the chance, and an empty entry with weight 500 (about a quarter of the total weight) makes some of those fire nothing. Events include a sibling adding a skill bonus, causing stress, taking money (greedy), being kind to peasants (generous), and giving a just judgement (just). One event, `sibling.0001`, is commented out. Runs on a character.",
+  "fields": [{ "name": "chance_to_happen", "text": "Chance in percent that any event is rolled at all.", "values": "a number, vanilla uses 25" }],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_sycophant_events", "label": "Sycophant events",
+  "summary": "Event pool for a ruler with a sycophant at court: the sycophant's secrets, jokes, ultimatums and mistakes.",
+  "details": "Ten events with weights of 25 or 50. Going by its name and file, the sycophant story cycle fires it. Runs on a character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_tax_rivalry_events", "label": "Tax rivalry events",
+  "summary": "Event pool for a rivalry between a tax collector and a steward: reconciling, stealing and blaming, sabotage, and small shifts in unity and rivalry.",
+  "details": "What can happen depends on how deep the rivalry is: a low rivalry gives the liege a chance to profit, a nemesis rivalry can sabotage the county. An empty entry with weight 10 is a fallback in case all other events are invalid. Runs on a character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_temujin_flavor_events", "label": "Temujin story events",
+  "summary": "Event pool for the Temujin story: becoming blood brothers with Jamukha, Jamukha leaving or becoming a rival, and Borte's pregnancy.",
+  "details": "Only for available characters. Four events of equal weight. Runs on a character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_turkic_tribe_events", "label": "Turkic tribe events",
+  "summary": "Event pool for the Turkic frontier story: letters from the orphaned and a forgiveness letter, a payment, horsemen, a stray arrow and a caravan mishap.",
+  "details": "Six events with weights of 25 or 50. Runs on a character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_violet_poet_owner_events", "label": "Violet Poet owner events",
+  "summary": "Event pool for the owner of the Violet Poet: story events and a chain about Ibn Zaydun.",
+  "details": "Only half of the rolls fire an event, and the wait is 40 to 80 days. Seven events of equal weight. Runs on a character.",
+  "fields": [{ "name": "chance_of_no_event", "text": "Chance in percent that nothing fires.", "values": "a number, vanilla uses 50" }, { "name": "delay", "text": "Random wait before the chosen event fires.", "values": "days = { 40 80 } in vanilla" }],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_visited_by_ghosts_events", "label": "Ghost visit events",
+  "summary": "Event pool for a character visited by ghosts: acts of repentance, second ghosts, making amends and the ending.",
+  "details": "Only runs while the character is not imprisoned. Seven events of equal weight. Runs on a character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_warhorse_events", "label": "Warhorse events",
+  "summary": "Event pool for a ruler's warhorse: new gear, a prowess or stress boost, illness, praise and a curse.",
+  "details": "Five events of equal weight. Runs on a character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "ongoing_witch_hunt_events", "label": "Witch hunt events",
+  "summary": "Event pool for a witch hunt: burning pets, repent demands, witch trials, the walk of shame and forcing out minorities.",
+  "details": "Only runs while the character is not imprisoned. Seven events of equal weight. Runs on a character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "organize_levies_monthly_on_action", "label": "Organize levies, monthly",
+  "summary": "Monthly effects of the marshal's Organize the Levies task: runs the side effects and gives a small chance of one extra event.",
+  "details": "Only runs if the character has a marshal on their council. It calls `organize_the_levies_marshal_task_side_effects`, and has a 10% chance of the event `marshal_task.1103` (an acclaimed knight leading a levy captaincy). Going by its name, it is fired monthly by the task. Runs on a character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "organize_the_levies_marshal_task_side_effects", "label": "Organize levies side effects",
+  "summary": "Side effects of the marshal's Organize the Levies task: a small chance of a bad or good event.",
+  "details": "Only runs if the character has a marshal and does not have the variable `had_marshal_task_side_effect`. The chance is 1%, and an empty entry with weight 1000 makes most of those fire nothing. Bad events are levy desertions, unused farmland and too few guards; good events are efficient organization and military presence. Runs on a character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "pagan_arrival_events", "label": "Pagan pilgrimage arrival",
+  "summary": "Event pool for the arrival stage of a pilgrimage: a sacred grove or meeting the mystic again.",
+  "details": "Only when the pilgrimage's rite has the tenet Sanctity of Nature (`tenet_sanctity_of_nature`). Two events of equal weight. Runs on a character. Going by its name and file, a pilgrimage activity fires it.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "pagan_conversion_pulse", "label": "Pagan conversion pulse",
+  "summary": "Checks whether an AI ruler with a tribal government and an unreformed faith is ready to convert, and if so fires the event `global_religion.0001`.",
+  "details": "The ruler must be an AI, a top liege (or a steppe duke or higher), with a tribal government, tribal authority law 2 or 3, an unreformed faith and at least prestige level 1. The capital's county development must reach 7, 6 or 5, depending on the date: 7 up to the year 950 (or for a steppe duke or higher), otherwise 6 up to 1000, otherwise 5. The culture must also have at least 7 of 14 listed innovations. Runs on a character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ }
+]

@@ -1,14 +1,16 @@
 {
   "name": "crusader-pope",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Mod editor and explorer for Crusader Kings III",
   "private": true,
   "license": "SEE LICENSE IN LICENSE",
   "repository": "github:xwcg/CrusaderPope",
-  "main": "./out/main/index.js",
+  "main": "./out/main/boot.js",
+  "desktopName": "crusader-pope.desktop",
   "scripts": {
-    "dev": "electron-vite dev --watch",
-    "build": "electron-vite build",
+    "dev": "node scripts/script-db-build.mjs && electron-vite dev --watch",
+    "build": "node scripts/script-db-build.mjs && electron-vite build",
+    "script-db": "node scripts/script-db-build.mjs",
     "start": "electron-vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "index:cli": "node --experimental-strip-types --no-warnings --max-old-space-size=6000 scripts/index-cli.ts",
@@ -16,8 +18,9 @@
     "drive": "node scripts/drive.mjs",
     "format": "node --experimental-strip-types --no-warnings scripts/format.ts",
     "format:check": "node --experimental-strip-types --no-warnings scripts/format.ts --check",
-    "dist": "electron-vite build && node --experimental-require-module node_modules/electron-builder/cli.js --win",
-    "dist:dir": "electron-vite build && node --experimental-require-module node_modules/electron-builder/cli.js --win --dir"
+    "dist": "npm run build && node --experimental-require-module node_modules/electron-builder/cli.js --win",
+    "dist:linux": "npm run build && node --experimental-require-module node_modules/electron-builder/cli.js --linux",
+    "dist:dir": "npm run build && node --experimental-require-module node_modules/electron-builder/cli.js --win --dir"
   },
   "devDependencies": {
     "@types/node": "^22.20.4",
@@ -53,6 +56,18 @@
       "LICENSE"
     ],
     "asar": false,
+    "extraResources": [
+      {
+        "from": "data/script-db",
+        "to": "script-db",
+        "filter": [
+          "*.sqlite"
+        ]
+      }
+    ],
+    "toolsets": {
+      "appimage": "1.0.3"
+    },
     "win": {
       "target": [
         {
@@ -78,8 +93,24 @@
     },
     "linux": {
       "target": [
-        "AppImage"
-      ]
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "category": "Development",
+      "syncDesktopName": true,
+      "synopsis": "Mod editor and explorer for Crusader Kings III",
+      "maintainer": "xwcg <https://github.com/xwcg/CrusaderPope>",
+      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}"
     },
     "publish": {
       "provider": "github",

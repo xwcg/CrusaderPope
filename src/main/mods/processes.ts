@@ -31,7 +31,7 @@ function processNames(): Promise<string[] | null>
 
 /**
  * The running launcher's process name; undefined when none runs; null when the process list cannot be read (then
- * nobody knows — writing the launcher database is refused unless the user says the launcher is closed).
+ * nobody knows: writing the launcher database is refused unless the user says the launcher is closed).
  */
 export async function runningLauncher(): Promise<string | null | undefined>
 {

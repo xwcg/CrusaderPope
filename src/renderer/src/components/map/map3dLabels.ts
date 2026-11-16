@@ -1,7 +1,7 @@
 /**
  * The 3D map's names (docs/map.md, "3D map"), laid on the ground as the game's are: each group's name along a curve
  * through its shape (pres-shape.ts, as the 2D map), letters spaced out over most of it, sized in map pixels by the
- * group's thickness — so they grow and shrink with the zoom — and draped letter by letter: each letter drawn through
+ * group's thickness (so they grow and shrink with the zoom) and draped letter by letter: each letter drawn through
  * the affine map of the ground at its place (its baseline along the curve, its up across it; foreshortened with the
  * view, tilted with the slope), the curve walked the other way when it would read right to left on screen. As the
  * game (NMapName LARGE_NAMES_ZOOM_STEP), the mode's names show from that zoom step on and county names below it,
@@ -23,7 +23,7 @@ const CELL_H = Math.ceil(F * 1.35);
 const PAD = Math.ceil(F * 0.14);
 
 /**
- * A tier's names — the mode's, counties', baronies': shown from `min` to `max` CSS pixels tall; `scale`: their size
+ * A tier's names (the mode's, counties', baronies'): shown from `min` to `max` CSS pixels tall; `scale`: their size
  * against the 2D map's (smaller names for the lower tiers, which crowd the near views).
  */
 interface Look
@@ -309,7 +309,7 @@ function place(ctx: CanvasRenderingContext2D, l: Label, ground: Ground, w: numbe
         const dz = uz * dir;
         const e = l.widths[i] / 2 + l.size * 0.25;
         const s = ground.screen(x, z);
-        // (along the baseline, and up — across the curve, to its left)
+        // (along the baseline, and up: across the curve, to its left)
         const a = ground.screen(x + dx * e, z + dz * e);
         const b = ground.screen(x + dz * e, z - dx * e);
 
@@ -400,7 +400,7 @@ export function drawLabels3d(canvas: HTMLCanvasElement, scene: LabelScene, info:
 
     const size = meanArea(groups);
     const smaller = tiers.map((t, i): [Groups, number] => [t, i + 1]).filter(([t]) => size > meanArea(t) * 1.5);
-    // (the game: the large names from LARGE_NAMES_ZOOM_STEP on, the small ones below it — baronies' only within the
+    // (the game: the large names from LARGE_NAMES_ZOOM_STEP on, the small ones below it; baronies' only within the
     // nearest third of that, fading over a step)
     const below = (step: number): number => Math.min(1, Math.max(0, step - scene.zoom));
     const large = smaller.length ? 1 - below(scene.largeNames) : 1;
@@ -451,7 +451,7 @@ export function drawLabels3d(canvas: HTMLCanvasElement, scene: LabelScene, info:
             if (!labels)
             {
                 const name = gs.name(g);
-                // (a barony named as its county — the county's capital — has its name there already)
+                // (a barony named as its county, the county's capital, has its name there already)
                 const parent = tier && info.titles[g].tier === 'b' ? info.titles[info.titles[g].parent] : undefined;
                 labels = name && parent?.name !== name ? labelPaths(ids, info.width, info.height, gs, g).map((p) => layout(p, name, look.scale)) : [];
                 cache.set(g, labels);

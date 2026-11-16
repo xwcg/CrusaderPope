@@ -1,6 +1,6 @@
 /**
  * The 2D map's names (docs/map.md, "Presentation"): the mode's groups on a 2D canvas over the GL one, each name
- * along a curve through its group's shape (pres-shape.ts) as the game draws them — letters spaced out to span most of
+ * along a curve through its group's shape (pres-shape.ts) as the game draws them, letters spaced out to span most of
  * the group, sized by its thickness. Zoomed in, county and then barony names come in between (smaller, when the
  * mode's groups are bigger than counties / baronies). Laid out once per group and mode (in map pixels); per frame
  * only moved, scaled, checked for overlaps (the mode's names first, the biggest first) and drawn letter by letter.
@@ -13,7 +13,7 @@ import { labelPaths, type LabelPath } from './pres-shape';
 const font = (px: number): string => `small-caps 600 ${px}px Georgia, 'Palatino Linotype', serif`;
 
 /**
- * How a tier's names look — the mode's, counties', baronies': smaller than `min` (CSS pixels) they are left out,
+ * How a tier's names look (the mode's, counties', baronies'): smaller than `min` (CSS pixels) they are left out,
  * bigger than `max` drawn at it, in their curve's middle.
  */
 interface Look
@@ -289,7 +289,7 @@ export function drawLabels(canvas: HTMLCanvasElement, view: View, info: MapInfo,
             if (!labels)
             {
                 const name = gs.name(g);
-                // (a barony named as its county — the county's capital — has its name there already)
+                // (a barony named as its county, the county's capital, has its name there already)
                 const parent = tier && info.titles[g].tier === 'b' ? info.titles[info.titles[g].parent] : undefined;
                 const named = !!name && parent?.name !== name;
                 const shape = `${named ? name : ''}|${gs.area[g]}|${gs.cx[g]}|${gs.cy[g]}|${gs.box.subarray(b, b + 4).join(',')}`;

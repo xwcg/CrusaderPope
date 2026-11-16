@@ -1,0 +1,498 @@
+[
+ {
+  "kind": "effect",
+  "key": "create_epidemic_outbreak",
+  "label": "Start epidemic",
+  "summary": "Starts a new epidemic (a spreading disease) in the province.",
+  "details": "Vanilla always gives both the disease type (for example smallpox, typhus, dysentery) and how strong it is (minor, major or apocalyptic). The new epidemic can be saved under a name so later script can refer to it.",
+  "fields": [
+    { "name": "type", "text": "Which disease the epidemic is.", "values": "an epidemic type key, such as smallpox", "required": true },
+    { "name": "intensity", "text": "How severe the outbreak is.", "values": "minor, major or apocalyptic", "required": true },
+    { "name": "save_scope_as", "text": "Saves the new epidemic under this name for later use in the same script.", "values": "a name you choose" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_faction",
+  "label": "Create faction",
+  "summary": "Makes the character start a faction of the given type against a target.",
+  "details": "Vanilla uses it for claimant, peasant and liberty factions, with the target being a liege or another character.",
+  "fields": [
+    { "name": "type", "text": "Which kind of faction is started.", "values": "a faction type key, such as claimant_faction", "required": true },
+    { "name": "target", "text": "Who the faction is directed against.", "values": "a character, for example liege or scope:actor.top_liege", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_holy_order",
+  "label": "Create holy order",
+  "summary": "Founds a new holy order with a leader and a barony as its seat.",
+  "details": "You can name the order's type directly, or ask for a random one (any, military, monastic or mendicant). Name and coat of arms are optional. The new order can be saved under a name for later use. Vanilla gives the leader, the capital barony and a random type of military.",
+  "fields": [
+    { "name": "leader", "text": "The character who leads the order.", "values": "a character", "required": true },
+    { "name": "capital", "text": "The barony where the order is based.", "values": "a barony title", "required": true },
+    { "name": "founder", "text": "The character credited as founder.", "values": "a character" },
+    { "name": "holy_order_type", "text": "A specific holy order type.", "values": "a holy order type key" },
+    { "name": "random_holy_order_type", "text": "Picks a random order type from a group.", "values": "any, military, monastic or mendicant" },
+    { "name": "name", "text": "The order's name.", "values": "a name or localization key" },
+    { "name": "coat_of_arms", "text": "The order's coat of arms.", "values": "a coat of arms key" },
+    { "name": "save_scope_as", "text": "Saves the new order under this name.", "values": "a name you choose" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_holy_site",
+  "label": "Create holy site",
+  "summary": "Creates a holy site for the faith in a county or barony.",
+  "details": "The faith must not already have a holy site of that type, and the chosen barony must not already host another holy site. If the holy site type defines its own location, county and barony are optional and replace that default; otherwise one of them is required. The input shows no vanilla use.",
+  "fields": [
+    { "name": "type", "text": "Which holy site type to create.", "values": "a holy site type key or a holy site object", "required": true },
+    { "name": "eminent", "text": "Whether the site is an eminent one.", "values": "yes or no", "default": "no" },
+    { "name": "county", "text": "The county the site is in.", "values": "a county title" },
+    { "name": "barony", "text": "The barony that hosts the site.", "values": "a barony title" },
+    { "name": "actor", "text": "A character the resulting on_action is credited to.", "values": "a character" }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_hybrid_culture",
+  "label": "Create hybrid culture",
+  "summary": "Creates a new culture by mixing the character's culture with another culture.",
+  "details": "The new culture gets a random mix of pillars and traditions from both, the same way the AI hybridizes. It is saved as scope:new_culture. The other culture is written as the value. The game's documentation says the side-effects version is the one that also charges the cost and converts people.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_hybrid_culture_with_side_effects",
+  "label": "Hybridize culture (full)",
+  "summary": "Creates a hybrid of the character's culture and another one, exactly as if the player had hybridized through the interface.",
+  "details": "It also charges the cost and does the conversion that the interface action does. The new culture is not saved as a scope, because of technical limitations, the game's documentation says. The plain create_hybrid_culture does only the creation.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_inspiration",
+  "label": "Create inspiration",
+  "summary": "Gives the character a new inspiration of the given type.",
+  "details": "The new inspiration is saved as scope:new_inspiration. Written as a block, it can also set the gold cost, replacing the cost defined in the inspiration type. Vanilla mostly uses the short form with a type name such as book_inspiration.",
+  "fields": [
+    { "name": "type", "text": "Which inspiration type.", "values": "an inspiration type key", "required": true },
+    { "name": "gold", "text": "Overrides the type's base cost.", "values": "a number or script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_legend",
+  "label": "Create legend",
+  "summary": "Creates a new legend owned by the character.",
+  "details": "The legend has a type, a quality and a chronicle (the story template). Its properties fill the chronicle's slots, and each key must match a property of that chronicle with an object of the right kind. The protagonist defaults to the character. The new legend can be saved under a name.",
+  "fields": [
+    { "name": "type", "text": "The kind of legend.", "values": "such as heroic, holy or legitimizing", "required": true },
+    { "name": "quality", "text": "How grand the legend is.", "values": "such as famed", "required": true },
+    { "name": "chronicle", "text": "Which chronicle (story template) the legend follows.", "values": "a chronicle type key", "required": true },
+    { "name": "properties", "text": "Fills the chronicle's slots with objects.", "values": "a block of key = object pairs", "required": true },
+    { "name": "protagonist", "text": "Who the legend is about.", "values": "a character", "default": "the character in scope" },
+    { "name": "save_scope_as", "text": "Saves the new legend under this name.", "values": "a name you choose" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_legend_seed",
+  "label": "Create legend seed",
+  "summary": "Creates a legend seed owned by the character.",
+  "details": "The block has the same shape as create_legend: type, quality, chronicle and properties. The game's documentation does not say what a seed is or how it differs from a finished legend. Vanilla uses it often with famed quality and heroic, holy or legitimizing types.",
+  "fields": [
+    { "name": "type", "text": "The kind of legend.", "values": "such as heroic, holy or legitimizing", "required": true },
+    { "name": "quality", "text": "How grand the legend is.", "values": "such as famed or illustrious", "required": true },
+    { "name": "chronicle", "text": "Which chronicle (story template) it follows.", "values": "a chronicle type key", "required": true },
+    { "name": "properties", "text": "Fills the chronicle's slots with objects.", "values": "a block of key = object pairs" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_maa_regiment",
+  "label": "Create men-at-arms",
+  "summary": "Creates a men-at-arms regiment for the ruler.",
+  "details": "If a title is given, the regiment is created as that title's troops. Either name the type or copy the type from an existing regiment, not both. Vanilla nearly always sets check_can_recruit = no; going by its name, that skips the recruiting check, but the game's documentation does not say. A bare type name also works as a short form.",
+  "fields": [
+    { "name": "type", "text": "The men-at-arms type.", "values": "a men-at-arms type key, such as light_footmen" },
+    { "name": "type_of", "text": "Takes the type from an existing regiment. Cannot be combined with type.", "values": "a regiment" },
+    { "name": "check_can_recruit", "text": "Going by its name, whether the game checks that the ruler can recruit this; the game's documentation does not explain it.", "values": "yes or no" },
+    { "name": "title", "text": "Makes it title troops of this title.", "values": "a title, such as root.primary_title" },
+    { "name": "size", "text": "The size of the new regiment; the game's documentation gives no unit.", "values": "a number" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "create_nomad_title",
+  "label": "Create nomad title",
+  "summary": "Creates a new title for a nomad and gives it to a holder.",
+  "details": "The government defaults to nomad, and it must be one that uses county fertility. The optional article, pre and adj take further name texts; if left out, the name is used. The game's documentation does not say what each is for. Vanilla always sets name, holder, government and a saved name for the new title.",
+  "fields": [
+    { "name": "name", "text": "The title's name.", "values": "a localization key or dynamic description", "required": true },
+    { "name": "holder", "text": "The character who holds the new title.", "values": "a character", "required": true },
+    { "name": "government", "text": "The government the title uses.", "values": "a government key", "default": "nomad" },
+    { "name": "save_scope_as", "text": "Saves the new title under this name.", "values": "a name you choose", "required": true },
+    { "name": "article", "text": "An optional extra name text; the game's documentation does not say its role.", "values": "a key or dynamic description" },
+    { "name": "pre", "text": "An optional extra name text; the game's documentation does not say its role.", "values": "a key or dynamic description", "default": "the name" },
+    { "name": "adj", "text": "An optional extra name text; the game's documentation does not say its role.", "values": "a key or dynamic description", "default": "the name" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_rite_from_type",
+  "label": "Create rite",
+  "summary": "Creates a new rite in the character's faith, with the character as its founder.",
+  "details": "The faith and the founder are used to generate the rite's icon and names. The founder converts to the rite only if convert is yes; it defaults to no. The new rite can be saved under a name.",
+  "fields": [
+    { "name": "type", "text": "Which rite type to create from.", "values": "a rite type key", "required": true },
+    { "name": "save_scope_as", "text": "Saves the new rite under this name.", "values": "a name you choose" },
+    { "name": "convert", "text": "Whether the founder converts to the new rite.", "values": "yes or no", "default": "no" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_story",
+  "label": "Start story",
+  "summary": "Starts a story cycle with the character as its owner.",
+  "details": "It can be written as just the story type name, or as a block that also saves the new story under a name for later use. Vanilla uses types such as story_conqueror and story_cycle_murders_at_court.",
+  "fields": [
+    { "name": "type", "text": "Which story type.", "values": "a story type key", "required": true },
+    { "name": "save_scope_as", "text": "Saves the new story under this name.", "values": "a name you choose" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_task_contract",
+  "label": "Create task contract",
+  "summary": "Creates a task contract of a given type and tier at a location.",
+  "details": "Type, tier and location are required. An employer, a destination and a target character are optional. The game's documentation spells the tier field task_task_contract_tier, but all 181 vanilla uses write task_contract_tier. The new contract can be saved under a name.",
+  "fields": [
+    { "name": "task_contract_type", "text": "Which kind of contract.", "values": "a task contract type key", "required": true },
+    { "name": "task_contract_tier", "text": "The contract's tier.", "values": "a number or script value", "required": true },
+    { "name": "location", "text": "The province where the contract is.", "values": "a province", "required": true },
+    { "name": "task_contract_employer", "text": "The employer of the contract.", "values": "a character" },
+    { "name": "destination", "text": "A destination province.", "values": "a province" },
+    { "name": "target", "text": "A target character for the contract.", "values": "a character" },
+    { "name": "save_scope_as", "text": "Saves the new contract under this name.", "values": "a name you choose" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_title_and_vassal_change",
+  "label": "Start title change",
+  "summary": "Starts a batch of title and vassal changes and saves it under a name.",
+  "details": "You then add single moves (for example change_title_holder) inside that saved change, and finish with resolve_title_and_vassal_change to apply them together. The type decides which on_actions fire, how vassals and the title treasury are handled, and more; for example usurped makes lower-tier vassals independent. The game's documentation text in the input is cut off, so not every type is described here. Vanilla uses types such as granted, created, conquest, independency and swear_fealty.",
+  "fields": [
+    { "name": "type", "text": "The kind of title change.", "values": "a change type such as granted, created, conquest or usurped", "required": true },
+    { "name": "save_scope_as", "text": "The name the change is saved under.", "values": "a name you choose, for example change", "required": true },
+    { "name": "add_claim_on_loss", "text": "Whether the old holder gets a weak claim on titles they lose.", "values": "yes or no" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "custom_description",
+  "label": "Custom description",
+  "summary": "Runs the effects inside it but shows your own text in the tooltip instead of the automatic description.",
+  "details": "The text is a localization key. Subject defaults to the current scope; object and value are optional and can be used by the text. The effects inside still run as normal.",
+  "fields": [
+    { "name": "text", "text": "The localization key shown in place of the automatic description.", "values": "a localization key", "required": true },
+    { "name": "subject", "text": "The thing the text is about.", "values": "a scope", "default": "the current scope" },
+    { "name": "object", "text": "A second thing the text can refer to.", "values": "a scope" },
+    { "name": "value", "text": "A number the text can show.", "values": "a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "custom_description_no_bullet",
+  "label": "Custom description, no bullet",
+  "summary": "Like custom_description, runs its effects but shows your own text, and leaves out the bullet point.",
+  "details": "It takes the same text, subject, object and value as custom_description. Vanilla uses it 532 times, nearly always with just a text key.",
+  "fields": [
+    { "name": "text", "text": "The localization key shown in place of the automatic description.", "values": "a localization key", "required": true },
+    { "name": "subject", "text": "The thing the text is about.", "values": "a scope", "default": "the current scope" },
+    { "name": "object", "text": "A second thing the text can refer to.", "values": "a scope" },
+    { "name": "value", "text": "A number the text can show.", "values": "a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "custom_label",
+  "label": "Custom label",
+  "summary": "Shows a tooltip line from a localization key, used for grouping and wording.",
+  "details": "The game's documentation says the scope is used as the object. It can also be written as a block with text, an optional subject and hidden effects. The game's documentation is terse, so how it differs from custom_tooltip is not stated.",
+  "fields": [
+    { "name": "text", "text": "The localization key to show.", "values": "a localization key" },
+    { "name": "subject", "text": "The thing the text is about.", "values": "a scope" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "custom_tooltip",
+  "label": "Custom tooltip",
+  "summary": "Shows a text line in the tooltip; the text itself changes nothing in the game.",
+  "details": "The game's documentation says the current scope is the subject, used for grouping and wording. Written as a block it takes text, an optional subject and effects, which are hidden. Vanilla uses it in very many places, mostly as a plain key.",
+  "fields": [
+    { "name": "text", "text": "The localization key to show.", "values": "a localization key" },
+    { "name": "subject", "text": "The thing the text is about.", "values": "a scope" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "death",
+  "label": "Die",
+  "summary": "Kills the character.",
+  "details": "Give a death reason and optionally a killer. An artifact can be named as the murder weapon, replacing the default one from the killer's slot for that death reason. Writing death = natural picks a natural cause of death instead.",
+  "fields": [
+    { "name": "death_reason", "text": "How the character dies.", "values": "a death reason key, such as death_execution", "required": true },
+    { "name": "killer", "text": "Who killed them.", "values": "a character" },
+    { "name": "artifact", "text": "The artifact used to kill, instead of the default one.", "values": "an artifact" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "debug_create_organization",
+  "label": "Create organization (debug)",
+  "summary": "A debug effect on a character; the game documents it only as TODO.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "debug_log",
+  "label": "Debug log",
+  "summary": "Writes a message to the debug log when it runs.",
+  "details": "The message can be a localization string, which can use ROOT, SCOPE and PREV.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "debug_log_date",
+  "label": "Log date",
+  "summary": "Writes the current date to the debug log.",
+  "details": "Vanilla always writes it as yes.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "debug_log_scopes",
+  "label": "Log scopes",
+  "summary": "Writes the current scope to the debug log.",
+  "details": "With yes it writes full scope information, with no only the current scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "debug_log_stack_trace",
+  "label": "Log with stack trace",
+  "summary": "Writes a message followed by a stack trace to the debug log.",
+  "details": "The message can be a localization string, which can use ROOT, SCOPE and PREV. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "debug_trigger_event",
+  "label": "Trigger event (debug)",
+  "summary": "Triggers an event like trigger_event, and also prints the event's trigger check and immediate effects.",
+  "details": "The game's documentation gives no usage line, so the exact way to write it is not shown. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "decline_activity_invite",
+  "label": "Decline activity invite",
+  "summary": "Makes the character decline their invitation to the given activity.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "delay_travel_plan",
+  "label": "Delay journey",
+  "summary": "Pauses the travel plan for a length of time, then lets it continue.",
+  "details": "The delay is added to any delay already running, unless add = no is set. Write the length in days, weeks, months or years. Vanilla mostly uses days.",
+  "fields": [
+    { "name": "days", "text": "Delay in days.", "values": "a number" },
+    { "name": "weeks", "text": "Delay in weeks.", "values": "a number" },
+    { "name": "months", "text": "Delay in months.", "values": "a number" },
+    { "name": "years", "text": "Delay in years.", "values": "a number" },
+    { "name": "add", "text": "Whether to add to an existing delay or replace it.", "values": "yes or no", "default": "yes" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "deplete_army_by_percentage",
+  "label": "Reduce army",
+  "summary": "Kills a share of the army's current soldiers.",
+  "details": "The value is the share that dies, as a fraction: 0.2 means a fifth. Vanilla uses numbers like 0.1, 0.4 and 0.9, and once a script value.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "depose",
+  "label": "Depose",
+  "summary": "Deposes the character.",
+  "details": "The game's documentation says nothing more about what being deposed does. Vanilla always writes depose = yes.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "depose_diarch",
+  "label": "Depose diarch",
+  "summary": "Removes the character's current diarch and replaces them with the next in the line of succession.",
+  "details": "Written as yes or no; vanilla always writes yes. The game's documentation does not say more about what a diarch is.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "designate_diarch",
+  "label": "Designate diarch",
+  "summary": "Names the target character as a future diarch of the character.",
+  "details": "It marks them as designated; the game's documentation does not say when they take over. Vanilla gives the target as a character, a title's holder or a saved scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "destroy_all_event_troops",
+  "label": "Destroy event troops",
+  "summary": "Destroys all event troop regiments that belong to the character.",
+  "details": "The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "destroy_artifact",
+  "label": "Destroy artifact",
+  "summary": "Destroys the given artifact, whoever owns it.",
+  "details": "destroy_owned_artifact is described as the safer version of this.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "destroy_character_memory",
+  "label": "Destroy memory",
+  "summary": "Destroys the given character memory.",
+  "details": "The memory is removed, so do not use that saved scope after this runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "destroy_faction",
+  "label": "Destroy faction",
+  "summary": "Destroys the faction.",
+  "details": "Vanilla always writes destroy_faction = yes.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "destroy_inspiration",
+  "label": "Destroy inspiration",
+  "summary": "Destroys the given inspiration.",
+  "details": "The inspiration is removed, so do not use that saved scope after this runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "destroy_maa_regiment",
+  "label": "Disband regiment",
+  "summary": "Destroys the men-at-arms regiment.",
+  "details": "It does not work on regiments that belong to mercenary companies or holy orders. Vanilla always writes destroy_maa_regiment = yes.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "destroy_owned_artifact",
+  "label": "Destroy owned artifact",
+  "summary": "Destroys an artifact that the character owns.",
+  "details": "The game's documentation calls it a safer version of destroy_artifact; it does not say what exactly makes it safer. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "destroy_title",
+  "label": "Destroy title",
+  "summary": "Destroys the given title.",
+  "details": "Vanilla gives the title as prev, a saved scope or a title link. The game's documentation says nothing about what happens to its holder or vassals.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ }
+]

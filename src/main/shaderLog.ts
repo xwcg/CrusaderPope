@@ -1,5 +1,5 @@
 /**
- * Shader error log (docs/shaders.md, "Error log"): `userData/logs/shaders.log` —
+ * Shader error log (docs/shaders.md, "Error log"): `userData/logs/shaders.log`:
  *   COMPILE   the worker pipeline (effect → GLSL) failed, with the compiler's message
  *   SUMMARY   after indexing: programs in the store and every failure known (also ones loaded from the cache)
  *   WEBGL     the renderer's WebGL compile/link failed: info log and the source lines it points at

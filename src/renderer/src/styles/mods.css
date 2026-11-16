@@ -289,6 +289,11 @@ button.danger:hover:not(:disabled) {
   user-select: text;
   word-break: break-word;
 }
+.mods-notice.warn {
+  border-color: #6e5a2c;
+  background: #26200f;
+  color: #ecd9a8;
+}
 .mods-notice.error {
   border-color: #7a3f36;
   background: #2a1a18;
@@ -647,4 +652,173 @@ button.danger:hover:not(:disabled) {
 .pr-added {
   color: var(--text-faint);
   font-size: 12px;
+}
+
+/* "Fix for <version>…" (MigrateDialog.tsx) */
+.migrate-modal {
+  max-width: 720px;
+  /* the plan can be long: the body scrolls, the title stays above it and the buttons below it */
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 40px);
+}
+.migrate-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.migrate-modal .actions {
+  flex: none;
+}
+.migrate-next {
+  margin-top: 8px;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+.migrate-step {
+  margin: 10px 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--accent-dim);
+  background: var(--bg-panel);
+}
+.migrate-step-title {
+  color: var(--accent);
+}
+.migrate-step ul,
+.fold ul {
+  margin: 6px 0 0;
+  padding-left: 20px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.migrate-found {
+  margin: 12px 0 6px;
+}
+/* what the patch mod has done already: a check, muted */
+.migrate-done > summary,
+.migrate-done li {
+  color: var(--text-dim);
+}
+.migrate-caveat {
+  margin: 8px 0;
+}
+.migrate-result {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--ok);
+  border-radius: var(--radius);
+}
+
+/* the three layers: summary and ask on top, closed category folds below (Fold.tsx), rule lists inside; no inner scrollers */
+.migrate-summary,
+.migrate-ask {
+  margin: 12px 0;
+  padding: 8px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+}
+.migrate-ask {
+  border-left: 3px solid var(--accent);
+}
+.migrate-summary ul {
+  margin: 4px 0 0;
+  padding-left: 20px;
+}
+.migrate-ask p {
+  margin: 4px 0;
+}
+.migrate-heading {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.migrate-opt {
+  display: block;
+  padding: 1px 0;
+}
+.migrate-folds {
+  margin-top: 12px;
+}
+.fold {
+  margin: 4px 0;
+}
+.fold > summary {
+  cursor: pointer;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.fold > summary::-webkit-details-marker {
+  display: none;
+}
+.fold > summary::before {
+  content: '▸';
+  color: var(--text-faint);
+  width: 10px;
+}
+.fold[open] > summary::before {
+  content: '▾';
+}
+.fold-title {
+  flex: 1;
+}
+.fold-title.warn {
+  color: #e0b070;
+}
+.fold-body {
+  padding: 4px 0 4px 16px;
+}
+.fold-rule > summary {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.migrate-stale {
+  opacity: 0.55;
+  pointer-events: none;
+}
+.migrate-refresh {
+  margin: 8px 0;
+}
+
+/* the stage and count above, the bar below (TaskProgress.tsx); no count yet: a stripe moves along the bar */
+.migrate-progress {
+  margin-top: 12px;
+}
+.migrate-progress .progress-row {
+  width: auto;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.migrate-progress .progress {
+  width: 100%;
+  height: 6px;
+}
+.migrate-progress .progress.indeterminate > div {
+  width: 30%;
+  transition: none;
+  animation: progress-slide 1.3s ease-in-out infinite;
+}
+@keyframes progress-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(340%);
+  }
+}
+
+/* "Merge into one mod…" (MergeDialog.tsx) */
+.merge-mods {
+  margin: 8px 0 10px;
+  padding-left: 24px;
+}
+.merge-mods li {
+  margin: 2px 0;
+}
+
+/* "Delete mod…" (ModDialogs.tsx): the box to tick before Delete works */
+.delete-sure {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
 }

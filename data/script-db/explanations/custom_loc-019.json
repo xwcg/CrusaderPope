@@ -1,0 +1,1002 @@
+[
+ {
+  "kind": "custom_loc",
+  "key": "TranslationBook",
+  "label": "Translated book name",
+  "summary": "The name of the classic work the character is translating, with a leading 'the' where the name needs one.",
+  "details": "Used on a character. Vanilla picks the entry by looking at the character's owned story of type book_translation_story and which book its translation_book variable names. It covers 23 books, from the Regula Pastoralis and the Almagest to the Rigveda and the Norse sagas. The input shows the first four texts, for example 'the Almagest' and 'Physica Elementa'.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_scholarship_lifestyle_custom_loc.txt:5"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "TranslationBookLong",
+  "label": "Translated book blurb",
+  "summary": "A one-line flavor sentence about the classic work the character is translating.",
+  "details": "Used on a character. One entry per book (23), chosen by the same owned book_translation_story check as TranslationBook. The entry keys start with learning_scholarship_special.2001, which suggests a scholarship event. Examples: 'Studying the heavens through Ptolemy's Almagest.' and 'Elements, Euclid's mathematical treatise!'.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_scholarship_lifestyle_custom_loc.txt:240"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "TricksterGodNameCel",
+  "label": "Trickster god name",
+  "summary": "The name of a faith's trickster god, with one entry per religion.",
+  "details": "Used on a faith. Vanilla picks the entry by the faith's religion tag. The entry keys (for example christianity_trickster_god_cel, germanic_trickster_god_name_cel, hellenism_trickster_god_name_cel) are named after religions; one is named akom_knowledge_god_name_cel instead. The input gives no texts for them, so what each prints is not shown here.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_pl_custom_loc_extra.txt:4871"],
+  "uncertain": true
+ },
+ {
+  "kind": "custom_loc",
+  "key": "TrinketLookAdjective",
+  "label": "Trinket look adjective",
+  "summary": "An adjective describing how a trinket looks: adorned, decorated, embellished or ornamented.",
+  "details": "Used on a character. Vanilla picks the entry from the character variable trinket_adjective_followup, which a vanilla comment says is set by calling set_up_trinket_adjective_effect just before the trinket is created. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_artifact_custom_loc.txt:3699"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "TrinketLookAdverbFollowup",
+  "label": "Trinket look adverb",
+  "summary": "An adverb that goes with a trinket's description, such as beautifully, carefully, elegantly or mysteriously.",
+  "details": "Used on a character. It has eight entries without any conditions, so one is picked at random; the input shows the first four texts. Going by the name, it follows the adjective from TrinketLookAdjective.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_artifact_custom_loc.txt:3725"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "TriumphReligiousLocation",
+  "label": "Triumph worship place",
+  "summary": "The name of the religious building for the character's faith: Hagia Sophia, the cathedral, Hagia Sophia Mosque or the main temple.",
+  "details": "Used on a character. Vanilla picks by the character's location and faith: Hagia Sophia for a Christian in Constantinople (province 496), the cathedral for a Christian elsewhere, Hagia Sophia Mosque for a Muslim in Constantinople, the main temple for any other faith. A Muslim outside Constantinople matches none of the four. Written for running text, so the cathedral and the main temple start with 'the' in lower case. The capitalized version is TriumphReligiousLocationCapitalized.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/07_ep3_custom_loc.txt:99"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "TriumphReligiousLocationCapitalized",
+  "label": "Triumph worship place, capitalized",
+  "summary": "The same religious building names as TriumphReligiousLocation, but with a capital letter for use at the start of a sentence.",
+  "details": "Used on a character. Same conditions as TriumphReligiousLocation. Gives 'The Cathedral' and 'The Main Temple' instead of 'the cathedral' and 'the main temple'; the two Hagia Sophia entries are the same. Unlike the lower-case version, it does not allow random choice.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/07_ep3_custom_loc.txt:148"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "TwinDaughtersSonsChildren",
+  "label": "Twins: daughters, sons or children",
+  "summary": "The plural word for a pair of twins: daughters, sons, or children.",
+  "details": "Used on a character who has a twin. 'Daughters' when the character and the twin are both female, 'sons' when both are male, 'children' when the twin is of the opposite sex.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_relations.txt:9330"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "TwinDaughtersSonsChildrenPossessive",
+  "label": "Twins' possessive",
+  "summary": "The possessive form of the word for a pair of twins: daughters', sons' or children's.",
+  "details": "Used on a character. Going by the key names, it is the possessive companion of TwinDaughtersSonsChildren, for phrases like 'the sons' inheritance'.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VenomousCreature",
+  "label": "Venomous creature",
+  "summary": "The name of a specific venomous animal, such as a deadly spider, red scorpion, deathstalker, viper or king cobra.",
+  "details": "Used on a character. It has 13 entries; the input shows the first four texts (one entry is named beaked_mammal). Vanilla picks the creature from the saved scope 'venomous_creature' (a flag) when the script sets one; otherwise it goes by the region of the character's location, with the viper as the fallback everywhere. The sting or bite, the movement and the animal's kind have their own keys (VenomousCreatureAttack, VenomousCreatureMovement, VenomousCreatureType).",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_regional_custom_localization.txt:1215"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VenomousCreatureAttack",
+  "label": "Creature attack",
+  "summary": "The word for how the venomous creature hurts someone: sting or bite.",
+  "details": "Used on a character. Chosen from the saved scope 'venomous_creature': sting for the scorpions and the beaked mammal, bite for the spider and the snakes. Singular form; the plural is VenomousCreatureAttackPlural.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_regional_custom_localization.txt:1504"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VenomousCreatureAttackPlural",
+  "label": "Creature attacks, plural",
+  "summary": "The plural word for how the venomous creature hurts someone: stings or bites.",
+  "details": "Used on a character. Going by the key names, it is the plural of VenomousCreatureAttack.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VenomousCreatureMovement",
+  "label": "Creature movement",
+  "summary": "The verb for how the venomous creature moves: scutter, slither or scamper.",
+  "details": "Used on a character. Chosen from the saved scope 'venomous_creature': scutter for the scorpions and the spider, scamper for the beaked mammal, slither for the snakes (also the fallback).",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_regional_custom_localization.txt:1569"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VenomousCreatureType",
+  "label": "Creature kind",
+  "summary": "The general kind of venomous animal: scorpion, spider, snake, or the vague '...thing'.",
+  "details": "Used on a character. Chosen from the saved scope 'venomous_creature': the '...thing' text is for the beaked_mammal creature, snake is the fallback. Plural form: VenomousCreatureTypePlural.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_regional_custom_localization.txt:1418"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VenomousCreatureTypePlural",
+  "label": "Creature kind, plural",
+  "summary": "The plural of the general kind of venomous animal: scorpions, spiders, snakes, or 'things like that'.",
+  "details": "Used on a character. Going by the key names, it is the plural of VenomousCreatureType.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VizierExtravagance_T1_Activities",
+  "label": "Vizier tier 1 pastimes",
+  "summary": "A sentence about how a vizier of the lowest extravagance tier spends money on public or social activities.",
+  "details": "Used on a character. It has ten entries (parades, festivals, charity auctions, feasts, board game tourneys, pigeon racing, orgies, weekly feasts, exhibitions, feasts for commoners), picked at random. Vanilla gives some entries extra weight when the character's diarch has certain traits (for example generous or compassionate for parades), and some entries need a condition on the diarch. The four texts shown start 'This character ...'. Going by the key names, T1 is the first of four tiers (T1 to T4), and the later tiers describe bigger spending.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_diarchy_custom_loc.txt:467"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VizierExtravagance_T1_Charity",
+  "label": "Vizier tier 1 charity",
+  "summary": "A sentence about the small-scale charity a vizier of the lowest extravagance tier pays for.",
+  "details": "Used on a character. Twelve entries, which by their keys cover orphans, building repairs, religious feasts, widows and widowers, beggars, kitchens and more. Some texts name the capital through the root character's capital location. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VizierExtravagance_T1_Property",
+  "label": "Vizier tier 1 property",
+  "summary": "A sentence about the modest property a vizier of the lowest extravagance tier owns.",
+  "details": "Used on a character. Ten entries, which by their keys include a townhouse, minor businesses, a small arena, a manse, a toll road and a hostel. Some texts name the capital. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VizierExtravagance_T1_Treasure",
+  "label": "Vizier tier 1 treasures",
+  "summary": "A sentence about the small luxuries a vizier of the lowest extravagance tier collects, such as handkerchiefs, cosmetics, jewellery, furniture or hats.",
+  "details": "Used on a character. Ten entries. The jewellery text calls the custom text HandHands on the diarch of the root character's diarchy (the vizier) to name the hand or hands wearing the gold and gems. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VizierExtravagance_T2_Activities",
+  "label": "Vizier tier 2 pastimes",
+  "summary": "A sentence about the activities a tier 2 vizier spends money on, such as pool feasts, horse racing, concerts, theatre, poetry or animal baiting.",
+  "details": "Used on a character. Ten entries; the input shows the first four texts. Going by the key names, the same four-tier idea as the T1 key, one step richer. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VizierExtravagance_T2_Charity",
+  "label": "Vizier tier 2 charity",
+  "summary": "A sentence about the charity a tier 2 vizier funds, which by its keys covers schools, hospitals, funerals for the poor, scholars, police or preachers.",
+  "details": "Used on a character. Eleven entries. Some texts name the capital. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VizierExtravagance_T2_Property",
+  "label": "Vizier tier 2 property",
+  "summary": "A sentence about the property of a tier 2 vizier, such as a monopoly, an exotic market, a mine, warehouses or a fort.",
+  "details": "Used on a character. Ten entries. The warehouses text names the vizier through the root character's diarch; some others name the capital. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VizierExtravagance_T2_Treasure",
+  "label": "Vizier tier 2 treasures",
+  "summary": "A sentence about the treasures of a tier 2 vizier, such as a cabinet of curiosities, gems, sculpture, ornate arms, bezoar cutlery or a world map.",
+  "details": "Used on a character. Ten entries; the input shows the first four texts. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VizierExtravagance_T3_Activities",
+  "label": "Vizier tier 3 pastimes",
+  "summary": "A sentence about the lavish activities of a tier 3 vizier, such as surprise gift feasts, aid to neighbors, scholar debates, land and livestock grants or coin showers.",
+  "details": "Used on a character. Ten entries. The four shown texts speak of gifts counted in thousands. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VizierExtravagance_T3_Charity",
+  "label": "Vizier tier 3 charity",
+  "summary": "A sentence about the large-scale charity of a tier 3 vizier, such as observatories, universities, libraries, bathhouses, watermills or hajj water tanks.",
+  "details": "Used on a character. Ten entries. Vanilla weights some by the diarch's traits and limits others: watermills need a county with water and the windmills innovation, the hajj water tanks a Muslim diarch who may go on pilgrimage. The bathhouse text names the capital. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_diarchy_custom_loc.txt:1873"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VizierExtravagance_T3_Property",
+  "label": "Vizier tier 3 property",
+  "summary": "A sentence about the grand property of a tier 3 vizier, such as a cushioned pool, a business empire, a huge palace, a bathhouse, a fleet or a den of vice.",
+  "details": "Used on a character. Ten entries; some need a condition (a fleet needs a coastal county, a den of vice a diarch with traits like gluttonous or drunkard). The huge palace text compares it with the palace of the root character's title, using that title as a name. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_diarchy_custom_loc.txt:1733"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VizierExtravagance_T3_Treasure",
+  "label": "Vizier tier 3 treasures",
+  "summary": "A sentence about the luxurious possessions of a tier 3 vizier, such as mirrors, parasols, a silk tent, fabrics, exotic pets or a gold mattress.",
+  "details": "Used on a character. Ten entries; the input shows the first four texts. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VizierExtravagance_T4_Activities",
+  "label": "Vizier tier 4 pastimes",
+  "summary": "A sentence about the over-the-top activities of a tier 4 vizier, such as rose-petal pool parties, huge give-aways, a menagerie, masquerades or wild gambling.",
+  "details": "Used on a character. Ten entries; the input shows the first four texts. Going by the key names, T4 is the last and richest tier. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VizierExtravagance_T4_Charity",
+  "label": "Vizier tier 4 charity",
+  "summary": "A sentence about the huge charity of a tier 4 vizier, such as waystations, bridges, a food dole, housing, gardens, aqueducts or loans.",
+  "details": "Used on a character. Ten entries. The dole and housing texts name the capital. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VizierExtravagance_T4_Property",
+  "label": "Vizier tier 4 property",
+  "summary": "A sentence about the vast property of a tier 4 vizier, such as a pool palace, a countryside retreat, a private army of thugs, herds, a spire, a bordello or a gaol.",
+  "details": "Used on a character. Ten entries; some of the texts are dark in tone (a private army of thugs, and a palace whose key says torture). Some name the capital. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "VizierExtravagance_T4_Treasure",
+  "label": "Vizier tier 4 treasures",
+  "summary": "A sentence about the extravagant treasures of a tier 4 vizier, such as thousands of cushions, decorative arms, perfumes, a lavish office or a huge sword.",
+  "details": "Used on a character. Ten entries. The martial gear text says the vizier has more decorative weapons and armour than the root character's title (used as a name) has actual units of either. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WakeDesc",
+  "label": "Wake description",
+  "summary": "A paragraph describing what happens at a funeral wake, depending on the funeral custom: libations, sky burial, bathing, mummification or an ordinary wake.",
+  "details": "Used on a character. Vanilla gives the libations text to faiths that qualify for West African pagan feudalisation, the sky burial text when the faith has a rite with the sky_burials_active parameter, the bathing text to Muslims whose rite has stoic_funeral, and the mummification text when the rite has mummification_funeral. The ordinary wake is the fallback. WakeName gives the matching title.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_activity_loc.txt:474"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WakeName",
+  "label": "Wake title",
+  "summary": "The title of a funeral wake, such as Offering of Libations, Honor the Dead, Bathing of the Body or Mummification.",
+  "details": "Used on a character. Pairs with WakeDesc and has the same five kinds, but vanilla picks the libations title by the rite parameter bewailment_funeral, where WakeDesc uses the West African feudalisation check. The ordinary wake is the fallback.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_activity_loc.txt:438"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WarCasusBelliShort",
+  "label": "War type, short",
+  "summary": "A short name for the kind of war, taken from the casus belli (war reason) it uses: claim war, annexation, holy war, de jure war and so on.",
+  "details": "Used on a war. 26 entries named war_memory_cb_..., among them independence, tyranny, subjugation, vassalization and a fallback for anything else. Vanilla picks the entry by which casus belli the war uses; several casus belli can share one entry. The input shows the first four texts. The conquest entry prints 'annexation'.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_war_custom_loc.txt:589"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WarDeclaredFlavor",
+  "label": "War declaration speech",
+  "summary": "The body of the war declaration letter: a short in-character speech chosen from the war's reason and the attacker's traits and relations.",
+  "details": "Used on a war. 29 entries, for example naughty, zealous, just, greedy, holy war, subjugation, independence, vengeful and a fallback. The naughty one, for instance, needs the attacker and defender to be lovers and one of them deviant. Texts address the defender and can call other custom text for greetings. Going by the names, it follows the opening (WarDeclaredOpening).",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_war_custom_loc.txt:35"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WarDeclaredOpening",
+  "label": "War declaration opening",
+  "summary": "The greeting line that opens a war declaration letter, addressed to the defender.",
+  "details": "Used on a war. Three entries: one for the Great War of Defiance casus belli (mpo_gok, which calls the defender a foaming dog), one used when the attacker's opinion of the defender is -10 or lower, and a neutral one as the fallback. Each ends with a blank line before the main text.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_war_custom_loc.txt:2"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WarGodNameCel",
+  "label": "War god name",
+  "summary": "The name of a faith's god of war, with one entry per religion.",
+  "details": "Used on a faith. About 51 entries named after religions (christianity, hellenism, germanic, islam and many others). The input gives no texts for them. The same pattern exists for other gods, such as water, wealth, witch and trickster gods.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WarhorseStoryName",
+  "label": "Warhorse name",
+  "summary": "The name of the character's famous warhorse, taken from a list of legendary horses such as Bucephalus, Sleipnir or Zuljanah.",
+  "details": "Used on a character. 33 entries, each picked by the story_cycle_horse_name variable; the list also contains plain names such as Prancer and Charger. WarhorseStoryNameAll has the same entries without a required scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_martial_lifestyle_custom_loc.txt:329"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WarhorseStoryNameAll",
+  "label": "Warhorse name, any scope",
+  "summary": "The same warhorse names as WarhorseStoryName, but it can be called from any kind of thing, not only a character.",
+  "details": "Vanilla declares it with type = all and checks the variable story_cycle_horse_name against each horse's flag.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_martial_lifestyle_custom_loc.txt:747"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WaterGodNameCel",
+  "label": "Water god name",
+  "summary": "The name of a faith's god of water, with one entry per religion.",
+  "details": "Used on a faith. About 44 entries named after religions. The input gives no texts for them. One entry (waaqism) uses a high god key instead of a water one.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_pl_custom_loc_extra.txt:5588"],
+  "uncertain": true
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WealthGodNameCel",
+  "label": "Wealth god name",
+  "summary": "The name of a faith's god of wealth, with one entry per religion.",
+  "details": "Used on a faith. About 49 entries named after religions. The input gives no texts for them. The Finno-Ugric entry uses a high god key instead of a wealth one.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_pl_custom_loc_extra.txt:2792"],
+  "uncertain": true
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WifeHusband",
+  "label": "Wife or husband",
+  "summary": "The word 'wife' for a female character or 'husband' for a male one.",
+  "details": "Used on a character. Vanilla picks the entry by is_female.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_generic_character_words.txt:18"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WifeHusbandOpp",
+  "label": "Opposite of wife or husband",
+  "summary": "The word for the spouse's role: 'husband' for a female character, 'wife' for a male one.",
+  "details": "Used on a character. It is the reverse of WifeHusband, chosen by is_female.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_relations.txt:9236"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WifeHusbandPossessive",
+  "label": "Wife's or husband's",
+  "summary": "The possessive form: wife's or husband's.",
+  "details": "Used on a character. Going by the key names, it is the possessive companion of WifeHusband.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WitchGodNameCel",
+  "label": "Witch god name",
+  "summary": "The name of a faith's witch god (a night god in some religions), with one entry per religion.",
+  "details": "Used on a faith. About 40 entries named after religions; a few are named night_god instead of witch god. The input gives no texts for them.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_pl_custom_loc_extra.txt:5981"],
+  "uncertain": true
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WomanManGirlBoy",
+  "label": "Woman, man, girl or boy",
+  "summary": "A word for the character by sex and adulthood: woman, man, girl or boy.",
+  "details": "Used on a character. An adult female is a woman, an adult male a man, anyone else is a girl or a boy by sex. The entries are the game's CHARACTER_WOMAN, CHARACTER_MAN, CHARACTER_GIRL and CHARACTER_BOY texts.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_generic_character_words.txt:133"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WomanManOpposite",
+  "label": "Woman, man or person, opposite",
+  "summary": "A word for the opposite sex of the character: 'woman' for a male character, 'man' for a female one, otherwise 'person'.",
+  "details": "Used on a character. 'Person' is the fallback when the character is neither male nor female. The keys are gender_woman, gender_man and gender_person.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_generic_character_words.txt:920"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WomanManPerson_GenderPreference",
+  "label": "Woman, man, person by doctrine",
+  "summary": "A word chosen by the faith's gender doctrine: woman for a female-dominated faith, man for a male-dominated one, person where the sexes are equal.",
+  "details": "Used on a character. Vanilla checks the doctrines doctrine_gender_female_dominated, doctrine_gender_male_dominated and doctrine_gender_equal. Despite the 'GenderPreference' in the name, it does not look at who the character is attracted to. Same three entries as WomanManOpposite.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_generic_character_words.txt:223"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WomanManPossessive",
+  "label": "Woman's or man's",
+  "summary": "The possessive word by sex: woman's or man's.",
+  "details": "Used on a character. Going by the key names, it is the possessive companion of WomanManGirlBoy's woman and man.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WomanManPossessiveOpposite",
+  "label": "Opposite woman's, man's or person's",
+  "summary": "The possessive word for the opposite sex: woman's for a male character, man's for a female one, otherwise person's.",
+  "details": "Used on a character. Possessive companion of WomanManOpposite; 'person's' is the fallback.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_generic_character_words.txt:942"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WomenMen",
+  "label": "Women or men",
+  "summary": "The plural word by sex: women for a female character, men for a male one.",
+  "details": "Used on a character. The men entry key is loc_men.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_generic_character_words.txt:187"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WomenMenOpp",
+  "label": "Opposite women or men",
+  "summary": "The plural word for the opposite sex: men for a female character, women for a male one.",
+  "details": "Used on a character. Reverse of WomenMen.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_generic_character_words.txt:205"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WomenMenPeople",
+  "label": "Women, men or people",
+  "summary": "The plural word for the character and the saved scope 'second' together: women if both are female, men if both are male, otherwise people.",
+  "details": "Used on a character, with a saved scope called 'second' that the calling script must set.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_generic_character_words.txt:163"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WomenMenPeople_GenderPreference",
+  "label": "Women, men, people by doctrine",
+  "summary": "The plural word chosen by the faith's gender doctrine: women for a female-dominated faith, men for a male-dominated one, people where the sexes are equal.",
+  "details": "Used on a character. Vanilla checks the doctrines doctrine_gender_female_dominated, doctrine_gender_male_dominated and doctrine_gender_equal. It does not look at who the character is attracted to. Same entries as WomenMenPeople.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_generic_character_words.txt:248"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WorldDeadline",
+  "label": "World end deadline",
+  "summary": "A clause saying how long the current age of the world lasts before it ends, such as 'this age will end after one thousand years'.",
+  "details": "Used on a character. Chosen by the character's religion: 432,000 years for Hinduism, 1,000 for Buddhism, 21,000 for Jainism, a last period of 3,000 years for Zoroastrianism, and 6,000 years for everyone else.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_scholarship_lifestyle_custom_loc.txt:475"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "WritingInstrument",
+  "label": "Writing instrument",
+  "summary": "The word for what the character writes with: quill or pen.",
+  "details": "Used on a character. Quill when the character's capital (or, without one, the liege's or court owner's capital, or the character's location) lies in Europe; pen everywhere else. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_regional_custom_localization.txt:5112"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "YearlyEvent0001GetDescriptor",
+  "label": "Yearly event descriptor",
+  "summary": "An optional descriptor word placed before a character's name in the first yearly event: a positive descriptor, or nothing.",
+  "details": "Used on a character. The positive entry is used when the character's opinion of the saved scope 'second' is above 20; it calls the custom text DescriptorPositive for 'second' and ends with a space. At 20 or lower the other entry gives an empty text.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_yearly_events_custom_loc.txt:2"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "YearlyEvent0001Skill",
+  "label": "Skill in yearly event",
+  "summary": "A phrase that describes a skill area in the first yearly event, such as 'manners and etiquette' or 'tactics and strategy'.",
+  "details": "Used on a character. One entry for each of the five skills: diplomacy, martial, stewardship, intrigue and learning. The short version is YearlyEvent0001SkillShort.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "YearlyEvent0001SkillShort",
+  "label": "Skill in yearly event, short",
+  "summary": "A single word for a skill area in the first yearly event: etiquette, military, finance, intrigue and so on.",
+  "details": "Used on a character. One entry per skill (diplomacy, martial, stewardship, intrigue, learning); the input shows the first four texts.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "YourCharacterIntroduction",
+  "label": "Introduce a character to the player",
+  "summary": "Introduces a character from the point of view of the saved scope 'second', either as the plain phrase or with a comma added after it.",
+  "details": "Used on a character. Both entries call YourCharacterIntroductionNoComma with the saved scope 'second'. Vanilla uses the plain one when the character has a relation to 'second' or holds a primary title, and the one with the comma otherwise.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_relations.txt:8865"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "YourCharacterIntroductionNoComma",
+  "label": "Introduce a character, no comma",
+  "summary": "Names a character from the point of view of the saved scope 'second': 'your <council title> <name>', 'your <relation> <titled name>', or 'the <relation> of ...' for a spouse, father, mother, councillor or knight.",
+  "details": "Used on a character. There are eight entries, with a fallback last. The council title form is for a playable court chaplain councillor of 'second' who is not their spouse or close family. The 'the ... of' forms are for characters without a primary title. They call the same custom text again for the relative, so the phrase can nest, as in 'X, the father of your Y'. The relation word comes from the custom text RelationToMe.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_relations.txt:8612"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "ZealousDoW",
+  "label": "Zealous war cry",
+  "summary": "The closing threat of a zealous war declaration, matching the attacker's religion: merciful god, reincarnation, Christian, Islamic, Jewish or dharmic judgment, Norse ravens, pagan gods or Zoroastrian.",
+  "details": "Used on a character. Ten entries including a fallback. Vanilla picks by the root character's religion or rite (for example the Christian, Islamic, Jewish, Zoroastrian or dharmic religions, or a polytheist doctrine). Several texts name the attacker's high god through the faith. It is called from the 'zealous' entry of WarDeclaredFlavor.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_war_custom_loc.txt:470"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "apocalypse_name",
+  "label": "Apocalypse name",
+  "summary": "The name of the end of the world for the character's religion, such as Ragnarok, the Second Coming, Revelation, the Day of Judgement or Frashokereti, with generic names as fallbacks.",
+  "details": "Used on a character. Twelve entries. Germanic faiths get Ragnarok, other Abrahamic ones the Second Coming, Christians Revelation, Jews the coming of the Messiah, Buddhists the coming of the seven suns, Zoroastrians Frashokereti. The generic names (end times, end of days, apocalypse, doomsday) have no condition, and third_impact is an Easter egg for one specific character. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/06_ce1_epidemics_custom_loc.txt:278"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "artifact_rarity_ledger",
+  "label": "Artifact rarity numeral",
+  "summary": "The artifact's rarity written as a Roman numeral: I, II, III or IV.",
+  "details": "Used on an artifact. Common is I, masterwork II, famed III and illustrious IV.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/ledger_custom_loc.txt:1"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "artifact_relic_desc",
+  "label": "Relic description part",
+  "summary": "A name drawn from the character's faith for a relic's description: the afterlife, the high god, the alternate high god name, the health god, a symbol or a text.",
+  "details": "Used on a character. Six entries without conditions, so one is picked at random. The first four look up the character's faith (for example its positive afterlife or the high god's name).",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_artifact_custom_loc.txt:3860"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "bar_servant",
+  "label": "Bar servant",
+  "summary": "The word for the person serving drinks: barkeep for a male character, barmaid for a female one.",
+  "details": "Used on a character.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_servants.txt:255"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "bodypart_localising",
+  "label": "Body part phrase",
+  "summary": "A phrase for where something is felt on the body: in your chest, in your loins or on your skin.",
+  "details": "Used on a character. Random choice is allowed. The phrases say 'your', so they address the reader as 'you'.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "child_favorite_toy",
+  "label": "Child's favorite toy",
+  "summary": "The name of the child's favorite toy: wooden warrior, toy boat, wooden sword, ragdoll, spinning top, rolling hoop, scopperel, wooden horse, doll or stick horse.",
+  "details": "Used on a character. Vanilla picks the entry from the variable child_toy_variable on the character, with one flag per toy. The 'a ...' version is child_favorite_toy_indefinite and the plural is child_favorite_toy_plural.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_childhood_custom_localization.txt:159"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "child_favorite_toy_indefinite",
+  "label": "Child's favorite toy, with 'a'",
+  "summary": "The child's favorite toy with its indefinite article, such as 'a wooden sword' or 'a ragdoll'.",
+  "details": "Used on a character. Same ten toys as child_favorite_toy, picked by the same variable child_toy_variable. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_childhood_custom_localization.txt:61"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "child_favorite_toy_plural",
+  "label": "Child's favorite toy, plural",
+  "summary": "The plural name of the child's favorite toy, such as 'toy boats' or 'wooden swords'.",
+  "details": "Used on a character. Vanilla picks the entry from the variable child_toy_variable. The wooden warrior entry prints 'wooden warrior' without an s in the input's text, which looks like a mistake in the game's text.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_childhood_custom_localization.txt:206"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "child_object_of_interest",
+  "label": "Child's object of interest",
+  "summary": "The thing a child is interested in: the child's favorite toy if it has one, otherwise a random thing.",
+  "details": "Used on a character. The first entry calls child_favorite_toy when the character has the variable child_toy_variable; otherwise the second calls child_object_of_interest_random.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_childhood_custom_localization.txt:108"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "child_object_of_interest_indefinite",
+  "label": "Child's object of interest, with 'a'",
+  "summary": "The thing a child is interested in, with its article: the favorite toy if the child has one, otherwise a random thing, such as 'a ragdoll'.",
+  "details": "Used on a character. Calls child_favorite_toy_indefinite when the character has the variable child_toy_variable, otherwise child_object_of_interest_indefinite_random.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_childhood_custom_localization.txt:1"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "child_object_of_interest_indefinite_random",
+  "label": "Random interest, with 'a'",
+  "summary": "A randomly chosen thing of interest for a child, with its article: a spinning top, a ragdoll, a wooden warrior, a stick horse, a pet rabbit, a sowing kit and more.",
+  "details": "Used on a character. Ten entries. It has a pet rabbit and a sowing kit, which the version without 'a' (child_object_of_interest_random) does not list. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "child_object_of_interest_random",
+  "label": "Random interest",
+  "summary": "A randomly chosen thing of interest for a child, without an article: spinning top, ragdoll, wooden warrior, stick horse, rolling hoop, scopperel, toy boat or wooden sword.",
+  "details": "Used on a character. Eight entries. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_childhood_custom_localization.txt:121"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "christian_curse",
+  "label": "Christian oath",
+  "summary": "A Christian-style curse phrase such as 'by God's bones' or 'by God's nails', using the character's high god name.",
+  "details": "Used on a character. 16 entries without conditions, so one is picked at random; the input shows four. Three of the four shown use the possessive of the character's faith high god name. The second nails entry uses the text key chistianity_good_god_christ, which looks misspelled (missing an 'r').",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_curses_custom_loc.txt:1"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "councillor_flavor_prop",
+  "label": "Councillor's prop",
+  "summary": "A small object that matches a councillor's post: scrolls for the chancellor, a sword for the marshal, a purse for the steward, a robe for anyone else.",
+  "details": "Used on a character. Chosen by the character's council position; the robe is the fallback.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_councillor_custom_loc.txt:111"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "diplomacy_skill_level",
+  "label": "Diplomacy skill level word",
+  "summary": "A word for how good the character's diplomacy skill is: terrible, poor, average, good or excellent.",
+  "details": "Used on a character. Despite generic-looking entry keys (skill_level_...), vanilla compares the character's diplomacy skill against the game's terrible, average, good and excellent skill-level thresholds.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_skills_custom_loc.txt:76"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "diplomacy_skill_level_genitive",
+  "label": "Diplomacy skill level, genitive",
+  "summary": "The genitive (of-form) of the diplomacy skill level word, for languages that need one.",
+  "details": "Used on a character. Five entries, from terrible to excellent, chosen by the character's diplomacy skill with the same thresholds as diplomacy_skill_level. The texts are empty in the input, and vanilla sets log_loc_errors = no for it. It sits in a file of Polish texts, so it may be meant for translations only.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_pl_custom_loc.txt:165"],
+  "uncertain": true
+ },
+ {
+  "kind": "custom_loc",
+  "key": "disease_desc_full",
+  "label": "Illness description, full",
+  "summary": "A full sentence describing the symptoms of the character's illness: plague, measles, dysentery, ergotism, typhus, consumption, smallpox, cancer, gout, pneumonia, the great pox and others.",
+  "details": "Used on a character. 17 entries, each tied to a trait (the last ones for leper, incapable, infirm and generally ill, which is the fallback). The texts use the character's name and pronouns. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/06_ce1_epidemics_custom_loc.txt:7"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "disease_desc_short",
+  "label": "Illness description, short",
+  "summary": "A short phrase for the character's illness, such as 'beset by black buboes' or 'besieged by red spots'.",
+  "details": "Used on a character. 17 entries; the key for the great pox appears twice in the list. Random choice is allowed. The epidemic version is epidemic_symptom_short.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "dummy_peasant_profession",
+  "label": "Peasant profession",
+  "summary": "A trade for a made-up peasant, such as miller, reeve, cobbler or blacksmith, with 'wife' and 'husband' versions of many.",
+  "details": "Used on a character. 58 entries, e.g. 'miller', 'miller's wife', 'miller's husband'. Vanilla picks between the trade and its wife or husband form by the character's sex and the gender doctrine of the saved scope 'second' (male-dominated or equal, female-dominated or equal). Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_peasants.txt:1"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "education_conversation_subject",
+  "label": "Lesson topic",
+  "summary": "A topic a teacher and pupil talk about, depending on the character's education focus (martial, diplomacy, learning, stewardship, intrigue).",
+  "details": "Used on a character. 28 entries (martial, diplomacy and intrigue five each, stewardship six, learning seven), for example 'new strategies' and 'ancient military campaigns'. Each entry needs the matching education focus. Random choice is allowed. education_scroll_subject uses a subset of these.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_conversation_subjects.txt:1"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "education_focus",
+  "label": "Education focus",
+  "summary": "The name of the character's education focus: scholarship, stewardship, warfare, intrigue or diplomacy.",
+  "details": "Used on a character. Vanilla picks it by the character's education trait. Note that the learning skill is called scholarship here and the martial one warfare.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_personal_details_custom_loc.txt:3"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "education_focus_child",
+  "label": "Child's education focus",
+  "summary": "The name of the child's education focus: scholarship, stewardship, warfare, intrigue or diplomacy.",
+  "details": "Used on a character. It lists the same entries as education_focus; going by the name, it is used for a child.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "education_scroll_subject",
+  "label": "Scroll subject",
+  "summary": "A topic that a scroll is about, picked from the lesson topics: for example new strategies or etiquette in foreign courts.",
+  "details": "Used on a character. Twelve entries, a subset of education_conversation_subject, each needing the matching education focus. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_conversation_subjects.txt:119"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "epidemic_symptom_short",
+  "label": "Epidemic symptom",
+  "summary": "A short phrase for the main symptom of an epidemic, such as 'beset by black buboes' for plague.",
+  "details": "Used on an epidemic. Seven entries, one for each of plague, measles, dysentery, ergotism, typhus, consumption and smallpox. They reuse the texts of disease_desc_short. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "exotic_fowl_type",
+  "label": "Exotic fowl",
+  "summary": "The bird served at a feast: peacock, or a 'colorful bird' for a younger character.",
+  "details": "Used on a character. Vanilla gives the peacock when the character's age is over 14 and the colorful bird when it is under 15.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_feast_custom_loc.txt:1"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "exotic_fowl_type_genitive_plural",
+  "label": "Exotic fowl, genitive plural",
+  "summary": "The genitive plural of the feast bird (peacocks, colorful birds), for languages that need one.",
+  "details": "Used on a character. The texts are empty in the input, so nothing more is known about what it prints.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "custom_loc",
+  "key": "forced_into_faction_loc",
+  "label": "Faction member tooltip",
+  "summary": "A tooltip text for a faction member in the faction window: a warning that they were forced to join, or their commitment score.",
+  "details": "Used on a character. The first entry applies when the character was forced into the faction and is a red warning with an icon. The second (the fallback) shows the faction commitment score, notes that the member leaves if it falls below the game's leave threshold, and lists the breakdown. Both end with blank lines to separate from the next text.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_faction_custom_loc.txt:1"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "friendship_metaphor",
+  "label": "Friendship metaphor",
+  "summary": "A saying that compares friendship to something, depending on the character's education focus: a brother in arms, a secret exchange of messages, a garden, a negotiation, or a learning image.",
+  "details": "Used on a character. One entry for each of martial, intrigue, stewardship, diplomacy and learning, chosen by the character's education trait of that skill. Random choice is allowed. The version with advice on keeping the friendship is friendship_metaphor_with_tending.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_friendship_custom_localization.txt:1"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "friendship_metaphor_with_tending",
+  "label": "Friendship metaphor with advice",
+  "summary": "The friendship saying with a second half on how to keep the friendship going, for example 'friendship is a garden; it must be watered and always tended'.",
+  "details": "Used on a character. Same five skills as friendship_metaphor. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "galguy",
+  "label": "Gal or guy",
+  "summary": "The casual word 'gal' for a female character or 'guy' for anyone else.",
+  "details": "Used on a character. Vanilla keeps it in a file named 00_test.txt.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_test.txt:38"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_carvable_surface",
+  "label": "Carvable surface",
+  "summary": "The word for what something can be carved into: tree or rock.",
+  "details": "Used on a province. 'Tree' when the province is likely to contain trees, otherwise 'rock'.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_regional_custom_localization.txt:4378"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_council_of_toledo_attendee_description",
+  "label": "Council of Toledo attendee",
+  "summary": "How an attendee of the Council of Toledo is named: a landed one by title and primary title, an unlanded one as archbishop of the liege's primary title.",
+  "details": "Used on a character. 'Landed' means a playable character here. The landed text puts the character's title (without tooltip) before 'of' and their primary title's name. The unlanded text uses the character's liege's primary title.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/03_fp2_custom_loc.txt:55"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_council_of_toledo_count_suffix",
+  "label": "Ordinal suffix",
+  "summary": "The ending of a counted number in English: th, st, nd or rd.",
+  "details": "Used on a character. Ten entries named num_suffix_0 to num_suffix_9; vanilla picks one by comparing the Council of Toledo script values (a divided value against its floor, which reads as the last digit). The input shows 0 to 3 (th, st, nd, rd); numbers like 11 to 13 need other handling that the input does not show.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/03_fp2_custom_loc.txt:1"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_hold_court_8001_flaw",
+  "label": "Mayor's flaw",
+  "summary": "A phrase for how a mayor fails in the hold court event 8001: lazy, greedy, arbitrary, deceitful, incompetent, young, infirm, incapable, old or a fallback.",
+  "details": "Used on a character. Ten entries, picked by trait (lazy, greedy, arbitrary, deceitful, infirm, incapable), by stewardship of 6 or less (incompetent), by age under 25 (young) or over 60 (old). The greedy text refers to the saved scope 'mayor'. Random choice is allowed.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_hold_court_custom_joe.txt:1"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_hold_court_8010_stake",
+  "label": "What is at stake",
+  "summary": "A phrase for what is at stake in the hold court event 8010: the innocents of the city, the faith's followers or the family's hearths.",
+  "details": "Used on a character. Chosen by the character's government: republic, theocracy, or any other (family). The theocratic text uses the possessive of the character's high god name, and the family text the name of the character's house.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/customizable_localization/00_hold_court_custom_joe.txt:56"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_hold_court_8020_holiness_1",
+  "label": "Holy place, first part",
+  "summary": "The first sentence of the holiness plea in the hold court event 8020: pilgrims flock to a cathedral, a holy site is a center of pilgrimage, or the faithful cry for guidance.",
+  "details": "Used on a character. Three entries: cathedral, holy site and fallback. They read the saved variable holy_site_var for the title. The fallback names the devil of the county's faith.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_hold_court_8020_holiness_2",
+  "label": "Holy place, second part",
+  "summary": "The second part of the holiness plea in the hold court event 8020: such an important house of worship, such a holy place, or more of the top liege's realm.",
+  "details": "Used on a character. Three entries: cathedral, holy site and fallback. The fallback names the de facto top liege of the holy site title.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_hold_court_8020_holiness_3",
+  "label": "Holy place, closing line",
+  "summary": "The closing line of the holiness plea in the hold court event 8020: the temple belongs to the high god, the holy site should be in the priests' hands, or the priests should not be refused.",
+  "details": "Used on a character. Three entries: cathedral, holy site and fallback, using the character's faith for god and priest names.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

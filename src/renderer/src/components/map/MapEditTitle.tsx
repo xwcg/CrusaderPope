@@ -1,6 +1,6 @@
 /**
  * The map panel's title editor (docs/map.md, "Editing from the map"): a title's holder and liege at the map's date
- * (history/titles) and its colour (its definition in common/landed_titles) — written by MapEdit.tsx's runEdit.
+ * (history/titles) and its colour (its definition in common/landed_titles), written by MapEdit.tsx's runEdit.
  * Characters are searched in main (api.mapCharacters): house, life, culture and whether they live at the date.
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -8,8 +8,13 @@ import type { MapCharacter, MapEditRequest, MapInfo } from '../../../../shared/a
 import { api } from '../../api';
 import { runEdit, usePlan, whenOf, WhenRow, type When } from './MapEdit';
 import { MapEditChooser, type Choice } from './MapEditChooser';
-import { TIER_NAMES, hashColor } from './model';
+import { TIER_NAMES, ancestorAt, hashColor } from './model';
+import { newCharacterFor } from '../../characterPick';
 
+/** the holder chooser's row for a new character */
+const NEW = '\u0000new';
+
+import { tr } from '../../../../shared/i18n';
 /** tiers from low to high */
 const TIER_RANK = 'bcdkeh';
 
@@ -29,7 +34,7 @@ function characterChoice(c: MapCharacter, holds: Map<string, string>): Choice
     return {
         key: c.id,
         name: c.house ? `${c.name} ${c.house}` : c.name,
-        hint: c.alive ? (c.age !== undefined ? `age ${c.age}` : 'alive') : 'not alive then',
+        hint: c.alive ? (c.age !== undefined ? tr('age {age}', { age: c.age }) : 'alive') : tr('not alive then'),
         sub: [life, c.culture?.name, title && `holds ${title}`, `#${c.id}`].filter(Boolean).join(' · '),
         dim: !c.alive
     };
@@ -54,12 +59,39 @@ export function MapTitleEdit(props: { info: MapInfo; t: number; onDone: () => vo
     {
         setColor(hexOf(title.color));
     }, [title.color]);
-    // (the holder chooser opens: main readies its character lists for the date meanwhile)
+    // (the holder chooser opens: main readies its character lists for the date meanwhile), and its first list: the
+    // holder, the de jure liege's and the vassal titles' holders and their families (main: mapHolderSuggestions)
+    const [suggested, setSuggested] = useState<MapCharacter[]>([]);
     useEffect(() =>
     {
-        if (sub === 'holder')
-            void api.mapCharacters('', info.date).catch(() => undefined);
-    }, [sub, info.date]);
+        if (sub !== 'holder')
+            return;
+
+        void api.mapCharacters('', info.date).catch(() => undefined);
+        const seeds: [string, string][] = [];
+
+        if (title.holder)
+            seeds.push([title.holder.id, tr('holds it now')]);
+
+        const liege = title.parent >= 0 ? info.titles[title.parent] : undefined;
+
+        if (liege?.holder)
+            seeds.push([liege.holder.id, tr('holder of {name}', { name: liege.name })]);
+
+        for (const x of info.titles)
+            if (x.parent === t && x.holder)
+                seeds.push([x.holder.id, tr('holder of {name}', { name: x.name })]);
+
+        let live = true;
+        void api
+            .mapHolderSuggestions(seeds, info.date, true)
+            .then((r) => live && setSuggested(r))
+            .catch(() => undefined);
+        return () =>
+        {
+            live = false;
+        };
+    }, [sub, info.date, info.titles, t, title]);
 
     // who holds what at the date: a character's highest title
     const holds = useMemo(() =>
@@ -81,7 +113,7 @@ export function MapTitleEdit(props: { info: MapInfo; t: number; onDone: () => vo
         return new Map([...m].map(([id, x]) => [id, x.name]));
     }, [info.titles]);
 
-    // characters by name, id, house or dynasty — those alive at the date first (main ranks them)
+    // characters by name, id, house or dynasty, those alive at the date first (main ranks them)
     const searchCharacters = useCallback(async (q: string): Promise<Choice[]> => (await api.mapCharacters(q, info.date)).map((c) => characterChoice(c, holds)), [info.date, holds]);
     const lieges = useMemo(() =>
     {
@@ -92,7 +124,7 @@ export function MapTitleEdit(props: { info: MapInfo; t: number; onDone: () => vo
                 key: x.key,
                 name: x.name,
                 color: x.color ?? hashColor(x.key),
-                hint: `${TIER_NAMES[x.tier]?.[0] ?? x.tier} · ${x.holder ? x.holder.name : 'no holder'}`,
+                hint: `${TIER_NAMES[x.tier]?.[0] ?? x.tier} · ${x.holder ? x.holder.name : tr('no holder')}`,
                 dim: !x.holder
             }))
             .sort((a, b) => Number(a.dim) - Number(b.dim) || a.name.localeCompare(b.name));
@@ -117,40 +149,62 @@ export function MapTitleEdit(props: { info: MapInfo; t: number; onDone: () => vo
         setError(null);
     };
     const plan = sub === 'liege' ? liegePlan : holderPlan;
+    // a new character as the holder (characterPick.ts): the culture and faith of a province of the title where the
+    // preset leaves them, the holder's family for a "relative" dynasty; then set as the holder
+    const newHolder = async (): Promise<void> =>
+    {
+        let p = 1;
+
+        while (p < info.count && ancestorAt(info, p, title.tier as 'b' | 'c' | 'd' | 'k' | 'e' | 'h') !== t)
+            p++;
+
+        const layer = (id: string): string | undefined =>
+        {
+            const l = info.layers.find((x) => x.id === id);
+            const i = p < info.count ? (l?.values[p] ?? -1) : -1;
+            return l?.things && i >= 0 ? l.things[i].key : undefined;
+        };
+        const id = await newCharacterFor({ title: title.name, date: info.date, culture: layer('culture'), faith: layer('faith'), houseOf: title.holder?.id }, { x: Math.max(16, window.innerWidth / 2 - 160), y: 140 });
+
+        if (id)
+            await edit({ kind: 'holder', title: title.key, value: id, date: info.date, when: at }, tr('Holder of {name}: {id}{from}', { name: title.name, id, from }));
+    };
     const at = whenOf(plan, when, false);
-    const from = at === 'date' ? ` from ${info.date}` : '';
+    const from = at === 'date' ? tr(' from {date}', { date: info.date }) : '';
     return (
         <div className="map-edit">
             <div className="map-edit-head">
-                <b>{title.name}</b> <span className="map-dim">at {info.date}</span>
+                <b>{title.name}</b> <span className="map-dim">{tr('at {date}', { date: info.date })}</span>
             </div>
             <div className="map-edit-field">
-                <span className="map-edit-label">Holder</span>
-                <span className="map-edit-value">{title.holder ? `${title.holder.name}${title.holder.house ? ' ' + title.holder.house : ''}` : <span className="map-dim">none</span>}</span>
+                <span className="map-edit-label">{tr('Holder')}</span>
+                <span className="map-edit-value">{title.holder ? `${title.holder.name}${title.holder.house ? ' ' + title.holder.house : ''}` : <span className="map-dim">{tr('none')}</span>}</span>
                 <button className={'small' + (sub === 'holder' ? ' on' : '')} disabled={busy} onClick={() => open('holder')}>
-                    Change…
-                </button>
+                    {tr('Change…')}</button>
             </div>
             {sub === 'holder' && (
                 <>
                     <WhenRow date={info.date} plan={holderPlan} when={when} onWhen={setWhen} undated={false} />
                     <MapEditChooser
                         search={searchCharacters}
-                        fixed={[{ key: '0', name: 'No holder', hint: 'holder = 0' }]}
+                        choices={suggested.map((c) => ({ ...characterChoice(c, holds), hint: c.note ? `${c.note} · ${characterChoice(c, holds).hint}` : characterChoice(c, holds).hint }))}
+                        fixed={[{ key: '0', name: tr('No holder'), hint: 'holder = 0' }, { key: NEW, name: tr('＋ New character…'), hint: tr('from a preset') }]}
                         current={title.holder?.id}
-                        placeholder="Find a character (name, house or id)…"
+                        placeholder={tr('Find a character (name, house or id)…')}
                         busy={busy}
-                        onPick={(c) => void edit({ kind: 'holder', title: title.key, value: c.key, date: info.date, when: at }, `Holder of ${title.name}: ${c.key === '0' ? 'none' : c.name}${from}`)}
+                        onPick={(c) =>
+                            c.key === NEW ?
+                                void newHolder() :
+                                void edit({ kind: 'holder', title: title.key, value: c.key, date: info.date, when: at }, tr('Holder of {name}: {holder}{from}', { name: title.name, holder: c.key === '0' ? 'none' : c.name, from }))}
                         onCancel={() => setSub(null)}
                     />
                 </>
             )}
             <div className="map-edit-field">
-                <span className="map-edit-label">Liege</span>
-                <span className="map-edit-value">{liegePlan === undefined ? '…' : liege ? liege.name : liegeKey && liegeKey !== '0' ? liegeKey : <span className="map-dim">none</span>}</span>
+                <span className="map-edit-label">{tr('Liege')}</span>
+                <span className="map-edit-value">{liegePlan === undefined ? '…' : liege ? liege.name : liegeKey && liegeKey !== '0' ? liegeKey : <span className="map-dim">{tr('none')}</span>}</span>
                 <button className={'small' + (sub === 'liege' ? ' on' : '')} disabled={busy} onClick={() => open('liege')}>
-                    Change…
-                </button>
+                    {tr('Change…')}</button>
             </div>
             {sub === 'liege' && (
                 <>
@@ -159,27 +213,26 @@ export function MapTitleEdit(props: { info: MapInfo; t: number; onDone: () => vo
                         choices={lieges}
                         fixed={[{ key: '0', name: 'None (independent)', hint: 'liege = 0' }]}
                         current={liegeKey ?? '0'}
-                        placeholder="Find a title…"
+                        placeholder={tr('Find a title…')}
                         busy={busy}
-                        onPick={(c) => void edit({ kind: 'liege', title: title.key, value: c.key, date: info.date, when: at }, `Liege of ${title.name}: ${c.key === '0' ? 'none' : c.name}${from}`)}
+                        onPick={(c) => void edit({ kind: 'liege', title: title.key, value: c.key, date: info.date, when: at }, tr('Liege of {name}: {liege}{from}', { name: title.name, liege: c.key === '0' ? 'none' : c.name, from }))}
                         onCancel={() => setSub(null)}
                     />
                 </>
             )}
             <div className="map-edit-field">
-                <span className="map-edit-label">Colour</span>
+                <span className="map-edit-label">{tr('Colour')}</span>
                 <input type="color" className="map-edit-color" value={color} disabled={busy} onChange={(e) => setColor(e.target.value)} title="The title's colour (common/landed_titles: color = { r g b })" />
                 <span className="map-edit-value map-dim">{color}</span>
                 <button
                     className="small"
                     disabled={busy || color === hexOf(title.color)}
-                    onClick={() => void edit({ kind: 'color', title: title.key, value: color }, `Colour of ${title.name}: ${color}`)}
-                    title="Overrides the title's definition in the mod (the whole top-level title holding it) and sets its color"
+                    onClick={() => void edit({ kind: 'color', title: title.key, value: color }, tr('Colour of {name}: {color}', { name: title.name, color }))}
+                    title={tr('Overrides the title\'s definition in the mod (the whole top-level title holding it) and sets its color')}
                 >
-                    Apply
-                </button>
+                    {tr('Apply')}</button>
             </div>
-            {busy && <div className="map-edit-busy">Writing into the mod…</div>}
+            {busy && <div className="map-edit-busy">{tr('Writing into the mod…')}</div>}
             {error && <div className="map-edit-error">{error}</div>}
         </div>
     );

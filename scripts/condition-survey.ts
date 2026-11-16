@@ -1,10 +1,12 @@
 // Condition blocks per type (StoryBuilder.conditionBlocks: the .info's documented triggers and the top-level trigger
-// blocks the definitions write) with the root scope found — what the cards offer to make when a definition lacks one.
+// blocks the definitions write) with the root scope found: what the cards offer to make when a definition lacks one.
 // Usage: node --experimental-strip-types --no-warnings --max-old-space-size=6000 scripts/condition-survey.ts [type …]
 // GAME=<install dir> (default: the development install).
-import { GameIndex, resolveGameDir } from '../src/main/indexer/gameIndex.ts';
+// The index: scripts/fast-index.ts (parse threads, cached in %TEMP%/ckp-index-cache; FRESH=1 builds it anew).
+import { resolveGameDir } from '../src/main/indexer/gameIndex.ts';
 import { StoryBuilder } from '../src/main/describe/stories.ts';
 import { defaultInstall } from './ck3-install.ts';
+import { fastIndex } from './fast-index.ts';
 
 const install = defaultInstall();
 const gameDir = resolveGameDir(install);
@@ -12,8 +14,7 @@ const gameDir = resolveGameDir(install);
 if (!gameDir)
     throw new Error('No CK3 game dir at ' + install);
 
-const idx = new GameIndex(gameDir, 'english');
-idx.build();
+const idx = await fastIndex(gameDir, { cache: true });
 const sb = new StoryBuilder(idx);
 const only = process.argv.slice(2);
 

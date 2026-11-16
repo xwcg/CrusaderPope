@@ -1,6 +1,6 @@
 /**
- * Compiler thread of the ShaderPool (shaders/pool.ts): its own ShaderLibrary — parsed FX files and the WebAssembly
- * glslang / SPIRV-Cross — compiling the requests it is sent one after another, each result posted as soon as it is
+ * Compiler thread of the ShaderPool (shaders/pool.ts): its own ShaderLibrary (parsed FX files and the WebAssembly
+ * glslang / SPIRV-Cross), compiling the requests it is sent one after another, each result posted as soon as it is
  * done (started all at once they all wait for the WebAssembly module and then finish in one burst). The FX files come
  * from its own layering of the game and the loaded mods (a mod's gfx/FX file replaces the game's).
  */

@@ -1,7 +1,7 @@
 /**
  * The coats of arms of common/coat_of_arms (docs/map.md, "Coats of arms"), read through the index's layering: the
  * entries of coat_of_arms/ (later files win), their templates, the template lists with their special selections, the
- * dynamic definitions, and a design resolved from an entry — patterns, colours, emblems with their instances,
+ * dynamic definitions, and a design resolved from an entry: patterns, colours, emblems with their instances,
  * sub-arms, `parent`, `list "…"` picks, @constants.
  */
 import type { GameIndex } from '../indexer/gameIndex.ts';
@@ -9,7 +9,7 @@ import { parse, type PNode } from '../indexer/parser.ts';
 import { colorOf } from '../map/color.ts';
 import type { CoaDesign, CoaEmblem, CoaSub } from '../../shared/api.ts';
 
-/** common/defines/graphic/00_coa.txt: NCoatOfArms FALLBACK_COLOR = { 204 202 200 } — under the pattern, and for colours not given */
+/** common/defines/graphic/00_coa.txt: NCoatOfArms FALLBACK_COLOR = { 204 202 200 }, under the pattern, and for colours not given */
 export const FALLBACK = '#cccac8';
 const DIR = 'gfx/coat_of_arms/';
 /** chains of `98 = c_perigord` and `parent` / `sub` nesting are cut here */
@@ -39,7 +39,7 @@ export interface DynamicItem
 
 const picksOf = (list: PNode[]): Pick[] => list.flatMap((c): Pick[] => (c.k && /^\d+$/.test(c.k) && typeof c.v === 'string' ? [{ w: Number(c.k), v: c.v }] : []));
 
-/** FNV-1a: random picks keyed by the entry and the slot — the same arms every time. */
+/** FNV-1a: random picks keyed by the entry and the slot: the same arms every time. */
 function hash(s: string): number
 {
     let h = 0x811c9dc5;
@@ -151,7 +151,7 @@ export class CoaBook
             }
         }
 
-        // template_lists: `<group> = { <list> = { 30 = "red" … special_selection = { trigger = { … } 20 = "red" } } }` —
+        // template_lists: `<group> = { <list> = { 30 = "red" … special_selection = { trigger = { … } 20 = "red" } } }`:
         // the triggers ask about the character the arms are rolled for (root, scope:culture, scope:faith, scope:title)
         for (const f of vfs.list('common/coat_of_arms/template_lists', { ext: /\.txt$/i }))
         {

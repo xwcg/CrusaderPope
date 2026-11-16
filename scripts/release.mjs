@@ -1,4 +1,4 @@
-// Makes a release commit on the `release` branch — the only branch pushed to GitHub (docs: README.md "Releases").
+// Makes a release commit on the `release` branch, the only branch pushed to GitHub (docs: README.md "Releases").
 // It holds major milestones only, one commit each, made at the owner's say so: master's tree without the notes written
 // for the AI assistant (CLAUDE.md, docs/, .claude/). Nothing is checked out or pushed; master and the working tree stay
 // as they are.
@@ -53,7 +53,7 @@ if (!summary)
 const source = git(['rev-parse', ref]);
 
 if (source === last)
-    throw new Error(`${ref} is what the last release was made from — nothing new.`);
+    throw new Error(`${ref} is what the last release was made from: nothing new.`);
 
 // master's tree without the excluded paths, through an index of its own (the real index is not touched)
 const dir = mkdtempSync(join(tmpdir(), 'ckp-release-'));

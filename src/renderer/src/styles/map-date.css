@@ -1,9 +1,32 @@
 /* The map's date control (components/map/DateControl.tsx): bookmarks, year slider, date entry. */
 .map-date > .dd-btn {
+  /* (a fixed width: at a bookmark's date it shows the bookmark's name; a width of its own moved the slider beside it) */
+  width: 190px;
   max-width: 190px;
+}
+.map-date-track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.map-date-tick {
+  position: absolute;
+  bottom: -3px;
+  width: 2px;
+  height: 6px;
+  margin-left: -1px;
+  background: var(--text-faint);
+  border-radius: 1px;
+  cursor: pointer;
+}
+.map-date-tick:hover,
+.map-date-tick.on {
+  background: var(--accent);
 }
 .map-date-slider {
   width: 180px;
+}
+.map-date-slider input {
   accent-color: var(--accent);
   cursor: pointer;
 }
@@ -28,4 +51,19 @@
 /* a date asked for, its map on the way */
 .map-date.pending .map-date-entry {
   color: var(--accent);
+}
+/* before the first bookmark: the game's history is thin there */
+.map-date-early {
+  font-size: 11px;
+  color: var(--warn, #d9a441);
+  border: 1px solid currentColor;
+  border-radius: 9px;
+  padding: 1px 7px;
+  white-space: nowrap;
+  cursor: help;
+}
+.map-date-new {
+  padding: 1px 7px;
+  font-size: 13px;
+  line-height: 18px;
 }

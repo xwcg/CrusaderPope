@@ -1,0 +1,1091 @@
+[
+ {
+  "kind": "data_function",
+  "key": "WarOverviewWindow.IsPlayerPrimaryParticipant",
+  "label": "Is player primary participant",
+  "summary": "Going by its name, whether the player is one of the main participants of the war shown in the war overview window.",
+  "details": "Gives yes or no. Vanilla never uses it, so this rests on the name alone.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarOverviewWindow.NeedsAnswer",
+  "label": "Needs answer",
+  "summary": "Going by its name, whether the war overview window needs to show an answer to the player.",
+  "details": "Gives yes or no. Vanilla shows an answer area (a bar named answer_chance and an answer text, with a reason as tooltip) only when the player takes part in the war and this is yes; otherwise an empty space takes its place. What the answer is about rests on the name and that use.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_overview.gui:2923"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarOverviewWindow.Self",
+  "label": "War overview itself",
+  "summary": "A function on the war overview window (the panel that shows one war) that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type; Self after other types (such as Character.Self) is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarOverviewWindow.Send",
+  "label": "Send",
+  "summary": "Sends what the player has set up in the war overview window.",
+  "details": "Vanilla runs it from the window's main button, which is shown to a player taking part in the war, whose text comes from GetSendButtonLabel and which is enabled only while CanSend is yes. What exactly is sent rests on that use and the name.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_overview.gui:2956"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarOverviewWindow.SetEffectsTabDefeat",
+  "label": "Show defeat terms",
+  "summary": "Switches the war overview window's end-of-war terms to the Defeat tab.",
+  "details": "Vanilla runs it from the Defeat tab button; IsEffectsTabDefeat then marks that tab as pressed. Going by the tab's name, it covers the terms of a lost war.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_overview.gui:1381"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarOverviewWindow.SetEffectsTabVictory",
+  "label": "Show victory terms",
+  "summary": "Switches the war overview window's end-of-war terms to the Victory tab.",
+  "details": "Vanilla runs it from the Victory tab button; IsEffectsTabVictory then marks that tab as pressed. Going by the tab's name, it covers the terms of a won war.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_overview.gui:1424"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarOverviewWindow.SetEffectsTabWhitePeace",
+  "label": "Show white peace terms",
+  "summary": "Switches the war overview window's end-of-war terms to the White Peace tab.",
+  "details": "Vanilla runs it from the White Peace tab button; IsEffectsTabWhitePeace then marks that tab as pressed. A white peace ends a war with no winner.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_overview.gui:1403"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarOverviewWindow.ShowBeneficiary",
+  "label": "Show beneficiary",
+  "summary": "Whether the war overview window shows the \"Your beneficiary\" part.",
+  "details": "Gives yes or no. Vanilla uses it to show that part with the beneficiary's name, a button to change the beneficiary (it opens the select_ghw_beneficiary_interaction, so it concerns great holy wars) and a divider in front of it.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_overview.gui:2780"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarOverviewWindow.ShowContributionRank",
+  "label": "Show contribution rank",
+  "summary": "Whether the war overview window shows the player's rank by war contribution.",
+  "details": "Gives yes or no. When it is yes, vanilla shows the player's rank, or a dash when the rank is 0 (no rank).",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_overview.gui:2755"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarParticipantItem.AccessSelf",
+  "label": "Access war participant",
+  "summary": "A function on a war participant entry of the war interface that, going by its name, hands back the entry itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is another type and only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarParticipantItem.GetCharacter",
+  "label": "Participant character",
+  "summary": "The character who takes part in the war, behind this participant entry.",
+  "details": "Vanilla uses it in the war overview window and the ledger to show the participant's portrait and details.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarParticipantItem.GetComposition",
+  "label": "Army composition",
+  "summary": "The make-up of the participant's armies (soldiers and their quality).",
+  "details": "Vanilla uses it in the war overview window to show the participant's soldiers and their quality in a small box.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_overview.gui:1595"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarParticipantItem.GetContribution",
+  "label": "War contribution",
+  "summary": "The participant's war contribution as a whole number.",
+  "details": "Vanilla shows it under \"Your war contribution\" in the war overview window, next to the share in percent (GetContributionPercentage).",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_overview.gui:2746"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarParticipantItem.GetContributionPercentage",
+  "label": "War contribution percent",
+  "summary": "The participant's war contribution as a whole number shown as a percentage.",
+  "details": "Vanilla shows it with the percent format next to the contribution itself (GetContribution) in the war overview window. What the percentage is of the game does not say.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_overview.gui:2751"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarParticipantItem.GetContributionTooltip",
+  "label": "Contribution tooltip",
+  "summary": "The tooltip text that explains the participant's war contribution.",
+  "details": "Vanilla puts it on the \"Your war contribution\" part of the war overview window.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_overview.gui:2767"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarParticipantItem.GetLeaderTooltip",
+  "label": "War leader tooltip",
+  "summary": "The tooltip text for a side's war leader in the war overview window.",
+  "details": "Vanilla puts it on the portraits of the two war leaders at the top of the window. What the text holds the game does not say.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_overview.gui:344"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarParticipantItem.GetMilitaryStrength",
+  "label": "Military strength",
+  "summary": "Going by its name, the military strength of the war participant, as a decimal number.",
+  "details": "Vanilla never names it on this type; functions of the same name on other windows are shown next to a soldier icon, which is only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarParticipantItem.GetParticipantTooltip",
+  "label": "Participant tooltip",
+  "summary": "The tooltip text for a participant in the war overview window.",
+  "details": "Vanilla puts it on the portraits of the participants in the lists of both sides. What the text holds the game does not say.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_overview.gui:533"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarParticipantItem.IsAttacker",
+  "label": "Is attacker",
+  "summary": "Whether the participant fights on the attacking side of the war.",
+  "details": "Gives yes or no. Vanilla uses it to pick the attacker's or the defender's pose for the participant's portrait, and to name the war stance of each side's leader.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/shared/portraits.gui:1914", "vanilla: gui/window_war_overview.gui:442"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarParticipantItem.Self",
+  "label": "War participant itself",
+  "summary": "A function on a war participant entry that, going by its name, hands back the entry itself.",
+  "details": "Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarParticipantItem.ShowContribution",
+  "label": "Show contribution",
+  "summary": "Whether the war overview window shows this participant's war contribution.",
+  "details": "Gives yes or no. Vanilla checks it on the player's own entry to show or hide the \"Your war contribution\" part.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_overview.gui:2733"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.AccessSelf",
+  "label": "Access war results",
+  "summary": "A function on the war results window (shown when a war ends) that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is another type and only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.Close",
+  "label": "Close war results",
+  "summary": "Closes the war results window.",
+  "details": "Vanilla runs it from the window's minimize button in the header. The big button at the bottom uses Dismiss instead.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:86"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.Dismiss",
+  "label": "Dismiss war results",
+  "summary": "Dismisses the war results window.",
+  "details": "Vanilla runs it from the \"So be it\" button at the bottom of the window. How it differs from Close the game does not say.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:488"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetAttackerSide",
+  "label": "Attacker side",
+  "summary": "Going by its name, the attacking side of the war shown in the war results window.",
+  "details": "Vanilla never uses it and the game documents no return type, so this rests on the name alone.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetBeneficiary",
+  "label": "Beneficiary",
+  "summary": "The player's beneficiary in the ended war (a character).",
+  "details": "Vanilla shows this character's portrait under \"Your beneficiary\", next to the rank (GetGHWRank), when HasBeneficiary is yes. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:360"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetContributionScore",
+  "label": "Contribution score",
+  "summary": "The text with the player's war contribution score in the ended war, with its percent.",
+  "details": "Vanilla shows it under \"Your war contribution\" when the player was a secondary participant, had no war chest share and IsContributionShareSetup is yes. The game has a text \"Score: value (percent)\", which fits this use.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:402", "vanilla: localization/english/war_results_window_l_english.yml:13"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetContributionShare",
+  "label": "Contribution share",
+  "summary": "The text shown under the player's contribution score in the ended war, going by its name what the contribution earns.",
+  "details": "Vanilla shows it under the contribution score (GetContributionScore). The game also has a text saying the contribution was lower than required, so nothing is gained; it may be what this shows, but that link is not shown directly.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:410", "vanilla: localization/english/war_results_window_l_english.yml:18"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetEndDate",
+  "label": "War end date",
+  "summary": "The date the war ended.",
+  "details": "Vanilla shows it in short form after the start date, as the war's dates in the results window. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: localization/english/war_results_window_l_english.yml:7"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetGHWRank",
+  "label": "Great holy war rank",
+  "summary": "The text with the rank of the player's beneficiary, shown in the war results window.",
+  "details": "GHW going by the name stands for great holy war. Vanilla shows it next to the beneficiary's portrait; the game's text for it reads \"Rank: value\".",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:376", "vanilla: localization/english/war_results_window_l_english.yml:15"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetGHWScore",
+  "label": "Great holy war score",
+  "summary": "The text with the player's score for their share of the war chest, shown in the war results window.",
+  "details": "GHW going by the name stands for great holy war. Vanilla shows it under \"Your war chest share\" when HasGWHShare and IsSecondaryParticipant are both yes.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:436", "vanilla: localization/english/war_results_window_l_english.yml:14"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetGHWShare",
+  "label": "War chest share",
+  "summary": "The text with the player's share of the war chest after the war, shown in the war results window.",
+  "details": "GHW going by the name stands for great holy war. Vanilla shows it under the war chest score (GetGHWScore).",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:441"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetGetDefenderSide",
+  "label": "Defender side",
+  "summary": "Going by its name, the defending side of the war shown in the war results window.",
+  "details": "The doubled \"GetGet\" is in the game's own name. Vanilla never uses it and the game documents no return type, so this rests on the name alone.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetMessage",
+  "label": "Opponent's message",
+  "summary": "The message text shown in the war results window, above the opponent's signature.",
+  "details": "Vanilla shows it in the letter part of the window, which ends with \"Signed,\" and the opponent's name. Going by the game's texts for these letters (such as ATTACKER_WIN), it is the opponent's words on how the war ended; that link is not shown directly.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:252", "vanilla: localization/english/war_results_window_l_english.yml:27"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetOpponent",
+  "label": "Opponent",
+  "summary": "The character the player fought against in the ended war.",
+  "details": "Vanilla shows this character's portrait and coat of arms in the results window and signs the letter with their name. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:119", "vanilla: localization/english/war_results_window_l_english.yml:36"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetOpponentAnimationState",
+  "label": "Opponent portrait pose",
+  "summary": "The name of the pose (animation) used for the opponent's portrait in the war results window.",
+  "details": "Vanilla passes it to the full-body portrait of the opponent.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:196"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetOpponentSide",
+  "label": "Opponent side",
+  "summary": "The opponent's side of the ended war.",
+  "details": "Vanilla uses it for the right half of the losses panel, opposite the player's side (GetPlayerSide). The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:313"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetOutcome",
+  "label": "War outcome",
+  "summary": "The text with the outcome of the war, shown as the war results window's heading.",
+  "details": "Going by the game's texts, it is one of Victory, Defeat, White Peace, Invalidated or Unknown.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:73", "vanilla: localization/english/war_results_window_l_english.yml:2"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetPeaceDescription",
+  "label": "Peace terms text",
+  "summary": "The text that describes how the war ended (its peace terms, going by the name).",
+  "details": "Vanilla shows it in the results window, unless the war was invalidated. What the text holds the game does not say.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:342"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetPlayer",
+  "label": "Player",
+  "summary": "Going by its name, the player's character in the war results window.",
+  "details": "Vanilla never names it on this type; GetPlayer on its own is a different, global function and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetPlayerSide",
+  "label": "Player side",
+  "summary": "The player's side of the ended war.",
+  "details": "Vanilla uses it for the left half of the losses panel, opposite the opponent's side (GetOpponentSide). The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:310"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetSimpleDescription",
+  "label": "Short description",
+  "summary": "A short description text of the ended war, shown in the war results window.",
+  "details": "What it says is not shown; going by the game's texts it may be the line for secondary participants (\"We won the war led by ...\"), but that is a hint only.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:303"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetStartDate",
+  "label": "War start date",
+  "summary": "The date the war began.",
+  "details": "Vanilla shows it in short form before the end date, as the war's dates in the results window. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: localization/english/war_results_window_l_english.yml:7"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.GetWarName",
+  "label": "War name",
+  "summary": "The name of the ended war, shown in the war results window.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.HasBeneficiary",
+  "label": "Has beneficiary",
+  "summary": "Whether the player had a beneficiary in the ended war.",
+  "details": "Gives yes or no. Vanilla shows the \"Your beneficiary\" part only when it is yes.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:348"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.HasGWHShare",
+  "label": "Has war chest share",
+  "summary": "Whether the player gets a share of the war chest from the ended war.",
+  "details": "Gives yes or no. The letters GWH are in the game's own name, likely swapped from GHW (great holy war). Vanilla shows \"Your war chest share\" for a secondary participant when it is yes, and \"Your war contribution\" instead when it is no.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:386"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.IsContributionShareSetup",
+  "label": "Is contribution share set up",
+  "summary": "Whether a share for war contribution is set up for the ended war.",
+  "details": "Gives yes or no. Vanilla needs it, together with IsSecondaryParticipant and no war chest share, to show \"Your war contribution\". The meaning rests on the name and that use.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:386"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.IsEnemyWon",
+  "label": "Did the enemy win",
+  "summary": "Going by its name, whether the player's enemy won the war shown in the war results window.",
+  "details": "Gives yes or no. Vanilla never uses it, so this rests on the name alone.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.IsInvalidated",
+  "label": "Is invalidated",
+  "summary": "Whether the war ended because it was invalidated (its reason for war, the casus belli, stopped being valid).",
+  "details": "Gives yes or no. Vanilla then hides the message and the peace terms and shows that nobody gains or loses anything.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:451", "vanilla: localization/english/war_results_window_l_english.yml:21"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.IsNoWinner",
+  "label": "Has no winner",
+  "summary": "Going by its name, whether the war shown in the war results window ended with no winner.",
+  "details": "Gives yes or no. Vanilla never uses it, so this rests on the name alone.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.IsPlayerAttacker",
+  "label": "Is player attacker",
+  "summary": "Whether the player was on the attacking side of the ended war.",
+  "details": "Gives yes or no. Vanilla uses it to label the opponent's part of the window: Defender when the player attacked, Attacker otherwise.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:188"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.IsPlayerWon",
+  "label": "Did the player win",
+  "summary": "Whether the player won the ended war.",
+  "details": "Gives yes or no. Vanilla uses it to pick the background of the opponent's part of the window: the defeat background when the player won.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:160"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.IsSecondaryParticipant",
+  "label": "Is secondary participant",
+  "summary": "Whether the player took part in the ended war without being a war leader.",
+  "details": "Gives yes or no. Vanilla shows the opponent's sigil only when it is no, and the contribution or war chest share parts only when it is yes. The meaning rests on the name and those uses.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:280"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.IsWhitePeace",
+  "label": "Is white peace",
+  "summary": "Whether the war ended in a white peace (a peace without a winner).",
+  "details": "Gives yes or no. Vanilla uses the plain background for the opponent's part when this or IsInvalidated is yes.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_results.gui:124"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarResultsWindow.Self",
+  "label": "War results itself",
+  "summary": "A function on the war results window that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarSide.AccessSelf",
+  "label": "Access war side",
+  "summary": "A function on one side of a war (attackers or defenders) that, going by its name, hands back the side itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is another type and only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarSide.GetAttritionLosses",
+  "label": "Attrition losses",
+  "summary": "How many attrition losses this side of the war has had.",
+  "details": "Attrition is the game's term for losses outside battle. Vanilla shows it in the ledger's tooltip of a side's losses and in the war overview's losses panel, and adds it to battle losses and characters lost for the total.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarSide.GetBattleLosses",
+  "label": "Battle losses",
+  "summary": "How many losses this side of the war has had in battles.",
+  "details": "Vanilla shows it as \"Battle Losses\" in the ledger's tooltip of a side's losses and next to an army icon in the war overview, and adds it to attrition losses and characters lost for the total.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarSide.GetCharacterLossesTooltip",
+  "label": "Character losses tooltip",
+  "summary": "The tooltip text about the characters this side of the war has lost.",
+  "details": "Vanilla puts it on the knight icon with the character losses in the war overview's losses panel.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_overview.gui:2696"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarSide.GetCharacterSiegeLosses",
+  "label": "Siege losses",
+  "summary": "Going by its name, how many losses this side of the war has had in sieges.",
+  "details": "Gives a whole number. Vanilla never uses it, so this rests on the name alone; whether it counts soldiers or characters is not clear.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarSide.GetCharactersLost",
+  "label": "Characters lost",
+  "summary": "How many characters this side of the war has lost.",
+  "details": "Vanilla shows it in the ledger's tooltip of a side's losses, and adds it to battle and attrition losses for the total.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarSide.GetCommandersLost",
+  "label": "Commanders lost",
+  "summary": "Going by its name, how many commanders (army leaders) this side of the war has lost.",
+  "details": "Gives a whole number. Vanilla never uses it, so this rests on the name alone.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarSide.GetKnightsLost",
+  "label": "Knights lost",
+  "summary": "Going by its name, how many knights this side of the war has lost.",
+  "details": "Gives a whole number. Vanilla never uses it, so this rests on the name alone.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WarSide.GetParticipantLossesTooltip",
+  "label": "Army losses tooltip",
+  "summary": "The tooltip text about the losses of this side of the war.",
+  "details": "Vanilla puts it on the army icon with the battle losses count in the war overview's losses panel. What the text holds the game does not say.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_war_overview.gui:2638"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WarSide.Self",
+  "label": "War side itself",
+  "summary": "A function on one side of a war that, going by its name, hands back the side itself.",
+  "details": "Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WatchWindow.AccessSelf",
+  "label": "Access watch window",
+  "summary": "A function on the watch window (a debug window that follows one game object) that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is another type and only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WatchWindow.Close",
+  "label": "Close watch window",
+  "summary": "Closes the watch window, a debug window that follows one game object.",
+  "details": "Vanilla runs it from the window's close button. The window is part of the game's debug tools.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/debug/window_watch.gui:35"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WatchWindow.GetAttackerItems",
+  "label": "Attackers",
+  "summary": "The list of the attackers of the watched war, for the debug watch window.",
+  "details": "Vanilla fills the \"Attackers:\" list with it. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/debug/window_watch.gui:311"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WatchWindow.GetDefenderItems",
+  "label": "Defenders",
+  "summary": "The list of the defenders of the watched war, for the debug watch window.",
+  "details": "Vanilla fills the \"Defenders:\" list with it. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/debug/window_watch.gui:323"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WatchWindow.GetObjectName",
+  "label": "Watched object name",
+  "summary": "The name of the object the debug watch window follows.",
+  "details": "Vanilla shows it at the top of the window.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/debug/window_watch.gui:61"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WatchWindow.Self",
+  "label": "Watch window itself",
+  "summary": "A function on the debug watch window that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "WatchWindow.ShouldShowMemories",
+  "label": "Show memories",
+  "summary": "Whether the debug watch window shows the memories part for the watched object.",
+  "details": "Gives yes or no. Vanilla shows or hides the memories list with it.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/debug/window_watch.gui:258"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WatchWindow.ShouldShowParticipants",
+  "label": "Show war participants",
+  "summary": "Whether the debug watch window shows the lists of a war's attackers and defenders.",
+  "details": "Gives yes or no. Vanilla shows or hides both participant lists with it.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/debug/window_watch.gui:330"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WatchWindow.ShouldShowStories",
+  "label": "Show stories",
+  "summary": "Whether the debug watch window shows the stories part for the watched object.",
+  "details": "Gives yes or no. Vanilla shows or hides the stories list with it.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/debug/window_watch.gui:192"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WatchWindow.ToggleChangeOnPause",
+  "label": "Toggle pause on change",
+  "summary": "Turns on or off whether the game pauses when the watched object changes.",
+  "details": "Vanilla runs it from the check box labelled \"Pause on Change:\" in the debug watch window; WillPauseOnChange shows its state.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/debug/window_watch.gui:44"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "WatchWindow.WillPauseOnChange",
+  "label": "Pauses on change",
+  "summary": "Whether the game pauses when the object the debug watch window follows changes.",
+  "details": "Gives yes or no. Vanilla uses it to tick the check box labelled \"Pause on Change:\" that ToggleChangeOnPause switches.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/debug/window_watch.gui:43"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "bool.AccessSelf",
+  "label": "Access yes/no value",
+  "summary": "A function on a plain yes/no value of the interface that, going by its name, hands back the value itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is another type and only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "bool.Self",
+  "label": "Yes/no value itself",
+  "summary": "A function on a plain yes/no value that, going by its name, hands back the value itself.",
+  "details": "Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "double.AccessSelf",
+  "label": "Access decimal number",
+  "summary": "A function on a plain decimal number (double precision) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is another type and only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "double.Self",
+  "label": "Decimal number itself",
+  "summary": "A function on a plain decimal number (double precision) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "float.AccessSelf",
+  "label": "Access decimal number",
+  "summary": "A function on a plain decimal number (float) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is another type and only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "float.Self",
+  "label": "Decimal number itself",
+  "summary": "A function on a plain decimal number (float) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "int16.AccessSelf",
+  "label": "Access whole number",
+  "summary": "A function on a small whole number (16-bit, can be negative) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is another type and only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "int16.GetInt",
+  "label": "Whole number value",
+  "summary": "Going by its name, the value of a small whole number (16-bit, can be negative) as a plain whole number.",
+  "details": "Vanilla never names it on this type; int32.GetInt appears once in the multiplayer lobby and CharacterListItem.GetInt is another function, both only hints. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "int16.Self",
+  "label": "Whole number itself",
+  "summary": "A function on a small whole number (16-bit, can be negative) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "int32.AccessSelf",
+  "label": "Access whole number",
+  "summary": "A function on a whole number (32-bit, can be negative) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is another type and only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "int32.GetInt",
+  "label": "Whole number value",
+  "summary": "The value of a whole number (one that can be negative) handed to the interface, for example by a list of numbers.",
+  "details": "Vanilla uses it inside list items that are numbers: as the frame of a progress icon in the holy site windows, and in the multiplayer lobby to look up a trait by its number (`GetTraitForIndex(int32.GetInt)`). The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_holy_site.gui:451",
+   "vanilla: gui/multiplayer_lobby.gui:494"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "int32.Self",
+  "label": "Whole number itself",
+  "summary": "A function on a whole number (32-bit, can be negative) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "int64.AccessSelf",
+  "label": "Access whole number",
+  "summary": "A function on a large whole number (64-bit, can be negative) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is another type and only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "int64.GetInt",
+  "label": "Whole number value",
+  "summary": "Going by its name, the value of a large whole number (64-bit, can be negative) as a plain whole number.",
+  "details": "Vanilla never names it on this type; int32.GetInt and CharacterListItem.GetInt are other types and only hints. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "int64.Self",
+  "label": "Whole number itself",
+  "summary": "A function on a large whole number (64-bit, can be negative) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "int8.AccessSelf",
+  "label": "Access whole number",
+  "summary": "A function on a very small whole number (8-bit, can be negative) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is another type and only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "int8.GetInt",
+  "label": "Whole number value",
+  "summary": "Going by its name, the value of a very small whole number (8-bit, can be negative) as a plain whole number.",
+  "details": "Vanilla never names it on this type; int32.GetInt and CharacterListItem.GetInt are other types and only hints. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "int8.Self",
+  "label": "Whole number itself",
+  "summary": "A function on a very small whole number (8-bit, can be negative) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "uint16.AccessSelf",
+  "label": "Access whole number",
+  "summary": "A function on a small whole number that cannot be negative (16-bit) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is another type and only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "uint16.GetUint",
+  "label": "Whole number value",
+  "summary": "Going by its name, the value of a small whole number that cannot be negative (16-bit) as a plain whole number.",
+  "details": "Vanilla never uses it and the game documents no return type, so this rests on the name alone.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "uint16.Self",
+  "label": "Whole number itself",
+  "summary": "A function on a small whole number that cannot be negative (16-bit) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "uint32.AccessSelf",
+  "label": "Access whole number",
+  "summary": "A function on a whole number that cannot be negative (32-bit) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is another type and only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "uint32.GetUint",
+  "label": "Whole number value",
+  "summary": "The value of a whole number that cannot be negative, handed to the interface, for example by a list of numbers.",
+  "details": "The engine's create account window uses it as the text of each item in its year, month and day dropdowns. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/pdx_account/create_account_window.gui:100"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "uint32.Self",
+  "label": "Whole number itself",
+  "summary": "A function on a whole number that cannot be negative (32-bit) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "uint64.AccessSelf",
+  "label": "Access whole number",
+  "summary": "A function on a large whole number that cannot be negative (64-bit) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is another type and only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "uint64.GetUint",
+  "label": "Whole number value",
+  "summary": "Going by its name, the value of a large whole number that cannot be negative (64-bit) as a plain whole number.",
+  "details": "Vanilla never uses it and the game documents no return type, so this rests on the name alone.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "uint64.Self",
+  "label": "Whole number itself",
+  "summary": "A function on a large whole number that cannot be negative (64-bit) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "uint8.AccessSelf",
+  "label": "Access whole number",
+  "summary": "A function on a very small whole number that cannot be negative (8-bit) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is another type and only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "uint8.GetUint",
+  "label": "Whole number value",
+  "summary": "Going by its name, the value of a very small whole number that cannot be negative (8-bit) as a plain whole number.",
+  "details": "Vanilla never uses it and the game documents no return type, so this rests on the name alone.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "uint8.Self",
+  "label": "Whole number itself",
+  "summary": "A function on a very small whole number that cannot be negative (8-bit) that, going by its name, hands back the number itself.",
+  "details": "Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "void.AccessSelf",
+  "label": "Access empty value",
+  "summary": "A function on the empty type void (the result of actions that give nothing back) that, going by its name, hands back the value itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is another type and only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "void.Self",
+  "label": "Empty value itself",
+  "summary": "A function on the empty type void (the result of actions that give nothing back) that, going by its name, hands back the value itself.",
+  "details": "Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ }
+]

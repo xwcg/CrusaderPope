@@ -1,0 +1,1980 @@
+[
+ {
+  "kind": "data_function",
+  "key": "civilian_career_path",
+  "label": "Civilian career path",
+  "summary": "The game concept Civilian Career Path: the path of rulers who focus on administration rather than war.",
+  "details": "`[civilian_career_path|E]` in a text shows the word linked to the concept's explanation. These rulers are appointed to civilian circuits, earn merit by developing the land and raising taxes, and can become civilian governors. Vanilla uses it in merit and concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "civilian_career_short",
+  "label": "Civilian career path",
+  "summary": "The game concept Civilian Career Path, in a short form: the path of rulers who focus on administration rather than war.",
+  "details": "`[civilian_career_short|E]` in a text shows a short word for the concept, linked to its explanation. Vanilla uses it in the decision to change one's career path.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "civilian_governor",
+  "label": "Civilian governor",
+  "summary": "The game concept Civilian Governor: a governor with civilian obligations who only administers and develops their land.",
+  "details": "`[civilian_governor|E]` in a text shows the word linked to the concept's explanation. Unlike military governors, they cannot field title men-at-arms; characters on the civilian career path can become one. Vanilla uses it in government and administration window texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "civilian_governor_short",
+  "label": "Civilian governor",
+  "summary": "The game concept Civilian Governor, in a short form: a governor with civilian obligations who only administers and develops their land.",
+  "details": "`[civilian_governor_short|E]` in a text shows a short word for the concept, linked to its explanation. Vanilla uses it in the celestial government's concept text next to the military one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "civilian_governors",
+  "label": "Civilian governor",
+  "summary": "The game concept Civilian Governor: a governor with civilian obligations who only administers and develops their land.",
+  "details": "`[civilian_governors|E]` in a text shows the plural word linked to the concept's explanation. Vanilla uses it in Chinese concept texts about treasury debt and military governors.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "claim",
+  "label": "Title claim",
+  "summary": "The game concept Title Claim: a legal right to own a title.",
+  "details": "`[claim|E]` in a text shows the word linked to the concept's explanation. A claim gives a casus belli to take the title by war and a valid reason to revoke titles from vassals. Rulers usually get claims on titles they lose, the fabricate claim task can make new ones, and a ruler's children have implicit claims on their titles.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "claim_i",
+  "label": "Title claim (icon)",
+  "summary": "The icon of the game concept Title Claim, a legal right to own a title.",
+  "details": "`[claim_i|E]` in a text shows the pressed claim icon linked to the concept's explanation. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:981"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "claimant",
+  "label": "Claimant",
+  "summary": "The game concept Claimant: a person with one or more claims on titles.",
+  "details": "`[claimant|E]` in a text shows the word linked to the concept's explanation. Ruler claimants can press their claims with the claim casus belli, which can also press the claims of vassals and unlanded characters of the realm. Claimants can lead factions even from outside the realm. Vanilla uses it in decision and faction texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "claimant_faction",
+  "label": "Claimant faction",
+  "summary": "The game concept Claimant Faction: a faction that wants to put its claimant on the throne of a title their liege holds.",
+  "details": "`[claimant_faction|E]` in a text shows the word linked to the concept's explanation. If it wins, the liege gives up the title to the claimant, the vassal structure is rearranged, and all members gain a hook on the claimant. Vanilla uses it in important action and decision texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "claimant_factions",
+  "label": "Claimant faction",
+  "summary": "The game concept Claimant Faction: a faction that wants to put its claimant on the throne of a title their liege holds.",
+  "details": "`[claimant_factions|E]` in a text shows the plural word linked to the concept's explanation. Vanilla uses it in legacy and language concept texts that make vassals less likely to join them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "claimant_possessive",
+  "label": "Claimant's",
+  "summary": "The possessive form of the game concept Claimant, a person with claims on titles.",
+  "details": "`[claimant_possessive|E]` in a text shows the possessive word linked to the concept's explanation. Vanilla uses it in faction texts about a claimant's appeal to vassal stances.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "claimants",
+  "label": "Claimant",
+  "summary": "The game concept Claimant: a person with one or more claims on titles.",
+  "details": "`[claimants|E]` in a text shows the plural word linked to the concept's explanation. Vanilla uses it in the decision that invites claimants to court.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "claimed",
+  "label": "Title claim",
+  "summary": "The game concept Title Claim, shown as the word \"Claimed\".",
+  "details": "`[claimed|E]` in a text shows the word linked to the concept's explanation, which describes a claim as a legal right to own a title. Vanilla uses it in an opinion modifier name and a war text about claimed titles.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:980"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "claims",
+  "label": "Title claim",
+  "summary": "The game concept Title Claim: a legal right to own a title.",
+  "details": "`[claims|E]` in a text shows the plural word linked to the concept's explanation. Vanilla uses it in decision and concept texts, such as which claims can be inherited.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clan",
+  "label": "Clan",
+  "summary": "The game concept Clan: a form of government in which the levies and taxes vassals give their liege depend on the aptitude of the liege's tax collector.",
+  "details": "`[clan|E]` in a text shows the word linked to the concept's explanation. Clans also use house unity. Vanilla uses it in court position and decision texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clan_government",
+  "label": "Clan",
+  "summary": "The game concept Clan, shown as \"clan government\": a form of government in which vassals' levies and taxes depend on the liege's tax collector.",
+  "details": "`[clan_government|E]` in a text shows the word linked to the concept's explanation. Vanilla uses it in council and decision texts about clan rulers.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clan_house_head",
+  "label": "Clan house head",
+  "summary": "The game concept Clan House Head: the head of a house under clan government, who differs from a normal house head in some ways.",
+  "details": "`[clan_house_head|E]` in a text shows the word linked to the concept's explanation. They get no weak hook on all house members, have more say over house unity than other members, and any house member may challenge them to become house head. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clan_house_head_head",
+  "label": "Clan house head",
+  "summary": "The game concept Clan House Head, shown with the same word as the house head's \"head\" form.",
+  "details": "`[clan_house_head_head|E]` in a text shows a word linked to the concept's explanation; the game's text for it reuses the house head concept's \"head\" form. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:471"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clan_house_heads",
+  "label": "Clan house head",
+  "summary": "The game concept Clan House Head: the head of a house under clan government.",
+  "details": "`[clan_house_heads|E]` in a text shows the plural word linked to the concept's explanation. They get no weak hook on all house members and can be challenged by any house member. Vanilla uses it in the house head concept text, noting they have special rules.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clan_i",
+  "label": "Clan (icon)",
+  "summary": "The icon of the game concept Clan, the government form where vassals' dues depend on the liege's tax collector.",
+  "details": "`[clan_i|E]` in a text shows the clan government icon linked to the concept's explanation. Vanilla puts it in front of the word in clan opinion modifier names.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:867"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clans",
+  "label": "Clan",
+  "summary": "The game concept Clan: a form of government in which vassals' levies and taxes depend on the liege's tax collector.",
+  "details": "`[clans|E]` in a text shows the plural word linked to the concept's explanation. Vanilla uses it in authority and tutorial texts about house unity.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clergy",
+  "label": "Clergy",
+  "summary": "The game concept Clergy: court chaplains, realm priests, theocratic rulers and anyone with the Devoted trait.",
+  "details": "`[clergy|E]` in a text shows the word linked to the concept's explanation. The faith's doctrines decide who can be clergy and whether clergy may marry or inherit land. Vanilla uses it in court position texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clergy_opinion",
+  "label": "Clergy opinion",
+  "summary": "The game concept Clergy Opinion: opinion that only affects clergy of your own faith.",
+  "details": "`[clergy_opinion|E]` in a text shows the word linked to the concept's explanation. Vanilla uses it in vow and character relation texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clerical",
+  "label": "Clergy opinion",
+  "summary": "The game concept Clergy Opinion, shown as the word \"Clerical\".",
+  "details": "`[clerical|E]` in a text shows the word \"Clerical\" linked to the Clergy Opinion explanation (opinion that only affects clergy of your own faith). Vanilla uses the word in puppet texts about non-clerical rulers, so the link's explanation does not fit those sentences closely.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:1404"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clerical_puppet",
+  "label": "Realm priest puppet",
+  "summary": "The game concept Realm Priest Puppet: a realm priest who is a puppet of their liege.",
+  "details": "`[clerical_puppet|E]` in a text shows the word linked to the concept's explanation. Through the puppet, the puppeteer can act in the faith's affairs: ask the head of faith for clerical titles or an excommunication, manage holy sites, found a rite or host an ecumenical council. Vanilla uses it in decision and important action texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clerical_puppets",
+  "label": "Realm priest puppet",
+  "summary": "The game concept Realm Priest Puppet: a realm priest who is a puppet of their liege.",
+  "details": "`[clerical_puppets|E]` in a text shows the plural word linked to the concept's explanation. Vanilla uses it in the Christian Church situation's puppeting bonus texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clerical_region",
+  "label": "Clerical region",
+  "summary": "The game concept Clerical Region: a geographical region under a clerical title, whose clergy are subordinates of that title's holder.",
+  "details": "`[clerical_region|E]` in a text shows the word linked to the concept's explanation. A ruler belongs to the region that holds their capital county, a new region is founded on the capital of its founder's primary title, and a region can span several realms. Vanilla uses it in vow and important action texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clerical_region_capital",
+  "label": "Clerical region capital",
+  "summary": "The game concept Clerical Region Capital: the county a clerical region was founded on with an ecclesiastical estate, the seat of the governing clerical title.",
+  "details": "`[clerical_region_capital|E]` in a text shows the word linked to the concept's explanation. Unlike a de jure capital, it is fixed and cannot be moved. Vanilla uses it in great project texts that require the chosen barony to be this capital.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clerical_region_capitals",
+  "label": "Clerical region capital",
+  "summary": "The game concept Clerical Region Capital: the county a clerical region was founded on, the fixed seat of its clerical title.",
+  "details": "`[clerical_region_capitals|E]` in a text shows the plural word linked to the concept's explanation. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clerical_region_possessive",
+  "label": "Clerical region's",
+  "summary": "The possessive form of the game concept Clerical Region, a region under a clerical title.",
+  "details": "`[clerical_region_possessive|E]` in a text shows the possessive word linked to the concept's explanation. Vanilla uses it in a puppet action about a clerical region absorbing a neighbor.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clerical_regions",
+  "label": "Clerical region",
+  "summary": "The game concept Clerical Region: a geographical region under a clerical title, whose clergy are subordinates of that title's holder.",
+  "details": "`[clerical_regions|E]` in a text shows the plural word linked to the concept's explanation. Vanilla uses it in an interaction trigger and as a header in the faith window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clerical_regions_possessive",
+  "label": "Clerical regions'",
+  "summary": "The plural possessive form of the game concept Clerical Region, a region under a clerical title.",
+  "details": "`[clerical_regions_possessive|E]` in a text shows the word \"Clerical Regions'\" linked to the concept's explanation. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: game/localization/english/dlc/pam/pam_game_concepts_l_english.yml:118"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clerical_title",
+  "label": "Clerical title",
+  "summary": "The game concept Clerical Title: an ecclesiastical title of the clergy that governs a clerical region of a faith; for Christians, an archdiocese.",
+  "details": "`[clerical_title|E]` in a text shows the word linked to the concept's explanation. Its holder is the religious superior of the region's clergy and is usually appointed by the head of faith. Vanilla uses it in interaction and message texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clerical_titles",
+  "label": "Clerical title",
+  "summary": "The game concept Clerical Title: an ecclesiastical title of the clergy that governs a clerical region of a faith.",
+  "details": "`[clerical_titles|E]` in a text shows the plural word linked to the concept's explanation. Vanilla uses it in texts about handing out clerical titles and candidate scores for them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "cloistered_emperor",
+  "label": "Cloistered emperor",
+  "summary": "The game concept Cloistered Emperor: a retired Ten'no who governs in practice as ruling regent for the reigning emperor.",
+  "details": "`[cloistered_emperor|E]` in a text shows the word linked to the concept's explanation. To become one, an emperor must abdicate the Chrysanthemum Throne and become a monk. Vanilla uses it in the texts of the faction against the ruling regent.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "cloistered_emperor_possessive",
+  "label": "Cloistered emperor's",
+  "summary": "The possessive form of the game concept Cloistered Emperor, a retired Ten'no who rules as regent for the reigning emperor.",
+  "details": "`[cloistered_emperor_possessive|E]` in a text shows the possessive word linked to the concept's explanation. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "close_family",
+  "label": "Close family",
+  "summary": "The game concept Close Family: a character's parents, grandparents, children, grandchildren and siblings.",
+  "details": "`[close_family|E]` in a text shows the word linked to the concept's explanation. Vanilla uses it in building tooltips that count close family members.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "close_family_member",
+  "label": "Close family member",
+  "summary": "The game concept Close Family, shown as one member: a parent, grandparent, child, grandchild or sibling of the character.",
+  "details": "`[close_family_member|E]` in a text shows the word linked to the concept's explanation. Vanilla uses it in decision and guardian texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "close_family_members",
+  "label": "Close family member",
+  "summary": "The game concept Close Family, shown as its members: the character's parents, grandparents, children, grandchildren and siblings.",
+  "details": "`[close_family_members|E]` in a text shows the plural word linked to the concept's explanation. Vanilla uses it in decision texts, for example about family isolation.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "clouded_eyes_mitigation",
+  "label": "Mitigate clouded eyes",
+  "summary": "The game concept Mitigate Clouded Eyes: how to slow down the Clouded Eyes trait, which cannot be stopped.",
+  "details": "`[clouded_eyes_mitigation|E]` in a text shows the word linked to the concept's explanation. The ways it lists: avoid travel, avoid desert and desert mountain terrain, and avoid places with normal or harsh winters. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "co_emperor",
+  "label": "Co-emperor",
+  "summary": "The game concept Duumvirate, shown as \"Co-Emperor\": the junior emperor who shares the rule of an empire with the senior emperor.",
+  "details": "`[co_emperor|E]` in a text shows the word linked to the Duumvirate explanation. Both generate passive influence, growing with years in the job, though most power stays with the senior emperor. Vanilla uses it in faction texts where a leader becomes co-emperor.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:2255"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "co_emperors",
+  "label": "Co-emperor",
+  "summary": "The game concept Duumvirate, shown as \"Co-Emperors\": junior emperors who share the rule of an empire with a senior emperor.",
+  "details": "`[co_emperors|E]` in a text shows the plural word linked to the Duumvirate explanation. Vanilla uses it in the imperial expedition casus belli and diarchy texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "co_monarch",
+  "label": "Co-monarch",
+  "summary": "The game concept Co-Monarchy, shown as \"Co-Monarch\": the partner a feudal king or emperor raises to share rule in a permanent diarchy.",
+  "details": "`[co_monarch|E]` in a text shows the word linked to the Co-Monarchy explanation. A co-monarchy lets feudal rulers pick a designated heir even in early eras, at the cost of a permanent diarchy that gives the partner easier access to many regent powers; it is only for kings and emperors. Vanilla uses it in government and diarchy texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:2267"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "co_monarchies",
+  "label": "Co-monarchy",
+  "summary": "The game concept Co-Monarchy: a type of diarchy that lets feudal rulers choose a designated heir even in early eras.",
+  "details": "`[co_monarchies|E]` in a text shows the plural word linked to the concept's explanation. The price is a permanent diarchy with the heir; only kings and emperors can have one. Vanilla uses it in a concept text listing diarchy types.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "co_monarchs",
+  "label": "Co-monarch",
+  "summary": "The game concept Co-Monarchy, shown as \"Co-Monarchs\": partners who share a king's or emperor's rule in a permanent diarchy.",
+  "details": "`[co_monarchs|E]` in a text shows the plural word linked to the Co-Monarchy explanation. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "co_monarchy",
+  "label": "Co-monarchy",
+  "summary": "The game concept Co-Monarchy: a type of diarchy that lets feudal rulers choose a designated heir even in early eras.",
+  "details": "`[co_monarchy|E]` in a text shows the word linked to the concept's explanation. The price is a permanent diarchy that gives the heir easier access to many entrenched regent powers; only kings and emperors can have one. Vanilla uses it as the diarchy type's name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "co_ruler",
+  "label": "Co-ruler",
+  "summary": "The game concept Co-Rulership, shown as \"Co-Ruler\": a diarch who officially and permanently shares the rule of the realm.",
+  "details": "`[co_ruler|E]` in a text shows the word linked to the Co-Rulership explanation. A co-ruler is always the designated heir (though elections can still go against them) and can only be removed by execution, or maimed with a fitting culture tradition. Vanilla uses it in diarch interaction texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:2249"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "co_rulers",
+  "label": "Co-ruler",
+  "summary": "The game concept Co-Rulership, shown as \"Co-Rulers\": diarchs who officially and permanently share the rule of the realm.",
+  "details": "`[co_rulers|E]` in a text shows the plural word linked to the Co-Rulership explanation. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "co_rulership",
+  "label": "Co-rulership",
+  "summary": "The game concept Co-Rulership: a form of diarchy in which the diarch officially and permanently shares the rule of the realm.",
+  "details": "`[co_rulership|E]` in a text shows the word linked to the concept's explanation. The co-ruler is always the designated heir and can only be removed by execution, or maimed with a fitting culture tradition. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "co_rulerships",
+  "label": "Co-rulership",
+  "summary": "The game concept Co-Rulership: a form of diarchy in which the diarch officially and permanently shares the rule of the realm.",
+  "details": "`[co_rulerships|E]` in a text shows the plural word linked to the concept's explanation. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "cognomen",
+  "label": "Nickname",
+  "summary": "The game concept Nickname, shown as \"Cognomen\": a second name a character takes or is given, such as Charles 'the Bald'.",
+  "details": "`[cognomen|E]` in a text shows the word linked to the Nickname explanation. Nicknames are only for show, and a bad one is sometimes replaced by a good one. Vanilla uses it in the nickname lifestyle events.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:1974"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "cognomens",
+  "label": "Nickname",
+  "summary": "The game concept Nickname, shown as \"Cognomens\": second names characters take or are given.",
+  "details": "`[cognomens|E]` in a text shows the plural word linked to the Nickname explanation. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:1977"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "cohesion",
+  "label": "Bloc cohesion",
+  "summary": "The game concept Bloc Cohesion: how united a house bloc is; higher levels give its member houses more benefits, based on the leading house's aspiration.",
+  "details": "`[cohesion|E]` in a text shows the word \"Cohesion\" linked to the concept's explanation. It comes mainly from relations between the member houses, and a large bloc or members with mismatched aspirations or governments lower it. Vanilla uses it in a debug decision and an effect that sets a bloc's cohesion.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/dlc/tgp/dlc_tgp_japan_government_l_english.yml:63"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "collect_taxes",
+  "label": "Collect taxes",
+  "summary": "The game concept Collect Taxes: a councillor task of the steward that raises all taxes in the character's personal domain.",
+  "details": "`[collect_taxes|E]` in a text shows the task's name linked to the concept's explanation. Vanilla uses it in an effect text about the task's effectiveness.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/council_tasks_l_english.yml:275"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "college_of_cardinals",
+  "label": "College of cardinals",
+  "summary": "The game concept College of Cardinals: the cardinals who advise the Pope and elect the next head of faith of the Christian Church.",
+  "details": "`[college_of_cardinals|E]` in a text shows the word linked to the concept's explanation. Every cardinal is both a candidate and a voter for the Papacy. Vanilla uses it in important action and succession law texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "combat_phase",
+  "label": "Battle phase",
+  "summary": "The game concept Battle Phase: one part of a battle, which has three: maneuver, main phase and aftermath.",
+  "details": "`[combat_phase|E]` in a text shows the word linked to the concept's explanation. Vanilla uses it in the battle window, for the current phase and the days left in it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "combat_roll",
+  "label": "Battle roll",
+  "summary": "The game concept Battle Roll: the random advantage roll, from 0 to 10, that each commander makes during a battle.",
+  "details": "`[combat_roll|E]` in a text shows the word linked to the concept's explanation. The rolls are purely random but can decide a battle. Vanilla uses it in perk texts that raise the minimum and maximum roll in certain terrain.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "combat_width",
+  "label": "Combat width",
+  "summary": "The game concept Combat Width: how many soldiers from each side can fight each other at the same time in a battle.",
+  "details": "`[combat_width|E]` in a text shows the word linked to the concept's explanation. It is set at the start of the battle, can depend on terrain, and stops one side from overwhelming the other at once. Vanilla uses it in the battle breakdown and terrain texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "command_modifier",
+  "label": "Command modifier",
+  "summary": "The game concept Command Modifier: a modifier that only works while the character commands an army.",
+  "details": "`[command_modifier|E]` in a text shows the word linked to the concept's explanation. The army the character leads gets the effect. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "command_modifier_i",
+  "label": "Command modifier (icon)",
+  "summary": "The icon of the game concept Command Modifier, a modifier that only works while the character commands an army.",
+  "details": "`[command_modifier_i|E]` in a text shows the command modifier icon linked to the concept's explanation. Vanilla puts it in front of effect lines that only apply to commanders; written as `[command_modifier_i]` without `|E` it shows the icon alone.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:1967"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "command_modifiers",
+  "label": "Command modifier",
+  "summary": "The game concept Command Modifier: a modifier that only works while the character commands an army.",
+  "details": "`[command_modifiers|E]` in a text shows the plural word linked to the concept's explanation. Vanilla uses it in a Chinese government text listing a councillor's command modifiers.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "commander",
+  "label": "Army commander",
+  "summary": "The game concept Army Commander: a character leading an army.",
+  "details": "`[commander|E]` in a text shows the word linked to the concept's explanation. Courtiers and direct vassals can be commanders, within limits of age, health and doctrines. The commander's martial skill strongly affects advantage in battle, and commander traits give the army perks. Vanilla uses it in relation and council task texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "commander_trait",
+  "label": "Commander trait",
+  "summary": "The game concept Commander Trait: a special trait that gives a character useful perks while commanding an army.",
+  "details": "`[commander_trait|E]` in a text shows the word linked to the concept's explanation. Children with the martial education focus usually get them, but the martial lifestyle and other ways can also give them. Vanilla uses it in building requirement texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "commander_traits",
+  "label": "Commander trait",
+  "summary": "The game concept Commander Trait: special traits that give a character useful perks while commanding an army.",
+  "details": "`[commander_traits|E]` in a text shows the plural word linked to the concept's explanation. Vanilla uses it in the battle prediction and the commander concept text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "commanders",
+  "label": "Army commander",
+  "summary": "The game concept Army Commander: characters leading armies.",
+  "details": "`[commanders|E]` in a text shows the plural word linked to the concept's explanation. Vanilla uses it in concept texts, for example about who can be commanders and knights.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "commanding",
+  "label": "Army commander",
+  "summary": "The game concept Army Commander, shown as the word \"Commanding\".",
+  "details": "`[commanding|E]` in a text shows the word linked to the Army Commander explanation. Vanilla uses it in sentences such as \"the risks of commanding armies\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:711"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "commission_epic",
+  "label": "Commission epic",
+  "summary": "The game concept Commission Epic: a decision in which a character pays gold for an artifact, a commissioned family epic.",
+  "details": "`[commission_epic|E]` in a text shows the decision's name linked to the concept's explanation. The epic gives dynasty prestige and, depending on the choices made, other bonuses. Vanilla uses it in effect texts that unlock the decision.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/decisions_l_english.yml:640"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "commission_epic_decision",
+  "label": "Commission epic",
+  "summary": "The game concept Commission Epic: a decision in which a character pays gold for an artifact, a commissioned family epic.",
+  "details": "`[commission_epic_decision|E]` in a text shows the decision's name linked to the concept's explanation. The epic gives dynasty prestige and can give other bonuses. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: game/localization/english/decisions_l_english.yml:640"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "common",
+  "label": "Artifact rarity",
+  "summary": "The game concept Artifact Rarity, shown as the lowest rarity \"Common\".",
+  "details": "`[common|E]` in a text shows the common rarity's name linked to the Artifact Rarity explanation. From lowest to highest the rarities are common (never shown, as it is the default), masterwork, famed and illustrious. Vanilla uses it for a common Ampulla of Holy Myron.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:2118"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "commoner",
+  "label": "Commoner",
+  "summary": "The game concept Commoner: a lowborn character who is not part of a noble dynasty.",
+  "details": "`[commoner|E]` in a text shows the word linked to the concept's explanation. Commoners can still rule theocracies and republics; one who becomes landed turns noble and founds a dynasty, except in republics and theocracies. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "commoners",
+  "label": "Commoner",
+  "summary": "The game concept Commoner: lowborn characters who are not part of a noble dynasty.",
+  "details": "`[commoners|E]` in a text shows the plural word linked to the concept's explanation. Vanilla uses it in the landed and dynasty concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "complete_control",
+  "label": "Complete control",
+  "summary": "The game concept Complete Control: a condition met when the ruler or their vassals hold all de jure vassal titles of a title and none of its counties are occupied by hostile armies.",
+  "details": "`[complete_control|E]` in a text shows the word linked to the concept's explanation. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "complete_control_region",
+  "label": "Complete control (region)",
+  "summary": "The game concept Complete Control for a region: a condition met when the ruler or their vassals hold all counties in the region and none are occupied by hostile armies.",
+  "details": "`[complete_control_region|E]` in a text shows the word linked to the concept's explanation. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "completely_control",
+  "label": "Complete control",
+  "summary": "The game concept Complete Control, shown as \"Completely Control\": the ruler or their vassals hold all de jure vassal titles of a title and none of its counties are occupied.",
+  "details": "`[completely_control|E]` in a text shows the word linked to the concept's explanation. Vanilla uses it in achievement and title formation texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:1470"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "completely_control_region",
+  "label": "Complete control (region)",
+  "summary": "The game concept Complete Control for a region, as a verb: the ruler or their vassals hold all counties in the region and none are occupied.",
+  "details": "`[completely_control_region|E]` in a text shows the word linked to the concept's explanation. Vanilla uses it in the trigger texts \"You (do not) completely control the region of ...\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "completely_controlled",
+  "label": "Complete control",
+  "summary": "The game concept Complete Control, shown as \"Completely Controlled\": the ruler or their vassals hold all de jure vassal titles of a title and none of its counties are occupied.",
+  "details": "`[completely_controlled|E]` in a text shows the word linked to the concept's explanation. Vanilla uses it in title formation decisions about which titles join the new kingdom.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "completely_controls",
+  "label": "Complete control",
+  "summary": "The game concept Complete Control, shown as \"Completely Controls\": the ruler or their vassals hold all de jure vassal titles of a title and none of its counties are occupied.",
+  "details": "`[completely_controls|E]` in a text shows the word linked to the concept's explanation. Vanilla uses it in decision and trigger texts naming the title.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "completely_controls_region",
+  "label": "Complete control (region)",
+  "summary": "The game concept Complete Control for a region, shown as \"Completely Controls\": the ruler or their vassals hold all counties in the region and none are occupied.",
+  "details": "`[completely_controls_region|E]` in a text shows the word linked to the concept's explanation. Vanilla uses it in the region trigger texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:1476"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "concubinage",
+  "label": "Concubinage",
+  "summary": "The game concept Concubinage: taking a concubine, a partner of lower status than a spouse, in faiths whose doctrine allows it.",
+  "details": "`[concubinage|E]` in a text shows the word linked to the concept's explanation. Unlike marriage it gives no alliance, concubines can be set aside without a divorce, and their children are legitimate. It cannot exist together with polygamy. Vanilla uses it in the character window and lover texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "concubine",
+  "label": "Concubine",
+  "summary": "The game concept Concubinage, shown as \"Concubine\": a partner of lower status than a spouse, allowed by some faiths' doctrine.",
+  "details": "`[concubine|E]` in a text shows the word linked to the Concubinage explanation. A concubine brings no alliance, can be set aside without a divorce, and has legitimate children. Vanilla uses it in the effect texts for taking a concubine.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "concubine_female",
+  "label": "Concubine",
+  "summary": "The game concept Concubinage, shown as \"Concubine\" for a woman.",
+  "details": "`[concubine_female|E]` in a text shows the word linked to the Concubinage explanation. Vanilla uses it in the character window for a female concubine.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:553"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "concubine_male",
+  "label": "Concubine",
+  "summary": "The game concept Concubinage, shown as \"Concubine\" for a man.",
+  "details": "`[concubine_male|E]` in a text shows the word linked to the Concubinage explanation. Vanilla uses it in the character window for a male concubine.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: game/localization/english/game_concepts_l_english.yml:552"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "concubines",
+  "label": "Concubine",
+  "summary": "The game concept Concubinage, shown as \"Concubines\": partners of lower status than a spouse.",
+  "details": "`[concubines|E]` in a text shows the plural word linked to the Concubinage explanation. Vanilla uses it in concept texts about legitimacy and setting concubines aside.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "confederate",
+  "label": "Confederate",
+  "summary": "The game concept Confederate: a ruler who belongs to a confederation.",
+  "details": "`[confederate|E]` in a text shows the word linked to the concept's explanation. Confederates join each other's defensive wars automatically and may not attack or raid each other. Vanilla uses it in AI behavior lines of interactions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "confederates",
+  "label": "Confederate",
+  "summary": "The game concept Confederate: rulers who belong to a confederation.",
+  "details": "`[confederates|E]` in a text shows the plural word linked to the concept's explanation. Vanilla uses it in cultural tradition texts where confederates become tributaries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "confederation",
+  "label": "Confederation",
+  "summary": "The game concept Confederation: a mutual defense bond between tribal or nomadic rulers, much like an alliance.",
+  "details": "`[confederation|E]` in a text shows the word linked to the concept's explanation. It is formed through a decision, members must join each other's defensive wars and may not attack or raid each other, and they are kept from high tribal or nomadic authority. Vanilla uses it in the membership trigger texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "confederation_government",
+  "label": "Confederation",
+  "summary": "The game concept Confederation, shown as \"Confederation Government\": a mutual defense bond between tribal or nomadic rulers.",
+  "details": "`[confederation_government|E]` in a text shows the word linked to the Confederation explanation. No vanilla text uses this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: game/localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:12"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "confederations",
+  "label": "Confederation",
+  "summary": "The game concept Confederation: mutual defense bonds between tribal or nomadic rulers.",
+  "details": "`[confederations|E]` in a text shows the plural word linked to the concept's explanation. Vanilla uses it in a coronation intent text and as a header next to blocs.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "confidant",
+  "label": "Confidant",
+  "summary": "The game concept Confidant: the vizier or one of the spouses that a ruler with a clan government picks to support them in daily tasks.",
+  "details": "`[confidant|E]` in a text shows the word Confidant, linked to the concept's explanation. The concept's name and description come from the council texts (the vizier position). The vanilla lines that write `[confidant.GetFirstNameNoTooltip]` and similar read as a saved character of the same name in a coronation event, not this concept.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/council_l_english.yml:61",
+   "vanilla: localization/english/council_l_english.yml:62",
+   "vanilla: localization/english/game_concepts_l_english.yml:2235"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "congenital",
+  "label": "Congenital",
+  "summary": "The game concept Congenital: traits that children can inherit from their parents.",
+  "details": "`[congenital|E]` in a text shows the word Congenital, linked to the concept's explanation. By breeding, some of these traits can be made stronger: two parents with the first intelligence trait may have a child with the better one. Base skills are not inherited this way. Vanilla uses the link in the choice of a trait to make more common in a dynasty.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "congenital_trait",
+  "label": "Congenital trait",
+  "summary": "Another name of the game concept Congenital (inheritable traits), shown as the words Congenital Trait.",
+  "details": "`[congenital_trait|E]` in a text shows Congenital Trait, linked to the explanation of congenital traits: traits a child can inherit, and that breeding can strengthen. Vanilla's texts do not use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1437"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "congenital_traits",
+  "label": "Congenital traits",
+  "summary": "The plural name of the game concept Congenital: the traits a character can pass on to their children.",
+  "details": "`[congenital_traits|E]` in a text shows the plural, linked to the explanation of congenital traits. Vanilla uses it in the inheritable-traits line of an interaction window and in a modifier for the chance to inherit good ones.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "conqueror_i",
+  "label": "Conqueror icon",
+  "summary": "The icon of the game concept Conqueror (the AI personality that wants to grow its realm by war at any cost).",
+  "details": "`[conqueror_i]` in a text shows the conqueror icon; vanilla writes it right before the word, as in the conqueror game rule and the conqueror AI personality's name. A Conqueror puts its gold into its war chest or into men-at-arms, starts many more wars and is an unreliable ally.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2425",
+   "vanilla: localization/english/game_concepts_l_english.yml:2436"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contact_list",
+  "label": "Roll of patrons",
+  "summary": "The game concept Roll of Patrons: an adventurer's list of characters who support them.",
+  "details": "`[contact_list|E]` in a text shows the words Roll of Patrons, linked to the concept's explanation. The list holds everyone the adventurer finished a task contract for, plus others with a reason to help, such as fond family, friends and lovers. The adventurer can ask these patrons for extra support with a character interaction. Vanilla uses it where a contract or a scheme adds someone to the list.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contact_list_contact",
+  "label": "Roll of patrons",
+  "summary": "Another name of the game concept Roll of Patrons, used for one patron on an adventurer's list.",
+  "details": "`[contact_list_contact|E]` in a text shows the word for a single patron, linked to the Roll of Patrons explanation (the characters who support an adventurer). Vanilla uses it in effect texts such as every patron with a positive opinion, and in a task contract's requirement.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contact_list_contacts",
+  "label": "Roll of patrons",
+  "summary": "Another name of the game concept Roll of Patrons, used for the patrons on an adventurer's list.",
+  "details": "`[contact_list_contacts|E]` in a text shows the plural word, linked to the Roll of Patrons explanation. Vanilla uses it in texts about a camp's range: moving far puts the adventurer out of reach of their patrons, and provisions can be requested from them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contest",
+  "label": "Contest",
+  "summary": "The game concept Contest: one of the competitions of a tournament, where qualified contestants compete for prizes.",
+  "details": "`[contest|E]` in a text shows the word Contest, linked to the concept's explanation. The tournament's host chooses the contests. Each one picks its winner in one of four ways: knock-out, turns, teams or race. Skills, traits and preparation decide the chance to win; who may enter physical contests depends on health, sex and the host's culture and faith.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2347"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contest_aptitude",
+  "label": "Contest aptitude",
+  "summary": "The game concept Contest Aptitude: how good a character is at a kind of tournament contest (foot, horse, bow, wit, or a mix).",
+  "details": "`[contest_aptitude|E]` in a text shows the words Contest Aptitude, linked to the concept's explanation. Aptitude comes from skills, health, traits and the experience of the tourney participant trait; a giant with high prowess, for example, does well at wrestling. Vanilla uses it in modifier texts that raise or lower it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contest_category_race",
+  "label": "Race",
+  "summary": "The game concept Race: the contest format where the qualified contestant whose horse finishes first wins.",
+  "details": "`[contest_category_race|E]` in a text shows the word Race, linked to the concept's explanation. The horse race is the contest of this format. Vanilla uses it in the contest format line of tournaments.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contest_category_team",
+  "label": "Teams",
+  "summary": "The game concept Teams: the contest format where every qualified contestant on the team with the most points at the end gets rewards.",
+  "details": "`[contest_category_team|E]` in a text shows the word Teams, linked to the concept's explanation. The melee is the contest of this format.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contest_category_turn",
+  "label": "Turns",
+  "summary": "The game concept Turns: the contest format where the qualified contestant with the most points at the end wins.",
+  "details": "`[contest_category_turn|E]` in a text shows the word Turns, linked to the concept's explanation. Archery and the recital are contests of this format.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contest_category_versus",
+  "label": "Knock-out",
+  "summary": "The game concept Knock-Out: the contest format where qualified contestants face each other in bouts over three rounds until one is left.",
+  "details": "`[contest_category_versus|E]` in a text shows the word Knock-Out, linked to the concept's explanation. Wrestling, the duel, the joust and board games are contests of this format.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contest_qualification",
+  "label": "Qualification",
+  "summary": "The game concept Qualification: whether a contestant gets a place in a tournament contest.",
+  "details": "`[contest_qualification|E]` in a text shows the word Qualification, linked to the concept's explanation. Many characters may be eligible, but only a few qualify for each contest. A character whose progress to victory is above the threshold when the contest starts is sure to qualify. Vanilla uses it in message filters for changes to a character's or their champion's qualification.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contest_qualifier",
+  "label": "Qualification",
+  "summary": "Another name of the game concept Qualification, shown as the word Qualifier.",
+  "details": "`[contest_qualifier|E]` in a text shows Qualifier, linked to the Qualification explanation (only a few eligible characters get a place in each contest). Vanilla's texts do not use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2364"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contest_qualifiers",
+  "label": "Qualification",
+  "summary": "Another name of the game concept Qualification, shown as the word Qualifiers.",
+  "details": "`[contest_qualifiers|E]` in a text shows Qualifiers, linked to the Qualification explanation. Vanilla's texts do not use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2365"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contest_qualifies",
+  "label": "Qualification",
+  "summary": "Another name of the game concept Qualification, written as the verb qualifies (a contestant qualifies for a contest).",
+  "details": "`[contest_qualifies|E]` in a text shows the verb, linked to the Qualification explanation. Vanilla uses it once, in a concept text about gaining prestige when one of the ruler's knights qualifies for or wins a tournament contest.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contest_qualify",
+  "label": "Qualification",
+  "summary": "Another name of the game concept Qualification, shown as the verb Qualify.",
+  "details": "`[contest_qualify|E]` in a text shows Qualify, linked to the Qualification explanation: only a few eligible characters get a place in each tournament contest. Vanilla's texts do not use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2363"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contest_qualifying",
+  "label": "Qualification",
+  "summary": "Another name of the game concept Qualification, written as qualifying (the contestants who have a place in a contest).",
+  "details": "`[contest_qualifying|E]` in a text shows the word, linked to the Qualification explanation. Vanilla's concept texts write it before contestants, as in the qualifying contestants of a contest.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contest_round",
+  "label": "Contest round",
+  "summary": "The game concept Contest Round: one of the three rounds of a knock-out contest (quarter-finals, semi-finals and the final).",
+  "details": "`[contest_round|E]` in a text shows the words Contest Round, linked to the concept's explanation. In knock-out contests the qualified contestants are paired against each other in bouts until only one is left. Vanilla's texts use the plural form instead.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2359"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contest_rounds",
+  "label": "Contest round",
+  "summary": "The plural name of the game concept Contest Round: the rounds of a knock-out contest.",
+  "details": "`[contest_rounds|E]` in a text shows the plural, linked to the Contest Round explanation (quarter-finals, semi-finals and the final). Vanilla uses it in the knock-out explanation and in a tournament text giving the number of rounds as 3.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contestant",
+  "label": "Contestant",
+  "summary": "The game concept Contestant: a character who competes in a tournament contest.",
+  "details": "`[contestant|E]` in a text shows the word Contestant, linked to the concept's explanation. Each contest has requirements: board games are open to all, others such as wrestling depend on martial rules, and the host's culture and religion decide by gender and health who may enter. Those who do not compete are spectators, and a possible contestant may choose to watch instead. Vanilla lines that write `[contestant.GetHerHis]` and similar use a saved character of the same name in memory texts, not this concept.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contestants",
+  "label": "Contestant",
+  "summary": "The plural name of the game concept Contestant: the characters who compete in a tournament contest.",
+  "details": "`[contestants|E]` in a text shows the plural, linked to the Contestant explanation. Vanilla uses it in the concept texts about contests and their formats.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contests",
+  "label": "Contest",
+  "summary": "The plural name of the game concept Contest: the competitions of a tournament.",
+  "details": "`[contests|E]` in a text shows the plural, linked to the Contest explanation. Vanilla uses it in building texts about cheaper contests in a holding and in concept texts about tournaments and prizes.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contract_assistance",
+  "label": "Military assistance",
+  "summary": "The game concept Military Assistance: an interaction that lets rulers involved in the Iberian struggle join each other's wars for gold.",
+  "details": "`[contract_assistance|E]` in a text shows the words Military Assistance, linked to the concept's explanation. Payment comes when the war ends, whatever the outcome, as long as the helping ruler reached a war contribution of at least 100. Vanilla uses it in the texts telling who paid or did not pay whom for the help.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contract_assisting",
+  "label": "Military assistance",
+  "summary": "Another name of the game concept Military Assistance, shown as the words Assisting Militarily (giving paid help in another struggle ruler's war).",
+  "details": "`[contract_assisting|E]` in a text shows Assisting Militarily, linked to the Military Assistance explanation. Vanilla uses it once, in the message that the character is already assisting in a war.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contract_scheme",
+  "label": "Contract scheme",
+  "summary": "The game concept Contract Scheme: a scheme an adventurer must complete to fulfil a task contract.",
+  "details": "`[contract_scheme|E]` in a text shows the words Contract Scheme, linked to the concept's explanation. These schemes can be harmful (murdering the contractor's rival), pleasant (entertaining their court with stories) or harmless (copying texts). If the scheme fails or is abandoned, the task contract fails too.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contract_scheme_contract",
+  "label": "Contract scheme",
+  "summary": "Another name of the game concept Contract Scheme, shown as the word Contract.",
+  "details": "`[contract_scheme_contract|E]` in a text shows the word Contract, linked to the Contract Scheme explanation (a scheme an adventurer must finish for a task contract). Vanilla uses it once, in the description of a contract scheme.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contract_scheme_possessive",
+  "label": "Contract scheme",
+  "summary": "The possessive name of the game concept Contract Scheme, shown as Contract Scheme's.",
+  "details": "`[contract_scheme_possessive|E]` in a text shows Contract Scheme's, linked to the explanation of contract schemes. Vanilla's texts do not use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:132"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contract_schemes",
+  "label": "Contract scheme",
+  "summary": "The plural name of the game concept Contract Scheme: schemes adventurers must complete for task contracts.",
+  "details": "`[contract_schemes|E]` in a text shows the plural, linked to the Contract Scheme explanation. Vanilla's scheme explanation lists them as one of the four kinds of scheme, and the only kind whose success chance can go above 95%.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contract_schemes_possessive",
+  "label": "Contract scheme",
+  "summary": "The plural possessive name of the game concept Contract Scheme, shown as Contract Schemes'.",
+  "details": "`[contract_schemes_possessive|E]` in a text shows Contract Schemes', linked to the explanation of contract schemes. Vanilla's texts do not use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:133"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contractor",
+  "label": "Contractor",
+  "summary": "The game concept Contractor: the character who puts out a task contract for adventurers.",
+  "details": "`[contractor|E]` in a text shows the word Contractor, linked to the concept's explanation. The contract mostly concerns the contractor, who usually pays the adventurer. Criminal contracts are the exception: they are usually not put out by the contractor but exploit them, for example by tricking a gullible person out of gold.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contractor_possessive",
+  "label": "Contractor",
+  "summary": "The possessive name of the game concept Contractor (the character who puts out a task contract).",
+  "details": "`[contractor_possessive|E]` in a text shows the possessive, linked to the Contractor explanation. Vanilla uses it in contract scheme descriptions, such as the contractor's court or the contractor's land.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contractors",
+  "label": "Contractor",
+  "summary": "The plural name of the game concept Contractor: the characters who put out task contracts.",
+  "details": "`[contractors|E]` in a text shows the plural, linked to the Contractor explanation. Vanilla uses it in contract scheme descriptions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contractors_possessive",
+  "label": "Contractor",
+  "summary": "The plural possessive name of the game concept Contractor.",
+  "details": "`[contractors_possessive|E]` in a text shows the plural possessive, linked to the Contractor explanation (the characters who put out task contracts). Vanilla uses it once, in a contract scheme description about dangerous lands.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contribute",
+  "label": "War contribution",
+  "summary": "Another name of the game concept War Contribution, shown as the verb Contribute.",
+  "details": "`[contribute|E]` in a text shows Contribute, linked to the War Contribution explanation: rulers helping allies in a war earn contribution from battles (lost ones too) and occupied holdings, and are rewarded for it when the war ends, usually with gold, prestige or piety. Vanilla's texts do not use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1184"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "contribution",
+  "label": "War contribution",
+  "summary": "Another name of the game concept War Contribution: how much a ruler has done to help allies in a war.",
+  "details": "`[contribution|E]` in a text shows the word, linked to the War Contribution explanation. Contribution grows with the number and size of battles fought, even lost ones, and with occupied holdings; at the end of the war each helper is rewarded by it, depending on the casus belli. Vanilla uses it in interaction texts that pay gold by contribution.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "control",
+  "label": "County control",
+  "summary": "Another name of the game concept County Control: how firmly the government holds the people of a county.",
+  "details": "`[control|E]` in a text shows the word Control, linked to the County Control explanation. Control matters most for taxes from the holdings. It drops sharply when a county is taken in war, and sieges and peasant uprisings damage it; low control can bring county corruption, and the marshal's council task raises it. Vanilla uses it in the texts of control changes.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1967",
+   "vanilla: localization/english/game_concepts_l_english.yml:1226"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "control_i",
+  "label": "County control icon",
+  "summary": "The icon of the game concept County Control (how firmly the government holds a county).",
+  "details": "`[control_i]` in a text shows the control icon; vanilla writes it before a value, as in the control changes by an amount.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1225"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "convert",
+  "label": "Convert faith in county",
+  "summary": "Another name of the game concept Convert Faith in County (the court chaplain's council task), shown as the verb Convert.",
+  "details": "`[convert|E]` in a text shows Convert, linked to the explanation of the conversion task. Vanilla uses it once, in a law text saying vassals are more inclined to convert to the ruler's faith.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/council_tasks_l_english.yml:367"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "convert_county",
+  "label": "Convert faith in county",
+  "summary": "The game concept Convert Faith in County: the court chaplain's council task that converts a county of another faith or rite.",
+  "details": "`[convert_county|E]` in a text shows the task's name, linked to the concept's explanation. Progress grows each month; at 100% most of the county takes the chaplain's faith. The rite follows the liege when the new faith is the liege's, otherwise it is the chaplain's own rite. Many things change the speed, such as the councillor's skill.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/council_tasks_l_english.yml:367"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "converted",
+  "label": "Convert faith in county",
+  "summary": "Another name of the game concept Convert Faith in County, written as converted (a county the chaplain has converted).",
+  "details": "`[converted|E]` in a text shows the word, linked to the explanation of the chaplain's conversion task. Vanilla uses it in the message that a councillor has converted a county. The memory line that writes `[converted.GetName]` uses a saved county of the same name, not this concept.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "converting",
+  "label": "Convert faith in county",
+  "summary": "Another name of the game concept Convert Faith in County, written as converting (the chaplain's conversion task is under way).",
+  "details": "`[converting|E]` in a text shows the word, linked to the explanation of the conversion task. Vanilla uses it in the messages that a councillor is converting, or has stopped converting, a county.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "convince_dejure",
+  "label": "Convince de jure territory",
+  "summary": "The game concept Convince De Jure Territory: the steward's council task that persuades a county to come back to its rightful liege.",
+  "details": "`[convince_dejure|E]` in a text shows the task's name, linked to the concept's explanation. It targets a county that rightfully (de jure) belongs to the steward's liege but is owned by an independent ruler. Once persuaded, the county asks its ruler to release it to that liege. Vanilla uses it where a court grandeur level unlocks the task.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/council_tasks_l_english.yml:326"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "core",
+  "label": "Tenet",
+  "summary": "Another name of the game concept Tenet, shown as the word Core (a tenet that is part of a faith).",
+  "details": "`[core|E]` in a text shows Core, linked to the Tenet explanation: where doctrines are positions a rite must take, tenets are its own customs and practices. Vanilla uses it once, in a decision requiring a tenet to be permitted or core to the faith.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1371"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "core_tenet",
+  "label": "Tenet",
+  "summary": "Another name of the game concept Tenet, shown as the word Tenet: one of a faith's defining customs and practices.",
+  "details": "`[core_tenet|E]` in a text shows the word Tenet, linked to the Tenet explanation (tenets are a rite's own quirks, beside the doctrines it must take a stance on). Vanilla uses it often, in requirements such as having or not having a given tenet.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "core_tenet_status",
+  "label": "Core",
+  "summary": "The game concept Core: the tenet status of a tenet or doctrine that a rite actively promotes as one of its defining practices.",
+  "details": "`[core_tenet_status|E]` in a text shows the word Core, linked to the concept's explanation. Every follower of the rite is subject to the effects of a core tenet or doctrine. Vanilla uses it next to the permitted status, as in a tenet that is already permitted or core in the faith.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "core_tenets",
+  "label": "Tenet",
+  "summary": "The plural name of the game concept Tenet, shown as Tenets: a faith's defining customs and practices.",
+  "details": "`[core_tenets|E]` in a text shows the plural, linked to the Tenet explanation. Vanilla's concept texts use it for the beliefs of a faith's main rite and for what holy orders spread.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "coronation",
+  "label": "Coronation",
+  "summary": "The game concept Coronation: an activity where a ruler invites vassals, peers and guests to witness their ascension to the throne.",
+  "details": "`[coronation|E]` in a text shows the word Coronation, linked to the concept's explanation. It comes as a regular coronation or as an anointment, which costs more and rewards more. Vanilla's texts say kings and emperors who have not held one are seen as illegitimate by their vassals.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "coronation_anointment",
+  "label": "Anointment",
+  "summary": "The game concept Anointment: the kind of coronation where the ruler seeks the blessing of their head of faith (or the head of their rite when there is none).",
+  "details": "`[coronation_anointment|E]` in a text shows the word Anointment, linked to the concept's explanation. In some faiths it is needed to count as a truly legitimate ruler. The host can win the religious authority's support with the anointment request interaction. Vanilla uses it in coronation activity texts about who has access to the anointment option.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "coronation_detractor",
+  "label": "Detractor",
+  "summary": "The game concept Detractor: a guest at a coronation who opposes the host's ascension and tries to ruin their legitimacy.",
+  "details": "`[coronation_detractor|E]` in a text shows the word Detractor, linked to the concept's explanation. Detractors stand against the coronation's supporters. Vanilla uses it in faction reasons and in coronation intent texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "coronation_detractors",
+  "label": "Detractor",
+  "summary": "The plural name of the game concept Detractor: the coronation guests who work against the host.",
+  "details": "`[coronation_detractors|E]` in a text shows the plural, linked to the Detractor explanation. Vanilla uses it in coronation texts, such as an intent that harms detractors and the window of the detractors with the biggest impact.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "coronation_i",
+  "label": "Coronation icon",
+  "summary": "The icon of the game concept Coronation (the activity where a ruler is crowned before guests).",
+  "details": "`[coronation_i]` in a text shows the coronation activity icon; vanilla writes it before the word, as in `[coronation_i][coronation|E]`, and before coronation oath labels.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ach/dlc_ach_game_concepts_l_english.yml:5"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "coronation_magnificence",
+  "label": "Magnificence",
+  "summary": "The game concept Magnificence: the score of a coronation that decides how well it turns out for the host.",
+  "details": "`[coronation_magnificence|E]` in a text shows the word Magnificence, linked to the concept's explanation. A higher score gives the host a better outcome. Intents, activity options and the activity's events raise it, and supporters and detractors can change it too.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "coronation_supporter",
+  "label": "Supporter",
+  "summary": "The game concept Supporter: a guest at a coronation who backs the host's ascension and can help secure their legitimacy.",
+  "details": "`[coronation_supporter|E]` in a text shows the word Supporter, linked to the concept's explanation. Supporters stand against the coronation's detractors. Vanilla uses it in coronation texts, such as vassals who swore loyalty as supporters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "coronation_supporters",
+  "label": "Supporter",
+  "summary": "The plural name of the game concept Supporter: the coronation guests who back the host.",
+  "details": "`[coronation_supporters|E]` in a text shows the plural, linked to the Supporter explanation. Vanilla uses it in intent texts that please supporters and in texts about problems for the host and their supporters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "coronations",
+  "label": "Coronation",
+  "summary": "The plural name of the game concept Coronation: the activities where rulers are crowned.",
+  "details": "`[coronations|E]` in a text shows the plural, linked to the Coronation explanation. Vanilla uses it in a game rule text saying the AI holds coronations less often.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "council",
+  "label": "Council",
+  "summary": "The game concept Council: the six councillors who help a ruler run the realm.",
+  "details": "`[council|E]` in a text shows the word Council, linked to the concept's explanation. Each councillor heads a department and can be given council tasks. Vanilla uses it in texts about leaving or being fired from a council.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "council_i",
+  "label": "Council icon",
+  "summary": "The icon of the game concept Council (the ruler's six councillors).",
+  "details": "`[council_i]` in a text shows the council icon; vanilla writes it before a scheme agent offer of a guaranteed council seat.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:140"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "councillor",
+  "label": "Councillor",
+  "summary": "The game concept Councillor: one of a ruler's main helpers on the council.",
+  "details": "`[councillor|E]` in a text shows the word Councillor, linked to the concept's explanation. The six seats are chancellor, marshal, steward, spymaster, court chaplain (or realm priest) and the spouse; each runs a department with its own tasks. Powerful vassals are upset when they get no seat.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "councillor_task",
+  "label": "Councillor task",
+  "summary": "The game concept Councillor Task: a job a ruler gives one of their councillors.",
+  "details": "`[councillor_task|E]` in a text shows the words, linked to the concept's explanation. A task can be general or aimed at a county or a court. A relation with the councillor can make tasks with a completion time take longer or shorter. Councillors only lead the effort; they do not travel to do it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ }
+]

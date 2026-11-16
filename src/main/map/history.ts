@@ -1,13 +1,13 @@
 /**
- * Dated history files (history/titles, history/provinces … — docs/map.md): per entry (`c_paris = { … }`,
- * `2333 = { … }`) its statements with their dates — undated ones count from the start.
+ * Dated history files (history/titles, history/provinces …, docs/map.md): per entry (`c_paris = { … }`,
+ * `2333 = { … }`) its statements with their dates; undated ones count from the start.
  */
 import { parse, type PNode } from '../indexer/parser.ts';
 
 export const DATE_KEY = /^\d+\.\d+\.\d+$/;
 
 /**
- * A history block's date as the game reads it: y.m.d, also y and y.m, and with a dot after — vanilla writes
+ * A history block's date as the game reads it: y.m.d, also y and y.m, and with a dot after: vanilla writes
  * `867.1.1. = {` (e_khmer.txt: 25 counties' holders), `999 = {` (k_andhra.txt), `1084 = {` (k_pontus.txt), `895.1 = {`
  * (k_sulawesi.txt).
  */
@@ -16,7 +16,7 @@ export const HISTORY_DATE = /^\d+(\.\d+){0,2}\.?$/;
 /** y.m.d (or y, y.m, a dot after) → a sortable number (y × 10000 + m × 100 + d) */
 export function dateNum(d: string): number
 {
-    // (`895.1.`: the part after the last dot is empty — a missing month or day is the first)
+    // (`895.1.`: the part after the last dot is empty: a missing month or day is the first)
     const [y, m, day] = d.split('.').map(Number);
     return y * 10000 + (m || 1) * 100 + (day || 1);
 }
@@ -28,7 +28,7 @@ export interface Dated<T>
     v: T;
 }
 
-/** The index of the last entry at or before the date in a list sorted by date (−1: none) — binary search. */
+/** The index of the last entry at or before the date in a list sorted by date (−1: none), by binary search. */
 export function lastIndexAt(list: Dated<unknown>[], when: number): number
 {
     let lo = 0;

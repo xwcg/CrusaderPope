@@ -5,9 +5,15 @@
  */
 import type { GameIndex } from '../indexer/gameIndex.ts';
 import type { PNode } from '../indexer/parser.ts';
-import { T_CHARACTER } from '../indexer/schema.ts';
+import { T_CHARACTER, T_SAVE_CHARACTER } from '../indexer/schema.ts';
 import { riteHistory } from '../indexer/layouts.ts';
 import { dateNum, HISTORY_DATE, lastAt, lastIndexAt, scalarOf, type Dated } from './history.ts';
+
+/** The characters the map's holders are: a loaded save's (savegame/characters), else the history files'. */
+export function holderType(idx: GameIndex): string
+{
+    return idx.vfs.save ? T_SAVE_CHARACTER : T_CHARACTER;
+}
 
 export interface Holder
 {
@@ -17,7 +23,7 @@ export interface Holder
     death?: number;
     culture: Dated<string>[];
     faith: Dated<string>[];
-    /** 1.20: `rite = x` — wins over a faith of the same date; its faith depends on the date (`riteFaith`) */
+    /** 1.20: `rite = x`, wins over a faith of the same date; its faith depends on the date (`riteFaith`) */
     rite: Dated<string>[];
     riteFaith: (rite: string, when: number) => string | undefined;
     dynasty: Dated<string>[];
@@ -35,13 +41,16 @@ export class HolderBook
 {
     private idx: GameIndex;
     private read = new Map<string, Holder | null>();
+    /** the characters' type: the history files', or a loaded save's (savegame/characters, written alike) */
+    private type: string;
 
-    constructor(idx: GameIndex)
+    constructor(idx: GameIndex, type: string = T_CHARACTER)
     {
         this.idx = idx;
+        this.type = type;
     }
 
-    /** Reads the characters not read yet — in file order, so each history file is read once. */
+    /** Reads the characters not read yet, in file order, so each history file is read once. */
     load(ids: Iterable<string>): void
     {
         const todo: { id: string; file: number; start: number; }[] = [];
@@ -51,7 +60,7 @@ export class HolderBook
             if (this.read.has(id))
                 continue;
 
-            const e = this.idx.get(T_CHARACTER, id);
+            const e = this.idx.get(this.type, id);
             const d = e?.defs[e.defs.length - 1];
 
             if (d)
@@ -76,7 +85,7 @@ export class HolderBook
 
     private parse(id: string): Holder | null
     {
-        const e = this.idx.get(T_CHARACTER, id)!;
+        const e = this.idx.get(this.type, id)!;
         const node = this.idx.defNode(e)?.node;
 
         if (!node || !Array.isArray(node.v))
@@ -126,8 +135,8 @@ export class HolderBook
 }
 
 /**
- * A character's faith at a date from their dated `religion` / `faith` and (1.20) `rite` statements: the later one — the
- * rite at the same date —, a rite as its faith then.
+ * A character's faith at a date from their dated `religion` / `faith` and (1.20) `rite` statements: the later one (the
+ * rite at the same date), a rite as its faith then.
  */
 export function faithAt(faith: Dated<string>[], rite: Dated<string>[], when: number, riteFaith: (rite: string, when: number) => string | undefined): string | undefined
 {
@@ -137,7 +146,8 @@ export function faithAt(faith: Dated<string>[], rite: Dated<string>[], when: num
     if (r >= 0 && (f < 0 || rite[r].date >= faith[f].date))
         return riteFaith(rite[r].v, when) ?? (f >= 0 ? faith[f].v : undefined);
 
-    return f >= 0 ? faith[f].v : undefined;
+    // (a rite written as the faith (`religion = shafii`): its faith then)
+    return f >= 0 ? (riteFaith(faith[f].v, when) ?? faith[f].v) : undefined;
 }
 
 /** A holder's culture, faith, dynasty and house at a date. */

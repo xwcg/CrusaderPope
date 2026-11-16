@@ -1,0 +1,242 @@
+[
+ {
+  "kind": "on_action", "key": "on_accolade_create_squire", "label": "Accolade creates squire",
+  "summary": "Runs when the game creates a squire for an accolade (a knightly honour held by an acclaimed knight).",
+  "details": "The game's code fires it. Vanilla's comments name the accolade as the root and list the old acclaimed knight, the new accolade type (yes/no) and the new owner as available. Vanilla saves the accolade as `succeeding_accolade` and `accolade_in_need`, saves the old acclaimed knight (if there is one) as `knight_in_need`, and, if there is a new owner, runs the scripted effect `accolade_create_squire_effect` on that owner. The game's documentation says no scope is expected, but vanilla names the accolade as root.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_accolade_created", "label": "Accolade created",
+  "summary": "Runs when a new accolade is created.",
+  "details": "The game's code fires it; vanilla's comment names the accolade as root. Vanilla gives the accolade's acclaimed knight a character memory of type `accolade_created`, with the accolade's owner as the liege, but only if the knight has no memory of that type yet.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_accolade_glory_change", "label": "Accolade glory changes",
+  "summary": "Runs when an accolade's glory changes, with the amount of the change available as `scope:glory`.",
+  "details": "The game's code fires it; vanilla's comment names the accolade as root. Vanilla keeps a running total in the accolade's `lifetime_glory` variable: the first change creates the variable, each later change is added to it.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_accolade_new_acclaimed_knight", "label": "New acclaimed knight",
+  "summary": "Runs when an accolade gets a new acclaimed knight.",
+  "details": "The game's code fires it. Vanilla's comments name the accolade as root and list `glory`, `new_accolade_type` (yes/no), `new_acclaimed_knight` and `old_acclaimed_knight` as available. Vanilla stores the old knight in the accolade's `old_knight` variable if that is not set yet, and saves the accolade as `succeeding_accolade`. A comment then speaks of a glory loss on succession \"unless the old knight is dead and died with honor\", checked against a long list of violent death reasons. The input cuts off before the part that does the glory change, so what exactly happens is not shown.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "on_accolade_rank_change", "label": "Accolade rank changes",
+  "summary": "Runs when an accolade's rank changes; `scope:positive` is yes for a rise and no for a fall.",
+  "details": "The game's code fires it; vanilla's comment names the accolade as root. Vanilla saves the accolade as `changing_accolade` and its knight as `acclaimed_knight`, then triggers event accolade.0001 on the accolade's owner for a rise or accolade.0002 for a fall. On a rise, if the accolade's rank is now 1 or higher and the knight has no `accolade_ranked_up` memory yet, the knight gets one (liege: the owner).",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_accolade_succession", "label": "Accolade succession",
+  "summary": "Runs when an accolade changes hands, with the new owner available as `scope:new_owner`.",
+  "details": "The game's code fires it; vanilla's comment names the accolade as root. Vanilla's definition is empty, so by itself it does nothing; a mod can add its own effects to it.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_add_sexuality", "label": "Add sexuality",
+  "summary": "Starts the event child_personality.4000 on a character who is at least 10 years old, after a short delay.",
+  "details": "Script fires it (not the game's code), and it runs on a character. Vanilla's comment says its purpose is to make sure everyone, including characters from the game's history, gets a sexuality. It only runs for characters aged 10 or more, and the event fires after a random delay of 14 to 30 days.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0001", "label": "Mandala county contract",
+  "summary": "Picks a county and a province in the ruler's realm and rolls a low, medium or high contract tier for a mandala task contract.",
+  "details": "Script fires it. It runs only if the realm has a province with a holding that is not the ruler's capital province and has neither the variable `requested_mandala_ritual` nor `mandala_ritual_cooldown`. Vanilla refers to the ruler as `scope:mandala_ruler`, although the game's documentation lists no scope. The tier is rolled with weights of 30 (low), 10 (medium) and 5 (high); a higher county opinion adds 10 per step to medium (opinion 10, 20) and to high (40, 60, 80 and a further step cut off in the input). The input stops before the end, so how the contract itself is made is not shown.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0002", "label": "Barren Cattle contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Barren Cattle\" at a valid contract province.",
+  "details": "Script fires it. It needs at least one valid contract spot, and its weight multiplier is 0.4 unless the ruler's house has the aspiration parameter `aspect_of_creation`. Among the valid provinces, each starts with weight 1 and gets +100 if its county control is below 100. The contract type is `mandala_realm_contract_0002`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0003", "label": "The First Seed contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"The First Seed\" at a valid contract province that has no holding.",
+  "details": "Script fires it. It needs a valid contract spot without a holding, and the ruler's house must have the aspiration parameter `aspect_of_creation`. Each province starts with weight 1 and gets +100 if its county control is 100 or more. The contract type is `mandala_realm_contract_0003`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0004", "label": "Sacred Heifer contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Sacred Heifer\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot, and its weight multiplier is 0.4 unless the ruler's house has the aspiration parameter `aspect_of_creation`. A province with a pastures building (level 1 or higher) gets +100 on its base weight of 1. The contract type is `mandala_realm_contract_0004`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0005", "label": "Divine Witness contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Divine Witness\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_creation`. A province gets +100 on its base weight of 1 if its barony holder is an AI, is married to an AI spouse and has no living child. The contract type is `mandala_realm_contract_0005`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0006", "label": "Midwives' Dream contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Midwives' Dream\" at a valid contract province chosen at random.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_creation`. The province is picked from the valid ones with no extra weighting. The contract type is `mandala_realm_contract_0006`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0007", "label": "Weeping Statue contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Weeping Statue\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot, and its weight multiplier is 0.4 unless the ruler's house has the aspiration parameter `aspect_of_creation`. On a base weight of 1, a province gets +100 for a cereal fields or paddy fields building and -200 if its county has `stone_head_shrine_modifier`. The contract type is `mandala_realm_contract_0007`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0008", "label": "Sprouting Flowers contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Sprouting Flowers\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_creation`. On a base weight of 1, a province gets +100 for a cereal fields or paddy fields building and -200 if its county has `fertile_ground_modifier`. The contract type is `mandala_realm_contract_0008`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0009", "label": "River Ritual contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"River Ritual\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_creation`. On a base weight of 1, a riverside province gets +100, and a coastal or lakeside one gets +10. The contract type is `mandala_realm_contract_0009`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0010", "label": "Cursed Fields contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Cursed Fields\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot, and its weight multiplier is 0.4 unless the ruler's house has the aspiration parameter `aspect_of_creation`. A province with a cereal fields or paddy fields building gets +100 on its base weight of 1. The contract type is `mandala_realm_contract_0010`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0011", "label": "Withered Grove contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Withered Grove\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_creation`. On a base weight of 1, a province with a hunting grounds building gets +100, and one in a county with `lush_grove_modifier` gets -200. The contract type is `mandala_realm_contract_0011`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0012", "label": "Pig Slaughter Oath contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Pig Slaughter Oath\" at a valid contract province that has a neighbour.",
+  "details": "Script fires it. It needs a valid contract spot with a neighbour, and its weight multiplier is 0.4 unless the ruler's house has the aspiration parameter `aspect_of_destruction`. A province gets +100 on its base weight of 1 if its county borders a county whose holder has neither the ruler as top liege nor as top suzerain. The contract type is `mandala_realm_contract_0012`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0013", "label": "Ritual Wrath contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Ritual Wrath\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_destruction`. A province gets +100 on its base weight of 1 if its county control is below 100. The contract type is `mandala_realm_contract_0013`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0014", "label": "Collective Punishment contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Collective Punishment\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot, and its weight multiplier is 0.4 unless the ruler's house has the aspiration parameter `aspect_of_destruction`. On a base weight of 1, a province gets +100 if its county control is below 100 and -200 if its county has `collective_punishments_modifier`. The contract type is `mandala_realm_contract_0014`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0015", "label": "Diseased Spirits contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Diseased Spirits\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_destruction`. On a base weight of 1, a province gets +100 if its county control is below 100 and -200 if the province has `no_healers_modifier`. The contract type is `mandala_realm_contract_0015`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0016", "label": "Dull Spears contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Dull Spears\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_destruction`. On a base weight of 1, a province gets +100 if its county control is below 100, and -200 for each of `motivated_men_at_arms_modifier` and `safer_roads_modifier` it has. The contract type is `mandala_realm_contract_0016`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0017", "label": "Defiant Village contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Defiant Village\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_destruction`. On a base weight of 1, a province gets +100 if its county control is below 100 and -200 if its county has `slaughtered_village_modifier`. The contract type is `mandala_realm_contract_0017`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0018", "label": "Blood Tax contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Blood Tax\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_destruction`. On a base weight of 1, a province gets +100 if its county control is below 100 and -200 if its county has `enforced_levy_modifier`. The contract type is `mandala_realm_contract_0018`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0019", "label": "Bamboo Rebels contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Bamboo Rebels\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot, and its weight multiplier is 0.4 unless the ruler's house has the aspiration parameter `aspect_of_destruction`. On a base weight of 1, a province gets +100 if its county control is below 100 and -200 if its county has `well_armed_peasants_modifier`. The contract type is `mandala_realm_contract_0019`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0020", "label": "Road Sacrifice contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Road Sacrifice\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot, and its weight multiplier is 0.4 unless the ruler's house has the aspiration parameter `aspect_of_destruction`. On a base weight of 1, a province gets +100 if its county control is below 100 and -200 if the province has `safer_roads_modifier`. The contract type is `mandala_realm_contract_0020`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0021", "label": "War God Festival contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"War God Festival\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_destruction`. On a base weight of 1, a province gets +100 if its county control is below 100 and -200 if the province has `safer_roads_modifier`. The contract type is `mandala_realm_contract_0021`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0022", "label": "Quarreling Monks contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Quarreling Monks\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot, and its weight multiplier is 0.4 unless the ruler's house has the aspiration parameter `aspect_of_serenity`. On a base weight of 1, a province with a church or temple citadel holding gets +100, a province in a county with `upset_monks_modifier` gets -200, and one with `new_shrines_modifier` gets -200. The contract type is `mandala_realm_contract_0022`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0023", "label": "Purify Battlefield contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Purify Battlefield\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_serenity`. On a base weight of 1, a province with `recently_looted_modifier` gets +100 and one whose county control is below 100 gets +10. The contract type is `mandala_realm_contract_0023`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0024", "label": "Bless the Weavers contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Bless the Weavers\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot, and its weight multiplier is 0.4 unless the ruler's house has the aspiration parameter `aspect_of_serenity`. A province with a city holding gets +100 on its base weight of 1. The contract type is `mandala_realm_contract_0024`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0025", "label": "Breaking of Spears contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Breaking of Spears\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_serenity`. There is no bonus for any kind of province; a province with `feudless_village_modifier` gets -200 on its base weight of 1. The contract type is `mandala_realm_contract_0025`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0026", "label": "Guru's Peace contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Guru's Peace\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot, and its weight multiplier is 0.45 (most others use 0.4) unless the ruler's house has the aspiration parameter `aspect_of_serenity`. On a base weight of 1, a province gets +100 if its county control is above 100 and -200 if its county has `generation_of_peace_modifier`. The contract type is `mandala_realm_contract_0026`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0027", "label": "Reconciliation Edict contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Reconciliation Edict\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_serenity`. On a base weight of 1, a province gets +100 if its county control is above 100, and -200 for each of `weapon_ban_modifier` and `arbitration_edict_modifier` its county has. The contract type is `mandala_realm_contract_0027`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0028", "label": "Eightfold Path contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Eightfold Path\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot, and its weight multiplier is 0.4 unless the ruler's house has the aspiration parameter `aspect_of_serenity`. On a base weight of 1, a province gets +100 if its county control is above 100 and -200 if its county has `eightfold_path_modifier`. The contract type is `mandala_realm_contract_0028`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0029", "label": "Grove Guardians contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Grove Guardians\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_serenity`. On a base weight of 1, a province with jungle, forest or taiga terrain gets +100, and -200 for each of `well_protected_groves_modifier` and `garrisoned_groves_modifier` its county has. The contract type is `mandala_realm_contract_0029`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0030", "label": "Vow of Stillness contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Vow of Stillness\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_serenity`. On a base weight of 1, a province gets +100 if its county control is above 100 and -200 if its county has `discordant_town_modifier`. The contract type is `mandala_realm_contract_0030`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0031", "label": "Stone-laying contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Stone-laying\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_serenity`. On a base weight of 1, a province gets +100 if its county control is above 100 and -200 if the province has `pious_silpakaras_modifier`. The contract type is `mandala_realm_contract_0031`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0032", "label": "Laughing Ascetic contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Laughing Ascetic\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot, and its weight multiplier is 0.45 unless the ruler's house has the aspiration parameter `aspect_of_trickery`. A province gets +100 on its base weight of 1 if its county's culture differs from the ruler's culture. The contract type is `mandala_realm_contract_0032`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_action_mandala_realm_contract_0033", "label": "Spirit Decoy contract",
+  "summary": "Creates the mandala task contract that vanilla's comment calls \"Spirit Decoy\" at a valid contract province.",
+  "details": "Script fires it. It needs a valid contract spot and a ruler whose house has the aspiration parameter `aspect_of_trickery`. There is no bonus for any kind of province; on a base weight of 1, a province gets -200 for each of `mocked_idol_modifier`, `vegetable_idol_modifier` and `ruler_idol_modifier` its county has. The contract type is `mandala_realm_contract_0033`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ }
+]

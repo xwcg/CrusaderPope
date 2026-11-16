@@ -1,18 +1,19 @@
-// Portrait digests: one line per character — what the build applied (modifiers, accessories, tags, genes applied,
-// creature state) and a hash of its geometry and textures — to compare two versions of the portrait pipeline.
+// Portrait digests: one line per character: what the build applied (modifiers, accessories, tags, genes applied,
+// creature state) and a hash of its geometry and textures, to compare two versions of the portrait pipeline.
 // Usage: node --experimental-strip-types --no-warnings --max-old-space-size=8000 scripts/portrait-digest.ts [n] > out.txt
 // n characters spread over the list (default 60); AGOT=1 layered over A Game of Thrones (Workshop 2962333032, read
-// only) — then also the dragons (`dragon_*`); ONLY=<regex> just the characters it matches. DETAIL=1 prints the whole
-// record instead of a hash.
+// only), then also the dragons (`dragon_*`); ONLY=<regex> just the characters it matches. DETAIL=1 prints the whole
+// record instead of a hash. The index: scripts/fast-index.ts (parse threads, cached in %TEMP%/ckp-index-cache; FRESH=1 builds it anew).
 import { createHash } from 'node:crypto';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
-import { GameIndex, resolveGameDir } from '../src/main/indexer/gameIndex.ts';
+import { resolveGameDir } from '../src/main/indexer/gameIndex.ts';
 import { PortraitBuilder } from '../src/main/portraits/portrait.ts';
 import { GameFiles } from '../src/main/mods/gamefiles.ts';
 import { discoverMods } from '../src/main/mods/discover.ts';
 import type { PortraitData } from '../src/shared/api.ts';
 import { defaultInstall } from './ck3-install.ts';
+import { fastIndex } from './fast-index.ts';
 
 const gameDir = resolveGameDir(defaultInstall());
 
@@ -31,8 +32,7 @@ if (process.env.AGOT)
     files = new GameFiles(gameDir, [mod]);
 }
 
-const idx = new GameIndex(files, 'english');
-idx.build();
+const idx = await fastIndex(files, { cache: true });
 const pb = new PortraitBuilder(idx);
 const n = Number(process.argv[2] ?? 60);
 const names = idx.names('characters');

@@ -1,0 +1,526 @@
+[
+ {
+  "kind": "effect",
+  "key": "clear_traits",
+  "label": "Remove all traits",
+  "summary": "Removes every trait from the character.",
+  "details": "Written as `clear_traits = yes`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "clear_variable_list",
+  "label": "Empty variable list",
+  "summary": "Empties a variable list, so it holds no items any more.",
+  "details": "You write the name of the list. Vanilla uses it with lists such as neglect_reason, praise_reason and available_petitions.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "close_all_views",
+  "label": "Close all windows",
+  "summary": "Closes all the game's open windows (views) on the screen.",
+  "details": "Written as `close_all_views = yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "close_view",
+  "label": "Close a window",
+  "summary": "Closes one named window (view) of the game's interface.",
+  "details": "Without `player` the window closes for every player who runs the effect. If the effect does not come from the interface but from synchronized game code, set `player`, or the window is affected for all players. A short form `close_view = <view name>` also exists. Vanilla mostly closes `decisions` and `royal_court`.",
+  "fields": [
+    { "name": "view", "text": "The window to close.", "values": "a view name such as decisions or royal_court", "required": true },
+    { "name": "player", "text": "The player whose window is closed. Left out, it closes for all players who run the effect.", "values": "a character, such as root or a saved scope", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "complete_activity_intent",
+  "label": "Complete activity intent",
+  "summary": "Marks the character's current intent in the activity they take part in as fulfilled.",
+  "details": "Written as `yes`. It works on a character who is involved in an activity and has an intent there.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "complete_great_project",
+  "label": "Complete great project",
+  "summary": "Finishes a great project at once, as if it had been fully built.",
+  "details": "The project's on_complete effects run, but no completion animation plays. The requirements (such as contributions) are not checked. Written inside the great project's scope as `complete_great_project = this`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "complete_great_project_animated",
+  "label": "Complete great project with animation",
+  "summary": "Finishes a great project at once, as if it had been fully built, and plays its completion animation.",
+  "details": "The project's on_complete effects run too. The requirements (such as contributions) are not checked. Written inside the great project's scope as `complete_great_project_animated = this`. Compare complete_great_project, which skips the animations.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "complete_task_contract",
+  "label": "Complete task contract",
+  "summary": "Completes a task contract, using the named task contract reward.",
+  "details": "You write the name of a task contract reward. Vanilla mostly writes names such as failure_standard, success_standard and success_critical, and a few others.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "complete_travel_plan",
+  "label": "Complete travel plan",
+  "summary": "Ends a travel plan at once, with no further travelling.",
+  "details": "The on_action `on_travel_plan_complete` runs. Written as `yes` or `no`; the input does not say what `no` does.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "construct_domicile_building",
+  "label": "Build in domicile",
+  "summary": "Constructs a building in the domicile.",
+  "details": "The cost is ignored, but the normal construction time still applies. You write the key of the domicile building. Vanilla uses it for the episcopal palace levels.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "consume_banish_reasons",
+  "label": "Use up banish reasons",
+  "summary": "Uses up all reasons the character has to banish the target.",
+  "details": "Until the character gets a new reason, they cannot banish the target again. The character is the one who would banish; the target is the one who would be banished.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "consume_divorce_reasons",
+  "label": "Use up divorce reasons",
+  "summary": "Uses up all reasons the character has to divorce the target.",
+  "details": "Until the character gets a new reason, they cannot divorce the target again. The character is the one who would divorce; the target is the other person.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "consume_execute_reasons",
+  "label": "Use up execute reasons",
+  "summary": "Uses up all reasons the character has to execute the target.",
+  "details": "Until the character gets a new reason, they cannot execute the target again. The character is the one who would execute; the target is the one who would be executed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "consume_imprisonment_reasons",
+  "label": "Use up imprison reasons",
+  "summary": "Uses up all reasons the character has to imprison the target.",
+  "details": "Until the character gets a new reason, they cannot imprison the target again. The character is the one who would imprison; the target is the one who would be imprisoned.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "consume_revoke_title_reason",
+  "label": "Use up one revoke reason",
+  "summary": "Uses up one reason the character has to revoke a title from the target.",
+  "details": "Only one reason is used, unlike the other consume effects, which use all of them. The character is the one who would revoke; the target is the one the title would be revoked from.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "consume_saint_relic_charge",
+  "label": "Use a saint relic charge",
+  "summary": "Takes one charge away from the relics available for the target saint.",
+  "details": "It fails if the target is not a saint or has no charges left. Vanilla uses it once, with a saint saved as relic_creator_saint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "copy_all_traditions_from",
+  "label": "Copy traditions",
+  "summary": "Replaces all traditions of the culture with the traditions of the given culture.",
+  "details": "The culture's old traditions are dropped, not merged. Vanilla uses it with a culture saved as scope:norse.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "copy_artifact_modifiers",
+  "label": "Copy artifact modifiers",
+  "summary": "Copies the modifiers of the target artifact onto this artifact.",
+  "details": "Existing modifiers are not removed, the copied ones are added to them.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "copy_inheritable_appearance_from",
+  "label": "Copy inheritable looks",
+  "summary": "Gives the character the inheritable looks of the target character.",
+  "details": "These are the inheritable genes in the DNA, the part of a look that children can inherit. The target is the source, the character is the one who changes.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "copy_localized_text",
+  "label": "Copy text from character",
+  "summary": "Copies a piece of text for a given key from another character into the character.",
+  "details": "Vanilla uses it once, with the key story_cycle_dog_name and root as the target.",
+  "fields": [
+    { "name": "key", "text": "The key of the text to copy.", "values": "a localization key", "required": true },
+    { "name": "target", "text": "The character the text is copied from.", "values": "a character, such as root", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "copy_title_history",
+  "label": "Copy title history",
+  "summary": "Copies the history of another title onto this title.",
+  "details": "The given title is the source. Vanilla uses it with titles written as `title:k_sicily`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "copy_traits",
+  "label": "Copy traits",
+  "summary": "Adds all traits of the target character to the character.",
+  "details": "Traits the character may not have are skipped. Their existing traits stay.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_accolade",
+  "label": "Create accolade",
+  "summary": "Creates an accolade for the character, with the given knight and accolade type.",
+  "details": "If you give no name, the game makes one up. The game's documentation speaks of accolade types in the plural but shows only `primary`. The input shows no vanilla use.",
+  "fields": [
+    { "name": "knight", "text": "The knight the accolade is created with.", "values": "a character" },
+    { "name": "primary", "text": "The accolade's type.", "values": "an accolade type" },
+    { "name": "name", "text": "The accolade's name.", "values": "a localization key", "required": false }
+  ],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "create_adventurer_title",
+  "label": "Create adventurer title",
+  "summary": "Creates a title for a landless adventurer, meant for the chosen holder.",
+  "details": "The government is the adventurer one unless you give another. The name can be a localization key or a dynamic description. `pre` and `adj` use the name if left out.",
+  "fields": [
+    { "name": "name", "text": "The title's name.", "values": "a localization key or dynamic description", "required": true },
+    { "name": "holder", "text": "The character who is meant to hold the title.", "values": "a character", "required": true },
+    { "name": "government", "text": "The government type of the new title.", "values": "a government key", "required": false, "default": "the adventurer government" },
+    { "name": "save_scope_as", "text": "Saves the new title under this name, to use as scope:<name> afterwards.", "values": "a name" },
+    { "name": "article", "text": "The article in front of the name.", "values": "a localization key or dynamic description", "required": false },
+    { "name": "pre", "text": "The text placed before the name.", "values": "a localization key or dynamic description", "required": false, "default": "the name" },
+    { "name": "adj", "text": "The adjective form of the name.", "values": "a localization key or dynamic description", "required": false, "default": "the name" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_alliance",
+  "label": "Create alliance",
+  "summary": "Makes an alliance between the character and the target.",
+  "details": "The two allied-through characters are the ones the game checks to decide whether the alliance persists. The short form `create_alliance = <character>` uses the character and the target as those two.",
+  "fields": [
+    { "name": "target", "text": "The character the alliance is made with.", "values": "a character", "required": true },
+    { "name": "allied_through_owner", "text": "The character on the scoped character's side who is checked for whether the alliance persists.", "values": "a character" },
+    { "name": "allied_through_target", "text": "The character on the target's side who is checked for whether the alliance persists.", "values": "a character" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_artifact",
+  "label": "Create artifact",
+  "summary": "Creates a new artifact and puts it into the character's inventory.",
+  "details": "The game uses the current scopes when it reads the artifact's visuals (common/artifacts/visuals). `durability` is the maximum if left out. `decaying` is yes by default. `generate_history` makes the game write a history entry when none is scripted. Vanilla always gives name, description, visuals, type and modifier, and mostly saves the artifact with `save_scope_as`.",
+  "fields": [
+    { "name": "name", "text": "The artifact's name.", "values": "a localization key or dynamic description" },
+    { "name": "description", "text": "The artifact's description.", "values": "a localization key or dynamic description" },
+    { "name": "type", "text": "The inventory slot type, such as trinket.", "values": "an artifact type" },
+    { "name": "rarity", "text": "How rare the artifact is, such as legendary.", "values": "a rarity name" },
+    { "name": "modifier", "text": "The modifier applied to the character who wields the artifact.", "values": "a modifier key" },
+    { "name": "visuals", "text": "How the artifact looks.", "values": "an artifact visual type" },
+    { "name": "template", "text": "A ready-made base with triggers and modifiers.", "values": "an artifact template key" },
+    { "name": "quality", "text": "A number the AI uses to score the artifact.", "values": "a number or script value" },
+    { "name": "wealth", "text": "A number the AI uses to score the artifact.", "values": "a number or script value" },
+    { "name": "durability", "text": "The starting durability.", "values": "a number or script value", "default": "the maximum" },
+    { "name": "max_durability", "text": "Replaces the maximum durability the game defines.", "values": "a number or script value" },
+    { "name": "decaying", "text": "Whether the artifact wears down with time.", "values": "yes or no", "default": "yes" },
+    { "name": "history", "text": "A custom history entry, with a `type` such as created, given, stolen or reforged.", "values": "a block" },
+    { "name": "generate_history", "text": "Whether the game writes a history entry if none is scripted.", "values": "yes or no" },
+    { "name": "creator", "text": "The creator of the artifact.", "values": "a character", "default": "the owner" },
+    { "name": "visuals_source", "text": "Where coat of arms graphics come from. Only a few models use it, mostly banners.", "values": "a title, dynasty or house" },
+    { "name": "title_history", "text": "A title whose history entries are added to the artifact's history.", "values": "a title" },
+    { "name": "title_history_date", "text": "The date from which the title's history is copied.", "values": "a date" },
+    { "name": "save_scope_as", "text": "Saves the new artifact under this name, to use as scope:<name> afterwards.", "values": "a name" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_betrothal",
+  "label": "Betroth",
+  "summary": "Betroths the character to the target character.",
+  "details": "At least one of the two must not be an adult yet.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_betrothal_matrilineal",
+  "label": "Betroth matrilineally",
+  "summary": "Betroths the character to the target character in a matrilineal way.",
+  "details": "At least one of the two must not be an adult yet. The game's documentation does not explain what matrilineal changes in practice.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "create_cadet_branch",
+  "label": "Create cadet branch",
+  "summary": "Makes the character found a cadet branch (a new house) of the house they belong to.",
+  "details": "The character must belong to a house and must not be its head. The game's documentation lists `spread_to_descendants` (default yes); going by its name it decides whether descendants join the new branch.",
+  "fields": [
+    { "name": "name", "text": "How the new house is named.", "values": "a dynamic description, such as a name style", "required": false },
+    { "name": "prefix", "text": "A name prefix such as dynnp_de. Vanilla uses it once; the game's documentation does not list it.", "values": "a localization key", "required": false },
+    { "name": "coat_of_arms", "text": "The coat of arms of the new house.", "values": "a coat of arms key", "required": false },
+    { "name": "spread_to_descendants", "text": "Whether the character's descendants join the new house, going by its name.", "values": "yes or no", "required": false, "default": "yes" },
+    { "name": "save_scope_as", "text": "Saves the new house under this name, to use as scope:<name> afterwards.", "values": "a name" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_character",
+  "label": "Create character",
+  "summary": "Creates a new character.",
+  "details": "Faith, culture and dynasty come from the template character, else the father, the mother, then the employer (the employer does not give the dynasty). Without an employer, and unless a parent is landed, the character becomes a pool character. Without `dynasty_house`, a new dynasty is generated unless you say otherwise. Vanilla mostly sets `location`, a `template` and `save_scope_as`.",
+  "fields": [
+    { "name": "save_scope_as", "text": "Saves the new character under this name, to use as scope:<name> afterwards.", "values": "a name", "required": false },
+    { "name": "name", "text": "The character's name.", "values": "a name", "required": false },
+    { "name": "age", "text": "The age.", "values": "a number or script value", "required": false },
+    { "name": "gender", "text": "The gender.", "values": "male, female or a character to take it from", "required": false },
+    { "name": "gender_female_chance", "text": "The chance in percent that the character is female.", "values": "0 to 100, or a script value", "required": false },
+    { "name": "opposite_gender", "text": "A character whose gender is the opposite of the new one.", "values": "a character", "required": false },
+    { "name": "trait", "text": "A trait the character gets.", "values": "a trait", "required": false },
+    { "name": "random_traits", "text": "Whether random traits are added.", "values": "yes or no", "required": false },
+    { "name": "random_traits_list", "text": "Picks traits at random from those whose triggers are met. `count` says how many, default 1.", "values": "a block", "required": false },
+    { "name": "health", "text": "The health.", "values": "a number", "required": false },
+    { "name": "fertility", "text": "The fertility.", "values": "a number", "required": false },
+    { "name": "mother", "text": "The mother.", "values": "a character", "required": false },
+    { "name": "father", "text": "The father.", "values": "a character", "required": false },
+    { "name": "real_father", "text": "The biological father. Only set when different from the father.", "values": "a character", "required": false },
+    { "name": "employer", "text": "The court the character joins.", "values": "a character", "required": false },
+    { "name": "location", "text": "The pool province the character starts in. Cannot be combined with employer.", "values": "a province", "required": false },
+    { "name": "template", "text": "A character template to take values from.", "values": "a template key", "required": false },
+    { "name": "template_character", "text": "A character to take faith, culture and more from.", "values": "a character", "required": false },
+    { "name": "faith", "text": "The faith.", "values": "a faith", "required": false },
+    { "name": "random_faith", "text": "A faith picked at random among those whose triggers are met.", "values": "a block", "required": false },
+    { "name": "random_faith_in_religion", "text": "A random faith of the given religion.", "values": "a religion or a faith", "required": false },
+    { "name": "rite", "text": "A rite the character gets instead of the faith's default rite, if it belongs to their faith.", "values": "a rite", "required": false },
+    { "name": "culture", "text": "The culture.", "values": "a culture", "required": false },
+    { "name": "random_culture", "text": "A culture picked at random among those whose triggers are met.", "values": "a block", "required": false },
+    { "name": "random_culture_in_group", "text": "A random culture of the given group.", "values": "a culture group or a culture", "required": false },
+    { "name": "dynasty_house", "text": "The house the character belongs to.", "values": "a house", "required": false },
+    { "name": "dynasty", "text": "What to do when no house is given.", "values": "generate, inherit or none", "required": false, "default": "generate" },
+    { "name": "ethnicity", "text": "How the look is chosen.", "values": "culture, mother, father, parents or an ethnicity", "required": false, "default": "culture" },
+    { "name": "ethnicities", "text": "Picks the ethnicity at random from this list, with triggers.", "values": "a block", "required": false },
+    { "name": "after_creation", "text": "Effects run once the character exists. The scope is the new character, the creating scope is PREV.", "values": "effects", "required": false },
+    { "name": "martial / diplomacy / intrigue ...", "text": "A skill value. Skills left out get a random value.", "values": "a number", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_character_memory",
+  "label": "Create memory",
+  "summary": "Gives the character a new memory of a given type, with the participants.",
+  "details": "The new memory is saved as `scope:new_memory`. The duration is optional; vanilla sets it rarely (3 of 470 uses).",
+  "fields": [
+    { "name": "type", "text": "The kind of memory.", "values": "a memory type", "required": true },
+    { "name": "participants", "text": "The participants, each under a role name.", "values": "a block of role = scope", "required": false },
+    { "name": "duration", "text": "How long the memory lasts.", "values": "a block such as { years = 3 }", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_clerical_region",
+  "label": "Create clerical region",
+  "summary": "Creates a clerical region with its capital in the province.",
+  "details": "The new region takes the free counties of the capital province's de jure kingdom. Only counties reachable over land from the capital are used. Written inside the province scope; afterwards use the saved title, for instance `scope:new_title ?= { ... }`.",
+  "fields": [
+    { "name": "domicile_type", "text": "The domicile type of the region. Vanilla uses ecclesiastical_domicile.", "values": "a domicile type key", "required": true },
+    { "name": "name", "text": "The region's name.", "values": "a localization key or dynamic description", "required": true },
+    { "name": "adj", "text": "The adjective form.", "values": "a localization key or dynamic description", "required": false, "default": "the name" },
+    { "name": "pre", "text": "The text placed before the name.", "values": "a localization key or dynamic description", "required": false },
+    { "name": "article", "text": "The article in front of the name.", "values": "a localization key or dynamic description", "required": false },
+    { "name": "save_scope_as", "text": "Saves the new title under this name, to use as scope:<name> afterwards.", "values": "a name", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_confederation",
+  "label": "Create confederation",
+  "summary": "Creates a confederation and adds the character as a member.",
+  "details": "The new confederation is saved as `scope:new_confederation`. If you give a leader house, that house leads it.",
+  "fields": [
+    { "name": "name", "text": "The confederation's name.", "values": "a localization key or dynamic description", "required": true },
+    { "name": "type", "text": "The confederation type, such as confederation_type:house_bloc_ceremony.", "values": "a confederation type", "required": false },
+    { "name": "leader", "text": "The house that leads the confederation.", "values": "a house", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_divergent_culture",
+  "label": "Create divergent culture",
+  "summary": "Creates a new culture that splits off from the character's culture.",
+  "details": "The new culture keeps all pillars and traditions of its parent; adding or removing some is up to you. It is saved as `scope:new_culture`. Unlike the _with_side_effects versions, it does not charge the cost or convert people.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_divergent_culture_with_side_effects",
+  "label": "Diverge culture like in the game",
+  "summary": "Splits a new culture off from the character's culture, as if the player had done it in the interface.",
+  "details": "It charges the cost, converts people and changes things like the ethos. The new culture is not saved as a scope. See create_divergent_culture_with_side_effects_excluding_cost for the version without the cost.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_divergent_culture_with_side_effects_excluding_cost",
+  "label": "Diverge culture, no cost",
+  "summary": "Splits a new culture off from the character's culture as in the interface, but without charging the cost.",
+  "details": "It still converts people and changes things like the ethos. The new culture is not saved as a scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_domicile_title",
+  "label": "Create domicile title",
+  "summary": "Creates a title for a government type that uses a domicile, meant for the given holder.",
+  "details": "Meant for modded government types. For the base game's governments, use the more specific effects such as create_nomad_title and give_noble_family_title. The tier is county unless you set it.",
+  "fields": [
+    { "name": "name", "text": "The title's name.", "values": "a localization key or dynamic description", "required": true },
+    { "name": "holder", "text": "The character who is meant to hold the title.", "values": "a character", "required": true },
+    { "name": "government", "text": "The government type. It must have a domicile type.", "values": "a government key", "required": true },
+    { "name": "save_scope_as", "text": "Saves the new title under this name, to use as scope:<name> afterwards.", "values": "a name" },
+    { "name": "tier", "text": "The title's rank.", "values": "county, duchy, kingdom, empire or hegemony", "required": false, "default": "county" },
+    { "name": "article", "text": "The article in front of the name.", "values": "a localization key or dynamic description", "required": false },
+    { "name": "pre", "text": "The text placed before the name.", "values": "a localization key or dynamic description", "required": false, "default": "the name" },
+    { "name": "adj", "text": "The adjective form.", "values": "a localization key or dynamic description", "required": false, "default": "the name" }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_dynamic_rite",
+  "label": "Create dynamic rite",
+  "summary": "Creates a new rite inside the character's faith, with the character as its founder.",
+  "details": "It starts from the founder's current rite and keeps its tenets and doctrines. The game then makes a name and icon from the final result. Overrides are applied before that. If a target divergence is set and the overrides do not reach it, random tenets and doctrines are added until they do.",
+  "fields": [
+    { "name": "save_scope_as", "text": "Saves the new rite under this name, to use as scope:<name> afterwards.", "values": "a name", "required": false },
+    { "name": "convert", "text": "Whether the founder switches to the new rite.", "values": "yes or no", "required": false, "default": "no" },
+    { "name": "core_tenet_override_entry", "text": "A tenet that replaces one of the tenets the founder likes least. Can be repeated up to the game's core tenet cap; extra entries are ignored with an error.", "values": "a tenet", "required": false },
+    { "name": "doctrine_override_entry", "text": "A doctrine. It replaces the doctrine of the same group, or is added if there is none. Can be repeated.", "values": "a doctrine", "required": false },
+    { "name": "target_divergence", "text": "How far the new rite should differ from the main rite. The result can be a little more or less.", "values": "a number", "required": false, "default": "0, which is ignored" },
+    { "name": "include_unknown", "text": "Whether tenets and doctrines unknown to the founder may be chosen.", "values": "yes or no", "required": false, "default": "no" },
+    { "name": "override_tenets_first", "text": "Whether tenets are changed before doctrines.", "values": "yes or no", "required": false, "default": "yes" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_dynamic_title",
+  "label": "Create dynamic title",
+  "summary": "Creates a new title of a given rank with a name you choose.",
+  "details": "The new title is saved as `scope:new_title`. `adj` uses the name if left out.",
+  "fields": [
+    { "name": "tier", "text": "The title's rank.", "values": "duchy, kingdom, empire or hegemony in vanilla", "required": true },
+    { "name": "name", "text": "The title's name.", "values": "a localization key or dynamic description", "required": true },
+    { "name": "adj", "text": "The adjective form.", "values": "a localization key or dynamic description", "required": false, "default": "the name" },
+    { "name": "pre", "text": "The text placed before the name.", "values": "a localization key or dynamic description", "required": false },
+    { "name": "article", "text": "The article in front of the name.", "values": "a localization key or dynamic description", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "create_dynasty",
+  "label": "Create dynasty",
+  "summary": "Creates a new dynasty and house with the character as its head.",
+  "details": "The character must not be the head of the dynasty or house they leave. The game's documentation lists `spread_to_descendants` (default yes); going by its name it decides whether descendants join the new dynasty.",
+  "fields": [
+    { "name": "prefix", "text": "A name prefix.", "values": "a localization key", "required": false },
+    { "name": "name", "text": "The dynasty's name.", "values": "a dynamic description or localization key such as dynn_Minamoto", "required": false },
+    { "name": "coat_of_arms", "text": "The dynasty's coat of arms.", "values": "a coat of arms key", "required": false },
+    { "name": "spread_to_descendants", "text": "Whether the character's descendants join the new dynasty, going by its name.", "values": "yes or no", "required": false, "default": "yes" },
+    { "name": "save_scope_as", "text": "Saves the new dynasty under this name, to use as scope:<name> afterwards.", "values": "a name", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

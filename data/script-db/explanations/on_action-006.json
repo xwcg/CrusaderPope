@@ -1,0 +1,242 @@
+[
+  {
+    "kind": "on_action", "key": "house_feud_inheritance_events", "label": "House feud inheritance",
+    "summary": "Gives a character a 25% chance of getting one of two house feud events.",
+    "details": "Vanilla lists two events (bp1_house_feud.9001 and .9002) with equal weight, so each is picked half the time. The game's code does not fire it; script has to.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "hunt_end_events", "label": "Hunt ends",
+    "summary": "Picks a closing event for a hunt, but only for the hunt's host.",
+    "details": "It runs only if the character is the activity's host and the hunt is not the nomad-type hunt. The weights are 10 for a successful-hunt event (hunt.9001), 10 for a failed-hunt event (hunt.9002) and 3 for a big-animal event (hunt.4004). A fourth artifact event is commented out in vanilla.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "hunt_outcome_complication_events", "label": "Hunt complication",
+    "summary": "Picks one random mishap or twist that can happen during a hunt.",
+    "details": "It runs only if a hunt activity exists, the hunt is not the nomad-type hunt, and the character is either a human player or the host. The pool is large: shared events, murder or abduct scheme moments, legendary animal events, falconry problems, animal-specific complications and one event that vanilla labels TGP. The scheme decision events have weight 5000, far above the usual 25 to 200.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "hunt_outcome_end_events", "label": "Hunt outcome result",
+    "summary": "Picks the event that shows how the hunt itself turned out.",
+    "details": "It runs only for the host of a hunt that is not the nomad-type hunt. Every event has weight 1. The pool has success and failure events for the corner and ambush methods, a success and a failure for stealth, two falconry events, and the legendary animal outcomes (not found, killed, substitute found, escaped). The captive-animal events are commented out in vanilla.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "hunt_outcome_start_events", "label": "Hunt outcome start",
+    "summary": "Picks the event that starts the hunt proper, by hunting method.",
+    "details": "It runs only for the host of a hunt that is not the nomad-type hunt. Corner, ambush, stealth and falconry each have weight 100. A glimpse of the mystical animal has weight 5 and starts that animal's story.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "hunt_random_pulse", "label": "Hunt flavor pulse",
+    "summary": "Picks a random flavor event during a hunt, or sometimes none at all.",
+    "details": "It runs only if a hunt exists, the hunt is not the nomad-type hunt, and the character is a human player or the host. The chance of no event is 0 for the host and 50 for everyone else. The pool mixes general events, legendary animal, relations, intents (seduce and befriend conversations), falconry, schemes, nomad and East Asian flavor events. When it runs it also sets the variable hunt_outcome_random on the activity; a vanilla comment says this makes sure some progress was made before certain events fire. The input shows the definition only up to its 80-line cut-off.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "hunt_sighting_on_action", "label": "Hunt sighting",
+    "summary": "Yearly chance that a character gets an event about spotting game worth hunting.",
+    "details": "It is skipped for a character who has a master of the hunt (or could employ one), or has the flags recent_hunt_sighting or disabled_hunt_sightings_flag, or fails hunt_sighting_event_trigger. The chance of no event starts at 80 and drops by 20 for each of: an existing master of the hunt court position, an existing huntperson camp officer position, and a character who had a mystical animal story, still owns one, and has no county of their sub-realm carrying the legendary sighting modifier. The events are standard (100), legendary (5), dangerous (25), falconry (25) and a sighting that moves (25).",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "hunt_start_events", "label": "Hunt start",
+    "summary": "Fires the opening events of a hunt, labelled in vanilla as the start and method.",
+    "details": "It runs only for the host of the hunt. The three events listed (standard, legendary, falconry) sit in an events list, which fires all of them rather than picking one.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "imaginary_friend_adult_angel_on_action", "label": "Angel imaginary friend (adult)",
+    "summary": "Picks an event, or nothing, for the adult stage of an angel imaginary friend.",
+    "details": "Weights: 100 for nothing, 50 for a pilgrimage to a holy site in the friend's honor, 50 for a neutral ending that gives a relation. So half the time nothing happens. That this is the adult angel case comes from the key name; vanilla does not say it otherwise.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "imaginary_friend_adult_devil_on_action", "label": "Devil imaginary friend (adult)",
+    "summary": "Picks an event, or nothing, for the adult stage of a devil imaginary friend.",
+    "details": "Weights: 200 for nothing and 100 for an event vanilla describes as murdering someone close to the character. So there is a one in three chance of that event. That this is the adult devil case comes from the key name.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "imaginary_friend_childhood_on_action", "label": "Imaginary friend (childhood)",
+    "summary": "Picks a childhood event driven by the character's imaginary friend, or nothing.",
+    "details": "Weight 200 is for nothing. The events include regent shenanigans, a chance to lose or change a personality trait, inspiring a crush, standing up to a bully, flower crowns, and two that can give the confider or poet trait. The Eccentric trait event has weight 10000, so it dominates the pool. A comment in vanilla says another event, bp2_yearly.2011, is fired from the playdate on_action instead.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "imperial_examination_assembly_events", "label": "Exam assembly events",
+    "summary": "Picks a random event for the assembly phase of an imperial or local examination.",
+    "details": "It runs only when the activity is an imperial examination in its assembly phase or a local examination in its assembly phase. The pool, all weight 100, has events for the emperor, entrants, examiners and entrants' families.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "imperial_examination_exam_entrant_events", "label": "Exam entrant events",
+    "summary": "Picks a random event from nine imperial examination events, which by its name are for examination entrants.",
+    "details": "It has no trigger of its own, so whatever fires it decides when it applies. The nine imperial_examination events (5000 to 5400) have equal weight. The input does not say what these events do; the entrant purpose rests on the key name and a comment reading Entrants.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": true
+  },
+  {
+    "kind": "on_action", "key": "imperial_examination_exam_host_events", "label": "Exam host events",
+    "summary": "Picks a random event while an imperial examination is in its examination phase; vanilla groups the events under the emperor.",
+    "details": "It runs only when the activity is an imperial examination in its examination phase; the trigger does not check who the character is. The three events, equal weight, are an entrant caught cheating, a dynasty member failing badly, and an examiner falling asleep. That it is meant for the host comes from the key name.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "imperial_examination_exam_on_action", "label": "Examination day",
+    "summary": "Sends each attending character in the activity's location an event for their role in the examination.",
+    "details": "For everyone attending who is at the activity's location it fires one event: imperial_examination.1000 for entrants (members of the entrants guest subset with the matching exam-taker intent; the local-examination intent when the activity is not an imperial examination), .1001 for the host, .1002 for other guests. Only the first matching one is used. The game's documentation gives no expected scope, yet it reads the running character's own activity. The input does not show what fires it.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "imperial_examination_opening_on_action", "label": "Examination opening",
+    "summary": "Sends each attending character at the activity's location an opening event for their role.",
+    "details": "Among attendees at the location (AI characters only if they are rulers), entrants in the entrants guest subset with the exam-taker intent get imperial_examination.1000, the host gets .1001, those with a supporting-entrants intent get .1002, and those with the assist-exam intent get .1003. Unlike the exam on_action these are separate checks, so a character can get more than one. The game's documentation gives no expected scope, and the input does not show what fires it.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "imperial_examination_prep_events", "label": "Exam preparation events",
+    "summary": "Picks a random event for the preparation phase of an imperial or local examination.",
+    "details": "It runs only when the activity is an imperial or local examination in its preparation phase. The pool, all weight 100, has events for the emperor, entrants (studying, bribing, rivals, sneaking answers) and examiners.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "imperial_examination_pulse", "label": "Examination pulse",
+    "summary": "Picks between the assembly events and the preparation events, equally likely.",
+    "details": "It calls two other on_actions, imperial_examination_assembly_events and imperial_examination_prep_events, each with weight 1. Each of those has its own phase trigger, so only the one that fits the current phase can produce an event.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "in_debt_county_corruption_pulse", "label": "Debt corruption pulse",
+    "summary": "Gives each county of a character in debt a chance to trigger an event; vanilla's comment says being in debt may add corruption.",
+    "details": "It runs only if the character is in debt and holds at least one county that is not immune to county corruption. For each such county there is a chance (in_debt_county_corruption_gain_chance) of firing realm_maintenance.0002 on the county's holder, 10 to 40 days later, with the county and holder saved as scopes. The input does not show what that event does.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "increase_control_monthly_on_action", "label": "Control increase (monthly)",
+    "summary": "Runs the side effects of a control-raising council task and may give a marshal event.",
+    "details": "It runs if the character has a marshal councillor, or the saved councillor is a kurultai member performing one of the four kurultai control tasks. It then calls the on_action task_increase_control_side_effects and has a 10% chance of the event marshal_task.3103, an acclaimed knight subduing peasantry.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "inspiration_completed_events", "label": "Inspiration completed",
+    "summary": "Fires the completion event that fits the kind of inspiration that just finished.",
+    "details": "The list is first_valid: the game goes down it and fires the first event whose own conditions are met. Order: weapon, armor, book, weaver, weaver banner, adventurer, artisan, smith, alchemist, bow, religious artifact, then a fallback.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "inspiration_invalidated_events", "label": "Inspiration invalidated",
+    "summary": "Fires the event that explains why an inspiration was cancelled.",
+    "details": "It uses first_valid, so only the first fitting event fires. The reasons are: the adventurer wanted to come home, the inspired character died, was imprisoned, or is no longer a courtier of the sponsor.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "inspiration_maintenance_events", "label": "Inspiration maintenance",
+    "summary": "Fires upkeep events for inspirations, such as stopping icons for aniconic religions.",
+    "details": "All three events are listed in an events list: one prevents icons for religions that forbid images, and two handle a soulmate or nemesis who is no longer one while the work is about them.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "inspiration_maintenance_global_pulse", "label": "Inspiration generation",
+    "summary": "Fires inspiration_system.0005 after a random delay of 1 to 100 days; a vanilla comment says it generates new inspired people.",
+    "details": "The comment says new inspired people are generated every year, up to a limit. The game's documentation gives no expected scope, so it does not run on a particular character.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "inspiration_maintenance_quarterly_pulse", "label": "Inspiration quarterly check",
+    "summary": "Fires an event each quarter that checks if inspired guests should move to another royal court.",
+    "details": "Per the vanilla comment, every ruler checks whether guests in their court with active inspirations should move to another royal court. The event is inspiration_system.1001.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "inspiration_ongoing_events", "label": "Inspiration ongoing",
+    "summary": "Fires some events and picks a random one during an active inspiration.",
+    "details": "It runs only if the scope inspiration exists. Its events list covers the book topic, the adventurer's item type, the alchemy metal and reusing materials. It also picks one random event, with weight 3200 for nothing. The random pool has general, weapon/armor/smith, alchemy, book, artisan, weaver and adventurer events; a vanilla comment says adventurers only use this pool and their weights should be about four times higher. The input shows the definition only up to its 80-line cut-off.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "inspiration_start_events", "label": "Inspiration start",
+    "summary": "Fires the first fitting event that starts an inspiration, by its type.",
+    "details": "It uses first_valid. For each type (weapon, armor, book, weaver, weaver banner, adventurer, artisan, smith, alchemist, bow) vanilla has two events: one for choosing what is made and one for when they already know. A fallback event is last.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "intrigue_lifestyle_common_events", "label": "Intrigue common events",
+    "summary": "Picks a common intrigue lifestyle event, the most frequent tier.",
+    "details": "A vanilla comment says characters get a common event about once every 24 months and most lifestyle events belong here. The pool, all weight 100 except two at 200, is split into skulduggery (schemes, secrets, hooks), intimidation (dread) and temptation (seduction) events.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "intrigue_lifestyle_ongoing_events", "label": "Intrigue ongoing events",
+    "summary": "Picks an intrigue lifestyle event of the common, uncommon or rare tier, for available characters.",
+    "details": "It runs only if the character is available. There is a 10% chance of any event (about one per 18 months, says vanilla). The tiers are weighted 80 common, 15 uncommon, 5 rare. For AI characters the chance of no event is raised: by 30 for kings or higher, 70 for dukes, 95 for others, to save performance.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "intrigue_lifestyle_progress_pulse", "label": "Intrigue lifestyle pulse",
+    "summary": "Quarterly check that gives an eligible intrigue-lifestyle character an event from the general or the unavailable pool.",
+    "details": "A comment says it fires four times a year. The character needs the intrigue lifestyle, must be playable with a capital province, and must not have the variables had_recent_lifestyle_ongoing_event or is_in_intrigue_special_event. A human player must also have had the focus for over 30 days. It then uses first_valid: the ongoing events pool first, otherwise the pool for unavailable characters (imprisoned, commanding an army, infirm).",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "intrigue_lifestyle_rare_events", "label": "Intrigue rare events",
+    "summary": "Picks a rare intrigue lifestyle event, or falls back to the uncommon pool.",
+    "details": "Per a vanilla comment, characters get one about every 360 months, and character-defining or Easter egg events belong here. The pool has a cannibal cook, a mind-slave torture event, a touring theater and two nickname events. Its fallback is the uncommon events.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "intrigue_lifestyle_unavailable_events", "label": "Intrigue events (unavailable)",
+    "summary": "Event pool for intrigue lifestyle characters who are not available, for example imprisoned.",
+    "details": "It runs only if the character is not available. The chance to happen is 10%. This definition lists no events, only the chance; the events themselves are not shown in the input. A comment warns that every event added must have its own is_available trigger, or odd situations like a prisoner discussing strategy with army commanders can occur.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": true
+  },
+  {
+    "kind": "on_action", "key": "intrigue_lifestyle_uncommon_events", "label": "Intrigue uncommon events",
+    "summary": "Picks an uncommon intrigue lifestyle event, or falls back to the common pool.",
+    "details": "A comment says one about every 120 months, for longer event chains and lucrative opportunities. The seven events have equal weight (spy secrets, rooting out secrets, matchmaking, petitioners, enemy siege tactics, sharing traits with a lover). Its fallback is the common events.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "jain_arrival_events", "label": "Jain pilgrim arrival",
+    "summary": "Picks an arrival event for a Jain character at Shikharj.",
+    "details": "It runs only if the character's religion is Jainism and the activity's location is in the county c_radha (Shikharj). The two equal events are the Shikharj event (pilgrimage.5501) and meeting the Mystic again (pilgrimage.4002).",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "jester_ongoing", "label": "Jester events",
+    "summary": "Picks a random event from the jester event set.",
+    "details": "It has no trigger. Thirteen jester events (jester.100 to jester.1300) are weighted: ten at 100, two at 10 and one at 500. The input does not show what the events do; that they concern a jester comes from their names.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "jewish_arrival_events", "label": "Jewish pilgrim arrival",
+    "summary": "Picks an arrival event for a Jewish character at Jerusalem or Mount Sinai.",
+    "details": "It runs only if the character's religion is Judaism and the activity's location is in the county c_jerusalem or c_sinai. The events are Jerusalem (pilgrimage.5011), Mount Sinai (5101) and meeting the Mystic again (4002), equal weight. The list does not separate them by place, so any of the three can be picked at either county; the events' own conditions are not shown in the input.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "kurultai_succession_chaotic_major", "label": "Chaotic succession (major)",
+    "summary": "Picks a severe penalty when a kurultai succession goes badly.",
+    "details": "A kurultai is a council whose members can be obedient or disobedient. It needs at least as many disobedient members as obedient, or no obedient ones, and a realm of kingdom tier or higher (or 10 or more tributaries), and the flag had_mongolia_split must not be set. The weight multiplier is halved for AI characters (vanilla comment: be a bit kinder to the AI). The events: split the realm with a sibling (300), shatter the realm (50), 40% of the herd defects (100), all tributaries leave (100).",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "kurultai_succession_chaotic_medium", "label": "Chaotic succession (medium)",
+    "summary": "Picks a medium penalty when a kurultai succession goes badly.",
+    "details": "It needs two or more disobedient kurultai members or no obedient ones, a realm of kingdom tier or higher (or 10 or more tributaries), and no had_mongolia_split flag. The events: gold divided among siblings, 500 legitimacy lost, 20% of the herd defects, a 20% realm split (350), three tributaries leave.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "kurultai_succession_chaotic_minor", "label": "Chaotic succession (minor)",
+    "summary": "Picks a minor penalty when a kurultai succession goes badly.",
+    "details": "The only condition is that the character does not have the flag had_mongolia_split. The weight multiplier is doubled for AI characters. The events: siblings become rivals, a brother seizes a tributary's lands, a tributary leaves, county control loss, prestige level loss, 10% of the herd defects, good courtiers defect, a men-at-arms regiment defects.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "laamp_base_0001_contract_scheme_on_going_events", "label": "Storytelling contract events",
+    "summary": "Picks an event during the 'regale the court with stories' contract scheme.",
+    "details": "It runs only if the saved scheme is of type laamp_base_0001_contract_scheme. The four equal events are telling stories by prestige level, about the character's exotic culture or faith, an impressionable courtier who wants to join, and stories from the camp's purpose.",
+    "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+  }
+]

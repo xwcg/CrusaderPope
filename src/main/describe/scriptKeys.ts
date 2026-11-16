@@ -1,5 +1,5 @@
 /**
- * Which effect and trigger keys the loaded script uses, how often, and with what values — the statement picker's
+ * Which effect and trigger keys the loaded script uses, how often, and with what values: the statement picker's
  * "Other effect… / Other condition…" list (docs/picker.md). Runs on a thread of its own (scriptKeysWorker.ts): it
  * parses every script file of common/ and events/ once more (≈ 3 s), walking only statement blocks (effect and
  * trigger blocks, their control flow, scope switches and iterators) so parameter keys (`target`, `modifier`) are not
@@ -8,6 +8,8 @@
 import { parse, type PNode } from '../indexer/parser.ts';
 import type { GameFile, GameFiles } from '../mods/gamefiles.ts';
 import type { ScriptKeyInfo, ScriptKeys } from '../../shared/api.ts';
+import { LINKS } from '../../shared/scriptCatalog.ts';
+import { onFactsApplied } from '../../shared/scriptFacts.ts';
 
 /** Blocks holding effects (below the top level of a definition). */
 const EFFECT_BLOCKS = new Set([
@@ -155,8 +157,17 @@ export const SCOPE_LINK_KEYS = new Set([
     'province_owner',
     'barony',
     'dynasty_head',
-    'house_confederation'
+    'house_confederation',
+    // (and the picker's catalog of links, scriptCatalog.ts LINKS: 1.20's rite, head_of_rite, an activity's host, a holy order's leader …)
+    ...LINKS.map((l) => l.key)
 ]);
+// (the script database's links join when its facts are applied: src/shared/scriptFacts.ts)
+onFactsApplied(() =>
+{
+    for (const l of LINKS)
+        SCOPE_LINK_KEYS.add(l.key);
+});
+
 
 /** Parameters of iterators (not statements). */
 const ITERATOR_PARAMS = new Set([
@@ -186,7 +197,12 @@ const ITERATOR_PARAMS = new Set([
     'vassal_stance',
     'title_tier',
     'name',
-    'phase'
+    'phase',
+    // (the keys lists take, scriptCatalog.ts IteratorParam)
+    'involvement',
+    'knowledge_filter',
+    'category',
+    'artifact_slot_type'
 ]);
 
 const RANDOM_LIST_PARAMS = new Set(['trigger', 'modifier', 'desc', 'show_chance', 'min', 'max', 'opinion_modifier', 'compare_modifier', 'ai_value_modifier']);
@@ -240,23 +256,82 @@ function blockText(src: string, n: PNode): string | undefined
     return t.length <= 120 ? t : undefined;
 }
 
+/** A scripted effect's or trigger's parameters: the `$NAME$`s its definition uses (in the order written), and where each is used. */
+interface Defined
+{
+    params: string[];
+    keys: Record<string, { key: string; block?: string; }>;
+}
+
 /** A file's (or the base files') tallies per key. */
 interface Bucket
 {
     effect: Map<string, Tally>;
     trigger: Map<string, Tally>;
-    /** the scripted effects / triggers defined there, with the `$PARAM$`s each uses (in the order written) */
-    defined: { effect: Map<string, string[]>; trigger: Map<string, string[]>; };
+    /** the scripted effects / triggers defined there */
+    defined: { effect: Map<string, Defined>; trigger: Map<string, Defined>; };
 }
 
 const newBucket = (): Bucket => ({ effect: new Map(), trigger: new Map(), defined: { effect: new Map(), trigger: new Map() } });
+
+/**
+ * Where a definition's parameters are used: for each `$NAME$`, the key it is written after (`add_gold = $AMOUNT$`), with
+ * the block that key sits in when it is a field (`add_trait_xp = { trait = $TRAIT$ }`); the commonest spot, the first
+ * written on a tie. A parameter that is only part of a word (`x_$NAME$`), a text or an expression has none.
+ */
+export function paramUses(body: PNode[], params: string[]): Defined['keys']
+{
+    const tally = new Map<string, Map<string, { key: string; block?: string; n: number; }>>();
+
+    const walk = (nodes: PNode[], block: string | undefined): void =>
+    {
+        for (const c of nodes)
+        {
+            if (typeof c.v === 'string')
+            {
+                const m = c.k ? /^\$([^$\s]+)\$$/.exec(c.v) : null;
+
+                if (m)
+                {
+                    const spots = tally.get(m[1]) ?? tally.set(m[1], new Map()).get(m[1])!;
+                    const id = `${block ?? ''} ${c.k}`;
+                    const spot = spots.get(id);
+
+                    if (spot)
+                        spot.n++;
+                    else
+                        spots.set(id, { key: c.k!, ...(block ? { block } : {}), n: 1 });
+                }
+            }
+            else
+                walk(c.v, c.k ?? undefined);
+        }
+    };
+
+    walk(body, undefined);
+    const out: Defined['keys'] = {};
+
+    for (const p of params)
+    {
+        let best: { key: string; block?: string; n: number; } | undefined;
+
+        for (const spot of tally.get(p)?.values() ?? [])
+            if (!best || spot.n > best.n)
+                best = spot;
+
+        if (best)
+            out[p] = { key: best.key, ...(best.block ? { block: best.block } : {}) };
+    }
+
+    return out;
+}
 
 /** Script files the scan reads: `.txt` of common/ and events/, not the data-only folders. */
 export const scannedPath = (rel: string): boolean => /^(common|events)\/.*\.txt$/i.test(rel) && !SKIP.test(rel);
 
 export class ScriptKeyScanner
 {
-    /** the files that don't change while the app runs (the game, packed and Workshop mods) — summed up */
+    /** the files that don't change while the app runs (the game, packed and Workshop mods), summed up */
     private base = newBucket();
     /** their paths (lower case): a change there needs a full scan */
     private baseRels = new Set<string>();
@@ -308,7 +383,7 @@ export class ScriptKeyScanner
 
     /**
      * Takes changed files in (game-relative paths): each one's tallies are made again from the file the game loads
-     * now (none when it is gone). False when a path belongs to the summed-up files — only a full scan can take it in.
+     * now (none when it is gone). False when a path belongs to the summed-up files: only a full scan can take it in.
      */
     rescan(files: GameFiles, rels: string[]): boolean
     {
@@ -361,9 +436,10 @@ export class ScriptKeyScanner
                     continue;
 
                 this.scripted[se ? 'effect' : 'trigger'].add(n.k);
-                // (its parameters: the `$NAME$`s its text uses — a call passes `NAME = value`)
-                const params = [...new Set([...text.slice(n.vs, n.e).matchAll(/\$([A-Za-z_]\w*)\$/g)].map((m) => m[1]))];
-                this.tallies.defined[se ? 'effect' : 'trigger'].set(n.k, params);
+                // (its parameters: the `$NAME$`s its text uses; a call passes `NAME = value`; a macro's name may hold any
+                // character but `$` and white space, `$SUCCESS_%$`)
+                const params = [...new Set([...text.slice(n.vs, n.e).matchAll(/\$([^$\s]+)\$/g)].map((m) => m[1]))];
+                this.tallies.defined[se ? 'effect' : 'trigger'].set(n.k, { params, keys: paramUses(n.v, params) });
 
                 if (se)
                     this.effects(n.v);
@@ -656,8 +732,8 @@ export class ScriptKeyScanner
         const defined = new Map(this.base.defined[kind]);
 
         for (const b of this.perFile.values())
-            for (const [key, params] of b.defined[kind])
-                defined.set(key, params);
+            for (const [key, def] of b.defined[kind])
+                defined.set(key, def);
 
         for (const [key, t] of this.merged(kind))
         {
@@ -675,20 +751,25 @@ export class ScriptKeyScanner
             if (this.scripted[kind].has(key))
                 info.scripted = true;
 
-            const params = defined.get(key);
+            const def = defined.get(key);
 
-            if (params?.length)
-                info.params = params;
+            if (def?.params.length)
+            {
+                info.params = def.params;
+
+                if (Object.keys(def.keys).length)
+                    info.paramKeys = def.keys;
+            }
 
             out.push(info);
         }
 
-        // (scripted ones nothing uses yet — a mod's new one: listed too)
+        // (scripted ones nothing uses yet (a mod's new one): listed too)
         const listed = new Set(out.map((x) => x.key));
 
-        for (const [key, params] of defined)
+        for (const [key, def] of defined)
             if (!listed.has(key))
-                out.push({ key, count: 0, shapes: {}, values: [], scripted: true, ...(params.length ? { params } : {}) });
+                out.push({ key, count: 0, shapes: {}, values: [], scripted: true, ...(def.params.length ? { params: def.params } : {}), ...(Object.keys(def.keys).length ? { paramKeys: def.keys } : {}) });
 
         return out.sort((a, b) => b.count - a.count || (a.key < b.key ? -1 : 1));
     }

@@ -5,12 +5,14 @@ import type { Navigate } from '../App';
 import { openTitle, revealTitle } from './common';
 import { digest, useRevision } from '../revision';
 
+import { errorText } from '../errors';
+import { tr } from '../../../shared/i18n';
 const base = (p: string): string => p.slice(p.lastIndexOf('/') + 1);
 const fmt = (x: number): string => (Math.abs(x) >= 10 ? x.toFixed(1) : x.toFixed(3));
 
 /**
- * Expert "Portrait" tab: what the 3D portrait is built from — entities, mesh files, vertex counts, blend shapes
- * (applied, at zero, skipped and why), bone morphs, decals, tags and portrait modifiers. For checking mesh mods.
+ * Expert "Portrait" tab: what the 3D portrait is built from (entities, mesh files, vertex counts, blend shapes
+ * (applied, at zero, skipped and why), bone morphs, decals, tags and portrait modifiers). For checking mesh mods.
  */
 export function PortraitReportView(props: { type: string; name: string; navigate: Navigate; }): React.JSX.Element
 {
@@ -29,7 +31,7 @@ export function PortraitReportView(props: { type: string; name: string; navigate
         api
             .portraitReport(props.type, props.name, { naked: !dressed, figLeaf })
             .then((r) => !cancelled && setReport((old) => (old && r && digest(old) === digest(r) ? old : r)))
-            .catch((e: Error) => !cancelled && setError(e.message));
+            .catch((e: Error) => !cancelled && setError(errorText(e)));
         return () =>
         {
             cancelled = true;
@@ -37,13 +39,13 @@ export function PortraitReportView(props: { type: string; name: string; navigate
     }, [props.type, props.name, dressed, figLeaf, revision]);
 
     if (error)
-        return <div className="placeholder">Portrait report failed: {error}</div>;
+        return <div className="placeholder">{tr('Portrait report failed: {error}', { error })}</div>;
 
     if (report === undefined)
-        return <div className="placeholder">Building the portrait…</div>;
+        return <div className="placeholder">{tr('Building the portrait…')}</div>;
 
     if (report === null)
-        return <div className="placeholder">No portrait for this entry.</div>;
+        return <div className="placeholder">{tr('No portrait for this entry.')}</div>;
 
     const vertices = report.entities.reduce((s, e) => s + e.parts.reduce((t, p) => t + p.vertices, 0), 0);
     return (
@@ -55,16 +57,13 @@ export function PortraitReportView(props: { type: string; name: string; navigate
                 </span>
                 <span className="pr-dim">{report.source}</span>
                 <span className="pr-dim">
-                    {report.entities.length} entities · {vertices.toLocaleString()} vertices
-                </span>
+                    {tr('{entitiesCount} entities · {vertices} vertices', { entitiesCount: report.entities.length, vertices: vertices.toLocaleString() })}</span>
                 <span className="portrait-toggles">
-                    <label title="Undressed uses the game's naked outfit">
-                        <input type="checkbox" checked={dressed} onChange={(e) => setDressed(e.target.checked)} /> dressed
-                    </label>
+                    <label title={tr('Undressed uses the game\'s naked outfit')}>
+                        <input type="checkbox" checked={dressed} onChange={(e) => setDressed(e.target.checked)} /> {' '}{tr('dressed')}</label>
                     {!dressed && (
                         <label>
-                            <input type="checkbox" checked={figLeaf} onChange={(e) => setFigLeaf(e.target.checked)} /> fig leaf
-                        </label>
+                            <input type="checkbox" checked={figLeaf} onChange={(e) => setFigLeaf(e.target.checked)} /> {' '}{tr('fig leaf')}</label>
                     )}
                 </span>
             </div>
@@ -73,7 +72,7 @@ export function PortraitReportView(props: { type: string; name: string; navigate
 
             <div className="ref-group">
                 <header>
-                    <span className="label">Decals</span>
+                    <span className="label">{tr('Decals')}</span>
                     <span className="n">{report.decals.length}</span>
                 </header>
                 <div className="pr-table pr-decals">
@@ -84,7 +83,7 @@ export function PortraitReportView(props: { type: string; name: string; navigate
                                 {base(d.texture)}
                             </span>
                             <span className="pr-num">{d.weight.toFixed(2)}</span>
-                            <span className="pr-dim">{d.post ? 'after skin colour' : 'before skin colour'}</span>
+                            <span className="pr-dim">{d.post ? tr('after skin colour') : tr('before skin colour')}</span>
                         </div>
                     ))}
                 </div>
@@ -92,7 +91,7 @@ export function PortraitReportView(props: { type: string; name: string; navigate
 
             <div className="ref-group">
                 <header>
-                    <span className="label">Tags</span>
+                    <span className="label">{tr('Tags')}</span>
                     <span className="n">{report.tags.length}</span>
                 </header>
                 <div className="pr-chips">
@@ -105,7 +104,7 @@ export function PortraitReportView(props: { type: string; name: string; navigate
             </div>
             <div className="ref-group">
                 <header>
-                    <span className="label">Portrait modifiers applied</span>
+                    <span className="label">{tr('Portrait modifiers applied')}</span>
                     <span className="n">{report.modifiers.length}</span>
                 </header>
                 <div className="pr-chips">
@@ -136,37 +135,36 @@ function EntityBlock({ e, navigate }: { e: PortraitEntityReport; navigate: Navig
                     {e.role}
                     {e.accessory && <span className="pr-dim">· {e.accessory}</span>}
                 </span>
-                {problems.length > 0 && <span className="chip warn">{problems.length} blend shapes skipped</span>}
+                {problems.length > 0 && <span className="chip warn">{tr('{problemsCount} blend shapes skipped', { problemsCount: problems.length })}</span>}
                 <span className="n">
-                    {vertices.toLocaleString()} vertices · {applied.length} blend shapes · {e.boneMorphs.length} bone morphs
-                </span>
+                    {tr('{vertices} vertices · {appliedCount} blend shapes · {boneMorphsCount} bone morphs', { vertices: vertices.toLocaleString(), appliedCount: applied.length, boneMorphsCount: e.boneMorphs.length })}</span>
             </header>
             {open && (
                 <div className="pr-body">
                     <div className="pr-files">
-                        <span className="pr-dim">entity</span>
+                        <span className="pr-dim">{tr('entity')}</span>
                         <span className="pr-code">{e.entity}</span>
-                        <span className="pr-dim">asset</span>
+                        <span className="pr-dim">{tr('asset')}</span>
                         <span>
-                            <span className="site-link" title="Declarations, textures and preview" onClick={() => navigate({ type: 'models', name: e.asset })}>
+                            <span className="site-link" title={tr('Declarations, textures and preview')} onClick={() => navigate({ type: 'models', name: e.asset })}>
                                 {e.asset}
                             </span>
                             <span className="pr-ext" title={openTitle(e.assetAbs)} onClick={() => void api.openFile(e.assetAbs)}>
                                 ↗
                             </span>
                         </span>
-                        <span className="pr-dim">mesh</span>
+                        <span className="pr-dim">{tr('mesh')}</span>
                         <span>
-                            <span className="site-link" title="3D preview, parts and textures" onClick={() => navigate({ type: 'models', name: e.mesh })}>
+                            <span className="site-link" title={tr('3D preview, parts and textures')} onClick={() => navigate({ type: 'models', name: e.mesh })}>
                                 {e.mesh}
                             </span>
                             <span className="pr-ext" title={revealTitle(e.meshAbs)} onClick={() => void api.revealFile(e.meshAbs)}>
                                 ↗
                             </span>
                         </span>
-                        <span className="pr-dim">skeleton</span>
+                        <span className="pr-dim">{tr('skeleton')}</span>
                         <span>
-                            {e.pose} pose · {e.bones} bones{e.idle && <span className="pr-dim">· idle {base(e.idle)}</span>}
+                            {tr('{pose} pose · {bones} bones', { pose: e.pose, bones: e.bones })}{e.idle && <span className="pr-dim">{tr('· idle {base}', { base: base(e.idle) })}</span>}
                         </span>
                     </div>
 
@@ -175,9 +173,9 @@ function EntityBlock({ e, navigate }: { e: PortraitEntityReport; navigate: Navig
                             <div key={i} className="pr-row pr-part">
                                 <span className="pr-code">{p.shape}</span>
                                 <span className="pr-num">{p.vertices.toLocaleString()} v</span>
-                                <span className="pr-num">{p.triangles.toLocaleString()} tris</span>
+                                <span className="pr-num">{tr('{triangles} tris', { triangles: p.triangles.toLocaleString() })}</span>
                                 <span className="pr-dim">{p.shader}</span>
-                                <span className="pr-dim" title={`min ${p.min.map(fmt).join(', ')}\nmax ${p.max.map(fmt).join(', ')}`}>
+                                <span className="pr-dim" title={tr('min {min}\nmax {max}', { min: p.min.map(fmt).join(', '), max: p.max.map(fmt).join(', ') })}>
                                     {p.max.map((x, k) => fmt(x - p.min[k])).join(' × ')}
                                 </span>
                             </div>
@@ -195,14 +193,13 @@ function EntityBlock({ e, navigate }: { e: PortraitEntityReport; navigate: Navig
                                     </span>
                                     <span className="pr-dim">
                                         {b.status}
-                                        {b.detail && ` — ${b.detail}`}
+                                        {b.detail && `: ${b.detail}`}
                                     </span>
                                 </div>
                             ))}
                             {zero.length > 0 && (
                                 <div className="pr-more site-link" onClick={() => setShowZero(!showZero)}>
-                                    {showZero ? 'hide' : 'show'} {zero.length} blend shapes at zero
-                                </div>
+                                    {showZero ? 'hide' : 'show'} {tr('{zeroCount} blend shapes at zero', { zeroCount: zero.length })}</div>
                             )}
                         </div>
                     )}
@@ -216,7 +213,7 @@ function EntityBlock({ e, navigate }: { e: PortraitEntityReport; navigate: Navig
                                     <span className="pr-file" title={m.animation}>
                                         {base(m.animation)}
                                     </span>
-                                    <span className="pr-dim">bone morph</span>
+                                    <span className="pr-dim">{tr('bone morph')}</span>
                                 </div>
                             ))}
                         </div>

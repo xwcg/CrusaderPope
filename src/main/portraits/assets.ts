@@ -1,5 +1,5 @@
 /**
- * Read access to the portrait asset data — see docs/portraits.md.
+ * Read access to the portrait asset data; see docs/portraits.md.
  *
  * `.asset` files (pdxmesh / entity / animation declarations), the entity → asset file lookup, accessory definitions
  * (gfx/portraits/accessories: tags + entity variants) and portrait types (common/portrait_types: head and torso entity
@@ -448,9 +448,9 @@ export class AssetLibrary
 
     /**
      * Entity by name, from any .asset file under gfx/models (scanned once; the game registers the entities of all of
-     * gfx/models — accessories use props of gfx/models/artifacts, pets …: 329 of the game's accessory variants, 403
+     * gfx/models: accessories use props of gfx/models/artifacts, pets …: 329 of the game's accessory variants, 403
      * with AGOT). Declarations in comments don't count (AGOT keeps a commented-out copy of an entity in another file).
-     * The first declaration of a name in path order wins — no name is declared twice in the game or AGOT (docs/portraits.md,
+     * The first declaration of a name in path order wins; no name is declared twice in the game or AGOT (docs/portraits.md,
      * "Mods"). Its pdxmesh may be declared in another asset file (variants of a garment share one mesh).
      */
     entity(name: string): { asset: AssetInfo; entity: EntityDecl; mesh: MeshDecl; } | undefined

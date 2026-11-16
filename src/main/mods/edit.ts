@@ -1,9 +1,9 @@
 /**
  * Editing the active mod (docs/mods.md, "Editing the active mod"): overriding an entry by
- * - copying its winning definition into the mod's overrides file of that folder, `zz_<mod folder>_overrides.txt` — it
+ * - copying its winning definition into the mod's overrides file of that folder, `zz_<mod folder>_overrides.txt`: it
  *   loads after the game's files there, and for database types the later definition of a key wins; localization
  *   keys go to the mod's `localization/<lang>/replace/<mod folder>_l_<lang>.yml`, which wins over all loc files;
- * - copying the whole file holding it to the same path in the mod — a same-path file replaces the game's (and
+ * - copying the whole file holding it to the same path in the mod: a same-path file replaces the game's (and
  *   earlier mods') file.
  *
  * The index worker prepares the text (GameIndex.overrideSource: byte-exact, with the namespace, constants and
@@ -16,10 +16,13 @@ import { eolOf, fileLocals, TITLE_KEY, type OverrideSource, type OverrideText } 
 import { parse, type PNode } from '../indexer/parser.ts';
 import { parseLocalization } from '../indexer/localization.ts';
 import { T_CHARACTER, T_EVENT } from '../indexer/schema.ts';
+import { gamePathOrder } from './gamefiles.ts';
 import { modsOfList, modsState, writeAtomic, type ModsHost } from './manager.ts';
 import { formatScript, isScriptFile, mapPosition } from '../../shared/scriptFormat.ts';
 import { change, describeChange, recordWrite } from './undo.ts';
+import { recordTrail, trailEntry, type Splice } from './textTrail.ts';
 
+import { tr } from '../../shared/i18n.ts';
 export interface Active
 {
     mod: ModInfo;
@@ -48,15 +51,15 @@ export async function activeMod(host: ModsHost): Promise<Active | string>
     const id = state.activeMod;
 
     if (!id)
-        return 'No active mod. Set one on the Mods page (Mods tab): “New mod…”, or a mod’s ⋯ menu → “Set as active mod”.';
+        return tr('No active mod. Set one on the Mods page (Mods tab): “New mod…”, or a mod’s ⋯ menu → “Set as active mod”.');
 
     const mod = state.mods.find((m) => m.id.toLowerCase() === id.toLowerCase());
 
     if (!mod)
-        return `The active mod (${id}) was not found — choose another one on the Mods page (Mods tab).`;
+        return tr('The active mod ({id}) was not found — choose another one on the Mods page (Mods tab).', { id });
 
     if (!mod.editable || !mod.root)
-        return `“${mod.name}” cannot be edited here: only unpacked mods in your mod folder can. Choose another active mod on the Mods page.`;
+        return tr('“{name}” cannot be edited here: only unpacked mods in your mod folder can. Choose another active mod on the Mods page.', { name: mod.name });
 
     // (an operation running: its undo step is this mod's)
     describeChange({ mod, root: mod.root });
@@ -67,7 +70,7 @@ export async function activeMod(host: ModsHost): Promise<Active | string>
 
 /**
  * The mods loading after the active one whose replace_path is this folder (game-relative): the game ignores the active
- * mod's files directly in it (docs/mods.md, "Load order and layering") — a file written there would not load.
+ * mod's files directly in it (docs/mods.md, "Load order and layering"); a file written there would not load.
  */
 export function hiddenBy(a: Active, relDir: string): ModInfo[]
 {
@@ -92,7 +95,7 @@ export function hiddenProblem(a: Active, relDir: string): string | undefined
         return undefined;
 
     const names = by.map((m) => m.name).join(' and ');
-    return `${names} ${by.length === 1 ? 'loads' : 'load'} after ${a.mod.name} and ${by.length === 1 ? 'replaces' : 'replace'} ${relDir} (replace_path): the game ignores ${a.mod.name}’s files there — move ${a.mod.name} below ${by.length === 1 ? 'it' : 'them'} in the load order (Mods page).`;
+    return tr('{names} {value} after {name} and {value2} {relDir} (replace_path): the game ignores {name}’s files there — move {name} below {value3} in the load order (Mods page).', { names, value: by.length === 1 ? 'loads' : 'load', name: a.mod.name, value2: by.length === 1 ? 'replaces' : 'replace', relDir, value3: by.length === 1 ? 'it' : 'them' });
 }
 
 /** The mod's file for a game-relative path; undefined when it would lie outside its folder (a zip entry named `../x`). */
@@ -103,7 +106,27 @@ export function modPath(a: Active, rel: string): string | undefined
     return r && !r.startsWith('..') && !isAbsolute(r) ? abs : undefined;
 }
 
-const outside = (rel: string): OverrideOption => ({ disabled: `${rel} is not a path inside the mod folder.`, notes: [] });
+const outside = (rel: string): OverrideOption => ({ disabled: tr('{rel} is not a path inside the mod folder.', { rel }), notes: [] });
+
+/** The provenance comment above a copied definition in an overrides file (written after `# `). */
+export function provenanceText(v: { key: string; value: string; rel: string; line: string; from: string; }): string
+{
+    return tr('{key}{value} — copied from {rel}:{line} ({from})', v);
+}
+
+/**
+ * Whether a comment's text (after `# `) is a provenance comment (`provenanceText`): in the app's language, its fixed
+ * words around the values, or in English (a file written before the app language changed).
+ */
+export function isProvenance(text: string): boolean
+{
+    // (the text filled with markers: the words between them are the translation's own)
+    const mark = (c: string): string => `\u0001${c}\u0001`;
+    const filled = provenanceText({ key: mark('k'), value: mark('v'), rel: mark('r'), line: mark('l'), from: mark('f') });
+    const words = filled.split(/\u0001\w\u0001/).filter((w) => w.trim());
+    const own = words.length > 0 && words.every((w) => text.includes(w.trim()));
+    return own || / — copied from \S.*:\d+ \(/.test(text);
+}
 
 /** The mod's folder name as part of a file name: `my_mod` (other characters than letters, digits, _ and - become _). */
 export function fileTag(a: Active): string
@@ -166,7 +189,7 @@ function topKeys(ast: PNode[]): Map<string, number>
 
 /**
  * The line of a landed title's last definition with values of its own, at any depth (not the empty blocks written as
- * the way to a title inside them — override.ts titleText).
+ * the way to a title inside them; override.ts titleText).
  */
 function titleLine(ast: PNode[], key: string): number | undefined
 {
@@ -248,7 +271,7 @@ function findLocInMod(dir: string, relDir: string, key: string): OverrideOption[
     };
     walk(dir, relDir);
     const replace = (r: string): number => (/\/replace\//i.test(r) ? 1 : 0);
-    files.sort((a, b) => replace(a.rel) - replace(b.rel) || (a.rel.toLowerCase() < b.rel.toLowerCase() ? -1 : 1));
+    files.sort((a, b) => replace(a.rel) - replace(b.rel) || gamePathOrder(a.rel, b.rel));
     let found: OverrideOption['open'];
 
     for (const f of files)
@@ -297,7 +320,7 @@ const sameText = (a: string, b: string): boolean => a.replace(/\r\n/g, '\n').tri
 
 /**
  * An overrides file with the copied definition appended (the file's namespace declared at its top once; constants
- * and file-local definitions it needs before it, once per file) — or why this file cannot take it: a constant or
+ * and file-local definitions it needs before it, once per file), or why this file cannot take it: a constant or
  * local definition of the same name with other content is there.
  */
 export function composeScript(existing: string | null, c: OverrideText, provenance: string, header: string): { content?: string; line?: number; notes: string[]; conflict?: string; }
@@ -324,7 +347,7 @@ export function composeScript(existing: string | null, c: OverrideText, provenan
     const differs = c.locals.find((x) => locals.has(x.name) && !sameText(locals.get(x.name)!.text, x.text));
 
     if (differs)
-        return { notes, conflict: `its ${differs.kind} ${differs.name} is another one` };
+        return { notes, conflict: tr('its {kind} {name} is another one', { kind: differs.kind, name: differs.name }) };
 
     if (existing === null)
         body = `# ${header}${eol}`;
@@ -336,7 +359,7 @@ export function composeScript(existing: string | null, c: OverrideText, provenan
     {
         const at = namespaceAt(body, existing === null ? [] : ast);
         body = body.slice(0, at) + `namespace = ${c.namespace}` + eol + body.slice(at);
-        notes.push(`Declares namespace = ${c.namespace} at the top of the file.`);
+        notes.push(tr('Declares namespace = {namespace} at the top of the file.', { namespace: c.namespace }));
     }
 
     body += eol + `# ${provenance}` + eol + eol;
@@ -344,13 +367,13 @@ export function composeScript(existing: string | null, c: OverrideText, provenan
     if (addConsts.length)
     {
         body += addConsts.map((x) => x.text + eol).join('') + eol;
-        notes.push(`Takes along the ${plural(addConsts.length, 'constant', 'constants')} it uses: ${addConsts.map((x) => '@' + x.name).join(', ')}.`);
+        notes.push(tr('Takes along the {plural} it uses: {join}.', { plural: plural(addConsts.length, 'constant', 'constants'), join: addConsts.map((x) => '@' + x.name).join(', ') }));
     }
 
     if (addLocals.length)
     {
         body += addLocals.map((x) => x.text + eol + eol).join('');
-        notes.push(`Takes along the file-local ${addLocals.map((x) => `${x.kind} ${x.name}`).join(', ')} it calls.`);
+        notes.push(tr('Takes along the file-local {join} it calls.', { join: addLocals.map((x) => `${x.kind} ${x.name}`).join(', ') }));
     }
 
     const at = body.length + c.at;
@@ -387,7 +410,7 @@ function planLocCopy(a: Active, loc: NonNullable<OverrideSource['loc']>): { opti
     const found = findLocInMod(locDir, `localization/${loc.lang}`, loc.key) ?? findLocInMod(modPath(a, `localization/replace/${loc.lang}`)!, `localization/replace/${loc.lang}`, loc.key);
 
     if (found)
-        return { option: { open: found, notes: [`${a.mod.name} has this key already (${found.rel}:${found.line}) — edit it there.`] } };
+        return { option: { open: found, notes: [tr('{name} has this key already ({rel}:{line}) — edit it there.', { name: a.mod.name, rel: found.rel, line: found.line })] } };
 
     // (a replace file of the game or another mod could hold the key: the mod's must load after it)
     const winning = /\/replace\//i.test(loc.file) ? basename(loc.file) : '';
@@ -405,18 +428,18 @@ function planLocCopy(a: Active, loc: NonNullable<OverrideSource['loc']>): { opti
         return { option: { disabled: hiddenProblem(a, dirs[0])!, notes: [hiddenProblem(a, dirs[1])!] } };
 
     if (dir !== dirs[0])
-        notes.push(`Not in ${dirs[0]}: ${hiddenProblem(a, dirs[0])} ${dir} is read as a replace folder too.`);
+        notes.push(tr('Not in {dirs}: {hiddenProblem} {dir} is read as a replace folder too.', { dirs: dirs[0], hiddenProblem: hiddenProblem(a, dirs[0]), dir }));
 
     const rel = `${dir}/${name}`;
     const abs = modPath(a, rel)!;
     const existing = readUtf8(abs);
 
     if (existing === false)
-        return { option: { disabled: `${rel} is not UTF-8 text — it cannot be added to safely.`, notes: [] } };
+        return { option: { disabled: tr('{rel} is not UTF-8 text — it cannot be added to safely.', { rel }), notes: [] } };
 
     const r = composeLoc(existing, loc);
     return {
-        option: { target: rel, notes: [...notes, 'The replace folder loads after all other localization files, so this text wins.'] },
+        option: { target: rel, notes: [...notes, tr('The replace folder loads after all other localization files, so this text wins.')] },
         write: { abs, rel, content: r.content, line: r.line }
     };
 }
@@ -424,13 +447,13 @@ function planLocCopy(a: Active, loc: NonNullable<OverrideSource['loc']>): { opti
 function planCopy(a: Active, s: OverrideSource): { option: OverrideOption; write?: Write; }
 {
     if (s.inMod)
-        return { option: { open: { file: s.inMod.abs, rel: s.inMod.rel, line: s.inMod.line }, notes: [`${a.mod.name} defines it already (${s.inMod.rel}:${s.inMod.line}) — edit that definition.`] } };
+        return { option: { open: { file: s.inMod.abs, rel: s.inMod.rel, line: s.inMod.line }, notes: [tr('{name} defines it already ({rel}:{line}) — edit that definition.', { name: a.mod.name, rel: s.inMod.rel, line: s.inMod.line })] } };
 
     if (s.none)
-        return { option: { disabled: 'Nothing to copy: the entry has no definition.', notes: [] } };
+        return { option: { disabled: tr('Nothing to copy: the entry has no definition.'), notes: [] } };
 
     if (s.removed)
-        return { option: { disabled: 'A mod removed this entry: there is no loaded definition to copy.', notes: [] } };
+        return { option: { disabled: tr('A mod removed this entry: there is no loaded definition to copy.'), notes: [] } };
 
     if (s.loc)
         return planLocCopy(a, s.loc);
@@ -439,7 +462,7 @@ function planCopy(a: Active, s: OverrideSource): { option: OverrideOption; write
     const c = s.copy;
 
     if (!d || !c)
-        return { option: { disabled: s.copyProblem ?? 'This definition cannot be copied alone.', notes: [] } };
+        return { option: { disabled: s.copyProblem ?? tr('This definition cannot be copied alone.'), notes: [] } };
 
     const relDir = d.rel.slice(0, d.rel.lastIndexOf('/'));
     const dir = modPath(a, relDir);
@@ -447,14 +470,14 @@ function planCopy(a: Active, s: OverrideSource): { option: OverrideOption; write
     if (!dir)
         return { option: outside(relDir) };
 
-    // (a later mod's replace_path over the folder: no file of the mod there loads — no other folder holds the type's
+    // (a later mod's replace_path over the folder: no file of the mod there loads; no other folder holds the type's
     // definitions for sure: the game's subfolder reading under a replace_path is not known)
     const hidden = hiddenProblem(a, relDir);
     // the index sees the mod's definitions only while it is loaded: its files of that folder are checked too
     const found = findInFolder(dir, relDir, c.key, !!s.path);
 
     if (found)
-        return { option: { open: found, notes: [`${a.mod.name} defines ${c.key} already (${found.rel}:${found.line}) — edit that definition.`, ...(hidden ? [hidden] : [])] } };
+        return { option: { open: found, notes: [tr('{name} defines {key} already ({rel}:{line}) — edit that definition.', { name: a.mod.name, key: c.key, rel: found.rel, line: found.line }), ...(hidden ? [hidden] : [])] } };
 
     if (hidden)
         return { option: { disabled: hidden, notes: [] } };
@@ -463,26 +486,26 @@ function planCopy(a: Active, s: OverrideSource): { option: OverrideOption; write
 
     if (s.path)
         notes.push(
-            `It is written inside ${s.path.join(' › ')}: the copy is ${s.name} without its de jure vassals, inside empty blocks of those — the game adds a title written again to the one it has, so they and the vassals stay as they are.`
+            tr('It is written inside {join}: the copy is {name} without its de jure vassals, inside empty blocks of those — the game adds a title written again to the one it has, so they and the vassals stay as they are.', { join: s.path.join(' › '), name: s.name })
         );
     else if (s.container)
-        notes.push(`It is defined inside ${s.container.name}: the copy holds all of ${s.container.name} (the game overrides top-level keys).`);
+        notes.push(tr('It is defined inside {name}: the copy holds all of {name} (the game overrides top-level keys).', { name: s.container.name }));
 
     if (s.merging)
         notes.push(
-            'On_actions merge: the copy is added to the loaded definitions instead of replacing them — whatever stays in it runs twice. Edit it down to what you add, or replace the whole file for a real override.'
+            tr('On_actions merge: the copy is added to the loaded definitions instead of replacing them — whatever stays in it runs twice. Edit it down to what you add, or replace the whole file for a real override.')
         );
 
     // the game keeps no single winner for these (docs/mods.md, "Which definition wins")
     if (s.type === T_EVENT)
         notes.push(
-            'The game does not override single events: the copy is a second event of this id — the game reports "Duplicated event ID" in error.log and which of the two fires is not defined. Replace the whole file for a real override, or duplicate it as a new event.'
+            tr('The game does not override single events: the copy is a second event of this id — the game reports "Duplicated event ID" in error.log and which of the two fires is not defined. Replace the whole file for a real override, or duplicate it as a new event.')
         );
     else if (s.type === T_CHARACTER)
-        notes.push('History characters do not override each other: the copy is a second character of this id ("Duplicate character id in history" in error.log). Replace the whole file instead.');
+        notes.push(tr('History characters do not override each other: the copy is a second character of this id ("Duplicate character id in history" in error.log). Replace the whole file instead.'));
 
-    const provenance = `${c.key}${s.path ? ` (in ${s.path.join(' › ')})` : s.container ? ` (holds ${s.name})` : ''} — copied from ${d.rel}:${c.line} (${d.from})`;
-    const header = `${a.mod.name}: overrides written by CrusaderPope. This file loads after the other files of its folder, so its definitions win${s.merging ? ' (on_actions merge instead)' : ''}.`;
+    const provenance = provenanceText({ key: c.key, value: s.path ? ` (in ${s.path.join(' › ')})` : s.container ? ` (holds ${s.name})` : '', rel: d.rel, line: String(c.line), from: d.from });
+    const header = tr('{name}: overrides written by CrusaderPope. This file loads after the other files of its folder, so its definitions win{value}.', { name: a.mod.name, value: s.merging ? ' (on_actions merge instead)' : '' });
     const defFile = d.rel.slice(d.rel.lastIndexOf('/') + 1);
     const skipped: string[] = [];
 
@@ -495,7 +518,7 @@ function planCopy(a: Active, s: OverrideSource): { option: OverrideOption; write
 
         if (existing === false)
         {
-            skipped.push(`${rel} is not UTF-8 text`);
+            skipped.push(tr('{rel} is not UTF-8 text', { rel }));
             continue;
         }
 
@@ -508,26 +531,26 @@ function planCopy(a: Active, s: OverrideSource): { option: OverrideOption; write
         }
 
         if (skipped.length)
-            notes.push(`Not in ${skipped.join('; ')}.`);
+            notes.push(tr('Not in {join}.', { join: skipped.join('; ') }));
 
         return { option: { target: rel, notes: [...notes, ...r.notes] }, write: { abs, rel, content: r.content!, line: r.line! } };
     }
 
-    return { option: { disabled: `No overrides file can take it: ${skipped.join('; ')}.`, notes } };
+    return { option: { disabled: tr('No overrides file can take it: {join}.', { join: skipped.join('; ') }), notes } };
 }
 
 function planFile(a: Active, s: OverrideSource): OverrideOption
 {
     if (s.none)
-        return { disabled: 'The entry has no definition, so no file.', notes: [] };
+        return { disabled: tr('The entry has no definition, so no file.'), notes: [] };
 
     if (s.removed)
-        return { disabled: 'A mod removed this entry: the files that defined it are not loaded.', notes: [] };
+        return { disabled: tr('A mod removed this entry: the files that defined it are not loaded.'), notes: [] };
 
     const d = s.def!;
 
     if (s.activeSource > 0 && d.source === s.activeSource)
-        return { open: { file: d.abs, rel: d.rel, line: d.line }, notes: [`${d.rel} is ${a.mod.name}’s own file already.`] };
+        return { open: { file: d.abs, rel: d.rel, line: d.line }, notes: [tr('{rel} is {name}’s own file already.', { rel: d.rel, name: a.mod.name })] };
 
     const abs = modPath(a, d.rel);
 
@@ -539,13 +562,13 @@ function planFile(a: Active, s: OverrideSource): OverrideOption
     if (hidden)
         return { disabled: hidden, notes: [] };
 
-    const notes = [`Copies ${d.rel} as the game loads it now (from ${d.from}); ${a.mod.name}’s file of the same path replaces it.`];
+    const notes = [tr('Copies {rel} as the game loads it now (from {from}); {name}’s file of the same path replaces it.', { rel: d.rel, from: d.from, name: a.mod.name })];
 
     if (s.activeSource > 0 && d.source > s.activeSource)
-        notes.push(`${d.from} loads after ${a.mod.name} and has this file too, so its version keeps winning — move ${a.mod.name} below it in the load order.`);
+        notes.push(tr('{from} loads after {name} and has this file too, so its version keeps winning — move {name} below it in the load order.', { from: d.from, name: a.mod.name }));
 
     if (s.merging && d.otherFiles)
-        notes.push(`${d.otherFiles} other ${plural(d.otherFiles, 'file defines', 'files define')} it too — on_actions merge, so ${plural(d.otherFiles, 'that one still adds', 'those still add')} to it.`);
+        notes.push(tr('{otherFiles} other {plural} it too — on_actions merge, so {plural2} to it.', { otherFiles: d.otherFiles, plural: plural(d.otherFiles, tr('file defines'), tr('files define')), plural2: plural(d.otherFiles, tr('that one still adds'), tr('those still add')) }));
 
     return { target: d.rel, exists: existsSync(abs), notes };
 }
@@ -572,12 +595,14 @@ async function prepare(host: ModsHost, type: string, name: string): Promise<Prep
 
     if (!s)
     {
-        const why = 'The index is not ready, or it has no such entry.';
+        const why = tr('The index is not ready, or it has no such entry.');
         return { plan: { mod, problem: why, merging: false, loc, copy: none(why), file: none(why) } };
     }
 
     const copy = planCopy(a, s);
-    return { plan: { mod, merging: s.merging, loc: !!s.loc, copy: copy.option, file: planFile(a, s) }, active: a, source: s, copy: copy.write };
+    // (events and history characters: the game keeps no single winner for an id written twice, docs/mods.md)
+    const noWinner = s.type === T_EVENT || s.type === T_CHARACTER;
+    return { plan: { mod, merging: s.merging, loc: !!s.loc, ...(noWinner ? { noWinner } : {}), copy: copy.option, file: planFile(a, s) }, active: a, source: s, copy: copy.write };
 }
 
 /** What overriding an entry in the active mod would do: target files, notes, or why it is not possible. */
@@ -587,10 +612,12 @@ export async function planOverride(host: ModsHost, type: string, name: string): 
 }
 
 /**
- * Writes a file of the active mod (a script file formatted — `formatted`), recorded for undo (undo.ts: the running
- * operation's step); returns what was written.
+ * Writes a file of the active mod (a script file formatted, see `formatted`), recorded for undo (undo.ts: the running
+ * operation's step) and, a script file's text, in its trail (textTrail.ts: anchors made before the write are mapped
+ * through it); returns what was written. `edited`: what an in-place edit made before it was formatted (its text
+ * without a byte order mark, and the range it changed in the file's text), so the trail holds the edit's own range.
  */
-export function write(host: ModsHost, file: string, data: string | Uint8Array): string | Uint8Array
+export function write(host: ModsHost, file: string, data: string | Uint8Array, edited?: { text: string; splice?: Splice; }): string | Uint8Array
 {
     // (before writing: the folder watcher must know these are the app's own)
     host.wrote?.([file, file + '.crusaderpope-tmp']);
@@ -598,9 +625,50 @@ export function write(host: ModsHost, file: string, data: string | Uint8Array): 
     {
         mkdirSync(dirname(file), { recursive: true });
         const out = typeof data === 'string' ? formatted(host, file, data) : data;
+        const before = typeof data === 'string' && isScriptFile(file) ? scriptTextOf(file) : undefined;
         writeAtomic(file, out);
+
+        if (before !== undefined)
+            trail(file, before, edited?.text ?? noBom(data as string), noBom(out as string), edited?.splice);
+
         return out;
     });
+}
+
+const noBom = (s: string): string => (s.charCodeAt(0) === 0xfeff ? s.slice(1) : s);
+
+/** A file's text as anchors count it (UTF-8 without a byte order mark); undefined when it is not there or no UTF-8. */
+function scriptTextOf(file: string): string | undefined
+{
+    try
+    {
+        if (!existsSync(file))
+            return undefined;
+
+        const raw = readFileSync(file);
+        const all = raw.toString('utf8');
+        return Buffer.from(all, 'utf8').equals(raw) ? noBom(all) : undefined;
+    }
+    catch
+    {
+        return undefined;
+    }
+}
+
+/** Adds a write to the file's trail (never fails the write: without an entry the chain just breaks). */
+function trail(file: string, before: string, mid: string, out: string, splice?: Splice): void
+{
+    try
+    {
+        const t = trailEntry(before, mid, out, splice);
+
+        if (t)
+            recordTrail(file, t);
+    }
+    catch
+    {
+        // (no entry)
+    }
 }
 
 /** A line (1-based) of a text as it was written: where its first statement went when formatting re-spaced the text. */
@@ -625,7 +693,7 @@ export function lineAfter(before: string, after: string | Uint8Array, line: numb
 }
 
 /**
- * A script file's text as the mod keeps it: formatted (shared/scriptFormat.ts — whitespace only) unless the setting is
+ * A script file's text as the mod keeps it: formatted (shared/scriptFormat.ts, whitespace only) unless the setting is
  * off or it is no script file; a byte order mark stays.
  */
 export function formatted(host: ModsHost, file: string, text: string): string
@@ -646,7 +714,7 @@ export function formatted(host: ModsHost, file: string, text: string): string
  */
 export function applyOverride(host: ModsHost, req: OverrideRequest): Promise<OverrideResult>
 {
-    return change(host, `Override of ${req.name}${req.mode === 'file' ? ' (its whole file)' : ''}`, 'override', () => override(host, req));
+    return change(host, tr('Override of {name}{value}', { name: req.name, value: req.mode === 'file' ? ' (its whole file)' : '' }), 'override', () => override(host, req));
 }
 
 async function override(host: ModsHost, req: OverrideRequest): Promise<OverrideResult>
@@ -655,7 +723,7 @@ async function override(host: ModsHost, req: OverrideRequest): Promise<OverrideR
     const { plan, active: a, source: s } = p;
 
     if (plan.problem || !a || !s)
-        throw new Error(plan.problem ?? 'Nothing to override.');
+        throw new Error(plan.problem ?? tr('Nothing to override.'));
 
     const mod = { id: a.mod.id, name: a.mod.name };
     const opt = req.mode === 'file' ? plan.file : plan.copy;
@@ -688,7 +756,7 @@ async function override(host: ModsHost, req: OverrideRequest): Promise<OverrideR
     const bytes = await host.query!<Uint8Array | null>('overrideFileBytes', req.type, req.name);
 
     if (!bytes)
-        throw new Error(`${d.rel} could not be read.`);
+        throw new Error(tr('{rel} could not be read.', { rel: d.rel }));
 
     write(host, abs, bytes);
     describeChange({ line: d.line });

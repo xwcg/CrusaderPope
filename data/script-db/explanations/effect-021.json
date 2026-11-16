@@ -1,0 +1,442 @@
+[
+ {
+  "kind": "effect",
+  "key": "set_fallback_succession_title",
+  "label": "Fallback succession title",
+  "summary": "Names a title whose holder inherits from the character when the normal line of succession finds nobody.",
+  "details": "The holder of that title becomes the primary heir only in that case. Vanilla gives it the primary title of a character saved earlier as a scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_father",
+  "label": "Father",
+  "summary": "Makes the given character the father of the character.",
+  "details": "If the character had no real father separate from the previous father, the new father is treated as the real father too.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_figurehead_title",
+  "label": "Figurehead title",
+  "summary": "Changes whether the title is a special figurehead title.",
+  "details": "The game's documentation says nothing about what a figurehead title does or which values it takes, and vanilla gives no example.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_focus",
+  "label": "Focus",
+  "summary": "Sets the focus the character is pursuing.",
+  "details": "Vanilla writes a focus key such as `education_martial` or `martial_strategy_focus`. Twice it uses a yes/no value instead, which the input does not explain.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_focus_progress",
+  "label": "Focus progress",
+  "summary": "Sets how far the character has progressed in their focus.",
+  "details": "The game documents nothing more, and vanilla has no example, so the unit and range of the value are unknown.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_generated_asexuality_chance",
+  "label": "Generated asexuality chance",
+  "summary": "Sets the chance that a generated character is asexual.",
+  "details": "The documented example writes a plain number (20); the game does not say what unit it is. Vanilla uses it once, with a named value (`asexuality_chance`).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_generated_bisexuality_chance",
+  "label": "Generated bisexuality chance",
+  "summary": "Sets the chance that a generated character is bisexual.",
+  "details": "The documented example writes a plain number (20); the game does not say what unit it is. Vanilla uses it once, with a named value (`bisexuality_chance`).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_generated_homosexuality_chance",
+  "label": "Generated homosexuality chance",
+  "summary": "Sets the chance that a generated character is homosexual.",
+  "details": "The documented example writes a plain number (20); the game does not say what unit it is. Vanilla uses it once, with a named value (`homosexuality_chance`).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_global_variable",
+  "label": "Global variable",
+  "summary": "Stores a value under a name that can be read from anywhere in the game.",
+  "details": "The value can be a number, yes/no, a script value, a scope or a flag. With `days` or `years` the variable disappears after that time. It is read back with `global_var:name`. Writing only a name sets it to yes.",
+  "fields": [
+   { "name": "name", "text": "The name the variable is stored under.", "values": "a name you choose", "required": true },
+   { "name": "value", "text": "What is stored.", "values": "a number, yes/no, a script value, a scope or a flag (flag:x)", "required": false },
+   { "name": "days", "text": "Removes the variable after this many days.", "values": "a number or script value", "required": false },
+   { "name": "years", "text": "Removes the variable after this many years. Vanilla uses it, the game's documentation does not list it.", "values": "a number", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_great_building",
+  "label": "Great building",
+  "summary": "Puts the named great building into the province at once and for free.",
+  "details": "A great building already there may be destroyed. The owner pays nothing. To test for one, use `has_any_great_building`. Vanilla uses it mostly for the Great Wall.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_great_building_slot",
+  "label": "Great building slot",
+  "summary": "Adds a great building slot of the given type to the province.",
+  "details": "It gives an error if the province already has a free slot. It sets the slot to that type, which may destroy existing buildings. The player can only pick buildings whose `can_construct_potential` allows it. To add a finished building without the player starting construction, use `add_great_building`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_great_holy_war_target",
+  "label": "Great holy war target",
+  "summary": "Sets who and what a great holy war is aimed at.",
+  "details": "Works on a great holy war. Vanilla gives both the target character and the target title.",
+  "fields": [
+   { "name": "target_character", "text": "The character that is the war's target.", "values": "a character", "required": false },
+   { "name": "target_title", "text": "The title that is the war's target.", "values": "a title", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_heritage_from",
+  "label": "Heritage from culture",
+  "summary": "Makes the culture take its heritage from another culture.",
+  "details": "The culture it runs on is changed. The culture named is only the source.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_holding_type",
+  "label": "Holding type",
+  "summary": "Changes the province's holding to another type.",
+  "details": "Buildings that are not valid for the new type are removed. The game's documentation says it might also create a holding in an empty province, but that is untested.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_holy_site_owner",
+  "label": "Artifact to holy site",
+  "summary": "Gives the artifact to a holy site as its owner.",
+  "details": "The game's documentation is worded oddly (it speaks of the artifact's owner and the holy site), but vanilla's one use puts an artifact with `target = scope:relic_site`. A history entry for the change can be given, or generated automatically.",
+  "fields": [
+   { "name": "target", "text": "The holy site that becomes the owner.", "values": "a holy site", "required": true },
+   { "name": "history", "text": "A custom history entry for the artifact, for example to show it was stolen.", "values": "an artifact history entry", "required": false },
+   { "name": "generate_history", "text": "Whether a history entry is generated automatically when none is given.", "values": "yes or no", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_house",
+  "label": "House",
+  "summary": "Moves the character into the given dynasty house.",
+  "details": "Vanilla mostly copies the house of a parent or of the root character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_house_aspiration",
+  "label": "House aspiration",
+  "summary": "Sets the aspiration (aspect) of a dynasty house, and optionally its level.",
+  "details": "Vanilla uses types such as `aspect_of_creation` and `no_aspect`, with levels 1 to 5.",
+  "fields": [
+   { "name": "type", "text": "Which aspiration the house gets.", "values": "an aspiration type", "required": true },
+   { "name": "level", "text": "The level of the aspiration. Optional.", "values": "a number (vanilla uses 1 to 5)", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_house_head",
+  "label": "House head",
+  "summary": "Makes the given character the head of the house.",
+  "details": "It also hands over the noble family title.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_house_name",
+  "label": "House name",
+  "summary": "Sets the name of the dynasty house.",
+  "details": "The game's documentation says the value is a dynamic description. Vanilla writes plain names such as `dynn_Wang_Goryeo`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_house_name_from_dynasty",
+  "label": "House name from dynasty",
+  "summary": "Gives the house the same name as another dynasty.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_house_name_from_house",
+  "label": "House name from house",
+  "summary": "Gives the house the same name as another house.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_house_relation",
+  "label": "House relation",
+  "summary": "Sets the relation between this house and another house.",
+  "details": "Run on one house, with the other house as `target`. Vanilla uses levels such as `feud`, `quarrel` and `friendly`.",
+  "fields": [
+   { "name": "target", "text": "The other house.", "values": "a dynasty house", "required": true },
+   { "name": "type", "text": "The kind of relation.", "values": "a relation type", "required": false },
+   { "name": "level", "text": "How good or bad the relation becomes.", "values": "a relation level, such as feud, quarrel or friendly", "required": false },
+   { "name": "description", "text": "The text that says why the latest change happened.", "values": "a localization key or dynamic description", "required": true },
+   { "name": "save_scope_as", "text": "Saves the relation under a name for later use.", "values": "a name you choose", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_immortal_age",
+  "label": "Immortal age",
+  "summary": "Changes the age at which the character became immortal.",
+  "details": "It only works if the character is already immortal. The documented example uses 20.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_important_location",
+  "label": "Important location",
+  "summary": "Marks the county as important to a higher title, and fires an event or on_action when it enters or leaves that title's realm.",
+  "details": "In those events, root is the top liege of the title, `scope:county` is the county and `scope:title` is the interested title. `scope:changed_top_liege` is the former top liege when entering, and the new one when leaving. Vanilla uses it with the Roman empire titles and one yearly emperor event.",
+  "fields": [
+   { "name": "title", "text": "The higher title that is interested in the county.", "values": "a title", "required": true },
+   { "name": "enter_realm_event", "text": "Event fired when the county enters that title's realm.", "values": "an event id", "required": false },
+   { "name": "enter_realm_on_action", "text": "On_action fired when the county enters that title's realm.", "values": "an on_action", "required": false },
+   { "name": "leave_realm_event", "text": "Event fired when the county leaves that title's realm.", "values": "an event id", "required": false },
+   { "name": "leave_realm_on_action", "text": "On_action fired when the county leaves that title's realm.", "values": "an on_action", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_influence_level",
+  "label": "Influence level",
+  "summary": "Sets the character's influence level to the given value.",
+  "details": "The game documents nothing more, and vanilla gives no example, so the allowed values are unknown.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_killer_public",
+  "label": "Killer is public",
+  "summary": "Makes the killer of the character publicly known.",
+  "details": "Vanilla only writes `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_knight_status",
+  "label": "Knight status",
+  "summary": "Sets whether the character is a knight: forced, default or disallowed.",
+  "details": "Vanilla writes `force`, `forbid` and `default`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_known_bastard_on_pregnancy",
+  "label": "Child: known bastard",
+  "summary": "Makes the child of the current pregnancy a known bastard, or an unknown one.",
+  "details": "Only works while the character is pregnant. Vanilla always writes `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_landless_title",
+  "label": "Landless title",
+  "summary": "Sets whether the title is landless, so rulers with no land can hold it.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_language_from",
+  "label": "Language from culture",
+  "summary": "Makes the culture take its language from another culture.",
+  "details": "The culture it runs on is changed. The culture named is only the source.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_leading_house",
+  "label": "Leading house",
+  "summary": "Makes the given house the leading house of the confederation.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_legend_chapter",
+  "label": "Legend chapter",
+  "summary": "Sets the text of one named chapter of the legend.",
+  "details": "Vanilla uses chapter names such as `discovery`, `battle`, `motivation` and `conclusion`.",
+  "fields": [
+   { "name": "name", "text": "Which chapter.", "values": "a chapter name, such as opening, battle or conclusion", "required": true },
+   { "name": "localization_key", "text": "The text the chapter gets.", "values": "a localization key", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_legend_property",
+  "label": "Legend property",
+  "summary": "Sets the object stored under a named property of the legend.",
+  "details": "Vanilla sets properties like `ancestor` and `location`.",
+  "fields": [
+   { "name": "name", "text": "The property to set.", "values": "a property name", "required": true },
+   { "name": "target", "text": "The object it is set to.", "values": "a scope, such as a character or a province", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_legend_quality",
+  "label": "Legend quality",
+  "summary": "Sets the quality of the legend.",
+  "details": "The game's documentation lists famed, illustrious and mythical.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_local_variable",
+  "label": "Local variable",
+  "summary": "Stores a value under a name as a local variable.",
+  "details": "The game's documentation is the one for `set_variable` and does not explain what makes a variable local. Going by its name, it is read back with `local_var:name`. Vanilla writes it with a name and a value, mostly `yes` or small numbers.",
+  "fields": [
+   { "name": "name", "text": "The name the variable is stored under.", "values": "a name you choose", "required": true },
+   { "name": "value", "text": "What is stored.", "values": "a number, yes/no, a script value, a scope or a flag", "required": false },
+   { "name": "days", "text": "Removes the variable after this many days.", "values": "a number or script value", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_location",
+  "label": "Location",
+  "summary": "Moves the character to the given province.",
+  "details": "With `stick_to_location = yes`, the game's safety checks do not send the character back to their default location.",
+  "fields": [
+   { "name": "location", "text": "The province to move to.", "values": "a province", "required": true },
+   { "name": "stick_to_location", "text": "Keeps the game from returning the character to their default location.", "values": "yes or no", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_location_to_default",
+  "label": "Default location",
+  "summary": "Moves the character back to their default location.",
+  "details": "That is usually the realm capital for a landed character, or the court location for a courtier.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_main_rite",
+  "label": "Main rite",
+  "summary": "Makes the rite the main one of its faith.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_martial_custom_from",
+  "label": "Martial custom from culture",
+  "summary": "Makes the culture take its martial custom from another culture.",
+  "details": "The culture it runs on is changed. The culture named is only the source.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_max_durability",
+  "label": "Maximum durability",
+  "summary": "Sets the artifact's maximum durability.",
+  "details": "Vanilla uses numbers such as 25, 40 and 50.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

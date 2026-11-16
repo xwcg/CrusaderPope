@@ -20,8 +20,8 @@ const MAGIC = 'crusaderpope-shaders-1';
 type Entry = ShaderProgram | { error: string; };
 
 /**
- * Every FX file the game loads — gfx/FX of the game's engine layers (game, jomini, clausewitz) with the loaded mods'
- * files over them: which file (disk path or `archive › entry`), size, mtime — plus the layering itself and the
+ * Every FX file the game loads: gfx/FX of the game's engine layers (game, jomini, clausewitz) with the loaded mods'
+ * files over them: which file (disk path or `archive › entry`), size, mtime, plus the layering itself and the
  * compiler's code version. Another mod list, or a mod changing a shader, compiles afresh.
  */
 export function fxFingerprint(vfs: GameFiles, code: string): string
@@ -108,7 +108,7 @@ export class ShaderStore
     private readonly onFailure?: (req: ShaderRequest, message: string) => void;
 
     /**
-     * @param compiler compiles one request — the thread pool in the app, a ShaderLibrary in scripts
+     * @param compiler compiles one request: the thread pool in the app, a ShaderLibrary in scripts
      * @param onFailure a compile failed (logged; not called for cancelled requests or failures from the cache)
      */
     constructor(

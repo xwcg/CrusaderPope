@@ -12,11 +12,12 @@ import { errorText } from './ModDialogs';
 import { MODS_ROUTE } from './ModsView';
 import '../styles/edit.css';
 
+import { tr } from '../../../shared/i18n';
 const base = (p: string): string => p.slice(Math.max(p.lastIndexOf('/'), p.lastIndexOf('\\')) + 1);
 
 /**
- * An asset's ⋯ menu (textures, meshes, an .asset's pdxmesh — docs/mods.md "Replacing assets"): export its file as it
- * is, a texture as PNG, a mesh as glTF for Blender; replace it in the active mod with a file of one's own — converted
+ * An asset's ⋯ menu (textures, meshes, an .asset's pdxmesh; docs/mods.md "Replacing assets"): export its file as it
+ * is, a texture as PNG, a mesh as glTF for Blender; replace it in the active mod with a file of one's own, converted
  * to the asset's format and saved under its path and name, whatever the file is called. Clicks stay in the menu (tiles
  * around it open the asset).
  */
@@ -120,15 +121,15 @@ export function AssetMenu(props: { path: string; pdxmesh?: string; navigate: Nav
 
                 pushNotice({
                     kind: 'ok',
-                    title: as === 'gltf' ? 'Exported for Blender' : as === 'png' ? 'Exported as PNG' : 'Exported',
+                    title: as === 'gltf' ? tr('Exported for Blender') : as === 'png' ? tr('Exported as PNG') : tr('Exported'),
                     text: r.file,
-                    details: as === 'gltf' ? ['In Blender: File › Import › glTF 2.0; bring it back with “Replace with a file…” or “Import from Blender…”.', ...(r.gltf?.warnings ?? []).map((w) => '⚠ ' + w)] : undefined,
-                    actions: [{ label: 'Reveal', run: () => void api.revealFile(r.file) }]
+                    details: as === 'gltf' ? [tr('In Blender: File › Import › glTF 2.0; bring it back with “Replace with a file…” or “Import from Blender…”.'), ...(r.gltf?.warnings ?? []).map((w) => '⚠ ' + w)] : undefined,
+                    actions: [{ label: tr('Reveal'), run: () => void api.revealFile(r.file) }]
                 });
             }
             catch (e)
             {
-                pushNotice({ kind: 'error', title: 'Export failed', text: errorText(e) });
+                pushNotice({ kind: 'error', title: tr('Export failed'), text: errorText(e) });
             }
         });
 
@@ -138,7 +139,7 @@ export function AssetMenu(props: { path: string; pdxmesh?: string; navigate: Nav
     {
         try
         {
-            const pic = await api.pickImage(`Replace ${base(path)} — saved under that name, converted to its format`);
+            const pic = await api.pickImage(tr('Replace {name} — saved under that name, converted to its format', { name: base(path) }));
 
             if (!pic)
                 return;
@@ -166,7 +167,7 @@ export function AssetMenu(props: { path: string; pdxmesh?: string; navigate: Nav
         }
         catch (e)
         {
-            reportChange({ kind: 'error', text: 'Not replaced', details: [errorText(e)] });
+            reportChange({ kind: 'error', text: tr('Not replaced'), details: [errorText(e)] });
         }
     });
 
@@ -191,21 +192,21 @@ export function AssetMenu(props: { path: string; pdxmesh?: string; navigate: Nav
             if (!r)
                 return;
 
-            const actions: NoticeAction[] = [{ label: 'Reveal', run: () => void api.revealFile(r.files[0].abs) }];
+            const actions: NoticeAction[] = [{ label: tr('Reveal'), run: () => void api.revealFile(r.files[0].abs) }];
 
             if (!r.reindex)
-                actions.push({ label: 'Open the Mods page', run: () => navigate({ type: MODS_ROUTE }) });
+                actions.push({ label: tr('Open the Mods page'), run: () => navigate({ type: MODS_ROUTE }) });
 
             reportChange({
                 kind: 'ok',
-                text: `Replaced ${base(r.files[0]?.rel ?? path)} with ${base(r.source)}`,
+                text: tr('Replaced {file} with {source}', { file: base(r.files[0]?.rel ?? path), source: base(r.source) }),
                 mod: r.mod.name,
                 where: r.files[0]?.rel,
                 details: [
-                    ...r.files.map((f) => `${f.rel} — ${f.what}`),
+                    ...r.files.map((f) => `${f.rel}: ${f.what}`),
                     ...r.notes,
                     ...r.warnings.map((w) => '⚠ ' + w),
-                    ...(r.reindex ? [] : [`${r.mod.name} is not in the loaded mod list: the explorer does not show the change.`])
+                    ...(r.reindex ? [] : [tr('{name} is not in the loaded mod list: the explorer does not show the change.', { name: r.mod.name })])
                 ],
                 actions,
                 undo: r.step
@@ -213,7 +214,7 @@ export function AssetMenu(props: { path: string; pdxmesh?: string; navigate: Nav
         }
         catch (e)
         {
-            reportChange({ kind: 'error', text: 'Not replaced', details: [errorText(e)] });
+            reportChange({ kind: 'error', text: tr('Not replaced'), details: [errorText(e)] });
         }
     };
 
@@ -224,35 +225,35 @@ export function AssetMenu(props: { path: string; pdxmesh?: string; navigate: Nav
             const r = await api.removeAssetOverride(path, pdxmesh);
             reportChange({
                 kind: 'ok',
-                text: `Removed the override of ${base(r.rel)}`,
+                text: tr('Removed the override of {base}', { base: base(r.rel) }),
                 mod: r.mod,
                 where: r.rel,
-                details: [`The file is in the recycle bin; the game's (or an earlier mod's) ${base(r.rel)} counts again.`, ...(r.loaded ? [] : [`${r.mod} is not in the loaded mod list: the explorer does not show the change.`])],
+                details: [tr('The file is in the recycle bin; the game\'s (or an earlier mod\'s) {base} counts again.', { base: base(r.rel) }), ...(r.loaded ? [] : [tr('{mod} is not in the loaded mod list: the explorer does not show the change.', { mod: r.mod })])],
                 undo: r.step
             });
         }
         catch (e)
         {
-            reportChange({ kind: 'error', text: 'Not removed', details: [errorText(e)] });
+            reportChange({ kind: 'error', text: tr('Not removed'), details: [errorText(e)] });
         }
     });
 
-    const noMod = !active.mod ? 'Set an active mod first (Mods page: New mod…, or a mod’s ⋯ → Set as active mod).' : !active.mod.editable ? `${active.mod.name} can’t be edited here (only unpacked mods in your mod folder).` : undefined;
+    const noMod = !active.mod ? tr('Set an active mod first (Mods page: New mod…, or a mod’s ⋯ → Set as active mod).') : !active.mod.editable ? tr('{name} can’t be edited here (only unpacked mods in your mod folder).', { name: active.mod.name }) : undefined;
     const items: { label: string; title: string; go: () => void; disabled?: string; }[] = mesh
         ? [
-            { label: 'Export for Blender (glTF)…', title: 'The mesh as glTF 2.0 with its textures as PNG — for Blender', go: exportAs('gltf') },
-            { label: 'Export the .mesh file…', title: 'The game’s file as it is', go: exportAs('original') },
-            { label: 'Replace with a file…', title: `A .mesh, or a glTF / GLB from Blender — saved in ${active.mod?.name ?? 'the active mod'} under this mesh’s path and name`, go: replace, disabled: noMod }
+            { label: tr('Export for Blender (glTF)…'), title: tr('The mesh as glTF 2.0 with its textures as PNG — for Blender'), go: exportAs('gltf') },
+            { label: tr('Export the .mesh file…'), title: tr('The game’s file as it is'), go: exportAs('original') },
+            { label: tr('Replace with a file…'), title: tr('A .mesh, or a glTF / GLB from Blender — saved in {mod} under this mesh’s path and name', { mod: active.mod?.name ?? tr('the active mod') }), go: replace, disabled: noMod }
         ]
         : [
-            { label: 'Export as PNG…', title: 'The texture decoded to a PNG image (all channels, full size)', go: exportAs('png') },
-            { label: `Export the file (.${path.split('.').pop()})…`, title: 'The game’s file as it is', go: exportAs('original') },
-            { label: 'Replace with a file…', title: `A PNG, DDS, JPEG or WebP — cropped and turned if wanted, converted to this texture’s format and saved in ${active.mod?.name ?? 'the active mod'} under its path and name`, go: pickTexture, disabled: noMod }
+            { label: tr('Export as PNG…'), title: tr('The texture decoded to a PNG image (all channels, full size)'), go: exportAs('png') },
+            { label: tr('Export the file (.{pop})…', { pop: path.split('.').pop() }), title: tr('The game’s file as it is'), go: exportAs('original') },
+            { label: tr('Replace with a file…'), title: tr('A PNG, DDS, JPEG or WebP — cropped and turned if wanted, converted to this texture’s format and saved in {mod} under its path and name', { mod: active.mod?.name ?? tr('the active mod') }), go: pickTexture, disabled: noMod }
         ];
 
     return (
         <span className={'asset-menu' + (props.className ? ' ' + props.className : '')} ref={box} onClick={(e) => e.stopPropagation()}>
-            <button className={'am-btn' + (open ? ' on' : '')} title={mesh ? 'Export or replace this mesh' : 'Export or replace this texture'} disabled={busy} onClick={() => setOpen(!open)}>
+            <button className={'am-btn' + (open ? ' on' : '')} title={mesh ? tr('Export or replace this mesh') : tr('Export or replace this texture')} disabled={busy} onClick={() => setOpen(!open)}>
                 {busy ? '…' : '⋯'}
             </button>
             {open &&
@@ -266,13 +267,13 @@ export function AssetMenu(props: { path: string; pdxmesh?: string; navigate: Nav
                         {own?.file && (
                             <button
                                 className={'am-item danger' + (confirm ? ' confirm' : '')}
-                                title={`Deletes ${own.file} (to the recycle bin): the game’s file counts again`}
+                                title={tr('Deletes {file} (to the recycle bin): the game’s file counts again', { file: own.file })}
                                 onClick={confirm ? removeOverride : () => setConfirm(true)}
                             >
-                                {confirm ? `Really remove it from ${own.mod}? Click again` : `Remove the override from ${own.mod}…`}
+                                {confirm ? tr('Really remove it from {mod}? Click again', { mod: own.mod }) : tr('Remove the override from {mod}…', { mod: own.mod })}
                             </button>
                         )}
-                        {active.mod && !noMod && <small className="am-note">{own?.file ? `${own.mod} has its own ${base(own.rel)}` : `Replacing writes into ${active.mod.name}`}</small>}
+                        {active.mod && !noMod && <small className="am-note">{own?.file ? tr('{mod} has its own {base}', { mod: own.mod, base: base(own.rel) }) : tr('Replacing writes into {name}', { name: active.mod.name })}</small>}
                     </span>,
                     document.body
                 )}
@@ -281,8 +282,8 @@ export function AssetMenu(props: { path: string; pdxmesh?: string; navigate: Nav
                     <ImageCropDialog
                         image={cropping.pic}
                         out={{ w: cropping.w, h: cropping.h }}
-                        title={`Replace ${base(path)}: crop & rotate`}
-                        note={`The frame keeps the texture's shape (${cropping.w}×${cropping.h}); the result is converted to its format and saved in ${active.mod?.name ?? 'the active mod'} under its path and name.`}
+                        title={tr('Replace {base}: crop & rotate', { base: base(path) })}
+                        note={tr('The frame keeps the texture\'s shape ({w}×{h}); the result is converted to its format and saved in {mod} under its path and name.', { w: cropping.w, h: cropping.h, mod: active.mod?.name ?? tr('the active mod') })}
                         onDone={(png) => replaceWith({ png, name: cropping.pic.name })()}
                         onAsIs={() => replaceWith({ file: cropping.pic.file })()}
                         onCancel={() => setCropping(null)}

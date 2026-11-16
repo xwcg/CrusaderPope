@@ -1,7 +1,7 @@
 /**
  * History edits from the map (docs/map.md, "Editing from the map"), the text side: an entry's statements across the
  * history files (history/provinces, history/titles) with the one in effect at a date, and a file's text with
- * `key = value` set — the statement in effect replaced, in a `<date> = { }` block, as an undated statement or as a new
+ * `key = value` set: the statement in effect replaced, in a `<date> = { }` block, as an undated statement or as a new
  * entry. Bytes outside the edited range stay; the file's indentation and line ends are kept. Plain Node.
  */
 import type { LineSource } from '../../shared/api.ts';
@@ -9,6 +9,7 @@ import { parse, type PNode } from '../indexer/parser.ts';
 import { applyEdit, checkEdit, layoutOf, reindent, scriptProblems, type EditOutcome } from '../mods/scriptEdit.ts';
 import { dateNum, HISTORY_DATE, unquote } from './history.ts';
 
+import { tr } from '../../shared/i18n.ts';
 /** A history file's text (without its byte order mark) and parse. */
 export interface HistFile
 {
@@ -32,7 +33,7 @@ const isDated = (c: PNode): boolean => !!c.k && HISTORY_DATE.test(c.k) && Array.
 /** An entry's top-level blocks in a file (a file can have one twice). */
 export const entriesIn = (f: HistFile, entry: string): PNode[] => f.nodes.filter((n) => n.k === entry && Array.isArray(n.v));
 
-/** Every statement of an entry, files in load order, sorted by date — as the map reads them (history.ts HistoryBook). */
+/** Every statement of an entry, files in load order, sorted by date, as the map reads them (history.ts HistoryBook). */
 export function statementsOf(files: HistFile[], entry: string): HistStmt[]
 {
     const out: HistStmt[] = [];
@@ -113,7 +114,7 @@ function replaceStatement(text: string, n: PNode, stmt: string): EditOutcome
     const out = { text: text.slice(0, n.s) + stmt + text.slice(e), at: n.s };
 
     if (scriptProblems(out.text).length > scriptProblems(text).length)
-        throw new Error(`The file would not parse cleanly: ${scriptProblems(out.text)[0]}.`);
+        throw new Error(tr('The file would not parse cleanly: {value}.', { value: scriptProblems(out.text)[0] }));
 
     return out;
 }
@@ -126,9 +127,9 @@ export interface SetAt
 }
 
 /**
- * The file's text with `value` set in the entry (see SetAt) — `keys[0] = value` written, a statement of one of the
+ * The file's text with `value` set in the entry (see SetAt): `keys[0] = value` written, a statement of one of the
  * keys replaced keeping its key (a faith's `faith = x` stays `faith`):
- * - `stmt`: that statement is replaced — from its own date on (undated: from the start);
+ * - `stmt`: that statement is replaced, from its own date on (undated: from the start);
  * - `date`: in the entry's last block of that date (its statement of the keys replaced, else added), else a new
  *   `<date> = { }` block after the entry's last dated block up to that date (file order), else before its first later
  *   one, else at its end;
@@ -138,9 +139,11 @@ export interface SetAt
 export function setInEntry(text: string, entry: string, keys: string[], value: string, at: SetAt): EditOutcome
 {
     const stmt = `${keys[0]} = ${value}`;
+    // (a statement's own key is kept, but a `rite = x` (1.20) replaced by a faith is written as the first key: `religion =`)
+    const keyOf = (k: string | null): string => (k === 'rite' ? keys[0] : (k ?? keys[0]));
 
     if (at.stmt)
-        return replaceStatement(text, at.stmt, `${at.stmt.k} = ${value}`);
+        return replaceStatement(text, at.stmt, `${keyOf(at.stmt.k)} = ${value}`);
 
     const tops = entriesIn({ text, nodes: parse(text) }, entry);
     const top = tops[tops.length - 1];
@@ -164,7 +167,7 @@ export function setInEntry(text: string, entry: string, keys: string[], value: s
         if (same)
         {
             const old = (same.v as PNode[]).filter((c) => keys.includes(c.k!)).pop();
-            return old ? replaceStatement(text, old, `${old.k} = ${value}`) : insert(text, same, 'inside', stmt);
+            return old ? replaceStatement(text, old, `${keyOf(old.k)} = ${value}`) : insert(text, same, 'inside', stmt);
         }
 
         const before = kids.filter((c) => isDated(c) && dateNum(c.k!) < when).pop();

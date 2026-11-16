@@ -1,0 +1,594 @@
+[
+ {
+  "kind": "trigger",
+  "key": "has_legend_owner_modifier",
+  "label": "Has legend owner modifier",
+  "summary": "Whether the legend has the named modifier that applies to the legend's owner.",
+  "details": "Write the modifier's name after the equals sign. It only works on a legend.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_legend_owner_modifier_duration_remaining",
+  "label": "Owner modifier time left",
+  "summary": "Whether the legend has the named owner modifier, with a duration remaining to check.",
+  "details": "The game's documentation only shows the form `= name` and does not say how the remaining time is compared, so the exact usage is not documented. It only works on a legend.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_legend_province_modifier",
+  "label": "Has legend province modifier",
+  "summary": "Whether the legend has the named modifier that applies to the provinces it affects.",
+  "details": "Write the modifier's name after the equals sign. It only works on a legend.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_legend_province_modifier_duration_remaining",
+  "label": "Province modifier time left",
+  "summary": "Whether the legend has the named province modifier, with a duration remaining to check.",
+  "details": "The game's documentation only shows the form `= name` and does not say how the remaining time is compared, so the exact usage is not documented. It only works on a legend.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_legitimacy",
+  "label": "Uses legitimacy",
+  "summary": "Whether the character is one who uses legitimacy.",
+  "details": "Write `yes` or `no`. Vanilla mostly checks for `yes` (95 of 98 uses).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_legitimacy_flag",
+  "label": "Legitimacy level has flag",
+  "summary": "Whether the character's current legitimacy level carries the named flag.",
+  "details": "Legitimacy levels can carry flags, and this checks the level the character is at right now. Vanilla uses flag names such as `reduced_claim_cb_cost` and `reduced_title_creation_cost`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_lessee_approval",
+  "label": "Has lessee approval",
+  "summary": "Whether the character, as the liege, has the approval of the given lessee.",
+  "details": "The scoped character is the liege and the value is the lessee, for example `scope:lessee`. The input has no vanilla use, so what counts as approval is not shown here.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The lessee whose approval is checked.",
+    "values": "a character (scope)"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_lifestyle",
+  "label": "Has lifestyle",
+  "summary": "Whether the character has the given lifestyle.",
+  "details": "Vanilla uses the lifestyle keys such as `martial_lifestyle`, `intrigue_lifestyle`, `learning_lifestyle`, `diplomacy_lifestyle`, `stewardship_lifestyle` and `wanderer_lifestyle`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_local_player_open_court_event",
+  "label": "Court event open",
+  "summary": "Whether the local player has opened a court event in the royal court view.",
+  "details": "This is an interface trigger: it only works in specific places of the game interface, as the game's documentation says. Write `yes` or `no`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_local_player_seen_unopened_court_event",
+  "label": "Seen unopened court event",
+  "summary": "Whether the local player has already seen the unopened court events waiting in the royal court view.",
+  "details": "This is an interface trigger: it only works in specific places of the game interface, as the game's documentation says. Write `yes` or `no`. The input shows no vanilla use.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_local_player_unopened_court_event",
+  "label": "Unopened court event waiting",
+  "summary": "Whether the local player has an unopened court event waiting in the royal court view.",
+  "details": "This is an interface trigger: it only works in specific places of the game interface, as the game's documentation says. Write `yes` or `no`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_local_variable",
+  "label": "Has local variable",
+  "summary": "Whether the current scope has the named local variable set.",
+  "details": "Write the variable name. Vanilla uses names such as `ep2_wedding_nerd_var`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_local_variable_list",
+  "label": "Has local variable list",
+  "summary": "Whether the current scope has the named local variable list set.",
+  "details": "The game's documentation example is written `has_variable_list = name`, which looks like a copy of the neighbouring trigger; the key itself is `has_local_variable_list`. The input shows no vanilla use.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_maa_of_type",
+  "label": "Has men-at-arms type",
+  "summary": "Whether this side of a battle has at least one men-at-arms regiment of the given type.",
+  "details": "It works on one side of a combat, not on a character. Write the regiment type's key, for example `onager`. Vanilla uses it once, for `war_elephant`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_map_mode",
+  "label": "Map mode is",
+  "summary": "Whether the map is currently shown in the given map mode.",
+  "details": "This is an interface trigger: it only works in specific places of the game interface, as the game's documentation says. Vanilla uses it with modes such as `clerical_regions`, `dejure_duchies`, `religions`, `realms` and `holy_orders`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_memory_category",
+  "label": "Memory category",
+  "summary": "Whether the memory belongs to the given category.",
+  "details": "It works on a character memory. Vanilla uses categories such as `positive`, `negative`, `war`, `private`, `death`, `family` and `relationships`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_memory_participant",
+  "label": "Memory participant",
+  "summary": "Whether the given character took part in the memory.",
+  "details": "It works on a character memory. The value is the character to look for, often `root` or a saved scope like `scope:recipient`.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The character to look for among the memory's participants.",
+    "values": "a character (scope)"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_memory_type",
+  "label": "Memory type",
+  "summary": "Whether the memory is of the given type.",
+  "details": "It works on a character memory. Write the memory type's key, for example `battle`. Vanilla uses types such as `lover_died`, `soulmate_died` and `offensive_war`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_mother",
+  "label": "Has living mother",
+  "summary": "Whether the character has a valid mother who is alive.",
+  "details": "Write `yes` or `no`. A mother who has died does not count.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_multiple_players",
+  "label": "Multiple players",
+  "summary": "Whether at least two players are connected to the game right now.",
+  "details": "Write `yes` to require two or more connected players, or `no` to require fewer. Vanilla uses both about equally (10 each).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_name_list",
+  "label": "Has name list",
+  "summary": "Whether the culture uses the given name list.",
+  "details": "It works on a culture. Vanilla uses lists such as `name_list_roman`, `name_list_turkish` and `name_list_greek`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_nickname",
+  "label": "Has nickname",
+  "summary": "Whether the character has the given nickname.",
+  "details": "Write the nickname's key, such as `nick_the_stranger`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_none_of_variables",
+  "label": "Has none of variables",
+  "summary": "Whether the current scope has none of the listed variables set.",
+  "details": "It is true only when every variable in the list is missing. Vanilla uses names such as `should_be_vassalized_by_golden_horde` and `choice_a`.",
+  "fields": [
+   {
+    "name": "name",
+    "text": "A variable that must not be set. Write one `name = ...` line per variable.",
+    "values": "a variable name",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_obedience_reason",
+  "label": "Has obedience reason",
+  "summary": "Whether the character has an obedience reason towards the given target character.",
+  "details": "The game's documentation does not say what an obedience reason is. Vanilla uses it twice, each time with a character (`root` and a saved scope called `obedience_target`), once as a check inside an opinion calculation. The exact meaning is not documented.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The character the obedience is towards.",
+    "values": "a character (scope)"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_ongoing_construction",
+  "label": "Has ongoing construction",
+  "summary": "Whether the province has a construction going on.",
+  "details": "Write `yes` or `no`. It works on a province.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_ongoing_domicile_construction",
+  "label": "Domicile under construction",
+  "summary": "Whether the domicile has a construction going on.",
+  "details": "Write `yes` or `no`. It works on a domicile.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_opinion_modifier",
+  "label": "Has opinion modifier",
+  "summary": "Whether the character has the given opinion modifier towards the target.",
+  "details": "The opinion goes from the scoped character to the target. You can also require the modifier's value to match a comparison, such as `>= 20`, or fall inside a range written `{ MIN MAX }` (limits included).",
+  "fields": [
+   {
+    "name": "target",
+    "text": "The character the opinion is held towards.",
+    "values": "a character (scope)",
+    "required": true
+   },
+   {
+    "name": "modifier",
+    "text": "The opinion modifier to look for.",
+    "values": "an opinion modifier key",
+    "required": true
+   },
+   {
+    "name": "value",
+    "text": "Optional check on the modifier's value.",
+    "values": "a comparison like `>= 20`, or a range `{ MIN MAX }`"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_opposite_relation",
+  "label": "Has opposite relation",
+  "summary": "Whether the character has the opposite of the given relation with the target character.",
+  "details": "The game's documentation names two parts, `target` and `relation`, but gives no example and the input shows no vanilla use, so the exact meaning of opposite is not documented.",
+  "fields": [
+   {
+    "name": "target",
+    "text": "The other character.",
+    "values": "a character (scope)"
+   },
+   {
+    "name": "relation",
+    "text": "The relation whose opposite is checked.",
+    "values": "a relation key"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_order_of_succession",
+  "label": "Has order of succession",
+  "summary": "Whether the title uses the given order of succession.",
+  "details": "It works on a title. Vanilla checks for `election` and `appointment`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_original_first_name",
+  "label": "Has original first name",
+  "summary": "Whether the character has the given first name, or the same first name as another character.",
+  "details": "Names that are the same name in another culture count as equal. Regnal names (the numbered names of rulers) are ignored. The game warns that this is slow, so use it with care. The game's documentation examples spell the key `has_first_name`, which does not match this key.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The name to look for, as a localization key.",
+    "values": "a name's localization key"
+   },
+   {
+    "name": "character",
+    "text": "Alternative block form: compare with this character's first name.",
+    "values": "a character (scope)"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_original_first_name_strict",
+  "label": "Has original first name (exact)",
+  "summary": "Whether the character has exactly the given first name, or exactly the same first name as another character.",
+  "details": "Unlike the plain version, names that only match across cultures do not count. Regnal names are ignored. The game warns that this is slow, so use it with care. The game's documentation examples spell the key `has_first_name_strict`, which does not match this key.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The name to look for, as a localization key.",
+    "values": "a name's localization key"
+   },
+   {
+    "name": "character",
+    "text": "Alternative block form: compare with this character's first name.",
+    "values": "a character (scope)"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_outstanding_artifact_claims",
+  "label": "Has artifact claims to press",
+  "summary": "Whether the character has any artifact claims that they can press.",
+  "details": "Write `yes` or `no`. The game marks this trigger as expensive, so avoid running it often.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_owned_scheme",
+  "label": "Owns a scheme",
+  "summary": "Whether the character owns a scheme.",
+  "details": "Write `yes` or `no`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_participant_group_parameter",
+  "label": "Group has parameter",
+  "summary": "Whether the situation participant group currently has the given parameter.",
+  "details": "It works on a participant group of a situation. Vanilla uses parameter names such as `clergy_can_marry` and many starting `the_christian_church_`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_pending_court_events",
+  "label": "Has pending court events",
+  "summary": "Whether the character has court events waiting that will appear when they next open the royal court view.",
+  "details": "Write `yes` or `no`. It only works on player characters who have a royal court.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_pending_interaction_of_type",
+  "label": "Has pending interaction",
+  "summary": "Whether the character has a pending interaction of the given type.",
+  "details": "It only works when the character is player-controlled. Vanilla uses it with interactions like `marry_off_interaction` and `imprison_interaction`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_perk",
+  "label": "Has perk",
+  "summary": "Whether the character has taken the given perk.",
+  "details": "Vanilla uses it a lot (734 uses), for example with `journey_planner_perk`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_personal_artifact_claim",
+  "label": "Has artifact claim",
+  "summary": "Whether the character has a personal claim on the given artifact.",
+  "details": "The value is the artifact, usually a saved scope such as `scope:artifact` or `prev`.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The artifact the claim is on.",
+    "values": "an artifact (scope)"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_personal_legend_seed",
+  "label": "Has personal legend seed",
+  "summary": "Whether the character has a legend seed of the given legend type.",
+  "details": "Vanilla uses the legend types `holy`, `heroic` and `legitimizing`. The input does not explain what a legend seed is beyond its name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_personal_tenet",
+  "label": "Has personal tenet",
+  "summary": "Whether the character subscribes to the given tenet.",
+  "details": "The value can be a tenet key such as `tenet_communion` or a saved scope.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ }
+]

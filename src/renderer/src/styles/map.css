@@ -7,7 +7,7 @@
   background: var(--bg);
 }
 
-/* the toolbar: one line — the modes take what is left and scroll (or fold into sections), the rest keeps its size */
+/* the toolbar: one line; the modes take what is left and scroll (or fold into sections), the rest keeps its size */
 .map-toolbar {
   display: flex;
   align-items: center;
@@ -489,4 +489,19 @@
 
 .show-on-map {
   font-size: 12px;
+}
+
+/* the map kept loaded while another page shows (App.tsx MAP_KEEP): its page stands where it always does */
+.map-keep {
+  display: contents;
+}
+/* a loaded save's date (no timeline; MapView) */
+.map-save-date {
+  align-self: center;
+  padding: 3px 10px;
+  border: 1px solid var(--accent-dim);
+  border-radius: var(--radius);
+  color: var(--accent);
+  font-size: 13px;
+  white-space: nowrap;
 }

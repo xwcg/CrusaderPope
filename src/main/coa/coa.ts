@@ -14,12 +14,15 @@ import { CoaFacts, tierOf, type PersonAt } from './facts.ts';
 import { readStart, type RenownStep, type StartRule } from './start.ts';
 import { CoaTriggers, type Scope } from './triggers.ts';
 
+import { tr } from '../../shared/i18n.ts';
 const UI = 'gfx/interface/coat_of_arms/';
 /**
  * Titles (gui/shared/coat_of_arms.gui, coa_title_*): the arms in title_mask.dds, title_86.dds around them (96 px
  * around 86); data_binding/tgp_data_bindings.txt: DefaultCoATitleMaskOffset 0,0.04 and …Scale 0.9,0.9.
  */
 const TITLE_FRAME: CoaFrame = { mask: UI + 'title_mask.dds', frame: UI + 'title_86.dds', index: 0, ratio: 96 / 86, offset: [0, 0.04], scale: [0.9, 0.9] };
+/** an unheld title (coa_title_* `visible = "[Not(Title.HasHolder)]"`): title_no_holder_86.dds behind, a red glow, 104 px around the 86 */
+const UNHELD_FRAME: CoaFrame = { ...TITLE_FRAME, under: UI + 'title_no_holder_86.dds', underRatio: 104 / 96 };
 const REALMS = 'gfx/interface/icons/realm_frames/';
 /** results kept per index state */
 const KEEP = 5000;
@@ -41,7 +44,7 @@ interface State
 /** A state per index state: every build and incremental update replaces `idx.stats` (a mod's arms may have changed). */
 const states = new WeakMap<GameIndex, State>();
 
-/** @param date y.m.d — the history date (the map's); none: the first bookmark's */
+/** @param date y.m.d: the history date (the map's); none: the first bookmark's */
 export function coatOfArms(idx: GameIndex, kind: CoaKind, key: string, date?: string): CoaInfo | null
 {
     let s = states.get(idx);
@@ -64,7 +67,7 @@ export function coatOfArms(idx: GameIndex, kind: CoaKind, key: string, date?: st
     if (info === undefined)
     {
         info = resolve(idx, s, kind, key, when);
-        // (resolving is quick — well under a millisecond —, the designs of whole lists need not stay)
+        // (resolving is quick, well under a millisecond: the designs of whole lists need not stay)
         s.infos.set(info?.dated ? id + '@' + when : id, info);
 
         if (s.infos.size > KEEP)
@@ -87,7 +90,7 @@ function entryArms(book: CoaBook, key: string, seed: string): (Arms & { alias: b
 
 /**
  * Random arms as the game rolls them for entries without any, new every game: a template of
- * coat_of_arms_template_lists `all` (else the entry `default`) — here picked by the seed, with the special selections
+ * coat_of_arms_template_lists `all` (else the entry `default`), here picked by the seed, with the special selections
  * `test` passes (the character they are rolled for: culture, faith).
  */
 function randomArms(book: CoaBook, seed: string, test?: CoaTest): Arms | undefined
@@ -104,7 +107,7 @@ function randomArms(book: CoaBook, seed: string, test?: CoaTest): Arms | undefin
 
 /**
  * The special selections' test for arms rolled for a character (template_lists: root is the character, scope:culture
- * and scope:faith theirs, scope:title the title) — or for a culture alone (a dynasty's).
+ * and scope:faith theirs, scope:title the title), or for a culture alone (a dynasty's).
  */
 function tester(s: State, when: number, who: PersonAt | null, culture: string | undefined, title?: string): CoaTest
 {
@@ -147,22 +150,22 @@ function familyArms(s: State, house: string | undefined, dynasty: string | undef
         const own = entryArms(book, house, house);
 
         if (own)
-            return { ...own, how: own.alias ? 'alias' : 'own', note: own.alias ? `Arms of ${own.key}` : `Coat of arms ${house}` };
+            return { ...own, how: own.alias ? 'alias' : 'own', note: own.alias ? tr('Arms of {key}', { key: own.key }) : tr('Coat of arms {house}', { house }) };
     }
 
     dynasty ??= house ? facts.houseDynasty(house) : undefined;
     const arms = dynasty ? entryArms(book, dynasty, dynasty) : undefined;
 
     if (arms && house)
-        return { ...arms, how: 'alias', note: `No arms of its own: its dynasty's (${name('dynasties', dynasty!)}, ${arms.key})` };
+        return { ...arms, how: 'alias', note: tr('No arms of its own: its dynasty\'s ({name}, {key})', { name: name('dynasties', dynasty!), key: arms.key }) };
 
     if (arms)
-        return { ...arms, how: arms.alias ? 'alias' : 'own', note: arms.alias ? `Arms of ${arms.key}` : `Coat of arms ${dynasty}` };
+        return { ...arms, how: arms.alias ? 'alias' : 'own', note: arms.alias ? tr('Arms of {key}', { key: arms.key }) : tr('Coat of arms {dynasty}', { dynasty }) };
 
     const seed = house ?? dynasty;
     const culture = dynasty ? facts.dynastyCulture(dynasty) : undefined;
     const rolled = seed ? randomArms(book, seed, tester(s, when, null, culture)) : undefined;
-    return rolled && { ...rolled, how: 'random', note: `No arms of its own: the game rolls random ones every game (these: template ${rolled.key}, picked by the key${culture ? ` for the ${name('culture/cultures', culture)} culture` : ''})` };
+    return rolled && { ...rolled, how: 'random', note: tr('No arms of its own: the game rolls random ones every game (these: template {key}, picked by the key{value})', { key: rolled.key, value: culture ? ` for the ${name('culture/cultures', culture)} culture` : '' }) };
 }
 
 function resolve(idx: GameIndex, s: State, kind: CoaKind, key: string, when: number): CoaInfo | null
@@ -178,24 +181,24 @@ function resolve(idx: GameIndex, s: State, kind: CoaKind, key: string, when: num
         const gov = holder ? s.facts.government(holder, when) : undefined;
 
         if (arms)
-            info = { ...arms, note: arms.note + (gov ? ` — the realm's banner of the ${s.facts.displayName('governments', gov)}` : ''), dated: true, frame: realmFrame(idx, s, key, gov) };
+            info = { ...arms, note: arms.note + (gov ? tr(' — the realm\'s banner of the {displayName}', { displayName: s.facts.displayName('governments', gov) }) : ''), dated: true, frame: realmFrame(idx, s, key, gov) };
     }
     else if (kind === 'coa')
     {
         const own = entryArms(s.book, key, key);
 
         if (own)
-            info = { key: own.key, how: own.alias ? 'alias' : 'own', note: own.alias ? `Arms of ${own.key}` : `Coat of arms ${key}`, design: own.design };
+            info = { key: own.key, how: own.alias ? 'alias' : 'own', note: own.alias ? tr('Arms of {key}', { key: own.key }) : tr('Coat of arms {key}', { key }), design: own.design };
     }
     else if (idx.get(kind === 'dynasty' ? 'dynasties' : 'dynasty_houses', key) || s.book.has(key))
     {
         const arms = familyArms(s, kind === 'house' ? key : undefined, kind === 'dynasty' ? key : undefined, when);
         const dynasty = kind === 'house' ? s.facts.houseDynasty(key) : key;
         const renown = renownLevel(idx, s, dynasty, when);
-        const note = renown.level ? `; renown level ${renown.level} when the game starts on ${dateText(when)}` : '';
+        const note = renown.level ? tr('; renown level {level} when the game starts on {dateText}', { level: renown.level, dateText: dateText(when) }) : '';
 
         if (arms)
-            info = { key: arms.key, how: arms.how, note: arms.note + note, dated: renown.dated || undefined, design: arms.design, frame: familyFrame(idx, kind, dynasty, Math.floor(renown.level / s.facts.renownLevels().step)) };
+            info = { key: arms.key, how: arms.how, note: arms.note + note, dated: renown.dated || undefined, design: arms.design, frame: familyFrame(idx, s, kind, dynasty, Math.floor(renown.level / s.facts.renownLevels().step)) };
     }
 
     return info ?? null;
@@ -203,12 +206,18 @@ function resolve(idx: GameIndex, s: State, kind: CoaKind, key: string, when: num
 
 /**
  * A dynasty's renown level in a game started at the date (the frame's cell follows it): none, then what the game
- * start's script does to it (start.ts) — renown added (the level: how many of NDynasty LEVELS_PRESTIGE it reaches),
+ * start's script does to it (start.ts): renown added (the level: how many of NDynasty LEVELS_PRESTIGE it reaches),
  * levels added, the level brought up or down to a value. `dated`: it has such steps (their limits may name dates).
  */
 function renownLevel(idx: GameIndex, s: State, dynasty: string | undefined, when: number): { level: number; dated: boolean; }
 {
-    const steps = dynasty ? (s.script ??= readStart(idx)).renown.filter((r) => r.dynasty === dynasty) : [];
+    // (its own steps, and those for a title's holder's dynasty when the holder at the date is of it)
+    const ofHolder = (title: string): string | undefined =>
+    {
+        const h = s.facts.holder(title, when);
+        return h ? s.facts.person(h, when)?.dynasty : undefined;
+    };
+    const steps = dynasty ? (s.script ??= readStart(idx)).renown.filter((r) => r.dynasty === dynasty || (r.of && ofHolder(r.of) === dynasty)) : [];
     const { thresholds } = s.facts.renownLevels();
     const none: Scope = { t: 'none' };
     const ctx = s.triggers.ctx(when, none);
@@ -244,10 +253,11 @@ function titleArms(idx: GameIndex, s: State, key: string, when: number, depth: n
     const { book, facts, triggers } = s;
     const holder = facts.holder(key, when);
     const who = holder ? facts.person(holder, when) : null;
-    const held = who ? `${who.name} holds it on ${dateText(when)}` : `no holder on ${dateText(when)}`;
+    const held = who ? tr('{name} holds it on {dateText}', { name: who.name, dateText: dateText(when) }) : tr('no holder on {dateText}', { dateText: dateText(when) });
     const rules = (s.script ??= readStart(idx)).arms;
     const title: Scope = { t: 'title', key };
-    const out = (arms: Arms, how: CoaInfo['how'], note: string, dated: boolean): CoaInfo => ({ key: arms.key, how, note, dated: dated || undefined, design: arms.design, frame: TITLE_FRAME });
+    // (unheld at the date: the red glow; whether it is held depends on the date)
+    const out = (arms: Arms, how: CoaInfo['how'], note: string, dated: boolean): CoaInfo => ({ key: arms.key, how, note, dated: dated || !holder || undefined, design: arms.design, frame: holder ? TITLE_FRAME : UNHELD_FRAME });
 
     // game start effects: the last `set_coa` that reaches the title
     let set: { rule: StartRule; arms: Arms; note: string; } | undefined;
@@ -276,7 +286,7 @@ function titleArms(idx: GameIndex, s: State, key: string, when: number, depth: n
             const arms = entryArms(book, a.coa, key);
 
             if (arms)
-                set = { rule: r, arms, note: `${arms.key}: set when the game starts (set_coa in ${r.at}) — ${held}` };
+                set = { rule: r, arms, note: tr('{key}: set when the game starts (set_coa in {at}) — {held}', { key: arms.key, at: r.at, held }) };
         }
         else if ('of' in a && who)
         {
@@ -284,14 +294,14 @@ function titleArms(idx: GameIndex, s: State, key: string, when: number, depth: n
             const whose = a.of === 'house' && who.house ? facts.displayName('dynasty_houses', who.house) : who.dynasty ? facts.displayName('dynasties', who.dynasty) : undefined;
 
             if (arms && whose)
-                set = { rule: r, arms, note: `The arms of its holder's ${a.of === 'house' && who.house ? 'house' : 'dynasty'} ${whose}: set when the game starts (set_coa in ${r.at}) — ${held}` };
+                set = { rule: r, arms, note: tr('The arms of its holder\'s {value} {whose}: set when the game starts (set_coa in {at}) — {held}', { value: a.of === 'house' && who.house ? 'house' : 'dynasty', whose, at: r.at, held }) };
         }
         else if ('title' in a && a.title !== key && depth < 4)
         {
             const other = titleArms(idx, s, a.title, when, depth + 1);
 
             if (other)
-                set = { rule: r, arms: other, note: `The arms of ${a.title}: set when the game starts (set_coa in ${r.at}) — ${held}` };
+                set = { rule: r, arms: other, note: tr('The arms of {title}: set when the game starts (set_coa in {at}) — {held}', { title: a.title, at: r.at, held }) };
         }
     }
 
@@ -304,29 +314,29 @@ function titleArms(idx: GameIndex, s: State, key: string, when: number, depth: n
     const dyn = item && entryArms(book, item.coa, key);
 
     if (dyn)
-        return out(dyn, 'dynamic', `${dyn.key}: the first item of its dynamic definition (common/coat_of_arms/dynamic_definitions) that fits — ${held}`, true);
+        return out(dyn, 'dynamic', tr('{key}: the first item of its dynamic definition (common/coat_of_arms/dynamic_definitions) that fits — {held}', { key: dyn.key, held }), true);
 
     // (the arms depend on the date when a holder can make a difference: a game start effect or a dynamic definition)
     const dated = !!items || facts.everHeld(key) || rules.some((r) => r.target.how === 'key' && r.target.key === key);
     const own = entryArms(book, key, key);
 
     if (own)
-        return out(own, own.alias ? 'alias' : 'own', own.alias ? `Arms of ${own.key}` : `Coat of arms ${key}`, dated);
+        return out(own, own.alias ? 'alias' : 'own', own.alias ? tr('Arms of {key}', { key: own.key }) : tr('Coat of arms {key}', { key }), dated);
 
     if (!facts.isTitle(key))
         return undefined;
 
     const culture = who?.culture;
     const arms = randomArms(book, key, tester(s, when, who, culture, key));
-    const why = who ? ` for its holder's culture and faith (${who.name} on ${dateText(when)})` : '';
-    return arms && out(arms, 'random', `No arms of its own: the game rolls random ones every game (these: template ${arms.key}, picked by the key${why})`, dated);
+    const why = who ? tr(' for its holder\'s culture and faith ({name} on {dateText})', { name: who.name, dateText: dateText(when) }) : '';
+    return arms && out(arms, 'random', tr('No arms of its own: the game rolls random ones every game (these: template {key}, picked by the key{why})', { key: arms.key, why }), dated);
 }
 
 /**
  * Realms (gui/shared/coat_of_arms.gui, coa_realm_huge): the primary title's arms in the banner of the holder's
- * government — gfx/interface/icons/realm_frames/<government>_mask.dds (the shape; its colours laid over the arms at
+ * government: gfx/interface/icons/realm_frames/<government>_mask.dds (the shape; its colours laid over the arms at
  * 40 %), common/governments `realm_mask_offset` / `_scale`, <government>_115_frame.dds over and _115_shadow.dds behind
- * (`_default_…` for governments without their own files: feudal), all 128 px — and the bar of the title's tier
+ * (`_default_…` for governments without their own files: feudal), all 128 px, and the bar of the title's tier
  * (`[Character.GetPrimaryTitle.GetTierFrame]`: barony 1 … hegemony 6, cell 0 is empty) of topframe_115.dds 14 px higher.
  */
 function realmFrame(idx: GameIndex, s: State, key: string, gov: string | undefined): CoaFrame
@@ -334,30 +344,43 @@ function realmFrame(idx: GameIndex, s: State, key: string, gov: string | undefin
     const file = (name: string): string => (gov && idx.vfs.get(REALMS + gov + name, { engine: true }) ? REALMS + gov + name : REALMS + '_default' + name);
     const g = s.facts.governmentInfo(gov);
     const mask = file('_mask.dds');
+    const cardinal = s.facts.isClericalElectorSeat(key) && !!idx.vfs.get(UI + 'cardinal_topframe_115.dds', { engine: true });
+    const forced = s.facts.frameDefines().realm;
     return {
         mask,
         frame: file('_115_frame.dds'),
         under: file('_115_shadow.dds'),
         index: 0,
         ratio: 1,
-        offset: g?.maskOffset ?? [0, 0],
-        scale: g?.maskScale ?? [1, 1],
+        // (OVERRIDE_REALM_MASK_ENABLED: one offset and scale for every government)
+        offset: forced?.offset ?? g?.maskOffset ?? [0, 0],
+        scale: forced?.scale ?? g?.maskScale ?? [1, 1],
         overlay: mask,
-        top: { texture: UI + 'topframe_115.dds', index: tierOf(key), dy: -14 / 128 }
+        top: { texture: UI + 'topframe_115.dds', index: tierOf(key), dy: -14 / 128 },
+        // (coa_realm_huge_crown, as most windows show realms: the tier's crown 2 px above; a landless adventurer's or an
+        // ecclesiastical government's own decoration instead, or a cardinal's (1.20.1: the primary title a clerical elector's,
+        // inferred from the title: isClericalElectorSeat); mercenaries' and holy orders' are not told apart here)
+        crown: gov === 'landless_adventurer_government' ?
+            { texture: UI + 'landless_adventurer_topframe_115.dds', index: 0, aspect: 80 / 128, gap: 2 / 128 } :
+            gov === 'ecclesiastical_government' ?
+            { texture: UI + (cardinal ? 'cardinal_topframe_115.dds' : 'ecclesiastic_topframe_115.dds'), index: 0, aspect: 80 / 128, gap: 2 / 128 } :
+            { texture: UI + 'crown_strip_115.dds', index: tierOf(key), aspect: 80 / 128, gap: 2 / 128 }
     };
 }
 
 /**
  * Dynasties and houses: the frame of their culture (common/culture/cultures `dynasty_coa_frame`, `house_coa_frame` =
- * gfx/interface/coat_of_arms/frames/<name>.dds + <name>_mask.dds, `house_coa_mask_offset` / `_scale`), else
- * common/defines/graphic NCoatOfArms DEFAULT_DYNASTY_COA_FRAME_NAME "dynasty" / DEFAULT_HOUSE_COA_FRAME_NAME "house".
+ * gfx/interface/coat_of_arms/frames/<name>.dds + <name>_mask.dds, `<kind>_coa_mask_offset` / `_scale`; from 1.20.1 a
+ * dynasty without a frame takes the house frame), else common/defines/graphic NCoatOfArms DEFAULT_DYNASTY_COA_FRAME_NAME
+ * "dynasty" / DEFAULT_HOUSE_COA_FRAME_NAME "house" (with their _OFFSET / _SCALE), and a non-empty OVERRIDE_<KIND>_COA_FRAME_NAME
+ * wins over both.
  * A house's culture is its dynasty's. The gui draws dynasty arms at 120 px in a 172 px frame, house arms at 120 in 156,
  * both with coa_overlay.dds at 40 %. The strips have a cell per renown step (`cell`): the gui's
  * `[Dynasty.GetPrestigeFrame]` is the dynasty's renown level (common/defines NDynasty LEVELS_PRESTIGE: how many of its
- * thresholds, 300 … 37000, the renown reached) over LEVELS_PRESTIGE_GRAPHICAL_STEP (2) — cells 0 … 5; history gives
+ * thresholds, 300 … 37000, the renown reached) over LEVELS_PRESTIGE_GRAPHICAL_STEP (2): cells 0 … 5; history gives
  * dynasties no renown, so most start at level 0: cell 0 (the dark frame with a red rim).
  */
-function familyFrame(idx: GameIndex, kind: 'dynasty' | 'house', dynasty: string | undefined, cell: number): CoaFrame
+function familyFrame(idx: GameIndex, s: State, kind: 'dynasty' | 'house', dynasty: string | undefined, cell: number): CoaFrame
 {
     const scalar = (list: PNode[], name: string): string | undefined =>
     {
@@ -370,20 +393,26 @@ function familyFrame(idx: GameIndex, kind: 'dynasty' | 'house', dynasty: string 
         return kidsOf(e && idx.winningDef(e) ? idx.defNode(e)?.node : undefined);
     };
     const cn = body('culture/cultures', scalar(body('dynasties', dynasty), 'culture'));
-    const name = scalar(cn, `${kind}_coa_frame`) ?? kind;
-    const pair = (k: string, def: number): [number, number] =>
+    const pair = (k: string, def: [number, number]): [number, number] =>
     {
         const v = kidsOf(cn.find((c) => c.k === k)).map((c) => Number(c.v));
-        return v.length === 2 && v.every(Number.isFinite) ? [v[0], v[1]] : [def, def];
+        return v.length === 2 && v.every(Number.isFinite) ? [v[0], v[1]] : def;
     };
     const house = kind === 'house';
+    const defines = s.facts.frameDefines()[kind];
+    // (1.20.1: a dynasty without a frame of its own takes its culture's house frame, and then its house's offset and scale
+    // as the frame's mask is cut for them)
+    const own = scalar(cn, `${kind}_coa_frame`);
+    const borrowed = !house && own === undefined && scalar(cn, 'house_coa_frame') !== undefined;
+    const name = own ?? (borrowed ? scalar(cn, 'house_coa_frame') : undefined) ?? defines.name;
+    const fixed = defines.override;
     return {
-        mask: `${UI}frames/${name}_mask.dds`,
-        frame: `${UI}frames/${name}.dds`,
+        mask: `${UI}frames/${fixed?.name ?? name}_mask.dds`,
+        frame: `${UI}frames/${fixed?.name ?? name}.dds`,
         index: cell,
         ratio: house ? 156 / 120 : 172 / 120,
-        offset: house ? pair('house_coa_mask_offset', 0) : [0, 0],
-        scale: house ? pair('house_coa_mask_scale', 1) : [1, 1],
+        offset: fixed?.offset ?? pair(`${kind}_coa_mask_offset`, borrowed ? pair('house_coa_mask_offset', defines.offset) : defines.offset),
+        scale: fixed?.scale ?? pair(`${kind}_coa_mask_scale`, borrowed ? pair('house_coa_mask_scale', defines.scale) : defines.scale),
         overlay: UI + 'coa_overlay.dds'
     };
 }

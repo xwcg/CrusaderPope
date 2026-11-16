@@ -6,13 +6,14 @@ import { reportChange } from '../changes';
 import { reportEditError } from '../scriptEdits';
 import '../styles/edit.css';
 
+import { tr } from '../../../shared/i18n';
 /**
  * A localization text shown in an entry written in the active mod (an event's title, a description, an option's name, a
- * card's name and description, a line's text — Line.locKey: "✎ text", `label`) with ✎ to change it in place
- * (docs/mods.md, "Editing in place": `api.editLoc` — the mod's own line, else an override in its replace folder). Shows
+ * card's name and description, a line's text; Line.locKey: "✎ text", `label`) with ✎ to change it in place
+ * (docs/mods.md, "Editing in place": `api.editLoc`; the mod's own line, else an override in its replace folder). Shows
  * the text as written (with its [data functions] and $values$); Enter saves a one-line text, Ctrl+Enter a description
  * (or any text with line breaks), Esc cancels. An empty text reads "(no text yet)". "⟨⟩ Code…" (Ctrl+Space) inserts one of
- * the game's text codes at the cursor — the statement picker in mode 'loc': a character's name, pronoun, faith … (you
+ * the game's text codes at the cursor (the statement picker in mode 'loc'): a character's name, pronoun, faith … (you
  * or a scope of the entry, `of`), a concept link, an icon, formatting (around the selected text).
  */
 export function LocEditable(props: { locKey?: string; editable: boolean; multiline?: boolean; empty?: boolean; of?: EntityKey; label?: string; children: React.ReactNode; }): React.JSX.Element
@@ -60,12 +61,12 @@ export function LocEditable(props: { locKey?: string; editable: boolean; multili
         try
         {
             const r = await api.editLoc(locKey, text);
-            reportChange({ kind: 'ok', text: `Changed the text of ${locKey}`, mod: r.mod.name, where: `${r.rel}:${r.line}`, file: r.file, line: r.line, details: r.notes.length ? r.notes : undefined, undo: r.step });
+            reportChange({ kind: 'ok', text: tr('Changed the text of {locKey}', { locKey }), mod: r.mod.name, where: `${r.rel}:${r.line}`, file: r.file, line: r.line, details: r.notes.length ? r.notes : undefined, undo: r.step });
             setOpen(false);
         }
         catch (e)
         {
-            reportEditError('Text not changed')(e);
+            reportEditError(tr('Text not changed'))(e);
         }
         finally
         {
@@ -92,7 +93,7 @@ export function LocEditable(props: { locKey?: string; editable: boolean; multili
         const ins = r.caret !== undefined ? r.text.slice(0, r.caret) + selected + r.text.slice(r.caret) : r.text;
         const next = text.slice(0, start) + ins + text.slice(end);
         setText(next);
-        // (after the code — inside a formatting pair when nothing was selected)
+        // (after the code, inside a formatting pair when nothing was selected)
         const pos = start + (r.caret !== undefined && !selected ? r.caret : ins.length);
         setTimeout(() =>
         {
@@ -122,23 +123,23 @@ export function LocEditable(props: { locKey?: string; editable: boolean; multili
     };
     return (
         <span className="loc-editable">
-            {props.empty ? <span className="loc-empty">(no text yet)</span> : props.children}
+            {props.empty ? <span className="loc-empty">{tr('(no text yet)')}</span> : props.children}
             {!open && (
-                <button className={'ghost loc-edit-btn' + (props.label ? ' labelled' : '')} title={`Change the text (${locKey})`} onClick={(e) => (e.stopPropagation(), setOpen(true))}>
+                <button className={'ghost loc-edit-btn' + (props.label ? ' labelled' : '')} title={tr('Change the text ({locKey})', { locKey })} onClick={(e) => (e.stopPropagation(), setOpen(true))}>
                     ✎{props.label ? ' ' + props.label : ''}
                 </button>
             )}
             {open && (
                 <span className="loc-editor" onClick={(e) => e.stopPropagation()}>
                     {text === null ?
-                        <span className="loc-key">Reading {locKey}…</span> :
+                        <span className="loc-key">{tr('Reading {locKey}…', { locKey })}</span> :
                         multiline ?
                         <textarea ref={field} rows={Math.min(12, Math.max(3, text.split('\n').length + 1))} value={text} onChange={(e) => setText(e.target.value)} onKeyDown={onKey} /> :
                         <input ref={field} value={text} onChange={(e) => setText(e.target.value)} onKeyDown={onKey} />}
                     <span className="loc-actions">
                         <code className="loc-key">{locKey}</code>
                         <button
-                            title="Insert a text code at the cursor: a name, pronoun, faith …, a concept link, an icon, formatting (Ctrl+Space)"
+                            title={tr('Insert a text code at the cursor: a name, pronoun, faith …, a concept link, an icon, formatting (Ctrl+Space)')}
                             disabled={text === null}
                             onClick={(e) =>
                             {
@@ -146,13 +147,12 @@ export function LocEditable(props: { locKey?: string; editable: boolean; multili
                                 void insertCode({ x: r.left, y: r.bottom + 4 });
                             }}
                         >
-                            ⟨⟩ Code…
-                        </button>
-                        <button onClick={() => setOpen(false)}>Cancel</button>
+                            {tr('⟨⟩ Code…')}</button>
+                        <button onClick={() => setOpen(false)}>{tr('Cancel')}</button>
                         <button className="primary" disabled={text === null || busy} onClick={() => void save()}>
-                            {busy ? 'Saving…' : 'Save'}
+                            {busy ? tr('Saving…') : tr('Save')}
                         </button>
-                        <small>{multiline ? 'Ctrl+Enter saves' : 'Enter saves'} · Ctrl+Space inserts a code · Esc cancels</small>
+                        <small>{multiline ? tr('Ctrl+Enter saves') : tr('Enter saves')} {' '}{tr('· Ctrl+Space inserts a code · Esc cancels')}</small>
                     </span>
                 </span>
             )}

@@ -1,5 +1,5 @@
 /**
- * "Try the statement picker" (top bar): opens the picker without the editor — for an effect or a condition — and
+ * "Try the statement picker" (top bar): opens the picker without the editor (for an effect or a condition) and
  * shows what it built as a notice with the script to copy.
  */
 import { useEffect, useRef, useState } from 'react';
@@ -7,6 +7,7 @@ import { pushNotice } from '../notices';
 import { pickStatement } from './pickStatement';
 import '../styles/picker.css';
 
+import { tr } from '../../../shared/i18n';
 export function TryPicker(): React.JSX.Element
 {
     const [menu, setMenu] = useState<{ right: number; top: number; } | null>(null);
@@ -47,17 +48,17 @@ export function TryPicker(): React.JSX.Element
     const run = (kind: 'effect' | 'trigger'): void =>
     {
         setMenu(null);
-        void pickStatement({ kind, title: kind === 'effect' ? 'Try the picker (effect)' : 'Try the picker (condition)' }).then((r) =>
+        void pickStatement({ kind, title: kind === 'effect' ? tr('Try the picker (effect)') : tr('Try the picker (condition)') }).then((r) =>
         {
             if (!r)
                 return;
 
             pushNotice({
                 kind: 'ok',
-                title: `Built ${kind === 'effect' ? 'an effect' : 'a condition'} with the statement picker`,
+                title: tr('Built {kind} with the statement picker', { kind: kind === 'effect' ? 'an effect' : 'a condition' }),
                 text: r.summary ?? '',
                 details: r.text.split('\n').map((l) => l.replace(/\t/g, '    ')),
-                actions: [{ label: 'Copy script', run: () => void navigator.clipboard.writeText(r.text) }]
+                actions: [{ label: tr('Copy script'), run: () => void navigator.clipboard.writeText(r.text) }]
             });
         });
     };
@@ -67,7 +68,7 @@ export function TryPicker(): React.JSX.Element
             <button
                 ref={button}
                 className="ghost picker-try"
-                title="Try the statement picker — build an effect or condition from menus"
+                title={tr('Try the statement picker — build an effect or condition from menus')}
                 onClick={(e) =>
                 {
                     const r = e.currentTarget.getBoundingClientRect();
@@ -79,11 +80,9 @@ export function TryPicker(): React.JSX.Element
             {menu && (
                 <div className="popover picker-try-menu" ref={ref} style={{ right: menu.right, top: menu.top }}>
                     <div className="item" onClick={() => run('effect')}>
-                        <span className="pk-key">E</span> Try the statement picker: an effect
-                    </div>
+                        <span className="pk-key">E</span> {' '}{tr('Try the statement picker: an effect')}</div>
                     <div className="item" onClick={() => run('trigger')}>
-                        <span className="pk-key">C</span> Try the statement picker: a condition
-                    </div>
+                        <span className="pk-key">C</span> {' '}{tr('Try the statement picker: a condition')}</div>
                 </div>
             )}
         </>

@@ -1,0 +1,362 @@
+[
+ {
+  "kind": "on_action", "key": "task_help_herders_side_effects",
+  "label": "Herder help side effects",
+  "summary": "Rolls for a good or bad side effect of the Kurultai council task that helps herders.",
+  "details": "Runs only if the character does not yet have the variable had_kurultai_task_side_effect. Only 1 percent of firings roll at all (chance_to_happen = 1). When they do, 'no event' has weight 1000 against 100 for each of four events: two bad ones (kurultai_task.1050, .1055) and two good ones (kurultai_task.1000, .1005). The task name is read from the key and the event prefix; the input does not state it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "task_increase_control_side_effects",
+  "label": "Increase control side effects",
+  "summary": "Rolls for a good or bad side effect of a council task that increases county control.",
+  "details": "Blocked if the character already has the variable had_marshal_task_side_effect or had_kurultai_task_side_effect. It also needs a marshal on the council, or a Kurultai councillor (scope:councillor) who is performing one of the four Kurultai control tasks. Only 1 percent of firings roll at all; then 'no event' has weight 1000. Bad outcomes (vanilla comments): lower county opinion (marshal_task.3001), loss of control (3002, weight 50), baron opinion loss (3003). Good outcomes: higher county opinion (3101), baron opinion gain (3102). Unless noted, each has weight 100.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "task_integrate_title_side_effects",
+  "label": "Integrate title side effects",
+  "summary": "Rolls for a good or bad side effect of the chancellor's task of integrating a title.",
+  "details": "Runs only if the character does not yet have the variable had_chancellor_task_side_effect and has a chancellor on the council. Vanilla's chancellor task fires it through its monthly_on_action. Only 1 percent of firings roll at all; then 'no event' has weight 1000. Bad outcomes (weight 50 each, vanilla comments): nobles resist integration, the culture is upset. Good outcomes (weight 150 each): nobles endorse it, the culture endorses it, or a choice between development and integration.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/council_tasks/00_chancellor_tasks.txt:596"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "task_manage_astrologer_on_action",
+  "label": "Manage astrologer task",
+  "summary": "Passes on to the astrologer task's side effects when the character has a Kurultai councillor.",
+  "details": "It rolls nothing itself. If any of the four Kurultai councillor slots is filled, it fires task_manage_astrologer_side_effects, which does the rolling. Vanilla's Kurultai astrologer task fires this one through its monthly_on_action.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/council_tasks/00_kurultai_tasks.txt:675"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "task_manage_astrologer_side_effects",
+  "label": "Astrologer side effects",
+  "summary": "Rolls for a good or bad side effect of the Kurultai task that manages the astrologer.",
+  "details": "Runs only if the character does not yet have the variable had_kurultai_task_side_effect. Only 1 percent of firings roll at all; then 'no event' has weight 1000 against 100 for each of four events: two bad ones (kurultai_task.1250, .1255) and two good ones (kurultai_task.1200, .1205). Fired by task_manage_astrologer_on_action.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "task_manage_fertility_on_action",
+  "label": "Manage fertility task",
+  "summary": "Passes on to the fertility task's side effects when the character has a Kurultai councillor.",
+  "details": "It rolls nothing itself. If any of the four Kurultai councillor slots is filled, it fires task_manage_fertility_side_effects, which does the rolling. Vanilla's Kurultai fertility task fires this one through its monthly_on_action.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/council_tasks/00_kurultai_tasks.txt:194"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "task_manage_fertility_side_effects",
+  "label": "Fertility side effects",
+  "summary": "Rolls for a good or bad side effect of the Kurultai task that manages fertility.",
+  "details": "Runs only if the character does not yet have the variable had_kurultai_task_side_effect. Only 1 percent of firings roll at all; then 'no event' has weight 1000 against 100 for each of four events: two bad ones (kurultai_task.1150, .1155) and two good ones (kurultai_task.1100, .1105). Fired by task_manage_fertility_on_action.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "task_organize_raiders_on_action",
+  "label": "Organize raiders task",
+  "summary": "Passes on to the raiders task's side effects when the character has a Kurultai councillor.",
+  "details": "It rolls nothing itself. If any of the four Kurultai councillor slots is filled, it fires task_organize_raiders_side_effects, which does the rolling. Vanilla's Kurultai raiders task fires this one through its monthly_on_action.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/council_tasks/00_kurultai_tasks.txt:1220"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "task_organize_raiders_side_effects",
+  "label": "Raiders side effects",
+  "summary": "Rolls for a good or bad side effect of the Kurultai task that organizes raiders.",
+  "details": "Runs only if the character does not yet have the variable had_kurultai_task_side_effect. Only 1 percent of firings roll at all; then 'no event' has weight 1000 against 100 for each of four events: two bad ones (kurultai_task.1450, .1455) and two good ones (kurultai_task.1400, .1405). Fired by task_organize_raiders_on_action.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "task_promote_culture_side_effects",
+  "label": "Promote culture side effects",
+  "summary": "Rolls for a good or bad side effect of the steward's task of promoting a culture.",
+  "details": "Runs only if the character does not yet have the variable had_steward_task_side_effect and has a steward on the council. Only 1 percent of firings roll at all; then 'no event' has weight 1000. Bad outcomes (vanilla comments): resistance to settlers (steward_task.3001), resistance to administration (3002). Good outcomes: better county opinion (3101), higher county taxes (3102), higher county levies (3103). All have weight 100.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "task_religious_relations_side_effects",
+  "label": "Religious relations side effects",
+  "summary": "Rolls for a good or bad side effect of the court chaplain's task of improving religious relations.",
+  "details": "Runs only if the character does not yet have the variable had_court_chaplain_task_side_effect and has a court chaplain. Only 1 percent of firings roll at all; then 'no event' has weight 1000. Bad outcomes (vanilla comments): loss of piety (court_chaplain_task.1001), lost opinion of a theocratic vassal (1002), and an 'SP' loss (4001; the comment does not spell out 'SP'). Good outcomes: impressing a theocratic vassal (1101), an 'SP' gain (4101), becoming friends (4102), an 'SP' gain plus fervor (4103). All have weight 100.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "task_support_schemes_side_effects",
+  "label": "Support schemes side effects",
+  "summary": "Rolls for a good or bad side effect of the spymaster's task of supporting schemes.",
+  "details": "Runs only if the character does not yet have the variable had_spymaster_task_side_effect and has a spymaster. Vanilla's spymaster task fires it through its monthly_on_action. Only 1 percent of firings roll at all; then 'no event' has weight 1000. Bad outcomes (vanilla comments): loss of piety (spymaster_task.2001), loss of prestige (2002), a scheme fails (2003, weight 50). Good outcomes: discovery of a minor secret (2101), discovery of a major secret (2104, weight 50). The others have weight 100.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/council_tasks/00_spymaster_tasks.txt:330"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tengri_arrival_events",
+  "label": "Tengri pilgrimage arrival",
+  "summary": "Picks an event for a pilgrim of the Tengri religion who arrives at a pilgrimage destination.",
+  "details": "Only runs for a character whose religion is Tengrism. Two events with equal weight: 'Blue Open Skies' (pilgrimage.5911) and 'Meet the Mystic again' (pilgrimage.4002). Vanilla lists it inside pilgrimage_arrival_events, which tries the religion-specific arrival lists in order and uses the first one that is valid.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/on_action/activities/pilgrimage_on_actions.txt:130"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_burdensome_taxes",
+  "label": "Burdensome taxes contract",
+  "summary": "Creates the 'Burdensome Taxes' governance contract in one of the realm's counties.",
+  "details": "Runs only if the cooldown flag task_contract_cooldown_burdensome_taxes is not set and some county of the realm has a province with a holding other than the governor's capital. It saves one such province as scope:target_province, creates the contract there (tier from scope:governance_task_contract_tier), sets the cooldown flag for 10 years and runs the shared set-up effect. It reads scope:governor and the tier scope, which must already be saved when it fires. Vanilla's celestial civic contract list picks it with weight 100.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/on_action/governance_on_actions.txt:51"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_china_yearly_events",
+  "label": "China yearly events",
+  "summary": "Picks a yearly event for characters in the Chinese (TGP) setting: movement, dynastic cycle or Confucian events.",
+  "details": "Needs the TGP DLC, and the character must have a government with the flag government_is_celestial or a dynastic cycle participant group (top_participant_group:dynastic_cycle). Only 50 percent of firings pick at all (chance_to_happen = 50). Events come from three groups: movement events (tgp_movement_events), dynastic cycle events (tgp_dynastic_cycle_events) and Confucianism events (tgp_china_yearly), with weights from 100 to 250. Event 0120 is commented out; its comment calls it a feast event. Vanilla's yearly on_action list picks it with weight 6.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/on_action/yearly_on_actions.txt:3069"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_combat_train_monks",
+  "label": "Train monks contract",
+  "summary": "Creates the 'Teach Monks Martial Arts' governance contract in a county with a church holding.",
+  "details": "Runs only if the cooldown flag task_contract_cooldown_combat_train_monks is not set and some county of the realm has a church-holding province other than the governor's capital. It saves such a province as scope:target_province, creates the contract there, sets the cooldown for 10 years and runs the shared set-up effect. It reads scope:governor and the tier scope, which must already be saved when it fires.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_confusion_of_tongues",
+  "label": "Confusion of tongues contract",
+  "summary": "Creates the 'A Confusion of Tongues' governance contract in a coastal county.",
+  "details": "Needs the cooldown flag unset, a coastal province with a holding (not the governor's capital) in the realm, and some county in the region world_asia_and_india that has a coastal province and whose culture does not have the Chinese heritage pillar. The contract is placed in a coastal holding province of the realm. The cooldown is 10 years; the shared set-up effect runs afterwards.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_contested_inheritance",
+  "label": "Contested inheritance contract",
+  "summary": "Creates the 'Contested Inheritance' governance contract in one of the realm's counties.",
+  "details": "Runs only if the cooldown flag task_contract_cooldown_contested_inheritance is not set and some county of the realm has a province with a holding other than the governor's capital. It saves one as scope:target_province, creates the contract there, sets the cooldown for 10 years and runs the shared set-up effect. It reads scope:governor and the tier scope, which must already be saved when it fires.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_crumbling_bridge",
+  "label": "Crumbling bridge contract",
+  "summary": "Creates the 'Crumbling Bridge' governance contract in a county with a non-desert province.",
+  "details": "Runs only if the 10-year cooldown flag is not set and the realm has a province with a holding that is not desert and not the governor's capital. The contract is placed in such a province; then the cooldown is set and the shared set-up effect runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_dam_in_disrepair",
+  "label": "Dam in disrepair contract",
+  "summary": "Creates the 'Dam in Disrepair' governance contract in a province of farmland, forest, hills or floodplains terrain.",
+  "details": "Runs only if the 10-year cooldown flag is not set and the realm has a province with a holding (not the governor's capital) of one of those four terrains. The contract is placed in such a province; then the cooldown is set and the shared set-up effect runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_disaster_displacement",
+  "label": "Provisional relocation contract",
+  "summary": "Creates the 'Provisional Relocation' natural-disaster governance contract (type tgp_disaster_displacement).",
+  "details": "Runs only if the 10-year cooldown flag is not set and some county of the realm has a province with a holding other than the governor's capital. The contract goes to such a province; then the cooldown is set and the shared set-up effect runs. Its weight_multiplier is base 1, plus 10 if the character it runs on has the education_stewardship trait. Vanilla's natural disaster list picks it with weight 100.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/on_action/governance_on_actions.txt:97"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_doddering_magistrate",
+  "label": "Doddering magistrate contract",
+  "summary": "Creates the 'Doddering Magistrate' governance contract in one of the realm's counties.",
+  "details": "Runs only if the 10-year cooldown flag is not set and some county of the realm has a province with a holding other than the governor's capital. The contract goes to such a province; then the cooldown is set and the shared set-up effect runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_escaped_justice",
+  "label": "Escaped justice contract",
+  "summary": "Creates the 'Escaped Justice' governance contract and makes a baron vassal of the governor its target.",
+  "details": "Needs the cooldown flag unset, a province without a holding (farmland, forest or hills, not the governor's capital) in the realm, and a vassal of the governor whose highest title is a barony and who is not travelling, imprisoned or commanding an army. The escapee is the vassal ranked highest by greed minus half their honor, so greedy, dishonorable ones come first. They are saved as scope:escapee and set as the contract's target; the location is a matching province saved as scope:target_province. Then the 10-year cooldown is set and the shared set-up effect runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/on_action/governance_on_actions.txt:1608", "vanilla: common/on_action/governance_on_actions.txt:1690"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_food_shortage",
+  "label": "Food shortage contract",
+  "summary": "Creates the 'Food Shortage' natural-disaster governance contract (type tgp_food_shortage).",
+  "details": "Runs only if the 10-year cooldown flag is not set and some county of the realm has a province with a holding other than the governor's capital. The contract goes to such a province; then the cooldown is set and the shared set-up effect runs. Its weight_multiplier is base 1, plus 10 if the character it runs on has the education_stewardship trait.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_forced_conscription",
+  "label": "Forced conscription contract",
+  "summary": "Creates the 'Forced Conscription' governance contract in a province of farmland, forest, hills or terraced hills terrain.",
+  "details": "Runs only if the 10-year cooldown flag is not set and the realm has a province (not the governor's capital) of one of those terrains; no holding is required. The governor's liege is set as the contract's employer. Then the cooldown is set for 10 years and the shared set-up effect runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_fraud_in_broad_daylight",
+  "label": "Fraud in broad daylight contract",
+  "summary": "Creates the 'Fraud in Broad Daylight' governance contract in one of the realm's counties.",
+  "details": "Runs only if the 10-year cooldown flag is not set and some county of the realm has a province with a holding other than the governor's capital. The contract goes to such a province; then the cooldown is set and the shared set-up effect runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_hoarding_grain",
+  "label": "Hoarding grain contract",
+  "summary": "Creates the 'Hoarding Grain' governance contract in a province of farmland, forest or hills terrain.",
+  "details": "Runs only if the 10-year cooldown flag is not set and the realm has a province with a holding (not the governor's capital) of one of those terrains. The contract goes to such a province; then the cooldown is set and the shared set-up effect runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_irregular_accounting",
+  "label": "Irregular accounting contract",
+  "summary": "Creates the 'Irregular Accounting' governance contract in one of the realm's counties.",
+  "details": "Runs only if the 10-year cooldown flag is not set and some county of the realm has a province with a holding other than the governor's capital. The contract goes to such a province; then the cooldown is set and the shared set-up effect runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_jail_inspection",
+  "label": "Jail inspection contract",
+  "summary": "Creates the 'Jail Inspection' governance contract in one of the realm's counties.",
+  "details": "Runs only if the 10-year cooldown flag is not set and some county of the realm has a province with a holding other than the governor's capital. The contract goes to such a province; then the cooldown is set and the shared set-up effect runs. Its weight_multiplier is base 1, plus 10 if the character it runs on has the education_stewardship trait.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_japan_poetry_events",
+  "label": "Japan poetry events",
+  "summary": "Picks one of three 'A Poetic Life' events for a character in the Japanese (TGP) setting.",
+  "details": "Needs the TGP DLC and an available character (is_available). The chance to pick at all is 100 percent (chance_to_happen = 100). Three events with equal weight: Imperial Immortality (1261), An Exchange of Verses (1262), Ephemeral Beauty in the Wilds (1263), all in tgp_japan_yearly_events.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_japan_yearly_events",
+  "label": "Japan yearly events",
+  "summary": "Picks a yearly event for characters of Japanese culture, with a capital in the Japan region, or with a Japanese government.",
+  "details": "Needs the TGP DLC, plus one of: a culture with the Japonic heritage, a capital province in the world_asia_japan region, or a Japanese government (government_is_japanese_trigger). Only 50 percent of firings pick at all. About 27 distinct events from tgp_japan_yearly_events, weights 5 to 200 (rare ones like the Yokai encounter have 5, 'A Poetic Life' 200). Events 1090, 1100 and 1110 are listed twice in the file; what the game does with a repeated entry is not documented in the input. Vanilla's yearly on_action list picks it with weight 6.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/on_action/yearly_on_actions.txt:3068"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_lines_in_the_soil",
+  "label": "Lines in the soil contract",
+  "summary": "Creates the 'Lines in the Soil' governance contract in one of the realm's counties.",
+  "details": "Runs only if the 10-year cooldown flag is not set and some county of the realm has a province with a holding other than the governor's capital. The contract goes to such a province; then the cooldown is set and the shared set-up effect runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_mandala_yearly_events",
+  "label": "Mandala yearly events",
+  "summary": "Picks a yearly 'devaraja' event for a ruler with a mandala government.",
+  "details": "Runs only for characters whose government has the flag government_is_mandala. Only 25 percent of firings pick at all (chance_to_happen = 25). Six events with equal weight: devaraja.0002 to devaraja.0007. Vanilla's yearly on_action list picks it with weight 3.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/on_action/yearly_on_actions.txt:3070"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_medieval_medicine",
+  "label": "Treating the unfortunate contract",
+  "summary": "Creates the 'Treating the Unfortunate' natural-disaster governance contract (type tgp_medieval_medicine).",
+  "details": "Runs only if the 10-year cooldown flag is not set and some county of the realm has a province with a holding other than the governor's capital. The contract goes to such a province; then the cooldown is set and the shared set-up effect runs. Its weight_multiplier is base 1, plus 10 if the character it runs on has the education_stewardship trait.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_minister_manage_talent_on_action",
+  "label": "Manage talent task",
+  "summary": "Once a year, may find a talented person in the realm and appoint them to a court position, for the Manage Talent minister task.",
+  "details": "Needs the TGP DLC. The effect works only in month 1 and then rolls a percentage chance given by task_manage_talent_scale_tooltip_total_value. It collects courtiers and guests of the liege's vassals (county rank or higher) and of the liege's own court, plus the capital's character pool, whose total skills reach the 'poor' threshold. It then checks a fixed list of court positions in order (physician, travel leader, grand mentor and others) and takes the first one the liege can fill and for which a candidate has enough aptitude (2 or 3 depending on the position). The best-aptitude valid candidate is hired if needed and appointed, with a toast. It expects scope:councillor_liege and scope:councillor to be saved by the council task, which fires it monthly.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/on_action/dlc/tgp/tgp_china_minister_on_action.txt:1", "vanilla: common/council_tasks/01_ministry_tasks.txt:77"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_missing_equipment",
+  "label": "Missing equipment contract",
+  "summary": "Creates the 'Missing Equipment' governance contract in the capital.",
+  "details": "Runs only if the 10-year cooldown flag is not set and no province of the realm has the tgp_well_equipped_soldiers_modifier or tgp_greatly_equipped_soldiers_modifier. It does not pick a county: the capital province is the location (a vanilla comment says the equipment is likely kept there). Then the cooldown is set and the shared set-up effect runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_monopoly_in_the_marketplace",
+  "label": "Marketplace monopoly contract",
+  "summary": "Creates the 'Monopoly in the Marketplace' governance contract in one of the realm's counties.",
+  "details": "Runs only if the 10-year cooldown flag is not set and some county of the realm has a province with a holding other than the governor's capital. The contract goes to such a province; then the cooldown is set and the shared set-up effect runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_potent_physick",
+  "label": "Potent physick contract",
+  "summary": "Creates the 'Potent Physick' governance contract in one of the realm's counties.",
+  "details": "Runs only if the 10-year cooldown flag is not set and some county of the realm has a province with a holding other than the governor's capital. The contract goes to such a province; then the cooldown is set and the shared set-up effect runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_quaking_in_panic",
+  "label": "Quaking in panic contract",
+  "summary": "Creates the 'Quaking in Panic' governance contract in one of the realm's counties.",
+  "details": "Runs only if the 10-year cooldown flag is not set and some county of the realm has a province with a holding other than the governor's capital. The contract goes to such a province; then the cooldown is set and the shared set-up effect runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "tgp_ravaged_buildings",
+  "label": "Ravaged buildings contract",
+  "summary": "Creates the 'Destroyed by Nature' natural-disaster governance contract (type tgp_ravaged_buildings).",
+  "details": "Runs only if the 10-year cooldown flag is not set and some county of the realm has a province with a holding other than the governor's capital. The contract goes to such a province; then the cooldown is set and the shared set-up effect runs. Its weight_multiplier is base 1, plus 10 if the character it runs on has the education_stewardship trait.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

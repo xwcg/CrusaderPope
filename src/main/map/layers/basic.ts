@@ -8,6 +8,7 @@ import { scalarOf } from '../history.ts';
 import { MAP_KINDS } from '../kinds.ts';
 import { lastOf, once, perDate, Things, type LayerCtx, type LayerDef } from '../layers.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 /** Fixed colours of the usual holdings (others get one from HOLDING_FALLBACK). */
 const HOLDING_COLORS: Record<string, string> = {
     castle_holding: '#b8483a',
@@ -57,7 +58,7 @@ export function thingsOf(ctx: LayerCtx, type: string): { list: MapThing[]; at: M
 }
 
 /**
- * history/province_mapping: `<province> = <source>` — the province takes the source's culture and faith ("mapped
+ * history/province_mapping: `<province> = <source>`: the province takes the source's culture and faith ("mapped
  * history", history/_provinces.info); vanilla maps 325 baronies (Guinea, Arabia, Sápmi …) that have no history of
  * their own.
  */
@@ -77,13 +78,13 @@ export function mappedFrom(ctx: LayerCtx): Map<string, string>
 }
 
 /**
- * history/provinces keys of a county's culture and faith (`religion`, rarely `faith` — a later one of either wins; 1.20:
- * `rite`, its faith at the date — it wins over a faith of the same date)
+ * history/provinces keys of a county's culture and faith (`religion`, rarely `faith`; a later one of either wins; 1.20:
+ * `rite`, its faith at the date, which wins over a faith of the same date)
  */
 const COUNTY_KEYS = { culture: ['culture'], faith: ['religion', 'faith', 'rite'] };
 
 /**
- * Per province at the date: its county's culture or faith key — of the county's first barony that has one, its own or
+ * Per province at the date: its county's culture or faith key: of the county's first barony that has one, its own or
  * mapped (history/provinces writes them on the county's capital, which comes first); every barony of the county gets
  * it.
  */
@@ -91,17 +92,33 @@ export function countyKeys(ctx: LayerCtx, what: 'culture' | 'faith'): (string | 
 {
     return perDate(ctx, 'county:' + what, () =>
     {
+        // (a loaded save: its counties' own)
+        if (ctx.save)
+        {
+            const by = what === 'culture' ? ctx.save.culture : ctx.save.faith;
+            const out = new Array<string | undefined>(ctx.count).fill(undefined);
+            ctx.tree.titles.forEach((t, ci) =>
+            {
+                const v = t.tier === 'c' ? by.get(t.key) : undefined;
+
+                if (v)
+                    for (const p of ctx.countyProvinces(ci))
+                        out[p] = v;
+            });
+            return out;
+        }
+
         const mapped = mappedFrom(ctx);
         const valueOf = (p: string): string | undefined =>
         {
             if (what === 'culture')
                 return scalarOf(lastOf(ctx.provinces, p, COUNTY_KEYS.culture, ctx.when)?.node);
 
-            const f = lastOf(ctx.provinces, p, ['religion', 'faith'], ctx.when);
-            const r = lastOf(ctx.provinces, p, ['rite'], ctx.when);
-            const n = r && (!f || r.date >= f.date) ? r : f;
+            // (the last of `religion` / `faith` / `rite` in history order wins; 1.20 writes `rite = x`, a mod's map edit
+            // may have added `religion = y` after it)
+            const n = lastOf(ctx.provinces, p, ['religion', 'faith', 'rite'], ctx.when);
             const v = scalarOf(n?.node);
-            return n && v ? (historyFaith(ctx.idx, { ...n.node, v }, ctx.when) ?? (f && scalarOf(f.node))) : undefined;
+            return n && v ? (historyFaith(ctx.idx, { ...n.node, v }, ctx.when) ?? v) : undefined;
         };
         const out = new Array<string | undefined>(ctx.count).fill(undefined);
         ctx.tree.titles.forEach((t, ci) =>
@@ -135,7 +152,7 @@ const culture: LayerDef = {
     build: (ctx) =>
     {
         const { list, at } = thingsOf(ctx, 'culture/cultures');
-        return { id: 'culture', label: 'Cultures', title: 'The counties’ cultures at the date', row: 'Culture', historical: true, things: list, values: countyKeys(ctx, 'culture').map((k) => (k ? (at.get(k) ?? -1) : -1)) };
+        return { id: 'culture', label: tr('Cultures'), title: tr('The counties’ cultures at the date'), row: tr('Culture'), historical: true, things: list, values: countyKeys(ctx, 'culture').map((k) => (k ? (at.get(k) ?? -1) : -1)) };
     }
 };
 
@@ -144,7 +161,7 @@ const faith: LayerDef = {
     build: (ctx) =>
     {
         const { list, at } = thingsOf(ctx, T_FAITH);
-        return { id: 'faith', label: 'Faiths', title: 'The counties’ faiths at the date', row: 'Faith', historical: true, things: list, values: countyKeys(ctx, 'faith').map((k) => (k ? (at.get(k) ?? -1) : -1)) };
+        return { id: 'faith', label: tr('Faiths'), title: tr('The counties’ faiths at the date'), row: tr('Faith'), historical: true, things: list, values: countyKeys(ctx, 'faith').map((k) => (k ? (at.get(k) ?? -1) : -1)) };
     }
 };
 
@@ -160,7 +177,8 @@ const holding: LayerDef = {
             if (t.province === undefined || t.province >= ctx.count)
                 continue;
 
-            const key = scalarOf(lastOf(ctx.provinces, String(t.province), ['holding'], ctx.when)?.node);
+            // (a loaded save: its own holdings)
+            const key = ctx.save ? ctx.save.holding.get(t.province) : scalarOf(lastOf(ctx.provinces, String(t.province), ['holding'], ctx.when)?.node);
 
             if (!key)
                 continue;
@@ -172,7 +190,7 @@ const holding: LayerDef = {
             }));
         }
 
-        return { id: 'holding', label: 'Holdings', title: 'The baronies’ holdings at the date', row: 'Holding', historical: true, labels: false, things: things.list, values };
+        return { id: 'holding', label: tr('Holdings'), title: tr('The baronies’ holdings at the date'), row: tr('Holding'), historical: true, labels: false, things: things.list, values };
     }
 };
 
@@ -209,8 +227,8 @@ const TERRAIN_COLORS: Record<string, string> = {
     coastal_sea: '#5a88b4'
 };
 /**
- * A terrain's readable colour: its own (TERRAIN_COLORS), else that of a listed terrain with the same game colour — a
- * terrain the game paints like another (a road across plains) — else the game's.
+ * A terrain's readable colour: its own (TERRAIN_COLORS), else that of a listed terrain with the same game colour (a
+ * terrain the game paints like another (a road across plains)), else the game's.
  */
 function terrainColor(key: string, game: string | undefined, gameOf: (key: string) => string | undefined): string | undefined
 {
@@ -224,7 +242,7 @@ function terrainColor(key: string, game: string | undefined, gameOf: (key: strin
 /**
  * common/province_terrain: `<id> = <terrain>`, default_land / default_sea / default_coastal_sea. (history/provinces
  * has 95 `terrain = …` lines too, listed in _provinces.info; 72 differ from province_terrain and 24 name `mountain`,
- * no terrain type — left aside.)
+ * no terrain type: left aside.)
  */
 const terrain: LayerDef = {
     id: 'terrain',
@@ -275,7 +293,7 @@ const terrain: LayerDef = {
                     values[p] = of(d);
             }
 
-            return { id: 'terrain', label: 'Terrain', title: 'The provinces’ terrain', row: 'Terrain', water: true, labels: false, things: things.list, values };
+            return { id: 'terrain', label: tr('Terrain'), title: tr('The provinces’ terrain'), row: tr('Terrain'), water: true, labels: false, things: things.list, values };
         })
 };
 

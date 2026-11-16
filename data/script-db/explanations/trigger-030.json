@@ -1,0 +1,531 @@
+[
+ {
+  "kind": "trigger",
+  "key": "not",
+  "label": "Not",
+  "summary": "Whether none of the conditions inside the block is true.",
+  "details": "It turns the check around: the block passes only when the conditions inside fail. Vanilla mostly puts a single check in it, such as `exists = involved_activity` or `has_character_flag = ...`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_accolades",
+  "label": "Number of accolades",
+  "summary": "Compares how many accolades the character currently has with a number.",
+  "details": "Write it as a comparison, for example `num_accolades < 3`. Vanilla compares it with the named value `max_accolades`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_artifact_kills",
+  "label": "Artifact kills",
+  "summary": "Compares how many kills the artifact has been used in with a number.",
+  "details": "Write it as a comparison, for example `num_artifact_kills >= 5`. It runs on an artifact.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_buildings",
+  "label": "Number of buildings",
+  "summary": "Compares the number of ordinary buildings in the province with a number.",
+  "details": "Buildings still under construction count. Duchy buildings and similar special buildings do not. Write it as a comparison, for example `num_buildings > 3`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_character_followers",
+  "label": "Number of character followers",
+  "summary": "Compares how many characters follow the faith with a number.",
+  "details": "It counts characters, not counties. Write it as a comparison, for example `num_character_followers >= 5`. It runs on a faith.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_county_followers",
+  "label": "Number of county followers",
+  "summary": "Compares how many counties follow the faith with a number.",
+  "details": "It counts counties, not characters. Write it as a comparison, for example `num_county_followers > 0`, which is the most common form in vanilla (17 of 29 uses). It runs on a faith.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_county_holdings",
+  "label": "Number of county holdings",
+  "summary": "Compares how many provinces of the county have a holding with a number.",
+  "details": "It runs on a county title. Write it as a comparison, for example `num_county_holdings >= 2`.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_discovered_innovations",
+  "label": "Number of discovered innovations",
+  "summary": "Compares how many innovations the culture has discovered with a number.",
+  "details": "Write it as a comparison, for example `num_discovered_innovations > 20`. It runs on a culture.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_discovered_innovations_in_era",
+  "label": "Discovered innovations in an era",
+  "summary": "Compares how many active discovered innovations the culture has in one given era with a number.",
+  "details": "It can be written as a block with the era and the comparison, or in short form as `num_discovered_innovations_in_era:<era> > 15`. The game's documentation also shows comparing it with the same count of another culture. It runs on a culture.",
+  "fields": [
+   {
+    "name": "target",
+    "text": "The culture era to count innovations in.",
+    "values": "a culture era, for example culture_era_early_medieval",
+    "required": true
+   },
+   {
+    "name": "value",
+    "text": "The comparison with the count.",
+    "values": "a comparison such as `value > 5`",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_domicile_buildings",
+  "label": "Number of domicile buildings",
+  "summary": "Compares how many buildings have been built in the domicile with a number.",
+  "details": "Write it as a comparison, for example `num_domicile_buildings >= 3`. It runs on a domicile.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_enemies_killed",
+  "label": "Enemies killed",
+  "summary": "Compares how many enemy troops this side of a battle has killed with a number.",
+  "details": "It counts the troops killed on the opposing side. Write it as a comparison, for example `num_enemies_killed >= 500`. It runs on a combat side.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_entourage_characters",
+  "label": "Entourage size",
+  "summary": "Compares the size of the travel plan's entourage with a number.",
+  "details": "Vanilla compares it with a cap value (`< $ENTOURAGE_CAP$`) or with small numbers. It runs on a travel plan.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_future_phases",
+  "label": "Future phases",
+  "summary": "Compares the number of phases the activity still has ahead with a number.",
+  "details": "Write it as a comparison, for example `num_future_phases > 5`. It runs on an activity.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_leased_titles",
+  "label": "Leased titles",
+  "summary": "Compares how many holdings the holy order has under lease with a number.",
+  "details": "Vanilla compares it with fixed numbers and with `holy_order_barony_number_soft_threshold`, and once writes a plain number. It runs on a holy order.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_bad_genetic_traits",
+  "label": "Number of bad genetic traits",
+  "summary": "Compares how many bad genetic traits the character has with a number.",
+  "details": "Write it as a comparison, for example `num_of_bad_genetic_traits > 0`, or a plain number for an exact count. Vanilla also compares it with another character's count, as in `> scope:contester.num_of_bad_genetic_traits`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_good_genetic_traits",
+  "label": "Number of good genetic traits",
+  "summary": "Compares how many good genetic traits the character has with a number.",
+  "details": "Write it as a comparison, for example `num_of_good_genetic_traits >= 2`. Vanilla also compares it with the same character's bad genetic trait count.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_known_languages",
+  "label": "Number of known languages",
+  "summary": "Compares how many languages the character knows with a number.",
+  "details": "Write it as a comparison, for example `num_of_known_languages > 1`. Vanilla often compares it with `language_soft_cap`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_activity_recurrer",
+  "label": "Number of activity recurrer relations",
+  "summary": "Compares how many scripted relations of the type activity recurrer the character has with a number.",
+  "details": "The game's documentation only says it counts scripted relations of this type. Vanilla uses it once, as `< 1`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_antiquarian",
+  "label": "Number of antiquarian relations",
+  "summary": "Compares how many scripted relations of the type antiquarian the character has with a number.",
+  "details": "The game's documentation only says it counts scripted relations of this type. The vanilla data shows no use of it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_best_friend",
+  "label": "Number of best friends",
+  "summary": "Compares how many best friend relations the character has with a number.",
+  "details": "Vanilla mostly writes a plain `0`, and once `< 1`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_blood_brother",
+  "label": "Number of blood brothers",
+  "summary": "Compares how many blood brother relations the character has with a number.",
+  "details": "Vanilla uses it with `0` and `>= 1`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_bully",
+  "label": "Number of bully relations",
+  "summary": "Compares how many scripted relations of the type bully the character has with a number.",
+  "details": "Vanilla uses it once, as `<= 0`, to check that the character has none.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_court_physician",
+  "label": "Number of court physician relations",
+  "summary": "Compares how many scripted relations of the type court physician the character has with a number.",
+  "details": "The game's documentation only says it counts scripted relations of this type. The vanilla data shows no use of it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_crush",
+  "label": "Number of crushes",
+  "summary": "Compares how many crush relations the character has with a number.",
+  "details": "Vanilla writes it with values such as `<= 0`, `< 1`, `<= 2`, or a plain `0`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_disciple",
+  "label": "Number of disciples",
+  "summary": "Compares how many disciple relations the character has with a number.",
+  "details": "Vanilla mostly compares it with `disciples_limit_value` or `> 0`. Once the compared number is written as a block with `value` and `add`, which gives a value plus an offset.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The base number.",
+    "values": "a number or script value, for example `scope:secondary_recipient.disciples_limit_value`"
+   },
+   {
+    "name": "add",
+    "text": "An amount added to the base number (a negative number subtracts).",
+    "values": "a number, for example -1"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_elder",
+  "label": "Number of elders",
+  "summary": "Compares how many elder relations the character has with a number.",
+  "details": "Vanilla uses it with `> 0` and a plain `0`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_event_recurrer",
+  "label": "Number of event recurrer relations",
+  "summary": "Compares how many scripted relations of the type event recurrer the character has with a number.",
+  "details": "The game's documentation only says it counts scripted relations of this type. The vanilla data shows no use of it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_favorite_child",
+  "label": "Number of favorite children",
+  "summary": "Compares how many favorite child relations the character has with a number.",
+  "details": "The game's documentation only says it counts scripted relations of this type. The vanilla data shows no use of it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_fellow_disciple",
+  "label": "Number of fellow disciples",
+  "summary": "Compares how many fellow disciple relations the character has with a number.",
+  "details": "The game's documentation only says it counts scripted relations of this type. The vanilla data shows no use of it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_friend",
+  "label": "Number of friends",
+  "summary": "Compares how many friend relations the character has with a number.",
+  "details": "Vanilla mostly writes `< 2` (38 of 63 uses), or a plain `0`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_grudge",
+  "label": "Number of grudges",
+  "summary": "Compares how many grudge relations the character has with a number.",
+  "details": "The game's documentation only says it counts scripted relations of this type. The vanilla data shows no use of it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_guardian",
+  "label": "Number of guardians",
+  "summary": "Compares how many guardian relations the character has with a number.",
+  "details": "Vanilla mostly writes a plain `0` (19 of 22 uses).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_intrigue_mentor",
+  "label": "Number of intrigue mentors",
+  "summary": "Compares how many intrigue mentor relations the character has with a number.",
+  "details": "Vanilla uses it with `0` and `<= 0`, to check that the character has none.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_intrigue_student",
+  "label": "Number of intrigue students",
+  "summary": "Compares how many intrigue student relations the character has with a number.",
+  "details": "The game's documentation only says it counts scripted relations of this type. The vanilla data shows no use of it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_lover",
+  "label": "Number of lovers",
+  "summary": "Compares how many lover relations the character has with a number.",
+  "details": "Vanilla mostly writes `< 2` or `< 1`, or a plain `0`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_mentor",
+  "label": "Number of mentors",
+  "summary": "Compares how many mentor relations the character has with a number.",
+  "details": "The game's documentation only says it counts scripted relations of this type. The vanilla data shows no use of it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_nemesis",
+  "label": "Number of nemeses",
+  "summary": "Compares how many nemesis relations the character has with a number.",
+  "details": "Vanilla uses it with `0` and `<= 0`, to check that the character has none.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_nursed_child",
+  "label": "Number of nursed children",
+  "summary": "Compares how many nursed child relations the character has with a number.",
+  "details": "The game's documentation only says it counts scripted relations of this type. The vanilla data shows no use of it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_oaf",
+  "label": "Number of oaf relations",
+  "summary": "Compares how many scripted relations of the type oaf the character has with a number.",
+  "details": "Vanilla uses it once, as `< 1`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "num_of_relation_old_flame",
+  "label": "Number of old flames",
+  "summary": "Compares how many old flame relations the character has with a number.",
+  "details": "The game's documentation only says it counts scripted relations of this type. The vanilla data shows no use of it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ }
+]

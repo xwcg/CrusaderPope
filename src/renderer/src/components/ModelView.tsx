@@ -14,8 +14,9 @@ import { errorText } from './ModDialogs';
 import { MODS_ROUTE } from './ModsView';
 import { digest, useGfxRevision } from '../revision';
 
+import { tr } from '../../../shared/i18n';
 const base = (p: string): string => p.slice(p.lastIndexOf('/') + 1);
-const size = (b: number): string => (b > 1048576 ? `${(b / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.ceil(b / 1024))} KB`);
+const size = (b: number): string => (b > 1048576 ? tr('{mb} MB', { mb: (b / 1048576).toFixed(1) }) : tr('{max} KB', { max: Math.max(1, Math.ceil(b / 1024)) }));
 const fmt = (x: number): string => (Math.abs(x) >= 10 ? x.toFixed(0) : x.toFixed(1));
 
 /** Link to another model file (asset or mesh). */
@@ -29,7 +30,7 @@ function ModelLink(props: { path: string; label?: string; navigate: Navigate; })
 }
 
 /**
- * Thumbnail channel per texture role: packed data maps look black or empty as RGBA — properties keep roughness in
+ * Thumbnail channel per texture role: packed data maps look black or empty as RGBA; properties keep roughness in
  * alpha (the other channels are mostly 0), normal maps and pattern masks read best without alpha.
  */
 function thumbChannel(role: string): string | undefined
@@ -49,14 +50,14 @@ export function TextureTile(props: { t: ModelTexture; navigate: Navigate; size?:
         <div
             className={'tex-tile' + (t.path ? '' : ' missing')}
             style={{ width: s + 2 }}
-            title={t.path ?? `Not found: ${t.ref}`}
+            title={t.path ?? tr('Not found: {ref}', { ref: t.ref })}
             onClick={t.path ? () => props.navigate({ type: 'images', name: t.path! }) : undefined}
         >
             <div className="tex-img checker" style={{ width: s, height: s }}>
-                {t.path ? <GameImg path={t.path} size={s} ch={thumbChannel(t.role)} /> : <span>missing</span>}
+                {t.path ? <GameImg path={t.path} size={s} ch={thumbChannel(t.role)} /> : <span>{tr('missing')}</span>}
             </div>
             {t.path && <AssetMenu path={t.path} navigate={props.navigate} className="tile-menu" />}
-            <div className="tex-role" title={t.role === 'properties' ? 'Thumbnail: alpha channel (roughness)' : undefined}>
+            <div className="tex-role" title={t.role === 'properties' ? tr('Thumbnail: alpha channel (roughness)') : undefined}>
                 {t.role}
             </div>
             <div className="tex-name">{base(t.path ?? t.ref).replace(/\.(dds|png|tga)$/i, '')}</div>
@@ -97,10 +98,10 @@ export function ModelView(props: { path: string; navigate: Navigate; }): React.J
     }, [props.path, gfx]);
 
     if (info === undefined)
-        return <div className="read-loading">Reading the model…</div>;
+        return <div className="read-loading">{tr('Reading the model…')}</div>;
 
     if (info === null)
-        return <div className="placeholder">Model file not found.</div>;
+        return <div className="placeholder">{tr('Model file not found.')}</div>;
 
     return info.kind === 'asset' ? <AssetView info={info} navigate={props.navigate} /> : <MeshView info={info} navigate={props.navigate} />;
 }
@@ -110,7 +111,7 @@ function Head(props: { info: ModelInfo; kind: string; extra?: React.ReactNode; }
     const { info } = props;
     return (
         <div className="model-head">
-            <div className="rpg-kind">3D model · {props.kind}</div>
+            <div className="rpg-kind">{tr('3D model · {kind}', { kind: props.kind })}</div>
             <h1>{base(info.path)}</h1>
             <div className="model-path">
                 <span className="site-link" title={revealTitle(info.abs)} onClick={() => void api.revealFile(info.abs)}>
@@ -120,8 +121,7 @@ function Head(props: { info: ModelInfo; kind: string; extra?: React.ReactNode; }
                 {info.kind === 'asset' && (
                     <span className="site-link" title={openTitle(info.abs)} onClick={() => void api.openFile(info.abs)}>
                         {' '}
-                        · open in editor
-                    </span>
+                        {tr('· open in editor')}</span>
                 )}
                 {props.extra}
             </div>
@@ -173,23 +173,23 @@ function BlenderBar(props: { path: string; pdxmesh?: string; navigate: Navigate;
                 counts.push(plural(c.joints, 'joint'));
 
             if (c.blendShapes)
-                counts.push(`${plural(c.blendShapes, 'blend shape')} (shape keys)`);
+                counts.push(tr('{plural} (shape keys)', { plural: plural(c.blendShapes, tr('blend shape')) }));
 
             pushNotice({
                 kind: 'ok',
-                title: 'Exported for Blender',
+                title: tr('Exported for Blender'),
                 text: r.gltf,
                 details: [
-                    `${counts.join(', ')} — ${plural(r.files.length, 'file')} written.`,
-                    'In Blender: File › Import › glTF 2.0. When done, export as glTF 2.0 (.glb or .gltf) and bring it back with “Import from Blender…”.',
+                    tr('{counts} — {plural} written.', { counts: counts.join(', '), plural: plural(r.files.length, 'file') }),
+                    tr('In Blender: File › Import › glTF 2.0. When done, export as glTF 2.0 (.glb or .gltf) and bring it back with “Import from Blender…”.'),
                     ...r.warnings.map((w) => '⚠ ' + w)
                 ],
-                actions: [{ label: 'Reveal', run: () => void api.revealFile(r.gltf) }]
+                actions: [{ label: tr('Reveal'), run: () => void api.revealFile(r.gltf) }]
             });
         }
         catch (e)
         {
-            pushNotice({ kind: 'error', title: 'Export failed', text: errorText(e) });
+            pushNotice({ kind: 'error', title: tr('Export failed'), text: errorText(e) });
         }
         finally
         {
@@ -208,21 +208,21 @@ function BlenderBar(props: { path: string; pdxmesh?: string; navigate: Navigate;
             if (!r)
                 return;
 
-            const actions: NoticeAction[] = [{ label: 'Reveal', run: () => void api.revealFile(r.files[0].abs) }];
+            const actions: NoticeAction[] = [{ label: tr('Reveal'), run: () => void api.revealFile(r.files[0].abs) }];
 
             if (!r.reindex)
-                actions.push({ label: 'Open the Mods page', run: () => navigate({ type: MODS_ROUTE }) });
+                actions.push({ label: tr('Open the Mods page'), run: () => navigate({ type: MODS_ROUTE }) });
 
             reportChange({
                 kind: 'ok',
-                text: `Imported ${plural(r.files.length, 'file')} from ${r.source.slice(Math.max(r.source.lastIndexOf('/'), r.source.lastIndexOf('\\')) + 1)}`,
+                text: tr('Imported {plural} from {source}', { plural: plural(r.files.length, 'file'), source: r.source.slice(Math.max(r.source.lastIndexOf('/'), r.source.lastIndexOf('\\')) + 1) }),
                 mod: r.mod.name,
                 where: r.files[0]?.rel,
                 details: [
-                    ...r.files.map((f) => `${f.rel} — ${f.what}`),
+                    ...r.files.map((f) => `${f.rel}: ${f.what}`),
                     ...r.notes,
                     ...r.warnings.map((w) => '⚠ ' + w),
-                    ...(r.reindex ? [] : [`${r.mod.name} is not in the loaded mod list: the explorer does not show the change.`])
+                    ...(r.reindex ? [] : [tr('{name} is not in the loaded mod list: the explorer does not show the change.', { name: r.mod.name })])
                 ],
                 actions,
                 undo: r.step
@@ -230,7 +230,7 @@ function BlenderBar(props: { path: string; pdxmesh?: string; navigate: Navigate;
         }
         catch (e)
         {
-            reportChange({ kind: 'error', text: 'Nothing imported', details: [errorText(e)] });
+            reportChange({ kind: 'error', text: tr('Nothing imported'), details: [errorText(e)] });
         }
         finally
         {
@@ -239,24 +239,24 @@ function BlenderBar(props: { path: string; pdxmesh?: string; navigate: Navigate;
     };
 
     const importTitle = !plan
-        ? 'Checking the active mod…'
+        ? tr('Checking the active mod…')
         : (plan.problem ??
-            `Writes ${plan.mesh} and the textures you changed into ${plan.mod!.name} — a file of the same path in a mod replaces the game’s${plan.mod!.loaded ? '' : `. ${plan.mod!.name} is not in the loaded mod list.`}`);
+            tr('Writes {mesh} and the textures you changed into {name} — a file of the same path in a mod replaces the game’s{notLoaded}', { mesh: plan.mesh, name: plan.mod!.name, notLoaded: plan.mod!.loaded ? '' : `. ${plan.mod!.name} is not in the loaded mod list.` }));
     return (
         <div className="blender-bar">
             <button
                 onClick={() => void exportModel()}
                 disabled={!!busy}
-                title="Writes the mesh as glTF 2.0 (.gltf + .bin), its textures as PNG and a manifest into a folder you choose — for Blender (File › Import › glTF 2.0)"
+                title={tr('Writes the mesh as glTF 2.0 (.gltf + .bin), its textures as PNG and a manifest into a folder you choose — for Blender (File › Import › glTF 2.0)')}
             >
-                {busy === 'export' ? 'Exporting…' : 'Export for Blender…'}
+                {busy === 'export' ? tr('Exporting…') : tr('Export for Blender…')}
             </button>
             <span title={importTitle}>
                 <button onClick={() => void importModel()} disabled={!!busy || !plan || !!plan.problem}>
-                    {busy === 'import' ? 'Importing…' : 'Import from Blender…'}
+                    {busy === 'import' ? tr('Importing…') : tr('Import from Blender…')}
                 </button>
             </span>
-            {plan?.mod && !plan.problem && <span className="pr-dim">into {plan.mod.name}</span>}
+            {plan?.mod && !plan.problem && <span className="pr-dim">{tr('into {name}', { name: plan.mod.name })}</span>}
         </div>
     );
 }
@@ -282,7 +282,7 @@ function AssetView({ info, navigate }: { info: AssetFileInfo; navigate: Navigate
     ].filter(Boolean);
     return (
         <div className="model-view">
-            <Head info={info} kind="asset file" extra={counts.length > 0 && <span className="pr-dim">· {counts.join(' · ')}</span>} />
+            <Head info={info} kind={tr('asset file')} extra={counts.length > 0 && <span className="pr-dim">· {counts.join(' · ')}</span>} />
             {sel ?
                 (
                     <>
@@ -299,32 +299,32 @@ function AssetView({ info, navigate }: { info: AssetFileInfo; navigate: Navigate
                         <MeshViewer path={info.path} pdxmesh={sel} />
                     </>
                 ) :
-                <div className="pr-dim model-note">No mesh declared here{info.entities.some((e) => e.pdxmeshAsset) ? ' — entities use meshes from other files (linked below)' : ''}.</div>}
+                <div className="pr-dim model-note">{tr('No mesh declared here')}{info.entities.some((e) => e.pdxmeshAsset) ? tr(' — entities use meshes from other files (linked below)') : ''}.</div>}
 
             {info.meshes.length > 0 && (
-                <Section title="Meshes (pdxmesh)" count={info.meshes.length}>
+                <Section title={tr('Meshes (pdxmesh)')} count={info.meshes.length}>
                     {info.meshes.map((m) => <PdxMeshBlock key={m.name + m.line} m={m} selected={m.name === sel} onShow={m.file ? () => select(m.name) : undefined} navigate={navigate} />)}
                 </Section>
             )}
 
             {info.entities.length > 0 && (
-                <Section title="Entities" count={info.entities.length}>
+                <Section title={tr('Entities')} count={info.entities.length}>
                     {info.entities.map((e) => (
                         <div key={e.name + e.line} className="model-block">
                             <div className="model-block-head">
                                 <span className="pr-code">{e.name}</span>
-                                {e.scale !== undefined && <span className="chip">scale {e.scale}</span>}
-                                {e.attributes > 0 && <span className="chip">{e.attributes} attributes</span>}
+                                {e.scale !== undefined && <span className="chip">{tr('scale {scale}', { scale: e.scale })}</span>}
+                                {e.attributes > 0 && <span className="chip">{tr('{attributes} attributes', { attributes: e.attributes })}</span>}
                             </div>
                             <div className="model-kv">
                                 {e.pdxmesh && (
                                     <>
-                                        <span className="pr-dim">mesh</span>
+                                        <span className="pr-dim">{tr('mesh')}</span>
                                         <span>
                                             {e.pdxmeshAsset ?
                                                 (
                                                     <>
-                                                        <ModelLink path={e.pdxmeshAsset} label={e.pdxmesh} navigate={navigate} /> <span className="pr-dim">in {base(e.pdxmeshAsset)}</span>
+                                                        <ModelLink path={e.pdxmeshAsset} label={e.pdxmesh} navigate={navigate} /> <span className="pr-dim">{tr('in {base}', { base: base(e.pdxmeshAsset) })}</span>
                                                     </>
                                                 ) :
                                                 info.meshes.some((m) => m.name === e.pdxmesh && m.file) ?
@@ -339,16 +339,16 @@ function AssetView({ info, navigate }: { info: AssetFileInfo; navigate: Navigate
                                 )}
                                 {e.defaultState && (
                                     <>
-                                        <span className="pr-dim">default state</span>
+                                        <span className="pr-dim">{tr('default state')}</span>
                                         <span className="pr-code">{e.defaultState}</span>
                                     </>
                                 )}
                                 {e.states.length > 0 && (
                                     <>
-                                        <span className="pr-dim">states</span>
+                                        <span className="pr-dim">{tr('states')}</span>
                                         <span className="pr-chips">
                                             {e.states.map((s, i) => (
-                                                <span key={i} className="chip" title={s.animation ? `animation ${s.animation}` : undefined}>
+                                                <span key={i} className="chip" title={s.animation ? tr('animation {animation}', { animation: s.animation }) : undefined}>
                                                     {s.name}
                                                     {s.animation && s.animation !== s.name ? <span className="pr-dim">→ {s.animation}</span> : null}
                                                 </span>
@@ -358,7 +358,7 @@ function AssetView({ info, navigate }: { info: AssetFileInfo; navigate: Navigate
                                 )}
                                 {e.attaches.length > 0 && (
                                     <>
-                                        <span className="pr-dim">attached</span>
+                                        <span className="pr-dim">{tr('attached')}</span>
                                         <span className="pr-chips">
                                             {e.attaches.map((a, i) => (
                                                 <span key={i} className="chip">
@@ -371,7 +371,7 @@ function AssetView({ info, navigate }: { info: AssetFileInfo; navigate: Navigate
                                 )}
                                 {e.variation && (
                                     <>
-                                        <span className="pr-dim">colour variation</span>
+                                        <span className="pr-dim">{tr('colour variation')}</span>
                                         <span className="pr-code">{e.variation}</span>
                                     </>
                                 )}
@@ -387,7 +387,7 @@ function AssetView({ info, navigate }: { info: AssetFileInfo; navigate: Navigate
             )}
 
             {info.accessories.length > 0 && (
-                <Section title="Portrait accessories using these entities" count={info.accessories.length}>
+                <Section title={tr('Portrait accessories using these entities')} count={info.accessories.length}>
                     <div className="pr-chips">
                         {info.accessories.map((a) => (
                             <span key={a} className="chip">
@@ -399,14 +399,14 @@ function AssetView({ info, navigate }: { info: AssetFileInfo; navigate: Navigate
             )}
 
             {info.textures.length > 0 && (
-                <Section title="Textures" count={info.textures.length}>
+                <Section title={tr('Textures')} count={info.textures.length}>
                     <div className="tex-row">
                         {info.textures.map((t, i) => <TextureTile key={i} t={t} navigate={navigate} />)}
                     </div>
                 </Section>
             )}
 
-            <Section title="Source" open={!info.meshes.length && !info.entities.length}>
+            <Section title={tr('Source')} open={!info.meshes.length && !info.entities.length}>
                 <SourceView defs={[info.source]} navigate={navigate} />
             </Section>
         </div>
@@ -434,22 +434,21 @@ function PdxMeshBlock({ m, selected, onShow, navigate }: { m: ModelPdxMesh; sele
         <div className={'model-block' + (selected ? ' selected' : '')}>
             <div className="model-block-head">
                 <span className="pr-code">{m.name}</span>
-                {m.scale !== undefined && <span className="chip">scale {m.scale}</span>}
+                {m.scale !== undefined && <span className="chip">{tr('scale {scale}', { scale: m.scale })}</span>}
                 {onShow && !selected && (
                     <button className="chip link-chip" onClick={onShow}>
-                        show in 3D
-                    </button>
+                        {tr('show in 3D')}</button>
                 )}
-                {selected && <span className="chip accent">shown above</span>}
+                {selected && <span className="chip accent">{tr('shown above')}</span>}
             </div>
             <div className="model-kv">
-                <span className="pr-dim">mesh file</span>
-                <span>{m.file ? <ModelLink path={m.file} navigate={navigate} /> : <span className="pr-bad-text">{m.fileRef || '—'} (not found)</span>}</span>
+                <span className="pr-dim">{tr('mesh file')}</span>
+                <span>{m.file ? <ModelLink path={m.file} navigate={navigate} /> : <span className="pr-bad-text">{tr('{fileRef} (not found)', { fileRef: m.fileRef || tr('none') })}</span>}</span>
             </div>
             {groups.map((g, i) => (
                 <div key={i} className="model-material">
                     <div className="model-material-head">
-                        <span className="pr-dim">{g.shapes.length > 1 ? `${g.shapes.length} shapes` : g.shapes[0]}</span>
+                        <span className="pr-dim">{g.shapes.length > 1 ? tr('{shapesCount} shapes', { shapesCount: g.shapes.length }) : g.shapes[0]}</span>
                         {g.shader && <span className="chip">{g.shader}</span>}
                     </div>
                     {g.shapes.length > 1 && <div className="pr-dim model-shapes">{g.shapes.join(', ')}</div>}
@@ -462,7 +461,7 @@ function PdxMeshBlock({ m, selected, onShow, navigate }: { m: ModelPdxMesh; sele
             ))}
             {m.animations.length > 0 && (
                 <div className="model-kv">
-                    <span className="pr-dim">animations</span>
+                    <span className="pr-dim">{tr('animations')}</span>
                     <span className="pr-chips">
                         {m.animations.map((a, i) => (
                             <span key={i} className="chip" title={a.ref}>
@@ -475,7 +474,7 @@ function PdxMeshBlock({ m, selected, onShow, navigate }: { m: ModelPdxMesh; sele
             )}
             {m.blendShapes.length > 0 && (
                 <div className="model-kv">
-                    <span className="pr-dim">blend shapes</span>
+                    <span className="pr-dim">{tr('blend shapes')}</span>
                     <span>
                         <span className="site-link" onClick={() => setShowBlend(!showBlend)}>
                             {showBlend ? 'hide' : 'show'} {m.blendShapes.length}
@@ -527,8 +526,8 @@ function MeshView({ info, navigate }: { info: MeshFileInfo; navigate: Navigate; 
     const [showBones, setShowBones] = useState(false);
     return (
         <div className="model-view">
-            <Head info={info} kind="mesh file" extra={<span className="pr-dim">· {info.shapes.length} parts · {vertices.toLocaleString()} vertices · {triangles.toLocaleString()} triangles</span>} />
-            {info.error ? <div className="placeholder">Could not read this mesh: {info.error}</div> : (
+            <Head info={info} kind={tr('mesh file')} extra={<span className="pr-dim">{tr('· {shapesCount} parts · {vertices} vertices · {triangles} triangles', { shapesCount: info.shapes.length, vertices: vertices.toLocaleString(), triangles: triangles.toLocaleString() })}</span>} />
+            {info.error ? <div className="placeholder">{tr('Could not read this mesh: {error}', { error: info.error })}</div> : (
                 <>
                     <BlenderBar path={info.path} navigate={navigate} />
                     <MeshViewer path={info.path} />
@@ -536,25 +535,25 @@ function MeshView({ info, navigate }: { info: MeshFileInfo; navigate: Navigate; 
             )}
 
             {(info.declaredIn.length > 0 || info.blendShapeOf.length > 0) && (
-                <Section title="Declared in">
+                <Section title={tr('Declared in')}>
                     <div className="model-kv">
                         {info.declaredIn.map((d, i) => (
                             <span key={i} className="model-decl">
-                                <ModelLink path={d.asset} navigate={navigate} /> <span className="pr-dim">pdxmesh</span> <span className="pr-code">{d.pdxmesh}</span>
+                                <ModelLink path={d.asset} navigate={navigate} /> <span className="pr-dim">{tr('pdxmesh')}</span> <span className="pr-code">{d.pdxmesh}</span>
                             </span>
                         ))}
                         {info.blendShapeOf.map((d, i) => (
                             <span key={'b' + i} className="model-decl">
-                                <span className="pr-dim">blend shape</span> <span className="pr-code">{d.id}</span> <span className="pr-dim">of</span> <ModelLink path={d.asset} label={d.pdxmesh} navigate={navigate} />
+                                <span className="pr-dim">{tr('blend shape')}</span> <span className="pr-code">{d.id}</span> <span className="pr-dim">{tr('of')}</span> <ModelLink path={d.asset} label={d.pdxmesh} navigate={navigate} />
                             </span>
                         ))}
                     </div>
                 </Section>
             )}
-            {info.declaredIn.length === 0 && info.blendShapeOf.length === 0 && !info.error && <div className="pr-dim model-note">No .asset file declares this mesh; textures come from the material names inside the file.</div>}
+            {info.declaredIn.length === 0 && info.blendShapeOf.length === 0 && !info.error && <div className="pr-dim model-note">{tr('No .asset file declares this mesh; textures come from the material names inside the file.')}</div>}
 
             {info.shapes.length > 0 && (
-                <Section title="Parts" count={info.shapes.length}>
+                <Section title={tr('Parts')} count={info.shapes.length}>
                     <div className="pr-table">
                         {info.shapes.map((s, i) => (
                             <div key={i} className="pr-row model-part">
@@ -562,15 +561,15 @@ function MeshView({ info, navigate }: { info: MeshFileInfo; navigate: Navigate; 
                                     {s.name}
                                 </span>
                                 <span className="pr-num">{s.vertices.toLocaleString()} v</span>
-                                <span className="pr-num">{s.triangles.toLocaleString()} tris</span>
+                                <span className="pr-num">{tr('{triangles} tris', { triangles: s.triangles.toLocaleString() })}</span>
                                 <span className="pr-dim">
                                     {s.shader}
-                                    {s.skinned ? ' · skinned' : ''}
-                                    {s.uvSets > 1 ? ` · ${s.uvSets} UV sets` : ''}
-                                    {s.lod ? ` · LOD ${s.lod}` : ''}
-                                    {s.decal ? ' · decal' : ''}
+                                    {s.skinned ? tr(' · skinned') : ''}
+                                    {s.uvSets > 1 ? tr(' · {uvSets} UV sets', { uvSets: s.uvSets }) : ''}
+                                    {s.lod ? tr(' · LOD {lod}', { lod: s.lod }) : ''}
+                                    {s.decal ? tr(' · decal') : ''}
                                 </span>
-                                <span className="pr-dim" title={`min ${s.min.map(fmt).join(', ')}\nmax ${s.max.map(fmt).join(', ')}`}>
+                                <span className="pr-dim" title={tr('min {min}\nmax {max}', { min: s.min.map(fmt).join(', '), max: s.max.map(fmt).join(', ') })}>
                                     {s.max.map((x, k) => fmt(x - s.min[k])).join(' × ')}
                                 </span>
                             </div>
@@ -580,13 +579,13 @@ function MeshView({ info, navigate }: { info: MeshFileInfo; navigate: Navigate; 
             )}
 
             {sets.length > 0 && (
-                <Section title="Textures" count={sets.reduce((n, s) => n + s.textures.length, 0)}>
+                <Section title={tr('Textures')} count={sets.reduce((n, s) => n + s.textures.length, 0)}>
                     {sets.map((g, i) => (
                         <div key={i} className="model-material">
                             {sets.length > 1 && (
                                 <div className="model-material-head">
                                     <span className="pr-dim" title={g.shapes.join('\n')}>
-                                        {g.shapes.length > 1 ? `${g.shapes.length} parts` : g.shapes[0]}
+                                        {g.shapes.length > 1 ? tr('{shapesCount} parts', { shapesCount: g.shapes.length }) : g.shapes[0]}
                                     </span>
                                     {g.shader && <span className="chip">{g.shader}</span>}
                                 </div>
@@ -600,7 +599,7 @@ function MeshView({ info, navigate }: { info: MeshFileInfo; navigate: Navigate; 
             )}
 
             {info.bones.length > 0 && (
-                <Section title="Skeleton" count={info.bones.length} open={false}>
+                <Section title={tr('Skeleton')} count={info.bones.length} open={false}>
                     <div className="pr-chips">
                         {(showBones ? info.bones : info.bones.slice(0, 40)).map((b) => (
                             <span key={b} className="chip">
@@ -609,7 +608,7 @@ function MeshView({ info, navigate }: { info: MeshFileInfo; navigate: Navigate; 
                         ))}
                         {info.bones.length > 40 && (
                             <span className="site-link" onClick={() => setShowBones(!showBones)}>
-                                {showBones ? 'fewer' : `all ${info.bones.length}`}
+                                {showBones ? 'fewer' : tr('all {bonesCount}', { bonesCount: info.bones.length })}
                             </span>
                         )}
                     </div>

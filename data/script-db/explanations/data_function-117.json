@@ -1,0 +1,2042 @@
+[
+ {
+  "kind": "data_function",
+  "key": "RiteWindow.OnOrderBySelectionChanged",
+  "label": "Change sort option",
+  "summary": "Applies the sort option the player picked in the faith view's list of other faiths.",
+  "details": "The rite window is the faith view's \"Other Faiths and Rites\" list. Vanilla calls it when the selection in the \"Sort by\" dropdown changes. Going by its name, the list is then sorted anew. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_faith.gui:4183"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteWindow.OnShowOnlyReligionFaiths",
+  "label": "Toggle same-religion filter",
+  "summary": "Switches the filter that limits the list of other faiths to faiths of the same religion on or off.",
+  "details": "Vanilla calls it when the player clicks the \"Only (religion) faiths\" checkbox in the \"Other Faiths and Rites\" list of the faith view. Whether the filter is on is read with ShowOnlyReligionFaiths. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_faith.gui:4227"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteWindow.RevertSortOrder",
+  "label": "Reverse sort order",
+  "summary": "Flips the order of the list of other faiths between ascending and descending.",
+  "details": "Vanilla calls it from the sort order button next to the \"Sort by\" dropdown in the faith view's \"Other Faiths and Rites\" list. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_faith.gui:4194"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteWindow.Self",
+  "label": "Window itself",
+  "summary": "A function on the faith view's list of other faiths and rites that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteWindow.ShowOnlyReligionFaiths",
+  "label": "Shows only same religion",
+  "summary": "Whether the list of other faiths is filtered to faiths of the same religion.",
+  "details": "Returns yes or no. Vanilla uses it to tick the \"Only (religion) faiths\" checkbox in the faith view's \"Other Faiths and Rites\" list; OnShowOnlyReligionFaiths switches it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_faith.gui:4236"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteWindow.Toggle",
+  "label": "Toggle window",
+  "summary": "A function on the faith view's list of other faiths and rites that, going by its name, opens or closes it.",
+  "details": "Vanilla never names it on this type; the lines with the same name elsewhere are toggle texts of other windows and only a hint. Returns nothing. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtScreenshotWindow.AccessSelf",
+  "label": "Access window itself",
+  "summary": "A function on the royal court's photo mode window that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtScreenshotWindow.AreCharactersShown",
+  "label": "Are characters shown",
+  "summary": "Whether the characters in the court room are currently shown in photo mode.",
+  "details": "Returns yes or no. Vanilla uses it to label the photo mode button \"Hide Characters\" while they are shown and \"Show Characters\" while they are hidden; ToggleCharacters switches it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtScreenshotWindow.Close",
+  "label": "Exit photo mode",
+  "summary": "Closes the royal court's photo mode and goes back to the court.",
+  "details": "Vanilla calls it from the \"Exit Photo Mode\" button, which also has the close-window shortcut. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court_screenshot.gui:207"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtScreenshotWindow.GetCameraActiveIndex",
+  "label": "Active camera position",
+  "summary": "The position, in the camera dropdown, of the camera photo mode is currently using.",
+  "details": "Vanilla uses it as the selected entry of the photo mode's camera dropdown. The game gives it as a pair of whole numbers (CVector2i), as it does for other dropdown selections.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court_screenshot.gui:136"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtScreenshotWindow.GetCameras",
+  "label": "Cameras",
+  "summary": "The list of camera angles photo mode can use in the court room.",
+  "details": "Vanilla fills the photo mode's camera dropdown from it; each entry shows its camera name and whether it is the selected one. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court_screenshot.gui:6"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtScreenshotWindow.HasCameras",
+  "label": "Has cameras",
+  "summary": "Whether the court room has any photo mode cameras set up.",
+  "details": "Returns yes or no. Vanilla shows the camera controls only when this is yes; in debug mode it shows a note that no screenshot camera is configured when it is no.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court_screenshot.gui:187"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtScreenshotWindow.HideNotification",
+  "label": "Hide notification",
+  "summary": "Hides the short \"screenshot taken\" notice in photo mode.",
+  "details": "Vanilla calls it when the notice's animation ends, together with clearing the variable that showed it. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court_screenshot.gui:261"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtScreenshotWindow.IsNotificationShown",
+  "label": "Is notification shown",
+  "summary": "Whether photo mode is currently showing its \"screenshot taken\" notice.",
+  "details": "Returns yes or no. Vanilla shows the notice only while this is yes and a GUI variable for it exists; HideNotification turns it off.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court_screenshot.gui:257"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtScreenshotWindow.IsUiShown",
+  "label": "Is UI shown",
+  "summary": "Whether photo mode's buttons and panels are visible, rather than hidden for a clean shot.",
+  "details": "Returns yes or no. Vanilla shows the photo mode panel while it is yes; while it is no it keeps only invisible shortcut buttons and a click-anywhere area that brings the interface back. ToggleUi switches it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court_screenshot.gui:85",
+   "vanilla: gui/window_royal_court_screenshot.gui:216"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtScreenshotWindow.Self",
+  "label": "Window itself",
+  "summary": "A function on the royal court's photo mode window that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtScreenshotWindow.SetActiveCameraByIndex",
+  "label": "Pick camera",
+  "summary": "Switches photo mode to the camera the player picked in the camera dropdown.",
+  "details": "Vanilla calls it when the selection in the photo mode's camera dropdown changes. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court_screenshot.gui:135"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtScreenshotWindow.TakeScreenshot",
+  "label": "Take screenshot",
+  "summary": "Takes a screenshot of the royal court from the current photo mode camera.",
+  "details": "Vanilla calls it from the \"Take Screenshot\" button and from its keyboard shortcut, also while the interface is hidden. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court_screenshot.gui:167",
+   "vanilla: gui/window_royal_court_screenshot.gui:223"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtScreenshotWindow.ToggleCharacters",
+  "label": "Toggle characters",
+  "summary": "Hides the characters in the court room for photo mode, or shows them again.",
+  "details": "Vanilla calls it from the \"Hide Characters\" / \"Show Characters\" button; AreCharactersShown tells which state it is in. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court_screenshot.gui:159"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtScreenshotWindow.ToggleUi",
+  "label": "Toggle UI",
+  "summary": "Hides photo mode's interface for a clean picture, or brings it back.",
+  "details": "Vanilla calls it from the \"Hide UI\" button and from the click-anywhere area shown while the interface is hidden. IsUiShown tells which state it is in. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court_screenshot.gui:182",
+   "vanilla: gui/window_royal_court_screenshot.gui:250"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtScreenshotWindow.UseNextCamera",
+  "label": "Next camera",
+  "summary": "Switches photo mode to the next camera angle.",
+  "details": "Vanilla calls it from the \"Next Camera\" arrow button and its keyboard shortcut. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court_screenshot.gui:144"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtScreenshotWindow.UsePreviousCamera",
+  "label": "Previous camera",
+  "summary": "Switches photo mode to the previous camera angle.",
+  "details": "Vanilla calls it from the \"Previous Camera\" arrow button and its keyboard shortcut. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court_screenshot.gui:109"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.AccessArtifactHelperWindow",
+  "label": "Artifact test window",
+  "summary": "The royal court's artifact test helper, a debug tool.",
+  "details": "Vanilla uses it for a debug-mode window that appears only after pressing the \"Artifact test\" debug button, which also calls UpdateEntities on it. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1360",
+   "vanilla: gui/window_royal_court.gui:1407"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.AccessCourtAmenitiesWindow",
+  "label": "Court amenities window",
+  "summary": "The court amenities part of the royal court window, shown on its grandeur tab.",
+  "details": "Vanilla uses it as the data for a panel on the grandeur tab. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1275"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.AccessCourtEventWindow",
+  "label": "Court event window",
+  "summary": "The court event part of the royal court window.",
+  "details": "Vanilla sets it as the data for the whole royal court window; other parts then ask it, for example, whether an event is open. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:11"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.AccessCourtSceneEditorWindow",
+  "label": "Scene editor window",
+  "summary": "The court scene editor, a debug tool for the 3D court room.",
+  "details": "Vanilla shows it only in debug mode, after the \"Open editor settings\" debug button. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1352"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.AccessCourtTypeWindow",
+  "label": "Court type window",
+  "summary": "The court type part of the royal court window, going by its name and its use in the amenities panel.",
+  "details": "Vanilla uses it as the data for a section of the court amenities window. The game documents no return type and nothing more.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_amenities.gui:998"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.AccessCourtVisualsWindow",
+  "label": "Court visuals window",
+  "summary": "A function of the royal court window that, going by its name, gives its court visuals part.",
+  "details": "No game text uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.AccessInspirationsWindow",
+  "label": "Inspirations window",
+  "summary": "The inspirations part of the royal court window.",
+  "details": "Vanilla uses it as the data for the inspirations list, and calls ClearSelectedInspiration on it when the window's hide animation ends. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:38",
+   "vanilla: gui/window_royal_court.gui:1299"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.AccessScreenshotWindow",
+  "label": "Photo mode window",
+  "summary": "The royal court's photo mode window.",
+  "details": "Vanilla uses it as the data for the photo mode panel, shown while a GUI variable for photo mode exists. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1344"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.AccessSelf",
+  "label": "Access window itself",
+  "summary": "A function on the royal court window that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.CanPutInSelectedSlot",
+  "label": "Can put in slot",
+  "summary": "Whether the given artifact can be placed in the court slot that is selected in the royal court window.",
+  "details": "Takes one artifact. Vanilla uses it to enable an artifact's button in the artifact list, together with the court being the player's own. CanPutInSelectedSlotTooltip gives the matching explanation.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.CanPutInSelectedSlotTooltip",
+  "label": "Can put in slot tooltip",
+  "summary": "The tooltip text that tells whether, or why not, the given artifact can go in the selected court slot.",
+  "details": "Takes one artifact. Vanilla shows it on artifacts in the royal court's artifact list; it goes with CanPutInSelectedSlot.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.CanSlotHoldSelectedArtifact",
+  "label": "Slot can hold artifact",
+  "summary": "Whether the given court slot can hold the artifact that is selected in the royal court window.",
+  "details": "Takes one inventory slot. Vanilla uses it, while no slot is selected, to mark the slots in the court room where the chosen artifact could be displayed.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:309"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.ClearSelectedArtifact",
+  "label": "Clear selected artifact",
+  "summary": "Deselects the artifact chosen in the royal court window.",
+  "details": "Vanilla calls it when the window opens, when the artifacts tab is clicked, from back and cancel buttons, and after a slot is clicked. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:29",
+   "vanilla: gui/window_royal_court.gui:1113"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.ClearSelectedSlot",
+  "label": "Clear selected slot",
+  "summary": "Deselects the court slot chosen in the royal court window.",
+  "details": "Vanilla calls it from back buttons and when the artifacts tab is clicked, usually together with ClearSelectedArtifact. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:470"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.ClickRoyalCourt",
+  "label": "Click court room",
+  "summary": "Handles a left click on the 3D court room at the given mouse position.",
+  "details": "Takes the mouse position. Vanilla calls it when the player clicks the court scene image, so a click on a character or object in the room acts on it. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:75"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.Close",
+  "label": "Close window",
+  "summary": "Closes the royal court window.",
+  "details": "Vanilla calls it from the window's close button. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.CloseToLanguageWindow",
+  "label": "Close to language view",
+  "summary": "Closes the royal court window so that the language view can open in its place.",
+  "details": "Vanilla calls it from the court language button in the court amenities panel, right before it opens the language's view. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_amenities.gui:1041"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.EquipArtifact",
+  "label": "Equip artifact",
+  "summary": "A function of the royal court window that, going by its name, puts the given artifact on display.",
+  "details": "Takes one value. No game text uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.GetAnimationInfo",
+  "label": "Animation info",
+  "summary": "A text with information on the animation of a character in the court room.",
+  "details": "Vanilla shows it in the character tooltip only when the game is set to show animation info, which looks like a developer aid. Going by its name and that use; the game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:1717"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.GetArtifactClaimsList",
+  "label": "Artifact claims list",
+  "summary": "The list of claims on artifacts shown in the royal court window.",
+  "details": "Vanilla uses it as the data for the artifact claims section and counts its claims for a number on the tab. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:616",
+   "vanilla: gui/window_royal_court.gui:1172"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.GetArtifactSortOptions",
+  "label": "Artifact sort options",
+  "summary": "The options of the dropdown that sorts the artifacts in the royal court window.",
+  "details": "Vanilla fills the artifact sort dropdown from it. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:509"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.GetArtifactSortOptionsIndex",
+  "label": "Chosen artifact sort",
+  "summary": "The position of the sort option currently chosen in the royal court window's artifact sort dropdown.",
+  "details": "Vanilla uses it as the dropdown's selected entry. The game gives it as a pair of whole numbers (CVector2i), as it does for other dropdown selections.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:512"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.GetCharacter",
+  "label": "Court owner",
+  "summary": "The character whose royal court the window shows.",
+  "details": "Vanilla checks whether this character is the player, to allow artifact actions and other controls only in the player's own court. The inspirations window also shows this character's relation to a person. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1255"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.GetCourtGrandeurWindow",
+  "label": "Court grandeur window",
+  "summary": "The court grandeur part of the royal court window (the court's grandeur level).",
+  "details": "Vanilla uses it as the data for the grandeur panels and the grandeur tab. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:997",
+   "vanilla: gui/window_royal_court.gui:1274"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.GetCourtRoomTexture",
+  "label": "Court room image",
+  "summary": "The rendered image of the 3D court room, drawn at the given screen size.",
+  "details": "Takes the size of the widget on screen. Vanilla uses it as the picture of the court scene button that fills the window. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:78"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.GetCourtSceneEditorWindow",
+  "label": "Scene editor window",
+  "summary": "The court scene editor, a debug tool for the 3D court room.",
+  "details": "Vanilla uses it as the data for the debug buttons shown at the top of the window in debug mode. It looks like the same thing as AccessCourtSceneEditorWindow, but the game does not say. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1368"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.GetCourtVisualsWindow",
+  "label": "Court visuals window",
+  "summary": "A function of the royal court window that, going by its name, gives its court visuals part.",
+  "details": "No game text uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.GetPetitionCharacter",
+  "label": "Petitioning character",
+  "summary": "The character who is petitioning in the court the window shows.",
+  "details": "Vanilla checks, while the window is in petition mode, whether this character is the player, to show the court's controls also to a player petitioning a liege. Going by its name and that use. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:130"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.GetSelectedArtifact",
+  "label": "Selected artifact",
+  "summary": "The artifact chosen in the royal court window.",
+  "details": "Vanilla shows its name while the player is placing it in the court room and in the tooltip \"Click to display (artifact) here\". The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:553"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.GetSelectedSlot",
+  "label": "Selected slot type",
+  "summary": "The type of the court slot chosen in the royal court window.",
+  "details": "Vanilla passes it to the inventory to find the matching slot, and shows its name in the header \"(slot) Artifacts\". The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1635"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.GetSortedArtifactForSelectedSlot",
+  "label": "Artifacts for slot",
+  "summary": "The sorted list of artifacts that fit the court slot chosen in the royal court window.",
+  "details": "Vanilla fills the artifact list shown after a slot is chosen from it. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1725"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.GetSortedArtifacts",
+  "label": "Sorted artifacts",
+  "summary": "The list of the court owner's artifacts, sorted by the chosen sort option.",
+  "details": "Vanilla fills the artifact storage list of the artifacts tab from it. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1628"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.GetStaticHoveredObjectPosition",
+  "label": "Hovered object position",
+  "summary": "The screen position of the object in the court room that is marked as hovered.",
+  "details": "Takes the widget to place relative to. Vanilla uses it to put a small arrow icon over that object. Given as a pair of decimal numbers (CVector2f).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:184"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.HasSelectedArtifact",
+  "label": "Has selected artifact",
+  "summary": "Whether an artifact is chosen in the royal court window.",
+  "details": "Returns yes or no. Vanilla uses it to choose slot tooltips and click hints, and to show empty slots only while no artifact is chosen.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:339"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.HasSelectedSlot",
+  "label": "Has selected slot",
+  "summary": "Whether a court slot is chosen in the royal court window.",
+  "details": "Returns yes or no. Vanilla uses it to switch between the full artifact list and the list for one slot, to show back buttons, and to fade out the other slots.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:443",
+   "vanilla: gui/window_royal_court.gui:460"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.HasStaticHoveredObject",
+  "label": "Has hovered object",
+  "summary": "Whether an object in the court room is marked as hovered.",
+  "details": "Returns yes or no. Vanilla shows an arrow icon over the object while this is yes, but not in photo mode; its position comes from GetStaticHoveredObjectPosition.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:179"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.HideEditor",
+  "label": "Hide scene editor",
+  "summary": "Closes the court scene editor, a debug tool.",
+  "details": "Vanilla calls it from the debug-mode button \"Hide editor settings\". Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1402"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.HoverRoyalCourt",
+  "label": "Hover court room",
+  "summary": "Updates which character or object in the 3D court room is under the mouse at the given position.",
+  "details": "Takes the mouse position and returns yes or no. A comment in vanilla says it is used as the court scene's visibility check only so that it runs every frame and picks up the new hovered item.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:71"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.IsActiveArtifactsTab",
+  "label": "Artifacts tab active",
+  "summary": "Whether the artifacts tab of the royal court window is open.",
+  "details": "Returns yes or no. Vanilla uses it to show the artifact panels and to mark the tab button as pressed.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:217"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.IsActiveGrandeurTab",
+  "label": "Grandeur tab active",
+  "summary": "Whether the grandeur tab of the royal court window is open.",
+  "details": "Returns yes or no. Vanilla uses it to show the grandeur and amenities panel and to mark the tab button as pressed.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1273"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.IsActiveThroneTab",
+  "label": "Throne tab active",
+  "summary": "Whether the throne tab, the main court room view, of the royal court window is open.",
+  "details": "Returns yes or no. Vanilla uses it to show the hold court and petition buttons, open court events and other throne room parts, and to mark the tab button as pressed.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1264"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.IsActiveVisualsTab",
+  "label": "Visuals tab active",
+  "summary": "Whether the visuals tab of the royal court window is open.",
+  "details": "Returns yes or no. Vanilla uses it to mark the tab button as pressed.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:921"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.IsArtifactSelected",
+  "label": "Is artifact selected",
+  "summary": "Whether the given artifact is the one chosen in the royal court window.",
+  "details": "Takes one artifact. Vanilla shows its button as pressed while it is chosen, and its tooltip then says \"Click to go back\" instead of \"Click to select\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.IsArtifactSortOrderDescending",
+  "label": "Artifact sort descending",
+  "summary": "Whether the artifacts in the royal court window are sorted in descending order.",
+  "details": "Returns yes or no. Vanilla uses it to pick the arrow picture of the sort order button; ToggleArtifactSortOrder flips it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:494"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.IsInPetitionMode",
+  "label": "Is in petition mode",
+  "summary": "Whether the royal court window is showing a court in petition mode, going by its name and its one use.",
+  "details": "Returns yes or no. Vanilla checks it together with GetPetitionCharacter being the player, so a player petitioning a liege also sees the court's controls. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:130"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.IsLiegesCourt",
+  "label": "Is liege's court",
+  "summary": "Whether the court the window shows belongs to the player's liege.",
+  "details": "Returns yes or no. Vanilla uses it on the throne tab to show the button for petitioning the liege. Going by its name and that use.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1264"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.IsPlacingArtifact",
+  "label": "Is placing artifact",
+  "summary": "Whether the player is placing a chosen artifact into the court room.",
+  "details": "Returns yes or no. While it is yes, vanilla hides the tabs and storage list and shows the artifact's name with an explanation and a cancel button.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:550",
+   "vanilla: gui/window_royal_court.gui:704"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.IsSelectedSlot",
+  "label": "Is selected slot",
+  "summary": "Whether the given court slot is the one chosen in the royal court window.",
+  "details": "Takes one inventory slot. Vanilla keeps the chosen slot fully visible while it fades the others, and its tooltip then offers to deselect it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:311"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.OnClickArtifact",
+  "label": "Click artifact",
+  "summary": "Handles a click on the given artifact in the royal court window's artifact lists.",
+  "details": "Takes one artifact. Going by the tooltips, a click selects the artifact, or goes back when it is already selected. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1680"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.OnClickArtifactSlot",
+  "label": "Click artifact slot",
+  "summary": "Handles a click on the given court slot for displaying an artifact.",
+  "details": "Takes one inventory slot. Going by the slot tooltips, a click selects or deselects the slot, or displays the chosen artifact there. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:313"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.OpenDecisionDetailView",
+  "label": "Open decision",
+  "summary": "Opens the detail view of the given decision from the royal court window.",
+  "details": "Takes one decision. Vanilla uses it for the Hold Court button (hold_court_decision) and the petition liege button (petition_liege_decision). Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1463",
+   "vanilla: gui/window_royal_court.gui:1542"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.OpenScreenshotWindow",
+  "label": "Open photo mode",
+  "summary": "Opens the royal court's photo mode, for choosing a camera angle and taking screenshots.",
+  "details": "Vanilla calls it from the photo mode button on the throne tab. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1208"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.RightClickRoyalCourt",
+  "label": "Right-click court room",
+  "summary": "Handles a right click on the 3D court room at the given mouse position.",
+  "details": "Takes the mouse position. Vanilla calls it on a right click on the court scene image; the artifact tooltip says a right click stores a displayed artifact. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:76"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.Self",
+  "label": "Window itself",
+  "summary": "A function on the royal court window that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.SetActiveTab",
+  "label": "Open tab",
+  "summary": "Opens the named tab of the royal court window.",
+  "details": "Takes the tab's name; vanilla uses 'throne', 'artifacts', 'grandeur' and 'visuals' on the tab buttons. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:718",
+   "vanilla: gui/window_royal_court.gui:904"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.SetCameraActiveByKey",
+  "label": "Set court camera",
+  "summary": "Switches the court room view to the camera with the given key.",
+  "details": "Takes a camera key. Vanilla passes the define NRoyalCourt DEFAULT_ARTIFACTS_CAMERA from artifact buttons and back buttons. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:472"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.SetHoverWidgetActive",
+  "label": "Set mouse over court",
+  "summary": "Tells the royal court window whether the mouse is over the court room picture.",
+  "details": "Takes yes or no. Vanilla sets yes when the mouse enters the court scene image and no when it leaves. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:55"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.SetObjectInteractions",
+  "label": "Set object interactions",
+  "summary": "A function of the royal court window that, going by its name, sets the interactions for objects in the court room.",
+  "details": "Takes one value. No game text uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.SetPetitionerCharacter",
+  "label": "Set petitioner",
+  "summary": "Makes the given character the petitioner in the royal court window.",
+  "details": "Takes one character. Vanilla passes the player from the petition liege button, before it opens that decision. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1541"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.SetSelectedArtifact",
+  "label": "Select artifact",
+  "summary": "A function of the royal court window that, going by its name, chooses the given artifact.",
+  "details": "Takes one value. Vanilla never names it on this type; the one line with the same name belongs to the interaction confirmation window and is only a hint. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.ShouldShowCourtVisualsTab",
+  "label": "Show visuals tab",
+  "summary": "Whether the royal court window should offer its visuals tab.",
+  "details": "Returns yes or no. Vanilla shows the visuals tab button only when this is yes and the Royal Court expansion feature is present.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:907"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.ShouldShowFadeToBlack",
+  "label": "Should fade to black",
+  "summary": "Whether the royal court window should fade the screen to black.",
+  "details": "Returns yes or no. When it becomes yes, vanilla shows a black overlay that then fades out again, and it hides the court's controls meanwhile.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1441"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.ShouldSlotBeEnabled",
+  "label": "Slot enabled",
+  "summary": "A function of the royal court window that, going by its name, says whether the given slot should be usable.",
+  "details": "Takes one value and returns yes or no. No game text uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.ShowEditor",
+  "label": "Show scene editor",
+  "summary": "Opens the court scene editor, a debug tool.",
+  "details": "Vanilla calls it from the debug-mode button \"Open editor settings\". Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:1395"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.SortArtifacts",
+  "label": "Sort artifacts",
+  "summary": "Re-sorts the artifacts in the royal court window by the option the player picked.",
+  "details": "Vanilla calls it when the selection in the artifact sort dropdown changes. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:511"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.ToggleArtifactSortOrder",
+  "label": "Flip artifact sort order",
+  "summary": "Flips the artifact list in the royal court window between ascending and descending order.",
+  "details": "Vanilla calls it from the sort order button; IsArtifactSortOrderDescending tells the current order. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_royal_court.gui:487"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.ToggleSelectedArtifact",
+  "label": "Toggle selected artifact",
+  "summary": "A function of the royal court window that, going by its name, selects the given artifact or deselects it.",
+  "details": "Takes one value. No game text uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.ToggleSelectedSlot",
+  "label": "Toggle selected slot",
+  "summary": "A function of the royal court window that, going by its name, selects the given slot or deselects it.",
+  "details": "Takes one value. Vanilla never names it on this type; the holy site window and the inventory view have functions of the same name, used on slots, which are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RoyalCourtWindow.UnequipArtifact",
+  "label": "Unequip artifact",
+  "summary": "A function of the royal court window that, going by its name, takes the given artifact off display.",
+  "details": "Takes one value. No game text uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerGeneGroup.AccessSelf",
+  "label": "Access group itself",
+  "summary": "A function on a gene group of the ruler designer's appearance editor that, going by its name, hands back the group itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerGeneGroup.GetCamera",
+  "label": "Group camera",
+  "summary": "The name of the portrait view to use while this gene group of the ruler designer is being edited.",
+  "details": "Vanilla stores it in a GUI variable for the appearance portrait view when the player clicks the group, so the portrait turns to fit the features being edited.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerGeneGroup.GetGroup",
+  "label": "Group key",
+  "summary": "The key of this gene group in the ruler designer's appearance editor.",
+  "details": "Vanilla stores it to remember which side tab is open, and builds the group's display name from it as the localization key RULER_DESIGNER_GROUP_ followed by this key.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerGeneGroup.Self",
+  "label": "Group itself",
+  "summary": "A function on a gene group of the ruler designer that, going by its name, hands back the group itself.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerGeneGroupCategory.AccessSelf",
+  "label": "Access category itself",
+  "summary": "A function on a category of gene groups in the ruler designer that, going by its name, hands back the category itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerGeneGroupCategory.GetCategory",
+  "label": "Category key",
+  "summary": "The key of this category of gene groups in the ruler designer's appearance editor.",
+  "details": "Vanilla builds the category's display name from it as the localization key RULER_DESIGNER_CATEGORY_ followed by this key.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerGeneGroupCategory.GetGroups",
+  "label": "Gene groups",
+  "summary": "The gene groups that belong to this category of the ruler designer's appearance editor.",
+  "details": "Vanilla lists them under the category. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerGeneGroupCategory.Self",
+  "label": "Category itself",
+  "summary": "A function on a category of gene groups in the ruler designer that, going by its name, hands back the category itself.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerLoadWindow.AccessSelf",
+  "label": "Access window itself",
+  "summary": "A function on the ruler designer's load window that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerLoadWindow.CanLoadFromFile",
+  "label": "Can load from file",
+  "summary": "A function of the ruler designer's load window that, going by its name, says whether a saved ruler can be loaded from a file.",
+  "details": "Returns yes or no. No game text uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerLoadWindow.Cancel",
+  "label": "Cancel loading",
+  "summary": "Closes the ruler designer's load window without loading a ruler.",
+  "details": "Vanilla calls it from the window's cancel and close buttons. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerLoadWindow.CurrentRulerLoadOption",
+  "label": "Chosen load option",
+  "summary": "The position of the option currently chosen in the load window's options dropdown.",
+  "details": "A whole number. Vanilla uses it as the dropdown's selected entry; the options come from GetRulerLoadOptions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ruler_designer_load.gui:715"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerLoadWindow.Delete",
+  "label": "Delete saved ruler",
+  "summary": "Deletes the saved ruler chosen in the ruler designer's load window.",
+  "details": "Vanilla calls it from the load window's delete button. Going by its name and that use. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerLoadWindow.GetRulerLoadOptions",
+  "label": "Load options",
+  "summary": "The options of the load window's dropdown, each a text.",
+  "details": "Vanilla fills the load options dropdown from it and shows each entry's text. The game does not say what the options choose. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ruler_designer_load.gui:713"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerLoadWindow.GetSavedRulers",
+  "label": "Saved rulers",
+  "summary": "The list of rulers saved from the ruler designer, as offered in the load window.",
+  "details": "Vanilla fills the load window's list from it. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerLoadWindow.GetSelectedRuler",
+  "label": "Selected saved ruler",
+  "summary": "The saved ruler chosen in the ruler designer's load window.",
+  "details": "Leads to a saved ruler entry (SaveRulerItem). Vanilla uses it as the data for the part of the window that shows the chosen ruler.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerLoadWindow.IsRulerSelected",
+  "label": "Is ruler selected",
+  "summary": "Whether a saved ruler is chosen in the ruler designer's load window.",
+  "details": "Returns yes or no. Vanilla shows a part of the window only while this is yes.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerLoadWindow.IsSelectedItem",
+  "label": "Is selected entry",
+  "summary": "Whether the given saved ruler is the one chosen in the load window.",
+  "details": "Takes one saved ruler entry. Vanilla shows that entry's button as pressed while it is chosen.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerLoadWindow.Load",
+  "label": "Load ruler",
+  "summary": "Loads the saved ruler chosen in the load window into the ruler designer.",
+  "details": "Vanilla calls it from the load window's load button. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerLoadWindow.Self",
+  "label": "Window itself",
+  "summary": "A function on the ruler designer's load window that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerLoadWindow.SetRulerLoadOption",
+  "label": "Choose load option",
+  "summary": "Applies the option the player picked in the load window's options dropdown.",
+  "details": "Vanilla calls it when the dropdown's selection changes. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ruler_designer_load.gui:714"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerPortraitModifier.AccessSelf",
+  "label": "Access option itself",
+  "summary": "A function on a portrait option of the ruler designer that, going by its name, hands back the option itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerPortraitModifier.GetName",
+  "label": "Option name",
+  "summary": "The display name of a portrait option in the ruler designer's appearance editor.",
+  "details": "Vanilla shows it as the option's text; the options are listed per gene category there.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerPortraitModifier.Self",
+  "label": "Option itself",
+  "summary": "The ruler designer's portrait option itself, handed on as a value.",
+  "details": "Vanilla passes it, with its gene category, to the ruler designer to check whether the option is valid, whether it is selected, and to select it when clicked. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSaveWindow.AccessSelf",
+  "label": "Access window itself",
+  "summary": "A function on the ruler designer's save window that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSaveWindow.CanSaveInFile",
+  "label": "Can save",
+  "summary": "Whether the designed ruler can be saved under the name entered in the save window.",
+  "details": "Returns yes or no. Vanilla enables the save button only when this is yes; CanSaveInFileTooltip explains it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSaveWindow.CanSaveInFileTooltip",
+  "label": "Can save tooltip",
+  "summary": "The tooltip text on the save window's save button, saying whether or why not the ruler can be saved.",
+  "details": "Goes with CanSaveInFile.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSaveWindow.Cancel",
+  "label": "Cancel saving",
+  "summary": "Closes the ruler designer's save window without saving.",
+  "details": "Vanilla calls it from the window's cancel and close buttons. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSaveWindow.GetDefaultSaveName",
+  "label": "Default save name",
+  "summary": "The name first filled into the save window's name field.",
+  "details": "Vanilla uses it as the starting text of the save name box. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ruler_designer_save.gui:73"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSaveWindow.GetSavedRulers",
+  "label": "Saved rulers",
+  "summary": "The list of rulers already saved from the ruler designer, as shown in the save window.",
+  "details": "Vanilla fills the save window's list from it. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSaveWindow.IsOverwrite",
+  "label": "Is overwrite",
+  "summary": "Whether saving would replace a ruler that is already saved.",
+  "details": "Returns yes or no. Vanilla labels the save button with the overwrite text when it is yes, and the plain save text otherwise.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSaveWindow.IsSelectedItem",
+  "label": "Is selected entry",
+  "summary": "Whether the given saved ruler is the one chosen in the save window.",
+  "details": "Takes one saved ruler entry. Vanilla shows that entry's button as pressed while it is chosen.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSaveWindow.Save",
+  "label": "Save ruler",
+  "summary": "Saves the designed ruler under the name entered in the save window.",
+  "details": "Vanilla calls it from the save button and when the player presses Enter in the name box. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ruler_designer_save.gui:75"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSaveWindow.Self",
+  "label": "Window itself",
+  "summary": "A function on the ruler designer's save window that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSaveWindow.UpdateSaveName",
+  "label": "Update save name",
+  "summary": "Takes over the text the player types into the save window's name box.",
+  "details": "Vanilla calls it every time the text in the name box is edited. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ruler_designer_save.gui:74"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSkill.AccessSelf",
+  "label": "Access skill itself",
+  "summary": "A function on a skill row of the ruler designer that, going by its name, hands back the row itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSkill.ChangeValue",
+  "label": "Change skill",
+  "summary": "Raises or lowers the designed ruler's base value in this skill by the given amount.",
+  "details": "Takes a whole number; vanilla uses -1 on the decrease button and 1 on the increase button. Returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSkill.GetBaseValue",
+  "label": "Base skill value",
+  "summary": "The designed ruler's base value in this skill, before traits and other bonuses.",
+  "details": "A whole number. Vanilla enables the decrease button only while it is above 0, and the increase button only while it is below GetMaxValue.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSkill.GetFrame",
+  "label": "Skill icon frame",
+  "summary": "Which picture of the skill icon sheet to show for this skill.",
+  "details": "A whole number. Vanilla uses it as the frame of the skill icon in the ruler designer.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ruler_designer.gui:1523"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSkill.GetLevelDesc",
+  "label": "Skill level text",
+  "summary": "A text describing the level of this skill for the designed ruler.",
+  "details": "Vanilla shows it under the skill's name in the ruler designer. Going by its name and that use; the game does not say what words it gives.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ruler_designer.gui:1539"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSkill.GetMaxValue",
+  "label": "Maximum skill value",
+  "summary": "The highest base value the ruler designer allows for this skill.",
+  "details": "A whole number. Vanilla enables the increase button only while the base value is below it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSkill.GetModifiedValueBreakdown",
+  "label": "Skill value breakdown",
+  "summary": "The breakdown of this skill's final value for the designed ruler, with what adds to it.",
+  "details": "Vanilla uses it for the skill value's tooltip, which lists the parts of the value. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ruler_designer.gui:1560"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSkill.GetName",
+  "label": "Skill name",
+  "summary": "The name of this skill in the ruler designer, such as Diplomacy.",
+  "details": "Vanilla shows it next to the skill and in the tooltips \"Increase (skill) skill\" and \"Decrease (skill) skill\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerSkill.Self",
+  "label": "Skill itself",
+  "summary": "A function on a skill row of the ruler designer that, going by its name, hands back the row itself.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerWindow.AccessColorPicker",
+  "label": "Color picker",
+  "summary": "The color picker for the given gene category in the ruler designer's appearance editor.",
+  "details": "Takes a gene category. Vanilla uses it only for categories of the color type. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ruler_designer.gui:3018"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerWindow.AccessCultureList",
+  "label": "Culture list",
+  "summary": "The list of cultures the player can pick from in the ruler designer.",
+  "details": "Vanilla uses it as the data for the culture list and hides all its sub-entries when that part opens. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerWindow.AccessEducationTraitSlot",
+  "label": "Education trait slot",
+  "summary": "The slot for the designed ruler's education trait in the ruler designer.",
+  "details": "Vanilla uses it as the data for the education trait row. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ruler_designer.gui:1378"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerWindow.AccessFaithList",
+  "label": "Faith list",
+  "summary": "The list of faiths of the given religion the player can pick from in the ruler designer.",
+  "details": "Takes a religion. Vanilla uses it as the data for the faiths shown under each religion. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerWindow.AccessOtherTraitSlots",
+  "label": "Other trait slots",
+  "summary": "The slots for the designed ruler's traits that are neither education nor personality traits.",
+  "details": "Vanilla uses it as the data for the \"other traits\" row of the ruler designer. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ruler_designer.gui:1464"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerWindow.AccessPersonalityTraitSlots",
+  "label": "Personality trait slots",
+  "summary": "The slots for the designed ruler's personality traits in the ruler designer.",
+  "details": "Vanilla uses it as the data for the personality traits row. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ruler_designer.gui:1449"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerWindow.AccessReligionList",
+  "label": "Religion list",
+  "summary": "The list of religions the player can pick from in the ruler designer.",
+  "details": "Vanilla uses it as the data for the religion list and hides all its sub-entries when that part opens; each religion's faiths come from AccessFaithList. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerWindow.AccessSelf",
+  "label": "Access window itself",
+  "summary": "A function on the ruler designer window that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerWindow.AccessSkills",
+  "label": "Skills",
+  "summary": "The list of skill rows of the designed ruler in the ruler designer.",
+  "details": "Vanilla fills the skills section from it; each row can be raised or lowered. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerWindow.CalcMaxNumberOfGeneratedChildren",
+  "label": "Maximum generated children",
+  "summary": "The highest number of children the ruler designer will create for the designed ruler.",
+  "details": "A whole number. Vanilla enables the buttons that add a son or a daughter only while the number of children to create is below it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerWindow.CanChangeSexuality",
+  "label": "Can change sexuality",
+  "summary": "Whether the designed ruler's sexuality can be chosen in the ruler designer.",
+  "details": "Returns yes or no. When it is no, vanilla shows instead the note \"Children develop a sexuality as they age\", so it is no at least for a child.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ruler_designer.gui:177"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerWindow.CanFinalize",
+  "label": "Can finalize",
+  "summary": "Whether the designed ruler can be finished and put into the game.",
+  "details": "Returns yes or no. Vanilla enables the ruler designer's finalize button only when this is yes; its tooltip comes from GetFinalizeTooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ruler_designer.gui:1812"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerWindow.CanOpenLoadRulerWindow",
+  "label": "Can open load window",
+  "summary": "Whether the ruler designer's load window can be opened.",
+  "details": "Returns yes or no. Vanilla enables the load button only when this is yes; CanOpenLoadRulerWindowTooltip explains it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerWindow.CanOpenLoadRulerWindowTooltip",
+  "label": "Load window tooltip",
+  "summary": "The tooltip text on the ruler designer's load button, saying whether or why not it can be used.",
+  "details": "Goes with CanOpenLoadRulerWindow.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RulerDesignerWindow.CanOpenSaveRulerWindow",
+  "label": "Can open save window",
+  "summary": "Whether the ruler designer's save window can be opened.",
+  "details": "Returns yes or no. Vanilla enables the save button only when this is yes.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ }
+]

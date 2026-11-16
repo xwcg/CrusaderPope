@@ -1,0 +1,2044 @@
+[
+ {
+  "kind": "data_function",
+  "key": "diarch_power_possessive",
+  "label": "Borrowed power's",
+  "summary": "The game concept Borrowed Power in its possessive form.",
+  "details": "Writing `[diarch_power_possessive|E]` in a text shows the possessive word linked to the borrowed power explanation. Borrowed powers are special interactions a diarch can use during power sharing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diarch_power_power",
+  "label": "Borrowed power",
+  "summary": "The game concept Borrowed Power, under another of its names.",
+  "details": "Writing `[diarch_power_power|E]` in a text shows the word linked to the borrowed power explanation. The base game's texts do not use this form. Borrowed powers are special interactions a diarch can use during power sharing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diarch_power_power_possessive",
+  "label": "Borrowed power's",
+  "summary": "The game concept Borrowed Power, under another of its names, in a possessive form.",
+  "details": "Writing `[diarch_power_power_possessive|E]` in a text shows the word linked to the borrowed power explanation. The base game's texts do not use this form. Borrowed powers are special interactions a diarch can use during power sharing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diarch_power_powers",
+  "label": "Borrowed powers",
+  "summary": "The game concept Borrowed Power in a plural form.",
+  "details": "Writing `[diarch_power_powers|E]` in a text shows the plural word linked to the borrowed power explanation. Borrowed powers are special interactions a diarch can use during power sharing, such as revoking titles from fellow vassals.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diarch_power_powers_possessive",
+  "label": "Borrowed powers'",
+  "summary": "The game concept Borrowed Power in a plural possessive form.",
+  "details": "Writing `[diarch_power_powers_possessive|E]` in a text shows the word linked to the borrowed power explanation. The base game's texts do not use this form. Borrowed powers are special interactions a diarch can use during power sharing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diarch_powers",
+  "label": "Borrowed powers",
+  "summary": "The game concept Borrowed Power in its plural form: the special interactions a diarch can use during power sharing.",
+  "details": "Writing `[diarch_powers|E]` in a text shows the plural word linked to the concept's explanation. They copy the liege's own interactions or are other abuses of power, such as siphoning gold from the liege.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diarch_powers_possessive",
+  "label": "Borrowed powers'",
+  "summary": "The game concept Borrowed Power in its plural possessive form.",
+  "details": "Writing `[diarch_powers_possessive|E]` in a text shows the possessive word linked to the borrowed power explanation. Borrowed powers are special interactions a diarch can use during power sharing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diarch_succession",
+  "label": "Diarch succession",
+  "summary": "The game concept Succession of diarchs: the rule for which of a liege's direct vassals or courtiers automatically becomes diarch when one is needed.",
+  "details": "Writing `[diarch_succession|E]` in a text shows the word linked to the concept's explanation. A new diarch is needed when the liege starts a diarchy or when the current diarch dies or is removed from office.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diarch_succession_explicit",
+  "label": "Diarch succession",
+  "summary": "The game concept Succession of diarchs, in a fuller form of its name.",
+  "details": "Writing `[diarch_succession_explicit|E]` in a text shows the word linked to the diarch succession explanation; the concept's own text uses this form for its name. It is the rule for which direct vassal or courtier automatically becomes diarch when one is needed.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diarchies",
+  "label": "Power sharing",
+  "summary": "The game concept Power Sharing (diarchy) in its plural form.",
+  "details": "Writing `[diarchies|E]` in a text shows the plural word linked to the power sharing explanation. In power sharing a ruler shares some authority with a vassal or courtier, who becomes their diarch; the ruler sets mandates and the diarch can use borrowed powers.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diarchs",
+  "label": "Diarchs",
+  "summary": "The game concept Diarch in its plural form.",
+  "details": "Writing `[diarchs|E]` in a text shows the plural word linked to the diarch explanation. A diarch is the junior partner who helps their liege run the realm during power sharing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diarchs_possessive",
+  "label": "Diarchs'",
+  "summary": "The game concept Diarch in its plural possessive form.",
+  "details": "Writing `[diarchs_possessive|E]` in a text shows the possessive word linked to the diarch explanation. A diarch is the junior partner who helps their liege run the realm during power sharing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diarchy",
+  "label": "Power sharing",
+  "summary": "The game concept Power Sharing: a ruler shares some authority with one of their vassals or courtiers, who becomes their diarch.",
+  "details": "Writing `[diarchy|E]` in a text shows the word linked to the concept's explanation. The ruler can set mandates for the diarch, and the diarch can use borrowed powers. The scales of power measure which of the two has the upper hand.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diligent_development_focus_decision",
+  "label": "Develop Capital decision",
+  "summary": "The game concept for the decision \"Develop Capital\", which improves the character's capital.",
+  "details": "Writing `[diligent_development_focus_decision|E]` in a text shows the decision's name linked to the concept's explanation. The decision gives the capital development and costs stress.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/decisions_l_english.yml:1229"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diplomacy",
+  "label": "Diplomacy skill",
+  "summary": "The game concept Diplomacy Skill: a character's ability to charm, negotiate and persuade.",
+  "details": "This is another name of the diplomacy skill concept; writing `[diplomacy|E]` in a text shows the word linked to its explanation. Diplomacy directly affects how much other characters like the character, and it helps diplomatic schemes. Its lifestyle is the diplomacy lifestyle.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/game_concepts/00_game_concepts.txt:770"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diplomacy_i",
+  "label": "Diplomacy icon",
+  "summary": "The game concept Diplomacy Skill (a character's ability to charm, negotiate and persuade), in its `_i` form.",
+  "details": "This is one of the diplomacy skill concept's other names. Vanilla writes it as `[diplomacy_i]` without `|E`, right before the linked word `[diplomacy_skill|E]`, which suggests it shows the concept's icon.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/game_concepts/00_game_concepts.txt:770"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diplomacy_lifestyle",
+  "label": "Diplomacy lifestyle",
+  "summary": "The game concept Diplomacy Lifestyle: the lifestyle for characters who want claims, reasons for war, prestige, or help from family and friends.",
+  "details": "Writing `[diplomacy_lifestyle|E]` in a text shows the word linked to the concept's explanation.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diplomacy_lifestyle_i",
+  "label": "Diplomacy lifestyle icon",
+  "summary": "The game concept Diplomacy Lifestyle, in its `_i` form.",
+  "details": "This is the diplomacy lifestyle concept's other name. Vanilla writes it once, as `[diplomacy_lifestyle_i]` without `|E` at the start of a bookmark text, which suggests it shows the concept's icon. The diplomacy lifestyle suits characters who want claims, reasons for war, prestige, or help from family and friends.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1050"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diplomacy_skill",
+  "label": "Diplomacy skill",
+  "summary": "The game concept Diplomacy Skill: a character's ability to charm, negotiate and persuade.",
+  "details": "Writing `[diplomacy_skill|E]` in a text shows the word linked to the concept's explanation. Diplomacy directly affects how much other characters like the character, and it helps diplomatic schemes. Its lifestyle is the diplomacy lifestyle.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diplomacy_task_contract",
+  "label": "Diplomacy contract",
+  "summary": "The game concept Diplomacy Contract: a task contract about settling local disputes or striking good deals by wit.",
+  "details": "Writing `[diplomacy_task_contract|E]` in a text shows the word linked to the concept's explanation.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diplomacy_task_contract_possessive",
+  "label": "Diplomacy contract's",
+  "summary": "The game concept Diplomacy Contract in its possessive form.",
+  "details": "Writing `[diplomacy_task_contract_possessive|E]` in a text shows the possessive word linked to the diplomacy contract explanation. Such a contract is about settling local disputes or striking good deals by wit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diplomacy_task_contracts",
+  "label": "Diplomacy contracts",
+  "summary": "The game concept Diplomacy Contract in its plural form.",
+  "details": "Writing `[diplomacy_task_contracts|E]` in a text shows the plural word linked to the diplomacy contract explanation. Such contracts are about settling local disputes or striking good deals by wit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diplomacy_task_contracts_possessive",
+  "label": "Diplomacy contracts'",
+  "summary": "The game concept Diplomacy Contract in its plural possessive form.",
+  "details": "Writing `[diplomacy_task_contracts_possessive|E]` in a text shows the possessive word linked to the diplomacy contract explanation. Such contracts are about settling local disputes or striking good deals by wit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diplomatic_range",
+  "label": "Diplomatic range",
+  "summary": "The game concept Diplomatic Range: the reach within which a character can interact with other characters.",
+  "details": "Writing `[diplomatic_range|E]` in a text shows the word linked to the concept's explanation. Characters outside the range cannot be interacted with, but neighboring realms are always in range.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "direct_vassal",
+  "label": "Direct vassal",
+  "summary": "The game concept Direct Vassal: a vassal who serves directly under the ruler.",
+  "details": "Writing `[direct_vassal|E]` in a text shows the word linked to the concept's explanation. Vassals of those vassals do not count.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "direct_vassals",
+  "label": "Direct vassals",
+  "summary": "The game concept Direct Vassal in its plural form: the vassals who serve directly under the ruler.",
+  "details": "Writing `[direct_vassals|E]` in a text shows the plural word linked to the direct vassal explanation. Vassals of those vassals do not count.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "directed_great_holy_war",
+  "label": "Directed great holy war",
+  "summary": "The game concept Directed Great Holy War: a great holy war a head of faith with temporal power declares to bring a kingdom under their own rule.",
+  "details": "Writing `[directed_great_holy_war|E]` in a text shows the word linked to the concept's explanation. Rulers of the same faith may help the head of faith and can be rewarded, for example with piety.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "directed_great_holy_wars",
+  "label": "Directed great holy wars",
+  "summary": "The game concept Directed Great Holy War in its plural form.",
+  "details": "Writing `[directed_great_holy_wars|E]` in a text shows the plural word linked to the concept's explanation. Such a war is declared by a head of faith with temporal power to bring a kingdom under their own rule; rulers of the faith who help can be rewarded.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "directive",
+  "label": "Vassal directive",
+  "summary": "The game concept Vassal Directive: an instruction a liege gives a vassal that steers the vassal's council tasks and which buildings they build.",
+  "details": "This is another name of the vassal directive concept; writing `[directive|E]` in a text shows the word linked to its explanation. A liege needs something that allows it first, such as 50 or more opinion with the vassal; advanced government forms do not need this.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "directives",
+  "label": "Vassal directives",
+  "summary": "The game concept Vassal Directive in its plural form.",
+  "details": "Writing `[directives|E]` in a text shows the plural word linked to the vassal directive explanation. Directives let a liege steer a vassal's council tasks and buildings, once allowed, for example by 50 or more opinion with that vassal.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "disaster",
+  "label": "Natural disaster",
+  "summary": "The game concept Natural Disaster: a flood or an earthquake.",
+  "details": "Writing `[disaster|E]` in a text shows the word linked to the concept's explanation. A disaster kills many characters in the counties it hits and badly hurts their development and county opinion.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "disasters",
+  "label": "Natural disasters",
+  "summary": "The game concept Natural Disaster in its plural form: floods and earthquakes.",
+  "details": "Writing `[disasters|E]` in a text shows the plural word linked to the disaster explanation. A disaster kills many characters in the counties it hits and badly hurts their development and county opinion.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "disciple",
+  "label": "Disciple",
+  "summary": "The game concept Disciple: a character who respects an elder's high status and follows their teachings.",
+  "details": "Writing `[disciple|E]` in a text shows the word linked to the concept's explanation. An elder can only have as many disciples as their disciple limit allows. Disciples can ask the elder for mentoring, a scheme that raises their skills.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "disciple_limit",
+  "label": "Disciple limit",
+  "summary": "The game concept Disciple Limit: how many disciples an elder can have at one time.",
+  "details": "Writing `[disciple_limit|E]` in a text shows the word linked to the concept's explanation. The base value comes from a script value; it can be raised, for example, by certain buildings in the elder's domicile.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "disciple_limit_short",
+  "label": "Disciple limit",
+  "summary": "The game concept Disciple Limit, in a shorter form of its name.",
+  "details": "Writing `[disciple_limit_short|E]` in a text shows the word linked to the disciple limit explanation; vanilla uses it in the disciple concept's text and in the domicile window next to the count of disciples. The limit is how many disciples an elder can have at one time.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "disciple_possessive",
+  "label": "Disciple's",
+  "summary": "The game concept Disciple in its possessive form.",
+  "details": "Writing `[disciple_possessive|E]` in a text shows the possessive word linked to the disciple explanation. A disciple is a character who follows an elder's teachings.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "disciples",
+  "label": "Disciples",
+  "summary": "The game concept Disciple in its plural form: characters who follow an elder's teachings.",
+  "details": "Writing `[disciples|E]` in a text shows the plural word linked to the disciple explanation. An elder can only have as many disciples as their disciple limit allows.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "disciples_possessive",
+  "label": "Disciples'",
+  "summary": "The game concept Disciple in its plural possessive form.",
+  "details": "Writing `[disciples_possessive|E]` in a text shows the possessive word linked to the disciple explanation. Disciples are characters who follow an elder's teachings.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "discontent",
+  "label": "Discontent",
+  "summary": "The game concept Discontent: how close a faction is to sending its liege an ultimatum.",
+  "details": "This is another name of the faction discontent concept; writing `[discontent|E]` in a text shows the word linked to its explanation. Discontent rises every month while the faction's military power is at the threshold and falls while it is below.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diseases",
+  "label": "Illnesses",
+  "summary": "The game concept Illness in plural form: negative traits that lower a character's health.",
+  "details": "This is another name of the illness concept; writing `[diseases|E]` in a text shows the word linked to its explanation. Illnesses last for different lengths of time and some are far deadlier than others.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "disinherit",
+  "label": "Disinherit",
+  "summary": "The game concept Disinherit: a dynasty head takes a dynasty member out of the inheritance, paying dynasty prestige.",
+  "details": "Writing `[disinherit|E]` in a text shows the word linked to the concept's explanation. The member is removed from the normal line of succession of every title other dynasty members currently hold.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "disinherited",
+  "label": "Disinherited",
+  "summary": "The game concept Disinherit, in the form \"disinherited\".",
+  "details": "Writing `[disinherited|E]` in a text shows the word linked to the disinherit explanation. A disinherited dynasty member is out of the normal line of succession of every title other dynasty members hold.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "disinheriting",
+  "label": "Disinheriting",
+  "summary": "The game concept Disinherit, in the form \"disinheriting\".",
+  "details": "Writing `[disinheriting|E]` in a text shows the word linked to the disinherit explanation. Disinheriting costs the dynasty head dynasty prestige and takes the member out of the succession to titles other dynasty members hold.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "disinherits",
+  "label": "Disinherits",
+  "summary": "The game concept Disinherit, in the form \"disinherits\".",
+  "details": "Writing `[disinherits|E]` in a text shows the word linked to the disinherit explanation. Disinheriting costs the dynasty head dynasty prestige and takes the member out of the succession to titles other dynasty members hold.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dismiss_strong_hook_interaction",
+  "label": "Dismiss Hook interaction",
+  "summary": "The game concept for the interaction \"Dismiss Hook\", which gets rid of a hook someone holds on the character.",
+  "details": "Writing `[dismiss_strong_hook_interaction|E]` in a text shows the interaction's name linked to the concept's explanation. Dismissing the hook costs prestige.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/interactions_l_english.yml:1935"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "disobedient",
+  "label": "Disobedient",
+  "summary": "The game concept Disobedient: a character in a nomad realm who is not obedient to their liege, suzerain or court owner.",
+  "details": "Writing `[disobedient|E]` in a text shows the word linked to the concept's explanation, which is the obedience text. Obedient characters are less likely to take part in hostile schemes, join wars or join factions against their liege, and they back the liege's wishes in succession; the text says non-obedient tributaries may try to break free. A character becomes obedient once their score passes the obedience threshold.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:156"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "disparate_tribes",
+  "label": "Disparate tribes",
+  "summary": "The game concept Disparate Tribes: the lowest level of tribal authority.",
+  "details": "This is another name of the disparate tribes concept; writing `[disparate_tribes|E]` in a text shows the word linked to its explanation. At this level vassals have no opinion penalty towards their liege, and the liege can only demand levies and taxes from them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "disparate_tribes_tribal_authority",
+  "label": "Disparate tribes",
+  "summary": "The game concept Disparate Tribes Tribal Authority: the lowest level of tribal authority.",
+  "details": "Writing `[disparate_tribes_tribal_authority|E]` in a text shows the word linked to the concept's explanation. At this level vassals have no opinion penalty towards their liege, and the liege can only demand levies and taxes from them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "disrupt_schemes",
+  "label": "Disrupt schemes",
+  "summary": "The game concept for the spymaster's council task \"Disrupt Schemes\".",
+  "details": "Writing `[disrupt_schemes|E]` in a text shows the task's name linked to the concept's explanation. The task raises the ruler's chance to discover schemes and slows down hostile spymaster actions of other rulers, such as espionage.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/council_tasks_l_english.yml:219"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dissolution_faction",
+  "label": "Dissolution faction",
+  "summary": "The game concept Dissolution Faction: a faction that wants to destroy its liege's realm.",
+  "details": "Writing `[dissolution_faction|E]` in a text shows the word linked to the concept's explanation. If it wins, every vassal of the realm becomes independent and the liege loses their primary title. Vanilla's game rule texts use it for the Kingdom of Al-Andalus.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dissolution_faction_dissolved",
+  "label": "Dissolved",
+  "summary": "The game concept Dissolution Faction, in the form \"dissolved\".",
+  "details": "Writing `[dissolution_faction_dissolved|E]` in a text shows the word linked to the dissolution faction explanation, as in vanilla's \"titles that cannot be dissolved due to an ongoing struggle\". A dissolution faction wants to destroy its liege's realm and make all its vassals independent.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dissolution_factions",
+  "label": "Dissolution factions",
+  "summary": "The game concept Dissolution Faction in its plural form.",
+  "details": "Writing `[dissolution_factions|E]` in a text shows the plural word linked to the dissolution faction explanation. Such a faction wants to destroy its liege's realm; if it wins, all vassals become independent and the liege loses their primary title.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dissolve_empire_casus_belli",
+  "label": "Dissolve Empire",
+  "summary": "The game concept for the reason for war (casus belli) \"Dissolve Empire\": a ruler of the same faith fights an excommunicated emperor to destroy the empire title.",
+  "details": "Writing `[dissolve_empire_casus_belli|E]` in a text shows the name linked to the concept's explanation. On victory the empire title is destroyed.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/empire_faith_gate_l_english.yml:30"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diverge",
+  "label": "Diverge",
+  "summary": "The game concept Divergent Culture, in the form of the verb \"diverge\".",
+  "details": "Writing `[diverge|E]` in a text shows the verb linked to the divergent culture explanation; vanilla uses it in game rule texts on how long a culture must exist before it can diverge. A divergent culture is an offshoot of an existing culture; with the feature, a ruler creates it, keeping the heritage and changing other parts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2083"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "divergence",
+  "label": "Divergence",
+  "summary": "The game concept Divergence: how far a rite's tenets and doctrines have moved away from its parent faith.",
+  "details": "This is another name of the rite divergence concept; writing `[divergence|E]` in a text shows the word linked to its explanation. A rite that makes tenets the parent faith forbids into core tenets diverges more. High divergence weakens the parent faith's fervor.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:232"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "divergence_i",
+  "label": "Divergence icon",
+  "summary": "The game concept Divergence (how far a rite has moved away from its parent faith), in its `_i` form.",
+  "details": "This is one of the rite divergence concept's other names. Vanilla writes it as `[divergence_i]` without `|E`, right before a number in its \"divergence increases by\" texts, which suggests it shows the concept's icon.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:232"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "divergent_bloc_house",
+  "label": "Divergent bloc house",
+  "summary": "The game concept Divergent Bloc Member House: a house in a house bloc whose house aspiration differs from the leading house's.",
+  "details": "This is another name of the concept; writing `[divergent_bloc_house|E]` in a text shows the word linked to its explanation.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "divergent_bloc_houses",
+  "label": "Divergent bloc houses",
+  "summary": "The game concept Divergent Bloc Member House in a plural form.",
+  "details": "Writing `[divergent_bloc_houses|E]` in a text shows the plural word linked to the concept's explanation. Such a house is in a house bloc but has a different house aspiration than the leading house.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "divergent_bloc_member_house",
+  "label": "Divergent bloc member house",
+  "summary": "The game concept Divergent Bloc Member House: a house in a house bloc whose house aspiration differs from the leading house's.",
+  "details": "Writing `[divergent_bloc_member_house|E]` in a text shows the word linked to the concept's explanation.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "divergent_bloc_member_houses",
+  "label": "Divergent bloc member houses",
+  "summary": "The game concept Divergent Bloc Member House in its plural form.",
+  "details": "Writing `[divergent_bloc_member_houses|E]` in a text shows the plural word linked to the concept's explanation. Such a house is in a house bloc but has a different house aspiration than the leading house.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "divergent_culture",
+  "label": "Divergent culture",
+  "summary": "The game concept Divergent Culture: a new culture that branches off an existing one.",
+  "details": "Writing `[divergent_culture|E]` in a text shows the word linked to the concept's explanation. With the culture divergence feature, a ruler creates it: it keeps the heritage, other parts can change, the parent culture must be old enough, and the prestige cost depends on the ruler's realm size. New cultures can also come from hybridization.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2083"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "divergent_cultures",
+  "label": "Divergent cultures",
+  "summary": "The game concept Divergent Culture in its plural form.",
+  "details": "Writing `[divergent_cultures|E]` in a text shows the plural word linked to the divergent culture explanation. A divergent culture branches off an existing one, keeping its heritage.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2083"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "diverges",
+  "label": "Diverges",
+  "summary": "The game concept Divergent Culture, in the form of the verb \"diverges\".",
+  "details": "Writing `[diverges|E]` in a text shows the verb linked to the divergent culture explanation, as in vanilla's \"a nearby ruler ... diverges their culture\". A divergent culture branches off an existing one, keeping its heritage.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2083"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "divorce",
+  "label": "Divorce",
+  "summary": "The game concept Divorce: married spouses end their marriage.",
+  "details": "Writing `[divorce|E]` in a text shows the word linked to the concept's explanation. Its rules, requirements and consequences depend on the doctrines of the spouses' faiths. Concubines need no divorce; they can be set aside at any time.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "divorced",
+  "label": "Divorced",
+  "summary": "The game concept Divorce, in the form \"divorced\".",
+  "details": "Writing `[divorced|E]` in a text shows the word linked to the divorce explanation. The rules and consequences of a divorce depend on the doctrines of the spouses' faiths.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "divorces",
+  "label": "Divorces",
+  "summary": "The game concept Divorce, in the form \"divorces\".",
+  "details": "Writing `[divorces|E]` in a text shows the word linked to the divorce explanation. The rules and consequences of a divorce depend on the doctrines of the spouses' faiths.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "divorcing",
+  "label": "Divorcing",
+  "summary": "The game concept Divorce, in the form \"divorcing\".",
+  "details": "Writing `[divorcing|E]` in a text shows the word linked to the divorce explanation. The rules and consequences of a divorce depend on the doctrines of the spouses' faiths.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "doctrine",
+  "label": "Doctrine",
+  "summary": "The game concept Doctrines in its singular form: a religious law that sets what behavior a faith accepts.",
+  "details": "This is another name of the doctrines concept; writing `[doctrine|E]` in a text shows the word linked to its explanation.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "doctrine_knowledge",
+  "label": "Religious knowledge",
+  "summary": "The game concept Religious Knowledge: which tenets and doctrines of religious practice a character knows.",
+  "details": "This is another name of the religious knowledge concept; writing `[doctrine_knowledge|E]` in a text shows the word linked to its explanation. Characters do not know every practice in detail. Known tenets and doctrines can be used when creating a divergent rite and can be taken up as personal tenets.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "doctrines",
+  "label": "Doctrines",
+  "summary": "The game concept Doctrines: the religious laws that set what behavior a faith accepts.",
+  "details": "Writing `[doctrines|E]` in a text shows the word linked to the concept's explanation.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domain",
+  "label": "Domain",
+  "summary": "The game concept Domain: all the holdings a ruler personally owns.",
+  "details": "Writing `[domain|E]` in a text shows the word linked to the concept's explanation. The domain limit hardly changes, so to grow a realm beyond it a ruler has to rely on vassals.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domain_fertility",
+  "label": "Domain fertility",
+  "summary": "The game concept Domain Fertility: the total county fertility of all counties the ruler holds.",
+  "details": "Writing `[domain_fertility|E]` in a text shows the word linked to the concept's explanation.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domain_i",
+  "label": "Domain icon",
+  "summary": "The game concept Domain (all the holdings a ruler personally owns), in its `_i` form.",
+  "details": "This is one of the domain concept's other names. Going by the other `_i` forms in vanilla, which are written without `|E` before a number, it would show the concept's icon; the base game's texts do not use this one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/game_concepts/00_game_concepts.txt:520"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domain_income",
+  "label": "Domain income",
+  "summary": "The game concept Domain Income: the taxes a ruler collects from their own domain.",
+  "details": "Writing `[domain_income|E]` in a text shows the word linked to the concept's explanation. How much comes in depends on the local control and development.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domain_limit",
+  "label": "Domain limit",
+  "summary": "The game concept Domain Limit: how many holdings a ruler can lawfully keep in their domain.",
+  "details": "Writing `[domain_limit|E]` in a text shows the word linked to the concept's explanation. Many things change it, such as the succession law and the tier of the primary title. A ruler can go above the limit, but that lowers their income and their vassals' opinion of them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domain_taxes",
+  "label": "Domain income",
+  "summary": "The game concept Domain Income: the taxes a ruler collects from their own domain.",
+  "details": "This is another name of the domain income concept; writing `[domain_taxes|E]` in a text shows the word linked to its explanation. How much comes in depends on the local control and development.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domains",
+  "label": "Domains",
+  "summary": "The game concept Domain in its plural form.",
+  "details": "Writing `[domains|E]` in a text shows the plural word linked to the domain explanation. A ruler's domain is all the holdings they personally own.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/game_concepts/00_game_concepts.txt:520"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domestic_affairs",
+  "label": "Domestic affairs",
+  "summary": "The game concept for the chancellor's council task \"Domestic Affairs\".",
+  "details": "Writing `[domestic_affairs|E]` in a text shows the task's name linked to the concept's explanation. The task raises the opinion the realm's vassals have of their liege.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/council_tasks_l_english.yml:82"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domicile",
+  "label": "Domicile",
+  "summary": "The game concept Domicile: the private or assigned home of characters with certain government forms, such as administrative, adventurer or ecclesiastical.",
+  "details": "Writing `[domicile|E]` in a text shows the word linked to the concept's explanation. For its owner the domicile is the main power base instead of holdings, and it can be improved with domicile buildings.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domicile_building",
+  "label": "Domicile building",
+  "summary": "The game concept Domicile Building: a building added to a domicile that gives its owner income, resources such as prestige, and other benefits.",
+  "details": "Writing `[domicile_building|E]` in a text shows the word linked to the concept's explanation. Which buildings are available depends on the type of domicile.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domicile_building_slot",
+  "label": "Domicile building slot",
+  "summary": "The game concept Domicile Building Slot: a place in a domicile where a new building can go.",
+  "details": "Writing `[domicile_building_slot|E]` in a text shows the word linked to the concept's explanation. Each domicile has a limited number of slots; more are unlocked by upgrading its central building.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domicile_building_slot_slot",
+  "label": "Building slot",
+  "summary": "The game concept Domicile Building Slot, under another of its names.",
+  "details": "Writing `[domicile_building_slot_slot|E]` in a text shows just \"Slot\" linked to the building slot explanation. The base game's texts do not use this form. A domicile has a limited number of slots for new buildings; upgrading its central building unlocks more.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:47"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domicile_building_slot_slots",
+  "label": "Building slots",
+  "summary": "The game concept Domicile Building Slot, in a plural form of another of its names.",
+  "details": "Writing `[domicile_building_slot_slots|E]` in a text shows the word linked to the building slot explanation; the concept's own text uses this form for \"slots\". A domicile has a limited number of slots for new buildings; upgrading its central building unlocks more.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domicile_building_slots",
+  "label": "Domicile building slots",
+  "summary": "The game concept Domicile Building Slot in its plural form.",
+  "details": "Writing `[domicile_building_slots|E]` in a text shows the plural word linked to the building slot explanation; vanilla uses it in the name of the modifier for the number of slots. A domicile has a limited number of slots for new buildings; upgrading its central building unlocks more.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domicile_building_upgrade",
+  "label": "Internal upgrade",
+  "summary": "The game concept Internal Upgrade: an improvement that can be built only inside a specific domicile building.",
+  "details": "Writing `[domicile_building_upgrade|E]` in a text shows the word linked to the concept's explanation. Each building that allows upgrades has its own set of them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domicile_buildings",
+  "label": "Domicile buildings",
+  "summary": "The game concept Domicile Building in its plural form.",
+  "details": "Writing `[domicile_buildings|E]` in a text shows the plural word linked to the domicile building explanation. Domicile buildings give their owner income, resources such as prestige and other benefits; which exist depends on the type of domicile.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domiciles",
+  "label": "Domiciles",
+  "summary": "The game concept Domicile in its plural form.",
+  "details": "Writing `[domiciles|E]` in a text shows the plural word linked to the domicile explanation. A domicile is the home and main power base of characters with certain government forms, such as administrative or adventurer.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dominance",
+  "label": "Dominance",
+  "summary": "The game concept Dominance: the power a nomad ruler projects.",
+  "details": "This is another name of the nomadic authority concept; writing `[dominance|E]` in a text shows the word linked to its explanation. A larger herd raises it, and higher levels unlock more migration options. There are five levels.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dominance_expansion",
+  "label": "Dominance expansion",
+  "summary": "Another name of the game concept Expand Dominance, shown as the words Dominance Expansion: a special war of nomadic rulers to take an area within their de jure lands (the lands that rightfully belong to their titles) or to push those lands out to new frontiers.",
+  "details": "`[dominance_expansion|E]` in a text shows Dominance Expansion, linked to the explanation of Expand Dominance. Nomadic rulers of duchy tier or higher can wage it inside their de jure lands; to reach foreign lands they must be of kingdom tier or higher, and then the won lands also become de jure part of their primary title. On a victory the attacker tries to make the defender a vassal or a tributary, or takes the lands outright. Vanilla uses it in the names of these wars (\"... dominance expansion over ...\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:193",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:194"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dominant",
+  "label": "Dominant",
+  "summary": "Another name of the game concept Dominant Family, shown as the word Dominant: a powerful family that has spread its control so far that it counts as the most influential house in a realm.",
+  "details": "`[dominant|E]` in a text shows Dominant, linked to the explanation of dominant families. Members of such a family are even better at political schemes and get their way more often in interactions with other characters. A house must control a share of the realm set by the script value `dominant_family_threshold_value` to become dominant. Vanilla uses the word in faction reasons and message filters (\"powerful or dominant\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:96"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dominant_families",
+  "label": "Dominant families",
+  "summary": "The plural form of the game concept Dominant Family, shown as the words Dominant Families.",
+  "details": "`[dominant_families|E]` in a text shows Dominant Families, linked to the explanation of dominant families: powerful families that count as the most influential house in a realm and are even better at political schemes. Vanilla uses it as a header in the administrative government window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:95"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dominant_family",
+  "label": "Dominant family",
+  "summary": "The game concept Dominant Family: a powerful family that has spread its control far and wide and counts as the most influential house in a realm.",
+  "details": "`[dominant_family|E]` in a text shows Dominant Family, linked to the concept's explanation. Its members are even better at political schemes and more likely to get what they want in interactions. A house must control at least the share of the realm given by the script value `dominant_family_threshold_value`. Vanilla uses it for the family status shown in the relations texts and in law texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:94"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dominate_title",
+  "label": "Dominate title",
+  "summary": "The game concept Dominate Title: a decision with which nomads fight for a higher-tier title instead of migrating, if their dominance is high enough.",
+  "details": "`[dominate_title|E]` in a text shows Dominate Title, linked to the concept's explanation. If someone holds the title, the nomad goes to war against that holder to usurp it; if no one does, they fight every de jure ruler of the area who is neither a tributary nor an ally. A win gives the title and makes all defenders tributaries; a loss costs gold paid to the defender and much dread. Vanilla names it as the decision nomads need to create higher titles.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:188",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:190"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "domination_war",
+  "label": "Domination war",
+  "summary": "Another name of the game concept Dominate Title, shown as the words Domination War: the war a nomad starts to take a higher-tier title by force.",
+  "details": "`[domination_war|E]` in a text shows Domination War, linked to the explanation of Dominate Title. The war targets the title's holder, or, when there is none, every de jure ruler of the area who is neither a tributary nor an ally. Vanilla uses it in the decision tooltips (\"Start a domination war against ... over ...\"), also for a Japanese decision.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:189",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:190"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "draw_up_new_charts",
+  "label": "Create travel itinerary",
+  "summary": "The game concept for the decision Create Travel Itinerary: a character pays gold for an artifact, a travel itinerary describing the places they have visited.",
+  "details": "`[draw_up_new_charts|E]` in a text shows the decision's name (Create Travel Itinerary, from the text `draw_up_new_charts_decision`), linked to the concept's explanation. The itinerary's effects depend on where the character has been and which choices they make. Vanilla uses it in an effect text (`realm_charts_perk_2_effect`) that says a perk unlocks this decision.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1813",
+   "vanilla: localization/english/decisions_l_english.yml:1626"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "draw_up_new_charts_decision",
+  "label": "Travel itinerary decision",
+  "summary": "Another name of the game concept for the Create Travel Itinerary decision, shown as the words Create Travel Itinerary Decision.",
+  "details": "`[draw_up_new_charts_decision|E]` in a text shows the decision's name followed by \"Decision\", linked to the explanation: a character trades gold for an itinerary artifact whose effects depend on the places visited. Vanilla's texts do not use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1814",
+   "vanilla: localization/english/decisions_l_english.yml:1626"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dread",
+  "label": "Dread",
+  "summary": "The game concept Dread: how much a ruler is feared.",
+  "details": "`[dread|E]` in a text shows Dread, linked to the concept's explanation. Rulers gain it through cruel acts such as torturing and executing prisoners; feared vassals can become intimidated or cowed and dare less to oppose them. Dread runs from 0 to 100 (up to 150 for nomads) and drifts over time towards a natural level set by the personality traits. Vanilla uses the word widely, from achievements to AI personality texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:841",
+   "vanilla: localization/english/game_concepts_l_english.yml:845"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dread_i",
+  "label": "Dread icon",
+  "summary": "The dread icon, an alias of the game concept Dread whose name text is the icon `@dread_icon!`.",
+  "details": "Vanilla writes it as `[dread_i]` without `|E`, which puts just the icon in front of an amount (\"gets [dread_i]5\"); with `|E` it would show the icon linked to the explanation of dread (how feared a ruler is).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:844"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dreaded",
+  "label": "Dreaded",
+  "summary": "Another name of the game concept Dread, shown as the word Dreaded.",
+  "details": "`[dreaded|E]` in a text shows Dreaded, linked to the explanation of dread (how feared a ruler is, gained through cruel acts). Vanilla uses it in the legacy window (\"Was dreaded\") and in a tutorial tip about factions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:843"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dreadful",
+  "label": "Dreadful",
+  "summary": "Another name of the game concept Dread, shown as the word Dreadful.",
+  "details": "`[dreadful|E]` in a text shows Dreadful, linked to the explanation of dread. The concept text lists what a dreadful ruler gains, such as vassals being discouraged from joining factions and from scheming. Vanilla uses the word in AI reasons (\"You are dreadful\") for votes, vassalization and diarchy loyalty.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:842",
+   "vanilla: localization/english/game_concepts_l_english.yml:845"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ducal_conquest",
+  "label": "Ducal conquest",
+  "summary": "Another name of the game concept Ducal Conquest Casus Belli, shown as the words Ducal Conquest.",
+  "details": "`[ducal_conquest|E]` in a text shows Ducal Conquest, linked to the explanation of the casus belli (war justification) that lets a ruler seize the counties needed to create a duchy title no one has created yet. Vanilla uses it in the war's name (\"Ducal Conquest of county\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1740"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ducal_conquest_casus_belli",
+  "label": "Ducal conquest casus belli",
+  "summary": "The game concept Ducal Conquest Casus Belli: a war justification for seizing the counties needed to create a duchy title that does not exist yet.",
+  "details": "`[ducal_conquest_casus_belli|E]` in a text shows Ducal Conquest Casus Belli, linked to the concept's explanation. Vanilla uses it in effect texts that unlock this casus belli for a character.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1739",
+   "vanilla: localization/english/game_concepts_l_english.yml:1741"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "duchies",
+  "label": "Duchies",
+  "summary": "The plural form of the game concept Duchy, shown as the word Duchies.",
+  "details": "`[duchies|E]` in a text shows Duchies, linked to the explanation of a duchy: the title tier between county and kingdom. Vanilla uses it in decision texts about duchies changing their de jure kingdom.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:277"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "duchy",
+  "label": "Duchy",
+  "summary": "The game concept Duchy: a title one tier below a kingdom and one above a county.",
+  "details": "`[duchy|E]` in a text shows Duchy, linked to the concept's explanation. A duchy's holder has de jure rights (rightful claims) to its counties and can have counts as vassals. A duchy can be dormant with no holder; a ruler who controls at least half of its counties can then create it. Vanilla uses the word very often (191 uses through chains).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:276"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "duchy_building",
+  "label": "Duchy building",
+  "summary": "The game concept Duchy Building: a powerful building that can only be built in the de jure capital of a duchy, one type per duchy.",
+  "details": "`[duchy_building|E]` in a text shows Duchy Building, linked to the concept's explanation. It only works while its owner also holds that duchy title. Many duchy buildings have modifiers for every holding in the duchy. Vanilla uses it in achievements, decisions and cultural traditions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:889"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "duchy_buildings",
+  "label": "Duchy buildings",
+  "summary": "The plural form of the game concept Duchy Building, shown as the words Duchy Buildings.",
+  "details": "`[duchy_buildings|E]` in a text shows Duchy Buildings, linked to the explanation: buildings only for a duchy's de jure capital that work while the owner holds the duchy. Vanilla uses it in innovations and traditions that unlock such building lines, and notes that they use their own building slots.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:890"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "duke",
+  "label": "Duke",
+  "summary": "The game concept Duke: a ruler whose primary title is a duchy.",
+  "details": "`[duke|E]` in a text shows Duke, linked to the concept's explanation. A duke ranks above counts and below kings, can have counts as vassals and a king or higher as liege. Vanilla uses it in other concept texts, for example \"duke tier or higher\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:278"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dukes",
+  "label": "Dukes",
+  "summary": "The plural form of the game concept Duke, shown as the word Dukes.",
+  "details": "`[dukes|E]` in a text shows Dukes, linked to the explanation of a duke (a ruler whose primary title is a duchy). Vanilla uses it in the rank texts of counts and kings and in a decision's requirements.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:279"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dungeon",
+  "label": "Dungeon",
+  "summary": "The game concept Dungeon: where imprisoned characters are kept, suffering rising stress and a health penalty.",
+  "details": "`[dungeon|E]` in a text shows Dungeon, linked to the concept's explanation. Over time prisoners there are likely to fall ill and die or suffer mental breaks. For landed rulers, commoners go to the dungeon automatically but can be moved to house arrest. Vanilla uses it in decisions and in the prisoner concept text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1078"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dungeons",
+  "label": "Dungeons",
+  "summary": "The plural form of the game concept Dungeon, shown as the word Dungeons.",
+  "details": "`[dungeons|E]` in a text shows Dungeons, linked to the explanation of the dungeon (where prisoners suffer stress and health loss). Vanilla uses it in the prison window (\"Your dungeons contain no important prisoners\") and in regional custom loc.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1080"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "durability",
+  "label": "Durability",
+  "summary": "Another name of the game concept Artifact Durability, shown as the word Durability: how much wear an artifact can still take before it is destroyed.",
+  "details": "`[durability|E]` in a text shows Durability, linked to the concept's explanation. Durability decays over time and can also be lost in events such as sieges and on succession; reforging or repairing the artifact restores it. Vanilla uses it in the effect texts that change an artifact's durability.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep1/dlc_ep1_game_concepts_l_english.yml:60"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "duumvirate",
+  "label": "Duumvirate",
+  "summary": "The game concept Duumvirate: one empire ruled by two characters, a senior emperor (the liege) and a junior one (the co-emperor).",
+  "details": "`[duumvirate|E]` in a text shows Duumvirate, linked to the concept's explanation. The co-emperor gives passive influence to themselves and the senior emperor, more the longer they serve. Most power stays with the senior emperor who holds the title. Vanilla uses it as the name of the co-emperorship diarchy type and in the co-emperor interaction.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2253",
+   "vanilla: localization/english/game_concepts_l_english.yml:2257"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "duumvirates",
+  "label": "Duumvirates",
+  "summary": "The plural form of the game concept Duumvirate, shown as the word Duumvirates.",
+  "details": "`[duumvirates|E]` in a text shows Duumvirates, linked to the explanation of a duumvirate (an empire ruled by a senior emperor and a co-emperor). Vanilla uses it in the co-rulership concept text and as the name text (`unlock_co_emperors_name`) of what a cultural tradition unlocks.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2254"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynast",
+  "label": "Dynasty head",
+  "summary": "The game concept Dynasty Head: the house head who leads a whole dynasty and all its houses.",
+  "details": "`[dynast|E]` in a text shows Dynasty Head, linked to the concept's explanation. The dynasty head has special interactions with the dynasty's members and picks the dynasty's legacies. Normally it is the house head who can have the most soldiers; if all house heads have a bureaucratic type of government (such as the administrative one), it is the one with the best powerful family rating. Vanilla uses it often, for example \"Only the dynasty head can spend renown\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:443",
+   "vanilla: localization/english/game_concepts_l_english.yml:444"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynast_interaction",
+  "label": "Dynasty head interaction",
+  "summary": "The game concept Dynasty Head Interaction: interactions only the head of a dynasty can use on the dynasty's other members.",
+  "details": "`[dynast_interaction|E]` in a text shows Dynasty Head Interaction, linked to the concept's explanation. These interactions cost renown (dynasty prestige). Vanilla uses it as the header of these interactions and in a legacy effect text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:450"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynast_interactions",
+  "label": "Dynasty head interactions",
+  "summary": "The plural form of the game concept Dynasty Head Interaction, shown as the words Dynasty Head Interactions.",
+  "details": "`[dynast_interactions|E]` in a text shows Dynasty Head Interactions, linked to the explanation: interactions only the dynasty head can use on dynasty members, paid with renown. Vanilla uses it in the dynasty head's concept text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:451"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynastic_cycle",
+  "label": "Dynastic cycle",
+  "summary": "The game concept Dynastic Cycle: the political state of the Great Empire of China, which moves through phases of stability, instability and chaos.",
+  "details": "`[dynastic_cycle|E]` in a text shows Dynastic Cycle, linked to the concept's explanation. Central to it is the Mandate of Heaven, a form of legitimacy held by the emperor; if it is lost, the empire shatters until someone unites it again. Vanilla uses it in faction reasons, government texts and the movement actions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:243"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynastic_cycle_catalyst",
+  "label": "Dynastic cycle catalyst",
+  "summary": "The game concept Dynastic Cycle Catalyst: an event that pushes the dynastic cycle (China's political situation) towards another phase.",
+  "details": "`[dynastic_cycle_catalyst|E]` in a text shows Dynastic Cycle Catalyst, linked to the concept's explanation. Its description is the general one of situation catalysts: some situations move between phases when a catalyst happens, and the situation window lists which catalysts matter in each phase. Vanilla uses it in China's concept texts (\"will trigger ... dynastic cycle catalyst\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:262",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:127"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynastic_cycle_catalyst_possessive",
+  "label": "Dynastic cycle catalyst's",
+  "summary": "The possessive form of the game concept Dynastic Cycle Catalyst, shown as the words Dynastic Cycle Catalyst's.",
+  "details": "`[dynastic_cycle_catalyst_possessive|E]` in a text shows Dynastic Cycle Catalyst's, linked to the explanation of these catalysts (events that move the dynastic cycle to another phase). Vanilla's texts do not use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:264"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynastic_cycle_catalysts",
+  "label": "Dynastic cycle catalysts",
+  "summary": "The plural form of the game concept Dynastic Cycle Catalyst, shown as the words Dynastic Cycle Catalysts.",
+  "details": "`[dynastic_cycle_catalysts|E]` in a text shows Dynastic Cycle Catalysts, linked to the explanation of these catalysts (events that move the dynastic cycle to another phase). Vanilla's texts do not use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:263"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynastic_cycle_catalysts_possessive",
+  "label": "Dynastic cycle catalysts'",
+  "summary": "The plural possessive form of the game concept Dynastic Cycle Catalyst, shown as the words Dynastic Cycle Catalysts'.",
+  "details": "`[dynastic_cycle_catalysts_possessive|E]` in a text shows Dynastic Cycle Catalysts', linked to the explanation of these catalysts. Vanilla's texts do not use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:265"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynastic_cycle_era_short",
+  "label": "Era",
+  "summary": "A short name of the game concept Dynastic Cycle Era, shown as the word Era: the current political state of the dynastic cycle.",
+  "details": "`[dynastic_cycle_era_short|E]` in a text shows Era, linked to the explanation of the dynastic cycle's eras: the stable eras (expansion and advancement), the unstable ones and the chaotic one. Vanilla uses it after a phase name and in the header \"Progress to next Era\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:249",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:251"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynastic_cycle_era_type",
+  "label": "Dynastic cycle era type",
+  "summary": "The game concept Dynastic Cycle Era Type: one of the three kinds of era (stable, unstable, chaotic) that group the dynastic cycle's phases into its repeating pattern.",
+  "details": "`[dynastic_cycle_era_type|E]` in a text shows Dynastic Cycle Era Type, linked to the concept's explanation. Vanilla uses it in the names of the dynastic cycle's participant groups.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:258"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynastic_cycle_era_type_chaotic",
+  "label": "Chaotic era",
+  "summary": "The game concept Chaotic Era: the era type of the dynastic cycle in which the empire is shattered and the Mandate of Heaven is lost.",
+  "details": "`[dynastic_cycle_era_type_chaotic|E]` in a text shows Chaotic Era, linked to the concept's explanation. Those worthy may regain the mandate in this era. There is only one chaotic phase, the chaos phase. Vanilla uses it in the list of era types.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:256"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynastic_cycle_era_type_stable",
+  "label": "Stable era",
+  "summary": "The game concept Stable Era: the era type of the dynastic cycle in which the empire prospers and the Mandate of Heaven is strong.",
+  "details": "`[dynastic_cycle_era_type_stable|E]` in a text shows Stable Era, linked to the concept's explanation. Its phases are the expansion and the advancement phase. Vanilla uses it in the list of eras.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:252"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynastic_cycle_era_type_unstable",
+  "label": "Unstable era",
+  "summary": "The game concept Unstable Era: the era type of the dynastic cycle in which the empire is in turmoil and the Mandate of Heaven wavers.",
+  "details": "`[dynastic_cycle_era_type_unstable|E]` in a text shows Unstable Era, linked to the concept's explanation. The turmoil can come from inside or outside; its phases are the instability and the instability conquest phase. Vanilla uses it as a faction reason for peasant discontent.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:254"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynastic_cycle_era_types",
+  "label": "Era types",
+  "summary": "The plural form of the game concept Dynastic Cycle Era Type, shown as the words Era Types.",
+  "details": "`[dynastic_cycle_era_types|E]` in a text shows Era Types, linked to the explanation of the three era types (stable, unstable, chaotic) of the dynastic cycle. Vanilla uses it in the descriptions of the stable and unstable eras.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:259"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynastic_cycle_eras_short",
+  "label": "Eras",
+  "summary": "A short plural name of the game concept Dynastic Cycle Era, shown as the word Eras.",
+  "details": "`[dynastic_cycle_eras_short|E]` in a text shows Eras, linked to the explanation of the dynastic cycle's eras (its political states). Vanilla uses it after a phase name in China's concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:250"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynastic_cycle_possessive",
+  "label": "Dynastic cycle's",
+  "summary": "The possessive form of the game concept Dynastic Cycle, shown as the words Dynastic Cycle's.",
+  "details": "`[dynastic_cycle_possessive|E]` in a text shows Dynastic Cycle's, linked to the explanation of the dynastic cycle (China's political state through stable, unstable and chaotic phases). Vanilla uses it as in \"Join one of the Dynastic Cycle's movements\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:244"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasties",
+  "label": "Dynasties",
+  "summary": "The plural form of the game concept Dynasty, shown as the word Dynasties.",
+  "details": "`[dynasties|E]` in a text shows Dynasties, linked to the explanation of a dynasty (the noble descendants of a landed founder, with all their houses). Vanilla uses it in concept texts about nobles founding dynasties and cadet branches.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:446"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty",
+  "label": "Dynasty",
+  "summary": "The game concept Dynasty: a group of noble descendants of a landed founder.",
+  "details": "`[dynasty|E]` in a text shows Dynasty, linked to the concept's explanation. The founding house can split into new houses (cadet branches) that stay part of the dynasty. When the player's character dies, a player heir is needed or the game ends. Dynasties have renown, much like prestige for characters. Vanilla uses the word very often (341 uses through chains).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:445",
+   "vanilla: localization/english/game_concepts_l_english.yml:449"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_members",
+  "label": "Dynasty members",
+  "summary": "Another name of the game concept Dynasty, shown as the words Dynasty Members.",
+  "details": "`[dynasty_members|E]` in a text shows Dynasty Members, linked to the explanation of a dynasty. Vanilla uses it in tutorial objectives and cultural traditions (\"prevent you from disinheriting dynasty members\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:448"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_perk",
+  "label": "Dynasty legacy",
+  "summary": "The game concept Dynasty Legacy: an unlockable bonus with strong effects for all members of a dynasty.",
+  "details": "`[dynasty_perk|E]` in a text shows Dynasty Legacy, linked to the concept's explanation. The dynasty head unlocks legacies with renown; each further legacy in a track costs more and is stronger. They come slowly but stay with the dynasty for good. Vanilla uses it in achievements and decisions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:768",
+   "vanilla: localization/english/game_concepts_l_english.yml:770"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_perks",
+  "label": "Dynasty legacies",
+  "summary": "The plural form of the game concept Dynasty Legacy, shown as the words Dynasty Legacies.",
+  "details": "`[dynasty_perks|E]` in a text shows Dynasty Legacies, linked to the explanation: lasting bonuses for a whole dynasty that the dynasty head buys with renown. Vanilla uses it in the concept texts of the dynasty head and of renown.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:769"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_prestige",
+  "label": "Renown",
+  "summary": "The game concept Renown: a prestige shared by a whole dynasty.",
+  "details": "`[dynasty_prestige|E]` in a text shows Renown, linked to the concept's explanation. A dynasty gains renown from its living members, its rulers and its marriages to other rulers; a ruler with a liege of the same dynasty adds none. Renown raises the dynasty's level of splendor, and the dynasty head spends it on legacies and on influencing members. Vanilla uses it often, for example in the renown tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:453",
+   "vanilla: localization/english/game_concepts_l_english.yml:456"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_prestige_i",
+  "label": "Renown icon",
+  "summary": "The renown icon, an alias of the game concept Renown whose name text is the icon `@dynasty_prestige_icon!`.",
+  "details": "Vanilla writes it as `[dynasty_prestige_i]` without `|E`, which puts just the icon in front of an amount (renown values and costs); with `|E` it would show the icon linked to the explanation of renown (a dynasty's shared prestige).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:454"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_prestige_level",
+  "label": "Level of splendor",
+  "summary": "The game concept Level of Splendor: how famous a dynasty is.",
+  "details": "`[dynasty_prestige_level|E]` in a text shows Level of Splendor, linked to the concept's explanation. A dynasty advances whenever it gains renown. Newborn members start with prestige that depends on this level, and spouses gain some prestige from each other's dynasty when they marry. There are levels 0 to 10, each a concept of its own (`dynasty_prestige_level_0` and so on).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:457",
+   "vanilla: localization/english/game_concepts_l_english.yml:458"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_prestige_level_0",
+  "label": "Base Origins",
+  "summary": "The game concept Base Origins: the lowest level of splendor (level 0) a dynasty can have.",
+  "details": "`[dynasty_prestige_level_0|E]` in a text shows Base Origins, linked to an explanation that the game fills with this level's effects and what the next level needs. Vanilla lists it in the level of splendor's concept text and shows it with `|L` in the house view.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1294"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_prestige_level_1",
+  "label": "Obscure",
+  "summary": "The game concept Obscure: a dynasty's level of splendor 1, one above the lowest.",
+  "details": "`[dynasty_prestige_level_1|E]` in a text shows Obscure, linked to an explanation that the game fills with this level's effects and what the next level needs. Vanilla lists it in the level of splendor's concept text and in the house view.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1295"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_prestige_level_10",
+  "label": "Legendary",
+  "summary": "The game concept Legendary: the highest level of splendor (level 10) a dynasty can reach.",
+  "details": "`[dynasty_prestige_level_10|E]` in a text shows Legendary, linked to an explanation with this level's effects and the note that no level is higher. Vanilla lists it in the level of splendor's concept text and in the house view.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1304"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_prestige_level_2",
+  "label": "Insignificant",
+  "summary": "The game concept Insignificant: a dynasty's level of splendor 2.",
+  "details": "`[dynasty_prestige_level_2|E]` in a text shows Insignificant, linked to an explanation that the game fills with this level's effects and what the next level needs. Vanilla lists it in the level of splendor's concept text and in the house view.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1296"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_prestige_level_3",
+  "label": "Noteworthy",
+  "summary": "The game concept Noteworthy: a dynasty's level of splendor 3.",
+  "details": "`[dynasty_prestige_level_3|E]` in a text shows Noteworthy, linked to an explanation that the game fills with this level's effects and what the next level needs. Vanilla lists it in the level of splendor's concept text and in the house view.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1297"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_prestige_level_4",
+  "label": "Reputable",
+  "summary": "The game concept Reputable: a dynasty's level of splendor 4.",
+  "details": "`[dynasty_prestige_level_4|E]` in a text shows Reputable, linked to an explanation that the game fills with this level's effects and what the next level needs. Vanilla also uses it in a game rule text about which marriages the AI arranges as matrilineal (\"a Reputable dynasty\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1298"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_prestige_level_5",
+  "label": "Well-known",
+  "summary": "The game concept Well-known: a dynasty's level of splendor 5.",
+  "details": "`[dynasty_prestige_level_5|E]` in a text shows Well-known, linked to an explanation that the game fills with this level's effects and what the next level needs. Vanilla lists it in the level of splendor's concept text and in the house view.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1299"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_prestige_level_6",
+  "label": "Significant",
+  "summary": "The game concept Significant: a dynasty's level of splendor 6.",
+  "details": "`[dynasty_prestige_level_6|E]` in a text shows Significant, linked to an explanation that the game fills with this level's effects and what the next level needs. Vanilla lists it in the level of splendor's concept text and in the house view.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1300"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_prestige_level_7",
+  "label": "Famous",
+  "summary": "The game concept Famous: a dynasty's level of splendor 7.",
+  "details": "`[dynasty_prestige_level_7|E]` in a text shows Famous, linked to an explanation that the game fills with this level's effects and what the next level needs. Vanilla lists it in the level of splendor's concept text and in the house view.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1301"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_prestige_level_8",
+  "label": "Glorious",
+  "summary": "The game concept Glorious: a dynasty's level of splendor 8.",
+  "details": "`[dynasty_prestige_level_8|E]` in a text shows Glorious, linked to an explanation that the game fills with this level's effects and what the next level needs. Vanilla lists it in the level of splendor's concept text and in the house view.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1302"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "dynasty_prestige_level_9",
+  "label": "Fabled",
+  "summary": "The game concept Fabled: a dynasty's level of splendor 9, one below the highest.",
+  "details": "`[dynasty_prestige_level_9|E]` in a text shows Fabled, linked to an explanation that the game fills with this level's effects and what the next level needs. Vanilla lists it in the level of splendor's concept text and in the house view.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1303"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "earthquake",
+  "label": "Earthquake",
+  "summary": "The game concept Earthquake: a natural disaster that suddenly and badly damages a small number of counties.",
+  "details": "`[earthquake|E]` in a text shows Earthquake, linked to the concept's explanation. Earthquakes only happen in regions prone to seismic activity. Vanilla uses it in the natural disaster texts, for example when an earthquake starts in a county.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:315"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "earthquakes",
+  "label": "Earthquakes",
+  "summary": "The plural form of the game concept Earthquake, shown as the word Earthquakes.",
+  "details": "`[earthquakes|E]` in a text shows Earthquakes, linked to the explanation of earthquakes (natural disasters that strike a few counties in seismic regions). Vanilla uses it in the natural disaster concept text (\"floods and earthquakes\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:316"
+  ],
+  "uncertain": false
+ }
+]

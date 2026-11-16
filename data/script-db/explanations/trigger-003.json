@@ -1,0 +1,434 @@
+[
+ {
+  "kind": "trigger",
+  "key": "can_be_exposed_by",
+  "label": "Can be exposed by",
+  "summary": "Whether the given character is able to expose the secret.",
+  "details": "It runs on a secret and takes a character. Vanilla mostly passes the root character or the actor of the event.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_be_leased_out",
+  "label": "Can be leased out",
+  "summary": "Whether the title can be leased out to a holy order.",
+  "details": "It runs on a title and takes `yes` or `no`. Vanilla only uses it with `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_be_parent_of",
+  "label": "Could be parent of",
+  "summary": "Whether the character was old enough to have had the given character as a child, judged at the time of that child's birth.",
+  "details": "Only age is taken into account, nothing else such as traits or fertility. It runs on the possible parent and takes the child.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_be_tributary_of",
+  "label": "Can be tributary of",
+  "summary": "Whether the character can become a tributary (a ruler who pays tribute) of the given character.",
+  "details": "It runs on the would-be tributary and takes the would-be overlord. The game's documentation does not say which rules it checks.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "can_become_owner_of_legend",
+  "label": "Can own legend",
+  "summary": "Whether the character can become the owner of the given legend.",
+  "details": "It runs on a character and takes a legend. Vanilla passes a saved legend scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_benefit_from_artifact",
+  "label": "Benefits from artifact",
+  "summary": "Whether the character gets the artifact's main bonuses.",
+  "details": "It runs on a character and takes an artifact. Vanilla mostly passes `prev` (the previous scope in the chain), and sometimes a saved scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_cancel",
+  "label": "Can be cancelled",
+  "summary": "Whether the travel plan can be cancelled.",
+  "details": "The activity tied to the plan may forbid cancelling. It runs on a travel plan and takes `yes` or `no`. Vanilla always writes `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_change_house_aspiration",
+  "label": "Can change aspiration",
+  "summary": "Whether the dynasty house can change or upgrade its house aspiration.",
+  "details": "It runs on a dynasty house and takes `yes` or `no`. Vanilla only uses `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_convert_to_rite",
+  "label": "Convertible to rite",
+  "summary": "Whether characters can convert to the rite.",
+  "details": "It runs on a rite. The game's documentation also refers to `set_can_convert_to_rite`. Vanilla only uses `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_create_faction",
+  "label": "Can create faction",
+  "summary": "Whether the character can create a faction of the given type against the given character.",
+  "details": "It runs on the character who would found the faction. Vanilla uses it with claimant, independence and ceremonial claimant factions.",
+  "fields": [
+   { "name": "type", "text": "The kind of faction.", "values": "a faction type, such as `claimant_faction` or `independence_faction`", "required": true },
+   { "name": "target", "text": "The character the faction would act against.", "values": "a character, such as `liege` or a saved scope", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_create_maa",
+  "label": "Can create men-at-arms",
+  "summary": "Whether the character can create men-at-arms (professional soldiers) of the given type.",
+  "details": "It runs on a character and takes a men-at-arms type key. The game's documentation says nothing more, and vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "can_create_task_contract",
+  "label": "Can create task contract",
+  "summary": "Whether the character can create a task contract of the given type, optionally for a given employer.",
+  "details": "The documented example spells it `can_create_task_contact`, which is a typo in the game's documentation. Vanilla writes the block form with both fields.",
+  "fields": [
+   { "name": "type_name", "text": "The kind of task contract.", "values": "a task contract type key", "required": true },
+   { "name": "employer", "text": "The character who would be the employer.", "values": "a character, usually a saved scope", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_create_title_maa",
+  "label": "Can create title men-at-arms",
+  "summary": "Whether men-at-arms of the given type can be created for the title.",
+  "details": "It runs on a title and takes a men-at-arms type key. The game's documentation says nothing more, and vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "can_declare_war",
+  "label": "Can declare war",
+  "summary": "Whether the character can declare war on the defender with the given casus belli (war reason) over the given titles.",
+  "details": "It runs on the would-be attacker. The titles are the ones the war would target. A claimant can optionally be given too; the game's documentation does not say more about it.",
+  "fields": [
+   { "name": "defender", "text": "The character who would be attacked.", "values": "a character, such as `scope:title.holder`", "required": true },
+   { "name": "casus_belli", "text": "The war reason.", "values": "a casus belli key", "required": true },
+   { "name": "target_titles", "text": "The titles the war is for.", "values": "a list of titles in braces", "required": false },
+   { "name": "claimant", "text": "An optional claimant for the war.", "values": "a character", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_disband_army",
+  "label": "Can disband army",
+  "summary": "Whether the army can be disbanded.",
+  "details": "It runs on an army and takes `yes` or `no`. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_diverge",
+  "label": "Can diverge culture",
+  "summary": "Whether the ruler can diverge their culture, including whether they can pay the cost.",
+  "details": "For a check that ignores the cost, use `can_diverge_excluding_cost`. It runs on a character and takes `yes` or `no`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_diverge_excluding_cost",
+  "label": "Can diverge, ignoring cost",
+  "summary": "Whether the ruler can diverge their culture, without checking the cost.",
+  "details": "`can_diverge` also checks the cost. It runs on a character and takes `yes` or `no`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_embrace_tradition",
+  "label": "Can embrace tradition",
+  "summary": "Whether the character can embrace a new cultural tradition.",
+  "details": "Write just the tradition, or a block that also names an old tradition to replace. Vanilla almost always uses the block form with `tradition = prev`.",
+  "fields": [
+   { "name": "tradition", "text": "The new tradition to embrace.", "values": "a tradition, such as `prev` or a saved scope", "required": true },
+   { "name": "replace", "text": "An existing tradition that the new one would replace.", "values": "a tradition key", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_employ_court_position_type",
+  "label": "Can employ court position",
+  "summary": "Whether the character can employ someone in the court position type, and the position is vacant.",
+  "details": "It runs on the ruler and takes a court position type key. Vanilla uses it a lot, for positions such as court physician, bodyguard and champion.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_enshrine_holy_site_artifact",
+  "label": "Can enshrine artifact",
+  "summary": "Whether the character can enshrine the artifact in the holy site.",
+  "details": "It runs on a character. Vanilla gives the holy site and the artifact, both as scopes.",
+  "fields": [
+   { "name": "holy_site", "text": "The holy site that would hold the artifact.", "values": "a holy site", "required": true },
+   { "name": "artifact", "text": "The artifact to enshrine.", "values": "an artifact", "required": true },
+   { "name": "slot", "text": "Which slot of the holy site to use.", "values": "a slot", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_equip_artifact",
+  "label": "Can equip artifact",
+  "summary": "Whether the character can equip the artifact.",
+  "details": "It runs on a character and takes an artifact.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_execute_decision",
+  "label": "Can execute decision",
+  "summary": "Whether the character can carry out the decision.",
+  "details": "It runs on a character and takes a decision key. Vanilla mostly writes the key, but sometimes a scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_fire_position",
+  "label": "Can fire councillor",
+  "summary": "Whether the councillor holding this council task can be dismissed.",
+  "details": "It checks the position's own firing rule and also rules such as the position being illegal to reassign. It runs on a council task and takes `yes` or `no`. The documented example writes `position_can_be_fired`, which differs from the key name, so use `can_fire_position` as vanilla does.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_fund_project_contribution",
+  "label": "Can fund contribution",
+  "summary": "Whether the character can pay for the given contribution to a great project.",
+  "details": "The contribution must be a scope or saved variable. It checks the contribution's own conditions, and fails if the contribution is already funded or was locked because the project has started.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_get_innovation_from",
+  "label": "Can get innovation from",
+  "summary": "Whether the culture can take an applicable innovation from the other culture.",
+  "details": "The game's documentation says the innovation is picked at random from the other culture. It runs on a culture and takes the culture to learn from.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_have_children",
+  "label": "Can have children",
+  "summary": "Whether nothing in the character, such as a trait, blocks them from having children.",
+  "details": "It only checks hard blocks from traits, not fertility. It runs on a character and takes `yes` or `no`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_host_activity",
+  "label": "Can host activity",
+  "summary": "Whether the character can host an activity of the given type.",
+  "details": "It runs on a character and takes an activity type key, such as a feast or a pilgrimage.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_hybridize",
+  "label": "Can hybridize",
+  "summary": "Whether the ruler can hybridize their culture with the given culture, including whether they can pay the cost.",
+  "details": "`can_hybridize_excluding_cost` skips the cost check.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_hybridize_excluding_cost",
+  "label": "Can hybridize, ignoring cost",
+  "summary": "Whether the ruler can hybridize their culture with the given culture, without checking the cost.",
+  "details": "`can_hybridize` also checks the cost. Vanilla does not use this key.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_join_activity",
+  "label": "Can join activity",
+  "summary": "Whether the character can join the given activity.",
+  "details": "It runs on a character and takes an activity. Vanilla often passes a saved activity or a character's `involved_activity`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_join_faction",
+  "label": "Can join faction",
+  "summary": "Whether the character can join the given faction.",
+  "details": "It runs on a character and takes a faction. Vanilla often passes a saved faction or another character's `joined_faction`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_join_or_create_faction_against",
+  "label": "Can join or create faction against",
+  "summary": "Whether the character can join or create a faction against the given character.",
+  "details": "Write just the target character, or a block to narrow it to one faction type. By default it also checks whether the character is already in a faction. Set `check_in_a_faction = no` to skip that.",
+  "fields": [
+   { "name": "who", "text": "The character the faction would be against.", "values": "a character", "required": true },
+   { "name": "faction", "text": "Limits the check to this faction type.", "values": "a faction type key", "required": false },
+   { "name": "check_in_a_faction", "text": "Whether to check if the character is already in a faction.", "values": "`yes` or `no`", "required": false, "default": "yes" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_nomad_raze_holding",
+  "label": "Can raze holding",
+  "summary": "Whether the nomad can raze (destroy) the holding in the given province with the Raze Holding command.",
+  "details": "The game's documentation calls it an interface trigger for the Raze Holding command. It runs on a character and takes a province.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_pick_personal_tenet",
+  "label": "Can pick personal tenet",
+  "summary": "Whether the character can choose the given tenet (a core belief of a faith) as their personal tenet.",
+  "details": "It runs on a character and takes a tenet key, such as `tenet_communion`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_plan_great_project",
+  "label": "Can plan great project",
+  "summary": "Whether the character can start planning a great project of the given type somewhere in their realm.",
+  "details": "It checks the project's `is_shown` and `can_start_planning` conditions and also whether the character can pay the cost. Vanilla writes the type either as a scope or as `great_project_type:key`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_plan_great_project_in_province",
+  "label": "Can plan project in province",
+  "summary": "Whether the character can start planning the great project in the given province.",
+  "details": "It fails if the planner or the project type is not valid. Vanilla does not use it.",
+  "fields": [
+   { "name": "type_name", "text": "The great project, by its key in the game's database.", "values": "a great project type key", "required": true },
+   { "name": "province", "text": "The province for the project.", "values": "a province", "required": true }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_remove_holy_site_artifact",
+  "label": "Can remove holy site artifact",
+  "summary": "Whether the character can take the artifact out of the holy site.",
+  "details": "It runs on a character. Vanilla gives the holy site and the artifact, both as scopes.",
+  "fields": [
+   { "name": "holy_site", "text": "The holy site that holds the artifact.", "values": "a holy site", "required": true },
+   { "name": "artifact", "text": "The artifact to remove.", "values": "an artifact", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_sponsor_inspiration",
+  "label": "Can sponsor inspiration",
+  "summary": "Whether the character can sponsor the given inspiration.",
+  "details": "It runs on the would-be sponsor and takes the inspiration.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_start_scheme",
+  "label": "Can start scheme",
+  "summary": "Whether the character can start a scheme of the given type against the given target.",
+  "details": "It runs on the character who would run the scheme. Vanilla names a target character for most types, and a target title for a few. The documented usage line writes `target`, but vanilla uses `target_character` and `target_title`.",
+  "fields": [
+   { "name": "type", "text": "The kind of scheme.", "values": "a scheme type, such as `murder` or `seduce`", "required": true },
+   { "name": "target_character", "text": "The character the scheme is aimed at.", "values": "a character", "required": false },
+   { "name": "target_title", "text": "The title the scheme is aimed at.", "values": "a title", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_start_tutorial_lesson",
+  "label": "Can start tutorial lesson",
+  "summary": "Whether the named tutorial lesson can be started.",
+  "details": "The game's documentation calls it an interface trigger that works only in specific places. Vanilla uses it once, with a lesson name passed in as a parameter.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

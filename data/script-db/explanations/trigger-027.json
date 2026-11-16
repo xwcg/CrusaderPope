@@ -1,0 +1,422 @@
+[
+ {
+  "kind": "trigger",
+  "key": "is_valid_for_event_debug_cooldown",
+  "label": "Valid for event (debug)",
+  "summary": "Whether the character is a valid target for the given event, also checking the event's cooldown.",
+  "details": "The game says this is only for debugging and does not work in a release build, so do not use it in a finished mod. It takes the key of an event.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_valid_to_hire_court_position_type",
+  "label": "Can hold court position",
+  "summary": "Whether the character meets the requirements to be employed in the given court position type.",
+  "details": "It takes the key of a court position type, such as a court musician or a camp officer. Vanilla also writes it with a placeholder inside a scripted template, for example `$COURT_POSITION$_court_position`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_valid_to_keep",
+  "label": "Contract is valid to keep",
+  "summary": "Whether a task contract is still valid to keep.",
+  "details": "It works on a task contract and takes `yes` or `no`. The game does not say what makes a contract valid.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_vassal_of",
+  "label": "Is vassal of",
+  "summary": "Whether the character is a direct vassal of the given character.",
+  "details": "Only direct vassals count, not vassals of vassals; use the 'vassal or below' check for that. The value is a character, usually a saved scope such as `scope:host` or `root`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_vassal_or_below_of",
+  "label": "Is vassal or below of",
+  "summary": "Whether the character is a vassal of the given character, directly or further down the chain.",
+  "details": "Vassals of vassals count too. Characters who are not rulers are never counted as vassals. The value is a character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_visibly_fertile",
+  "label": "Is visibly fertile",
+  "summary": "Whether the character looks able to have children.",
+  "details": "A woman must not be too old, anyone must not be too young, and the character must have no trait that blocks having children. Use `yes` or `no`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_war_leader",
+  "label": "Is war leader",
+  "summary": "Whether the given character leads one of the sides of the war.",
+  "details": "It runs on a war, and the value is the character you want to check. Vanilla mostly passes saved scopes such as `scope:actor`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_war_overview_tab_open",
+  "label": "War overview tab open",
+  "summary": "Whether the war overview window is open on the given tab (victory, defeat or white peace).",
+  "details": "This is an interface trigger. It can only be used in the specific places where the game allows interface checks.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_white_peace_possible",
+  "label": "White peace possible",
+  "summary": "Whether the war's casus belli (the reason the war was started) allows a white peace.",
+  "details": "It reads the casus belli's own `is_white_peace_possible` setting. Runs on a war; use `yes` or `no`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_widgetid_open",
+  "label": "Widget is open",
+  "summary": "Whether the interface widget with the given id is open, meaning visible and not in the middle of an animation.",
+  "details": "The game calls it the fastest and safest way to check a widget; it replaces the older name-based check. It is an interface trigger and only works in places where the game allows interface checks. Vanilla writes widget ids such as `character_window` or `diarchy_window`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_yes_men_enabled",
+  "label": "Yes men cheat on",
+  "summary": "Whether the character is the player and the 'yes men' cheat is currently switched on.",
+  "details": "The game's documentation does not say what the cheat does. Use `yes` or `no`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "join_faction_chance",
+  "label": "Chance to join faction",
+  "summary": "Compares the character's chance to join the given faction with a number.",
+  "details": "The faction must be an ongoing one. The value can be compared with `<`, `<=`, `>=` or `>`.",
+  "fields": [
+   { "name": "target", "text": "The ongoing faction the chance is for.", "values": "a faction", "required": true },
+   { "name": "value", "text": "The chance to compare with.", "values": "a comparison such as `>= 50`, with a number or script value", "required": true }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "join_scheme_chance",
+  "label": "Chance to join scheme",
+  "summary": "Whether the character's chance to join the given scheme lies between a minimum and a maximum.",
+  "details": "The scheme must be an ongoing one. The game's documentation says both ends are exclusive, so a chance equal to `min` or `max` does not match. The example in the game's documentation has a negative minimum, so the chance can be below zero.",
+  "fields": [
+   { "name": "scheme", "text": "The ongoing scheme the chance is for.", "values": "a scheme", "required": true },
+   { "name": "min", "text": "The lower end of the range.", "values": "a number" },
+   { "name": "max", "text": "The upper end of the range.", "values": "a number" }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "kin_legacy_track_perks",
+  "label": "Kin legacy perks",
+  "summary": "Compares how many perks the dynasty has in the kin legacy track with a number.",
+  "details": "The game has a dynasty legacy track called `kin_legacy_track`, and this check is read as belonging to it going by the name. The game's documentation text speaks of 'the lifestyle', which looks copied from the lifestyle triggers, so the meaning is not confirmed. It runs on a dynasty.",
+  "fields": [],
+  "sources": ["doc", "vanilla: common/dynasty_legacies/99_legacies.txt:33"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "knows_court_language_of",
+  "label": "Knows court language of",
+  "summary": "Whether the character knows the court language of the given character.",
+  "details": "The court language is the language spoken at the target's court. The value is a character, for example `root.liege` or a saved scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "knows_doctrine",
+  "label": "Knows doctrine",
+  "summary": "Whether the character knows the given doctrine.",
+  "details": "A doctrine is a rule of a faith, such as `doctrine_polygamy`. Write the doctrine's key.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "knows_language",
+  "label": "Knows language",
+  "summary": "Whether the character knows the given language.",
+  "details": "Write the language's key, such as `language_norwegian`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "knows_language_of_character",
+  "label": "Shares a language with",
+  "summary": "Whether the character knows at least one language that the given character also knows.",
+  "details": "The value is a character, such as a saved scope.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "knows_language_of_culture",
+  "label": "Knows culture's language",
+  "summary": "Whether the character knows the language of the given culture.",
+  "details": "The value is a culture, for example `root.culture` or `scope:recipient.culture`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "knows_rite_level",
+  "label": "Knows rite by percentage",
+  "summary": "Whether the character knows at least a given share of the tenets and doctrines of the given rite.",
+  "details": "Both the core tenets of the rite and the permitted tenets of the related faith count. Characters who are not playable only know what belongs to their own professed rite. The game's documentation says the percentage is 1-based, so 1 means 100 percent; vanilla mostly writes values like `>= 1` or `< 0.6`, though one use writes `>= 100`. A range can also be written as `value = { min max }`.",
+  "fields": [
+   { "name": "target", "text": "The rite to check.", "values": "a rite, such as `scope:target.rite`", "required": true },
+   { "name": "value", "text": "The share that is known, where 1 means everything.", "values": "a comparison with `<`, `<=`, `>`, `>=`, or a range `{ min max }`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "knows_tenet",
+  "label": "Knows tenet",
+  "summary": "Whether the character knows the given tenet.",
+  "details": "A tenet is a core belief of a faith, such as `tenet_communion`. Write the tenet's key.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "law_legacy_track_perks",
+  "label": "Law legacy perks",
+  "summary": "Compares how many perks the dynasty has in the law legacy track with a number.",
+  "details": "Going by its name this belongs to the law legacy track of a dynasty. The game's documentation text speaks of 'the lifestyle', which looks copied from the lifestyle triggers, so the meaning is not confirmed. It runs on a dynasty.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "learning",
+  "label": "Learning skill",
+  "summary": "Whether the character's learning skill meets the given comparison.",
+  "details": "Write it as a comparison, such as `>= 10` or `>= high_skill_rating`. Vanilla often compares with named skill ratings rather than plain numbers.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "learning_diff",
+  "label": "Learning difference",
+  "summary": "Whether the character's learning skill differs from the target's by the given amount.",
+  "details": "With `abs = yes` the difference is taken without its sign; the default is `no`. The documented usage line is written as `learning = { ... }`, but vanilla writes it as `learning_diff = { target = ... value >= ... }`.",
+  "fields": [
+   { "name": "target", "text": "The character to compare with.", "values": "a character", "required": true },
+   { "name": "value", "text": "The difference to compare.", "values": "a comparison with a script value, such as `<= 3`", "required": true },
+   { "name": "abs", "text": "Whether to ignore the sign of the difference.", "values": "`yes` or `no`", "default": "no" }
+  ],
+  "sources": ["doc", "vanilla: common/character_interactions/00_diarch_interactions.txt:2955"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "learning_for_portrait",
+  "label": "Learning for portrait",
+  "summary": "Compares the character's learning skill scaled to a range from 0.0 to 1.0, the form the portrait uses.",
+  "details": "Use it with a comparison against a value between 0 and 1.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "learning_lifestyle_perk_points",
+  "label": "Learning perk points",
+  "summary": "Compares how many perk points the character has available in the learning lifestyle.",
+  "details": "Perk points are what is spent to unlock perks. Vanilla uses it once, to compare with `max_perk_amount_per_lifestyle`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "learning_lifestyle_perks",
+  "label": "Learning perks owned",
+  "summary": "Compares how many perks from the learning lifestyle the character has.",
+  "details": "It counts perks already unlocked.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "learning_lifestyle_unlockable_perks",
+  "label": "Learning perks unlockable",
+  "summary": "Compares how many learning lifestyle perks the character could unlock right now.",
+  "details": "A perk counts when the character has its parent perks and its `can_be_picked` condition is met. Perk points are not checked, so a perk can count although the character cannot afford it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "learning_lifestyle_xp",
+  "label": "Learning lifestyle XP",
+  "summary": "Compares the character's experience in the learning lifestyle with a number.",
+  "details": "The game's documentation repeats the text of the perk points check ('how many perk points available'), which does not fit the key name. Going by the key name this is lifestyle experience, so treat the meaning as unconfirmed.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "legend_completion_date",
+  "label": "Legend completion date",
+  "summary": "Compares the date a legend was completed with a given date.",
+  "details": "It runs on a legend. Write a date and a comparison, such as `>= 1100.1.1`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "legend_quality",
+  "label": "Legend quality",
+  "summary": "Whether the legend has the given quality.",
+  "details": "The qualities are `famed`, `illustrious` and `mythical`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "legend_start_date",
+  "label": "Legend start date",
+  "summary": "Compares the date a legend was created with a given date.",
+  "details": "It runs on a legend. Write a date and a comparison, such as `<= 1100.1.1`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "legitimacy",
+  "label": "Legitimacy",
+  "summary": "Compares the character's current legitimacy (how widely their rule is accepted) with a number.",
+  "details": "Write it as a comparison such as `> 0`. Vanilla also compares with named levels like `legitimacy_level_3`. For the level instead of the raw value, see the legitimacy level check.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "legitimacy_level",
+  "label": "Legitimacy level",
+  "summary": "Compares the character's current legitimacy level with a number.",
+  "details": "Vanilla compares with whole numbers, mostly `>= 3`, `>= 4` and `>= 5`, and also `0`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "levies_to_liege",
+  "label": "Levies sent to liege",
+  "summary": "Compares the number of levies the character sends to their liege with a number.",
+  "details": "Levies are the troops a vassal provides to the liege's army.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "list_size",
+  "label": "List size",
+  "summary": "Whether the named saved list has the given number of entries.",
+  "details": "Vanilla checks lists named like `saved_targets` or `revoked_leases` this way. For lists stored as variables use the variable list check.",
+  "fields": [
+   { "name": "name", "text": "The name of the list.", "values": "a list name", "required": true },
+   { "name": "value", "text": "The size to compare.", "values": "a comparison with a number or script value, such as `< 5`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "local_player_knows_this_secret",
+  "label": "Player knows secret",
+  "summary": "Whether the local player knows about the secret.",
+  "details": "This is an interface trigger and can only be used in the places where the game allows interface checks. It runs on a secret; use `yes` or `no`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "local_variable_list_size",
+  "label": "Local variable list size",
+  "summary": "Checks the size of a local variable list.",
+  "details": "The documented usage line is the one of the normal variable list check (`variable_list_size = { name = X target >= Y }`), with X the list name and Y a script value or number, so the exact block form for this key may differ. The game documents nothing more, and vanilla does not use it.",
+  "fields": [
+   { "name": "name", "text": "The name of the variable list.", "values": "a variable name", "required": true },
+   { "name": "target", "text": "The size to compare, as the game's documentation writes it.", "values": "a comparison with a script value or number" }
+  ],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "long_term_gold",
+  "label": "Long-term gold",
+  "summary": "Whether the character has the required amount of gold in the AI's 'long term' budget.",
+  "details": "The game's documentation names an AI category 'long term' for this gold, so it is not simply all the gold the character owns. Write a comparison such as `>= 1000`; vanilla also compares with named costs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "long_term_gold_maximum",
+  "label": "Long-term gold maximum",
+  "summary": "Compares how large the AI's 'long term' gold budget is allowed to get with a number.",
+  "details": "The game's documentation asks how big that budget is supposed to get; vanilla does not use it, so nothing more is known.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ }
+]

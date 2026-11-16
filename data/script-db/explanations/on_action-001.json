@@ -1,0 +1,402 @@
+[
+ {
+  "kind": "on_action",
+  "key": "abduct_failed",
+  "label": "Abduction failed",
+  "summary": "Picks the event that plays out when an abduction scheme fails.",
+  "details": "Only runs while the scheme still exists. Vanilla tries three failure events in order and fires the first one that is valid (Seized Roadside, On the Way, Unwelcome Guests). Script fires it, not the game's code.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "abduct_ongoing",
+  "label": "Abduction in progress",
+  "summary": "Fires random events while a character is planning an abduction.",
+  "details": "Only runs while the scheme exists. Each time it fires there is a 10 percent chance that the events are looked at at all; even then the list gives a weight of 300 to nothing happening. The pool mixes generic intrigue scheme events, agent events and intrigue lifestyle events. A vanilla comment says the pool is shared with the murder scheme.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "abduct_setup",
+  "label": "Abduction setup",
+  "summary": "Sets up how an abduction is carried out, by running the standard abduct method setup.",
+  "details": "Vanilla runs the first valid on_action from a list that holds only standard_abduct_method_setup.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "abduct_succeeded",
+  "label": "Abduction succeeded",
+  "summary": "Picks the event for a successful abduction, and may make one of the scheme owner's knights eligible for the scoundrel accolade.",
+  "details": "Only runs while the scheme exists. It fires the first valid of three success events (Seized Roadside, On the Way, Unwelcome Guests). Separately, for the scheme owner there is a 2 percent chance, multiplied by the owner's accolade_progress value, to pick a knight who can unlock the scoundrel accolade attribute. The owner's accolade_progress is then reset to 0, the knight gets a variable marking the unlock, and an interface message is sent. Nothing happens if the owner has no eligible knight.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "admin_confirmation_invalid_on_action",
+  "label": "Governor confirmation invalid",
+  "summary": "Fires the events ep3_decisions_event.2002 and ep3_decisions_event.2080 from the governor confirmation files.",
+  "details": "Vanilla lists the two events in a plain events block. The name suggests it is for a confirmation that is no longer valid, but the game's documentation and vanilla do not state when it fires, so only the events are certain. It sits in the ep3 DLC folder of the game's script.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "admin_confirmation_start",
+  "label": "Governor confirmation start",
+  "summary": "Marks the start of a confirmation: remembers the liege in a grace variable and sets cooldown variables on the character and their liege.",
+  "details": "On the character, vanilla stores the liege in the variable confirmation_grace (replacing an older one) and sets confirmation_cooldown_vassal for 25 years. The liege gets a confirmation_cooldown variable for 2 years; a vanilla comment says this stops AI vassals taking the decision all at once. It has no fixed starting character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "admin_confirmation_travel_planner_exit",
+  "label": "Confirmation trip cancelled",
+  "summary": "Gives back the costs of a confirmation when the travel planner is left, going by its name and a toast titled for refunded costs.",
+  "details": "Vanilla shows a neutral toast message and returns prestige equal to the standard activity base cost. If the character is shy or humble, they also get a stress change (medium_stress_impact_loss). The grace variable is removed if it points at the current liege, so they can be confirmed again, and a saved liege variable is cleared. It has no fixed starting character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "adult_education_arrival_events",
+  "label": "Adult education arrival",
+  "summary": "Fires the event bp2_adult_education.0010; going by its name, this is for arriving at an adult education.",
+  "details": "The vanilla definition is a plain event list with that one event. When exactly the game fires it is not shown by the input.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "adult_education_destination_events",
+  "label": "Adult education destination",
+  "summary": "Picks one random event from the adult education event pool; going by its name, for a character at the destination.",
+  "details": "Vanilla lists 17 bp2_adult_education events, all with the same weight of 100, so each is equally likely. Some are commented as a guest speaker, a peasant break-in, romantic tensions in the library, a manic student and a visit from a local ruler. When the game fires it is not shown by the input.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "adventurer_encourage_relationships_on_action",
+  "label": "Adventurers encourage relationships",
+  "summary": "Gives a chance of a travel event when the character's travel plan has the option to encourage relationships.",
+  "details": "Only runs if the character's current travel plan has the adventurers_encourage_relationships_option. Its chance_of_no_event is 50, and the list also gives a weight of 100 to nothing against 100 each for ep3_travel_option_events.0002, .0003 and .0004.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "adventurer_talent_scouting_on_action",
+  "label": "Adventurers scout for talent",
+  "summary": "Gives a chance of the talent scouting travel event for a character whose travel plan has the scouting option, or who has the toe_the_line_perk.",
+  "details": "Runs only if the current travel plan has the adventurers_scout_for_talent_option, or the character has that perk. The chance_of_no_event value is 90 for AI characters and 50 for players. The list also gives a weight of 100 to nothing against 100 for the one event ep3_travel_option_events.0001.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "agent_events_on_action",
+  "label": "Scheme agent events",
+  "summary": "Picks a random event about the agents of a scheme.",
+  "details": "Only runs while the scheme exists. By the comments, the pool covers agents liking or hating each other, teaching each other, relatives and close relations of the owner or target reacting, and distance to the target helping or hurting. Weights are mostly 100, with a few at 50.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "ai_character_pulse",
+  "label": "AI character pulse",
+  "summary": "A pulse that runs only for AI characters and fires one of two events: learn_commander_trait.0001 or holy_order.0100.",
+  "details": "There is a 25 percent chance that the events are looked at, and the list gives a weight of 500 to nothing against 100 for each event. Vanilla comments holy_order.0100 as giving the pilgrim trait to military order members; learn_commander_trait.0001 is presumably about a commander trait, going by its name. Vanilla places it in its yearly on_action file, so it likely fires yearly, but the input does not show where it is called.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "befriend_critical_failure",
+  "label": "Befriend critical failure",
+  "summary": "Picks the event for a befriend scheme that fails critically.",
+  "details": "One of eleven befriend_outcome 8xxx events: visiting a manor, a dance, common interests, a generic failure, being shamed by a rival, a faction leader refusing, a spouse blackmailing, a bishop stirring peasants, the liege shaming at court, a formal meeting, an estate visit. Weights range from 10 to 60.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "befriend_critical_success",
+  "label": "Befriend critical success",
+  "summary": "Picks the event for a befriend scheme that succeeds critically.",
+  "details": "One of seven events: visiting a manor, a dance, common interests, a generic success, an estate visit, success against a faction leader, and a generic travel success. Weights range from 20 to 60.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "befriend_dislike_ongoing",
+  "label": "Befriend ongoing, target dislikes owner",
+  "summary": "Fires random events while a befriend scheme runs against a target who dislikes the schemer.",
+  "details": "Only runs while the scheme exists and the character is not travelling. There is a 25 percent chance that the events are looked at, and a heavy weight of 1000 for nothing. The events cover the target rebuffing advances, gifts, a spouse helping or disrupting, personality mismatches, and trades such as releasing a prisoner or cancelling a favor.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "befriend_failure",
+  "label": "Befriend failed",
+  "summary": "Picks the event for a befriend scheme that fails.",
+  "details": "One of seven befriend_outcome events: a manor visit, a dance, common interests, a generic failure, a formal meeting, an estate visit, and a cemetery visit against a rival. The generic failure is rare (weight 10, others 60 or 100).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "befriend_ongoing",
+  "label": "Befriend ongoing",
+  "summary": "Fires random events while an ordinary befriend scheme is running.",
+  "details": "Only runs while the scheme exists and the character is not travelling. There is a 25 percent chance that the events are looked at, and a weight of 500 for nothing. The pool has gifts, a shared rival, spouse help, personality matches and mismatches, trades and favors, diplomatic scheme lifestyle events, events for shared lifestyles (both have the same lifestyle, or dread), circumstances like a shared war enemy or faction, and a scheme modifier from a saved pilgrimage variable.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "befriend_rival_ongoing",
+  "label": "Befriend ongoing, target is a rival",
+  "summary": "Fires random events while a befriend scheme runs against a target the vanilla file marks as a rival.",
+  "details": "Only runs while the scheme exists and the character is not travelling. There is a 25 percent chance that the events are looked at, and a heavy weight of 1000 for nothing. The events include arguments, the rival rebuffing advances or spreading lies, a compliment, spouse involvement, personality mismatches and trades.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "befriend_success",
+  "label": "Befriend succeeded",
+  "summary": "Picks the event for a befriend scheme that succeeds.",
+  "details": "One of ten befriend_outcome events: a manor visit, a dance, common interests, a generic success, a formal meeting, an estate visit, a cemetery visit against a low-opinion target, success against a rival, success against a faction member, and a generic travel success. Weights range from 20 to 100.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "bishop_ongoing",
+  "label": "Hostile bishop events",
+  "summary": "Fires random events where unhappy clergy pressure a ruler.",
+  "details": "Only runs for a playable character who has a theocratic vassal, or a court chaplain councillor, whose opinion of the character is -10 or lower. There is a 25 percent chance that the events are looked at, and a weight of 200 for nothing. By the comments, the events force a divorce, force them to leave a faction, force a prisoner release, turn family members or zealous vassals against the ruler, lower county control in their demesne, or add an angry clergy event for a drunkard ruler.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "book_translation_story_events",
+  "label": "Book translation story events",
+  "summary": "Picks a random event for a character who owns a book translation story.",
+  "details": "Runs only if the character owns a story of type book_translation_story. Seven learning_scholarship_special events (2011 to 2017) can happen, equally likely except 2016, which is less likely (30 against 100).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "bp1_yearly_events",
+  "label": "Friends and foes yearly events",
+  "summary": "A pool of friends, rivals and consorts events for characters with the friends_and_foes DLC feature.",
+  "details": "Runs only if the character has the friends_and_foes DLC feature and at least one friend or rival. The weight multiplier grows by 0.25 for each of friend, rival, best friend and nemesis the character has. A vanilla comment says it is disabled in the yearly on_action file, so the game may not use it that way now. The input is cut off, so the list of events is not complete.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "bp2_adult_followups",
+  "label": "BP2 adult follow-ups",
+  "summary": "Picks a follow-up event for an available adult, when the BP2 DLC is on.",
+  "details": "Runs only with the BP2 DLC, for an adult who is available. There is a weight of 10 for nothing. By the comments, the events follow up on childhood events, for example a child returning home from being a hostage, a promise made, emulating a foreign court, a crush becoming something more, and a drunkard whose relatives died from drink.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "bp2_child_pulse",
+  "label": "BP2 child events pulse",
+  "summary": "Picks a random childhood event for a ruler who is an available child, when the BP2 DLC is on.",
+  "details": "Runs only with the BP2 DLC, for a ruling character who is an available child and not at war. There is a 50 percent chance that the events are looked at, and a weight of 100 for nothing. The pool includes an imaginary friend, a crush, a foreign hostage, gaining personality traits, learning about an ancestor, play events, and events about the child's regent.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "breed_warhorse",
+  "label": "Breed warhorse",
+  "summary": "Fires the event that suggests breeding the character's warhorse because it is getting old.",
+  "details": "Vanilla gives the single event warhorse.8001. It sits with the warhorse story cycle files.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "buddhist_arrival_events",
+  "label": "Buddhist pilgrimage arrival",
+  "summary": "Fires a holy-site event for a Buddhist whose activity is at Bodh Gaya, Kusinagara or Sarnath; going by its name, on arrival.",
+  "details": "Runs only for a Buddhist whose activity location is in the county of Gaya, Kusinagara or Varanasi. The events are pilgrimage.5401, 5411 and 5421 for those sites, and 4002 for meeting the mystic again. The on_action gives all four the same weight and does not tie an event to a site.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "burial_arrival_events",
+  "label": "Pilgrim burial arrival",
+  "summary": "Fires the event pilgrimage.4020 for a character with the pilgrimage_death_bury_there variable; going by the names, on arriving at their chosen burial place.",
+  "details": "Runs only if the character has the variable pilgrimage_death_bury_there. The one event is pilgrimage.4020.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "camp_party_arrival_events",
+  "label": "Camp party arrival",
+  "summary": "Fires the event ep3_camp_party.0001; going by its name, for arriving at a camp party.",
+  "details": "The vanilla definition is a plain event list with that one event. When exactly the game fires it is not shown by the input.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "camp_party_destination_events",
+  "label": "Camp party events",
+  "summary": "Picks a random event from the camp party event pool; going by its name, while at a camp party.",
+  "details": "Events include a story at the campfire, someone getting lost, a riddle, an archery contest, a local turning up, bonding with the intent target, relieving stress, felling a tree, a wandering merchant, and a fireside chat. Bonding with the intent target has weight 1000, the others are mostly 100 (one is 200, one is 20). When the game fires it is not shown by the input.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "caravan_master_prepare_travels_on_action",
+  "label": "Caravan master prepare travels",
+  "summary": "Updates the prepare_travels_value variable that builds up while the travel leader court position is preparing travels, and schedules itself again.",
+  "details": "While the holder of the travel leader court position has the variable performing_prepare_travels, the value goes up by the position's change amount, up to its maximum. Otherwise it drops by 0.5 and stops at 0. While the value is not 0, a prepare_travels_cooldown variable is set for 30 days and the on_action fires itself again after 30 days. At 0 the value and cooldown variables are removed. It has no fixed starting character; the variables are set on the scope it runs in.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "ce3_theocrat_dynasty_chain_succession",
+  "label": "Theocrat dynasty chain",
+  "summary": "Counts a chain of same-dynasty theocratic rulers, and sets an achievement variable at three in a row.",
+  "details": "A vanilla comment says it fires for the player's heir one day after the same-dynasty predecessor died, with the predecessor's chain length in scope:ce3_theocrat_dynasty_chain_predecessor. It runs only for a player in a theocracy who holds a title with a clerical region. The chain length is that value plus one. At three or more, it sets the global variable that unlocks an achievement.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "chariot_race_betting_events",
+  "label": "Chariot race betting events",
+  "summary": "Picks a random event for a ruler, from a pool about a chariot race with betting and spectating.",
+  "details": "Runs only for a ruler. Eleven events, among them a run-in with a fellow governor, a crowd chanting, a befriend intent, mingling, and getting or granting access to the kathisma. Weights are 100 or 200. When the game fires it is not shown by the input.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "chariot_race_on_action",
+  "label": "Chariot race weekly pulse",
+  "summary": "Runs the weekly progress of a chariot race, moving the race along and sending events to spectators.",
+  "details": "A vanilla comment says the root is the host. It adds one to the activity's week counter, updates the race standings, and builds temporary lists of charioteers and spectators. Then it picks what happens on the track, such as one charioteer pulling ahead of another. The input is cut off, so the rest of the logic is not shown.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "chariot_race_opening_on_action",
+  "label": "Chariot race opening",
+  "summary": "Sends the opening event chariot_race.0001 to every attendee located at the race.",
+  "details": "It goes through all characters attending the activity whose location is the activity location. It has no fixed starting character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "chariot_spectator_on_action",
+  "label": "Chariot race spectator",
+  "summary": "Picks an event for a ruler watching a chariot race: an update on a wagered charioteer, or flavour from the hippodrome lap.",
+  "details": "Runs only for a ruler. The two events, chariot_race.3020 and chariot_race_ongoing_jp.0400, have equal weight.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "child_personality_gain",
+  "label": "Child gains personality",
+  "summary": "Picks an event that lets someone who is not yet an adult choose or gain a personality trait.",
+  "details": "Runs only for a character who is not an adult and has fewer personality traits than the limit. Each event offers a group of traits, for example craven, lazy or arbitrary. Vanilla weights the events that can only be the third and last personality event more heavily (x3 or x6). It also has events for gaining a single trait (commented as being in prison), and tgp_ versions of many events. The input is cut off, so the list is not complete.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "childhood_education",
+  "label": "Childhood education",
+  "summary": "Fires the events that give education points, and also calls the patronage on_action.",
+  "details": "A vanilla comment says it is to gain education points. It lists the events childhood_education.9002, 1001, 9004 and 9010 and the nested on_action childhood_education_patronage.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "childhood_education_boost",
+  "label": "Education catch-up boost",
+  "summary": "Fires the education catch-up event for a character who needs a boost.",
+  "details": "Runs only if the character does not have the flag natural_education_progression, is not exactly 16 (a vanilla comment says the 16th birthday on_action already covers that), and has an education focus. The event is childhood_education.9103.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "childhood_education_patronage",
+  "label": "Spouse tutor education points",
+  "summary": "Fires an event that, by the vanilla comment, may add education points when the host's councillor spouse is a scholarly tutor.",
+  "details": "Runs only if the character's host has a spouse councillor, the scripted check spouse_learning_tier_1_trigger passes (the input does not show whose learning it tests), and the character has an education focus. If the character already has a patronage_spouse_tutor variable, it must point to that same councillor. The event is childhood_education.9003.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

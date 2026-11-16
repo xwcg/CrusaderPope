@@ -1,0 +1,2239 @@
+[
+ {
+  "kind": "data_function",
+  "key": "SplineVisibilityDropdown.SetVisibilityModeToAll",
+  "label": "Show all splines",
+  "summary": "Makes the map editor show all splines of the checked types.",
+  "details": "Vanilla uses it on the \"Show All\" entry of the \"Visible Splines\" dropdown. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/map_editor/spline_visibility_widget.gui:12"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SplineVisibilityDropdown.SetVisibilityModeToFirst",
+  "label": "Show first spline",
+  "summary": "Makes the map editor show only the first spline of the checked types for each pair of anchors.",
+  "details": "Vanilla uses it on the \"Show First\" entry of the \"Visible Splines\" dropdown. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/map_editor/spline_visibility_widget.gui:20"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SplineVisibilityDropdown.SetVisibilityModeToLast",
+  "label": "Show last spline",
+  "summary": "Makes the map editor show only the last spline of the checked types for each pair of anchors.",
+  "details": "Vanilla uses it on the \"Show Last\" entry of the \"Visible Splines\" dropdown. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/map_editor/spline_visibility_widget.gui:28"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SplineVisibilityDropdown.Toggle",
+  "label": "Toggle visibility dropdown",
+  "summary": "Opens or closes the map editor's \"Visible Splines\" dropdown, which sets which splines are shown.",
+  "details": "Vanilla uses it on the \"Visible Splines\" button of the spline strip tool. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/map_editor/spline_strip_tool.gui:153"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StaticModifier.AccessSelf",
+  "label": "Modifier itself",
+  "summary": "Going by its name, gives access to the static modifier itself.",
+  "details": "A static modifier is a named set of modifiers from the game files (the common/modifiers folder); vanilla's situation list, for example, checks whether a story's owner has one. Vanilla never uses AccessSelf on this type; the lines that use it follow PdxGuiWidget, which is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StaticModifier.GetDescOnly",
+  "label": "Description text",
+  "summary": "Going by its name, the static modifier's description text without its list of effects.",
+  "details": "Vanilla uses it in the scaled static modifier tooltip, passing the tooltip data's main text key and its multiplier. The effects part of that tooltip is filled by GetEffectsDesc.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The text key for the description; vanilla passes the tooltip data's main localization key.",
+    "values": "a text key"
+   },
+   {
+    "name": "Arg1",
+    "text": "The multiplier; vanilla passes the tooltip data's multiplier.",
+    "values": "a number"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:4394"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StaticModifier.GetDescWithBulletPointEffects",
+  "label": "Description with effects",
+  "summary": "The modifier's description followed by its effects as a bulleted list.",
+  "details": "Vanilla uses it in the tooltip of each merit level marker to list that level's modifier. Texts also call it on GetModifier('…') for the patron saint choices, which hints that GetModifier gives this kind of modifier.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/merit_l_english.yml:4",
+   "vanilla: localization/english/dlc/pam/pam_decisions_l_english.yml:185"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StaticModifier.GetDescWithEffects",
+  "label": "Description with effects",
+  "summary": "The static modifier's description together with its effects, as one text.",
+  "details": "Vanilla shows it in the barter window's tooltip for the modifier, in the situation list and in the static modifier tooltip. Going by its name and these uses, it lists what the modifier changes after its description.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_barter.gui:369",
+   "vanilla: gui/window_situation_list.gui:692"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StaticModifier.GetEffectsDesc",
+  "label": "Effect lines",
+  "summary": "The static modifier's effects as a list of lines, scaled by a multiplier.",
+  "details": "Vanilla uses it as the list of the effects part of the scaled static modifier tooltip, passing the tooltip's effect text key and its multiplier. The game does not document the list's item type.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The text key for the effects; vanilla passes the tooltip data's effect localization key.",
+    "values": "a text key"
+   },
+   {
+    "name": "Arg1",
+    "text": "The multiplier; vanilla passes the tooltip data's multiplier.",
+    "values": "a number"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:4403"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StaticModifier.GetIcon",
+  "label": "Icon",
+  "summary": "The static modifier's icon picture.",
+  "details": "Vanilla uses it as the texture of the modifier's icon in the barter window, the situation list and the modifier tooltip. The tooltip shows the icon only when HasValidIcon is true.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:4338"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StaticModifier.GetName",
+  "label": "Name",
+  "summary": "The static modifier's display name.",
+  "details": "Vanilla shows it as the heading of the modifier tooltip, in the situation list and in the court amenities window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StaticModifier.GetNameWithTooltip",
+  "label": "Name with tooltip",
+  "summary": "The static modifier's name, with a tooltip about the modifier when the player points at it.",
+  "details": "Vanilla uses it in the barter window's description: the province will gain this modifier for 5 years. Going by its name, the tooltip shows the modifier's details; plain GetName gives the name alone.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/barter_window_l_english.yml"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StaticModifier.HasIcon",
+  "label": "Has icon",
+  "summary": "Going by its name, whether the static modifier has an icon.",
+  "details": "Vanilla never uses it on this type; the lines given follow other types (game concepts, laws, situation phases). Vanilla's modifier tooltip checks HasValidIcon instead. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StaticModifier.HasValidIcon",
+  "label": "Has valid icon",
+  "summary": "Whether the static modifier has an icon that can be shown (yes or no).",
+  "details": "Vanilla uses it in the static modifier tooltip to show the icon only when there is one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:4340"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StaticModifier.Self",
+  "label": "Modifier itself",
+  "summary": "The static modifier itself, for passing it on to another function.",
+  "details": "Vanilla's situation list passes it to the story owner's HasStaticModifier check, to show a story's modifier icon only while the owner has that modifier.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_situation_list.gui:653"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StaticModifierTooltipData.AccessSelf",
+  "label": "Tooltip data itself",
+  "summary": "Going by its name, gives access to the static modifier tooltip data itself.",
+  "details": "The tooltip data holds what a static modifier's tooltip needs: text keys and a multiplier. Vanilla never uses AccessSelf on this type; the lines given follow PdxGuiWidget and are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StaticModifierTooltipData.GetEffectLocaizationKey",
+  "label": "Effect text key",
+  "summary": "The text key the static modifier tooltip uses for the modifier's effects.",
+  "details": "Vanilla passes it, with GetMultiplier, to StaticModifier.GetEffectsDesc in the modifier tooltip. The function's name has a typo in the game (Locaization); it must be written exactly so.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:4403"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StaticModifierTooltipData.GetMainLocalizationKey",
+  "label": "Main text key",
+  "summary": "The text key the static modifier tooltip uses for the modifier's main description.",
+  "details": "Vanilla passes it, with GetMultiplier, to StaticModifier.GetDescOnly in the modifier tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:4394"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StaticModifierTooltipData.GetMultiplier",
+  "label": "Multiplier",
+  "summary": "The multiplier the static modifier tooltip applies to the modifier's description and effects.",
+  "details": "A number. Vanilla passes it to both StaticModifier.GetDescOnly and StaticModifier.GetEffectsDesc in the scaled static modifier tooltip. Going by that tooltip's name, it scales the shown values for a modifier that counts more than once.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:4394"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StaticModifierTooltipData.Self",
+  "label": "Tooltip data itself",
+  "summary": "Going by its name, the static modifier tooltip data itself, for passing it on to another function.",
+  "details": "Vanilla never uses it on this type; the lines given follow other types (such as Character.Self) and are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StatusWidget.AccessSelf",
+  "label": "Status widget itself",
+  "summary": "Going by its name, gives access to the account status widget itself.",
+  "details": "Going by its other functions (connect, log out, login window), the status widget shows the player's Paradox account status. Vanilla never uses AccessSelf on this type; the lines given follow PdxGuiWidget and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StatusWidget.ConnectAccount",
+  "label": "Link account",
+  "summary": "Links the player's Paradox account with a third-party account, from the account status widget.",
+  "details": "Vanilla uses it on the \"Link …\" button (the name of the third-party provider follows), shown only while logged in, not yet linked and linking is supported. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/pdx_account/status_widget.gui:100",
+   "vanilla: jomini/localization/pdx_account/pdx_account_l_english.yml:10"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StatusWidget.DisconnectAccount",
+  "label": "Unlink account",
+  "summary": "Removes the link between the player's Paradox account and a third-party account, from the account status widget.",
+  "details": "Vanilla uses it on the \"Unlink …\" button, shown only while logged in and linked. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/pdx_account/status_widget.gui:116",
+   "vanilla: jomini/localization/pdx_account/pdx_account_l_english.yml:12"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StatusWidget.Hide",
+  "label": "Hide widget",
+  "summary": "Going by its name, hides the account status widget.",
+  "details": "Vanilla never names it on this type; the lines given are unrelated texts with the word Hide. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StatusWidget.IsAccountConnected",
+  "label": "Account linked",
+  "summary": "Whether the player's Paradox account is linked with a third-party account.",
+  "details": "Vanilla shows the \"Link …\" button while this is false and the \"Unlink …\" button while it is true, both only when logged in and linking is supported.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/pdx_account/status_widget.gui:101"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StatusWidget.IsBusy",
+  "label": "Account widget busy",
+  "summary": "Whether the account status widget is busy with a request.",
+  "details": "Vanilla switches the link and unlink buttons off while this is true and shows something in their place instead.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/pdx_account/status_widget.gui:102"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StatusWidget.Logout",
+  "label": "Log out",
+  "summary": "Logs the player out of their Paradox account.",
+  "details": "Vanilla uses it on the account status widget's logout button, shown only while logged in. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/pdx_account/status_widget.gui:136"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StatusWidget.Self",
+  "label": "Status widget itself",
+  "summary": "Going by its name, the account status widget itself, for passing it on to another function.",
+  "details": "Vanilla never uses it on this type; the lines given follow other types and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StatusWidget.Show",
+  "label": "Show widget",
+  "summary": "Going by its name, shows the account status widget.",
+  "details": "The opposite of Hide. Vanilla never names it on this type; the lines given are unrelated texts with the word Show. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StatusWidget.SupportsConnectAccount",
+  "label": "Linking supported",
+  "summary": "Whether linking the Paradox account with a third-party account is supported here.",
+  "details": "Vanilla shows the \"Link …\" and \"Unlink …\" buttons only while this is true.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/pdx_account/status_widget.gui:101"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StatusWidget.ToggleCreateAccountWindow",
+  "label": "Create account window",
+  "summary": "Opens or closes the window for creating a Paradox account; it returns nothing.",
+  "details": "The engine's account status bar runs it when the Create Account button is clicked. That button shows only while the player is not logged in, and works only when logging in is possible. It belongs to the engine's account screens, not to the game itself.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/pdx_account/status_widget.gui:72"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StatusWidget.ToggleCreateProfileWindow",
+  "label": "Social profile window",
+  "summary": "Opens or closes the window of the player's social profile in the Paradox account screens; it returns nothing.",
+  "details": "The engine's account status bar runs it from its Social Profile button, which shows only while the player is logged in. Going by its name, the window is where the profile is created. It belongs to the engine's account screens, not to the game itself.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: jomini/gui/pdx_account/status_widget.gui:84"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StatusWidget.ToggleLoginWindow",
+  "label": "Login window",
+  "summary": "Opens or closes the Paradox account login window.",
+  "details": "Vanilla's login window uses it on a button click. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/pdx_account/login_window.gui"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.AccessHerdChangeBreakdown",
+  "label": "Herd change breakdown",
+  "summary": "The breakdown of how a character's herd changes, for a tooltip in the Great Steppe window.",
+  "details": "The Great Steppe window is the game's window for the steppe situation. Vanilla passes a character (the Gurkhan shown in the window) and uses the result in the herd tooltip, next to the herd limit and herd conversion breakdowns. Going by the name, it lists what adds to or takes from the herd.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The character whose herd is shown.",
+    "values": "a character"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:569"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.AccessHerdConversionBreakdown",
+  "label": "Herd conversion breakdown",
+  "summary": "The breakdown of a domicile's herd conversion, for the herd tooltip in the Great Steppe window.",
+  "details": "Vanilla passes the Gurkhan's domicile and uses the result in the herd tooltip. What is converted into what is not documented here.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The domicile whose herd is shown.",
+    "values": "a domicile"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:573"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.AccessHerdLimitBreakdown",
+  "label": "Herd limit breakdown",
+  "summary": "The breakdown of a domicile's herd limit (how big the herd can grow), for a tooltip in the Great Steppe window.",
+  "details": "Vanilla passes the Gurkhan's domicile and uses the result in the herd tooltip. Going by the name, it lists what raises or lowers the limit.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The domicile whose herd limit is shown.",
+    "values": "a domicile"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:565"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.AccessSelf",
+  "label": "Steppe window itself",
+  "summary": "Going by its name, gives access to the Great Steppe window itself.",
+  "details": "Vanilla never uses AccessSelf on this type; the lines given follow PdxGuiWidget and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.Close",
+  "label": "Close window",
+  "summary": "Closes the Great Steppe window.",
+  "details": "Vanilla uses it on the window's close button. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:60"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.GetAstrologer",
+  "label": "Astrologer",
+  "summary": "Going by its name, the astrologer shown in the Great Steppe window.",
+  "details": "Vanilla sets it as the context of the window's astrologer part, which also shows season predictions and court position tasks. Whose astrologer it is is not documented; going by those uses, it is the player's court astrologer.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:626"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.GetAstrologerAnimation",
+  "label": "Astrologer animation",
+  "summary": "Going by its use, the name of the animation the astrologer's portrait plays in the Great Steppe window.",
+  "details": "Vanilla passes it as the animation argument of the astrologer's animated portrait. UpdateAstrologerAnimation is called when one of the astrologer's tasks is clicked, so it probably changes this value; the game does not say.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.GetCharacterList",
+  "label": "Herd leaderboard list",
+  "summary": "The character list of the Great Steppe window, used for its herd leaderboard.",
+  "details": "Vanilla sets it as the context of the herd leaderboard window inside the Great Steppe window, and of one more box in the window. Going by the leaderboard use, it holds characters ranked by herd; the game does not document the order.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:102"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.GetFuturePhases",
+  "label": "Future phases",
+  "summary": "Going by its name, the phases still to come in the steppe situation.",
+  "details": "Vanilla never names it on this type; other situation windows use GetFuturePhases on situation phases, which is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.GetGurkhan",
+  "label": "Gurkhan",
+  "summary": "The Gurkhan shown in the Great Steppe window.",
+  "details": "Vanilla sets it as the context of the window's Gurkhan part, next to the Gurkhan's location text. Going by the name, the Gurkhan is the character who holds that rank in the steppe situation; the game documents nothing more here.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:384"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.GetGurkhanLocationDesc",
+  "label": "Gurkhan location text",
+  "summary": "Going by its name, a text describing where the Gurkhan is, for the Great Steppe window.",
+  "details": "Vanilla shows it in the window's Gurkhan part.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:543"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.GetHerdLeaderboardWindow",
+  "label": "Herd leaderboard window",
+  "summary": "The herd leaderboard window that belongs to the Great Steppe window.",
+  "details": "Vanilla sets it as a context at the top of the Great Steppe window; the leaderboard is shown or hidden with its IsVisible.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:5"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.GetPlayerSubRegion",
+  "label": "Player's sub-region",
+  "summary": "Going by its name, the steppe sub-region (part of the situation) where the player is.",
+  "details": "Vanilla compares it with each shown sub-region, together with IsParticipant and IsSubRegionSelected, to show a marker on the sub-region that matches.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.GetSeasonEffects",
+  "label": "Season effects",
+  "summary": "Going by its name, the effects of the season in a given steppe sub-region, as a list.",
+  "details": "Vanilla passes the selected sub-region and shows the list under a season effects heading in the Great Steppe window. The list's item type is not documented.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The sub-region; vanilla passes the selected one.",
+    "values": "a situation sub-region"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.GetSeasonPrediction",
+  "label": "Season prediction",
+  "summary": "Going by its name, the astrologer's season prediction for a given steppe sub-region.",
+  "details": "Vanilla passes the selected sub-region and uses the result in the astrologer part of the Great Steppe window; GetSeasonPredictionDesc then turns a prediction into text.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The sub-region; vanilla passes the selected one.",
+    "values": "a situation sub-region"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:762"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.GetSeasonPredictionDesc",
+  "label": "Season prediction text",
+  "summary": "The text of a court astrologer's season prediction.",
+  "details": "Vanilla passes the prediction (a CourtAstrologerPrediction) from GetSeasonPrediction.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The prediction to describe.",
+    "values": "a court astrologer prediction"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:789"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.GetSelectedRegionSeasonEndDate",
+  "label": "Season end date",
+  "summary": "The date the current season ends in the sub-region selected in the Great Steppe window, as text.",
+  "details": "Vanilla shows it under the season's name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:276"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.GetSelectedRegionSeasonName",
+  "label": "Season name",
+  "summary": "The name of the current season in the sub-region selected in the Great Steppe window.",
+  "details": "",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:267"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.GetSelectedSubRegion",
+  "label": "Selected sub-region",
+  "summary": "The steppe sub-region the player has selected in the Great Steppe window.",
+  "details": "Vanilla passes it to GetSeasonEffects and GetSeasonPrediction and sets it as a context for the season part. SelectSubRegion changes it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.GetSituation",
+  "label": "Situation",
+  "summary": "The steppe situation the Great Steppe window shows.",
+  "details": "It hands over to the situation itself, so the situation's own functions work after it. Vanilla sets it as the window's context.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:4"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.GetSubRegionTitle",
+  "label": "Sub-region heading",
+  "summary": "The heading text for the sub-region part of the Great Steppe window.",
+  "details": "Going by its name and use, it names the shown sub-region; the game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:256"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.IsParticipant",
+  "label": "Is participant",
+  "summary": "Whether the player takes part in the steppe situation (yes or no).",
+  "details": "Vanilla uses it to show parts of the Great Steppe window only to participants, such as the marker on the player's own sub-region.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.IsSubRegionSelected",
+  "label": "Is sub-region selected",
+  "summary": "Whether the given steppe sub-region is the one selected in the Great Steppe window (yes or no).",
+  "details": "Vanilla uses it in the season tabs to show or hide parts depending on whether the tab's sub-region is the selected one.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The sub-region to check.",
+    "values": "a situation sub-region"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:113"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.SelectSubRegion",
+  "label": "Select sub-region",
+  "summary": "Selects the given steppe sub-region in the Great Steppe window.",
+  "details": "Vanilla calls it when a season tab's click animation finishes. It returns nothing.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The sub-region to select.",
+    "values": "a situation sub-region"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.SelectSubRegionByKey",
+  "label": "Select sub-region by key",
+  "summary": "Going by its name, selects a steppe sub-region in the Great Steppe window by its key.",
+  "details": "Vanilla's files never name it. Going by the name, it does what SelectSubRegion does but takes the sub-region's key. It returns nothing.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Going by the name, the sub-region's key.",
+    "values": "not documented"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.Self",
+  "label": "Steppe window itself",
+  "summary": "Going by its name, the Great Steppe window itself, for passing it on to another function.",
+  "details": "Vanilla never uses it on this type; the lines given follow other types and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "SteppeWindow.UpdateAstrologerAnimation",
+  "label": "Update astrologer animation",
+  "summary": "Going by its name, changes the astrologer portrait's animation to match a court position task.",
+  "details": "Vanilla calls it when the player clicks one of the astrologer's tasks in the Great Steppe window. It returns nothing.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The task that was picked.",
+    "values": "a court position task type"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_the_great_steppe.gui:862"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.AccessSelf",
+  "label": "Story itself",
+  "summary": "Going by its name, gives access to the story cycle itself.",
+  "details": "A story is a running story cycle (common/story_cycles), such as a pet or a long quest. Vanilla never uses AccessSelf on this type; the lines given follow PdxGuiWidget and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.Custom",
+  "label": "Custom text",
+  "summary": "A text made by a custom localization entry, evaluated for this story cycle.",
+  "details": "The key names a custom text defined in common/customizable_localization. Vanilla uses it for pet stories, for example the dog's name, pronoun and fur colour.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The custom localization key.",
+    "values": "a key in quotes, such as 'DogStoryNameAll'"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetArtifactLists",
+  "label": "Artifact lists",
+  "summary": "The story's artifact lists to show in its situation list entry.",
+  "details": "A story type fills them with `artifact_list = { variable_name = ... label = ... }` in its `visualization` block; each shows the artifacts saved in that variable list on the story.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:80"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetBackground",
+  "label": "Background",
+  "summary": "The story's background picture.",
+  "details": "It comes from the story type's `background` blocks (the first whose trigger passes); without one the game's default background is used. Vanilla shows it in the situation list.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:43"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetBasicCounters",
+  "label": "Counters",
+  "summary": "The story's basic counters (bars showing a number from a variable) to show in the situation list.",
+  "details": "A story type defines them with `basic_counter` in its `visualization` block: the variable, min and max (default 0 to 10), labels and an optional tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:92"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetCharacterLists",
+  "label": "Character lists",
+  "summary": "The story's character lists to show in its situation list entry.",
+  "details": "A story type fills them with `character_list = { variable_name = ... label = ... }` in its `visualization` block; each shows the characters saved in that variable list on the story.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:73"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetCustomString",
+  "label": "Custom text",
+  "summary": "The story's own text for the situation list, from its `custom_string_key`.",
+  "details": "The story type sets the text key in its `visualization` block; the text can use STORY to refer to the story. Shown only when HasCustomString is true.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:82",
+   "vanilla: gui/window_situation_list.gui:626"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetDecisions",
+  "label": "Decisions",
+  "summary": "The decisions the story's situation list entry shows.",
+  "details": "A story type lists them in `decisions = { ... }` in its `visualization` block.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:111"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetDesc",
+  "label": "Description",
+  "summary": "Going by its name, the story's description text.",
+  "details": "Vanilla never names it on this type; the lines given use GetDesc on other types (DLCs, situation types) and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetIcon",
+  "label": "Icon",
+  "summary": "The story's icon.",
+  "details": "It comes from the story type's `icon` blocks (the first whose trigger passes); without one the game looks for a file named like the story type in gfx/interface/icons/story_cycles/. Vanilla shows it in the situation list.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:26"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetModifiers",
+  "label": "Modifiers",
+  "summary": "The static modifiers the story's situation list entry shows.",
+  "details": "A story type lists them in `modifiers = { ... }` in its `visualization` block. Vanilla shows each icon only while the story's owner has that modifier.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:111",
+   "vanilla: gui/window_situation_list.gui:653"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetName",
+  "label": "Name",
+  "summary": "Going by its name, the story's display name.",
+  "details": "Vanilla never names it on this type; the lines given use GetName on other types and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetOwner",
+  "label": "Owner",
+  "summary": "The character who owns the story.",
+  "details": "Vanilla's pet texts use it to reach the owner's variables, for example the city a cat is named after.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetSpecificArtifacts",
+  "label": "Single artifacts",
+  "summary": "The single artifacts the story's situation list entry shows.",
+  "details": "A story type defines each with `artifact = { variable_name = ... label = ... }` in its `visualization` block; it shows the artifact saved in that variable on the story. Lists go through GetArtifactLists.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:79"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetSpecificCharacters",
+  "label": "Single characters",
+  "summary": "The single characters the story's situation list entry shows.",
+  "details": "A story type defines each with `character = { variable_name = ... label = ... }` in its `visualization` block; it shows the character saved in that variable on the story. Lists go through GetCharacterLists.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:68"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetSpecificTitles",
+  "label": "Single titles",
+  "summary": "The single titles the story's situation list entry shows.",
+  "details": "A story type defines each with `title = { variable_name = ... label = ... }` in its `visualization` block; it shows the title saved in that variable on the story. Lists go through GetTitleLists.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:77"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetTitleLists",
+  "label": "Title lists",
+  "summary": "The story's title lists to show in its situation list entry.",
+  "details": "A story type fills them with `title_list = { variable_name = ... label = ... }` in its `visualization` block.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:78"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetTraits",
+  "label": "Traits",
+  "summary": "The traits the story's situation list entry shows.",
+  "details": "A story type lists them in `traits = { ... }` in its `visualization` block.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:111"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.GetTugOfWarCounters",
+  "label": "Tug-of-war counters",
+  "summary": "The story's tug-of-war counters (bars that lean one way or the other around a middle) to show in the situation list.",
+  "details": "A story type defines them with `tug_of_war_counter` in its `visualization` block: the variable, min and max (vanilla's example uses -10 to 10), labels and an optional tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:101"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.HasArtifactLists",
+  "label": "Has artifact lists",
+  "summary": "Whether the story has artifact lists to show (yes or no).",
+  "details": "Vanilla uses it to show the artifact list part of the situation list entry only when there is one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.HasBasicCounters",
+  "label": "Has counters",
+  "summary": "Whether the story has basic counters to show (yes or no).",
+  "details": "Vanilla uses it to show the counter part of the situation list entry only when there is one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.HasCharacterLists",
+  "label": "Has character lists",
+  "summary": "Whether the story has character lists to show (yes or no).",
+  "details": "Vanilla uses it to show the character list part of the situation list entry only when there is one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.HasCustomString",
+  "label": "Has custom text",
+  "summary": "Whether the story type sets a `custom_string_key` (yes or no).",
+  "details": "Vanilla shows the custom text part of the situation list entry only when this is true.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_situation_list.gui:619"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.HasDecisions",
+  "label": "Has decisions",
+  "summary": "Whether the story has decisions to show (yes or no).",
+  "details": "Vanilla uses it to show the decisions part of the situation list entry only when there are any.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.HasModifiers",
+  "label": "Has modifiers",
+  "summary": "Whether the story has modifiers to show (yes or no).",
+  "details": "Vanilla uses it to show the modifiers part of the situation list entry only when there are any.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_situation_list.gui:639"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.HasSpecificArtifacts",
+  "label": "Has single artifacts",
+  "summary": "Whether the story has single artifacts to show (yes or no).",
+  "details": "Vanilla uses it to show that part of the situation list entry only when there are any.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.HasSpecificCharacters",
+  "label": "Has single characters",
+  "summary": "Whether the story has single characters to show (yes or no).",
+  "details": "Vanilla uses it to show that part of the situation list entry only when there are any.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.HasSpecificTitles",
+  "label": "Has single titles",
+  "summary": "Whether the story has single titles to show (yes or no).",
+  "details": "Vanilla uses it to show that part of the situation list entry only when there are any.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.HasTitleLists",
+  "label": "Has title lists",
+  "summary": "Whether the story has title lists to show (yes or no).",
+  "details": "Vanilla uses it to show the title list part of the situation list entry only when there is one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.HasTraits",
+  "label": "Has traits",
+  "summary": "Whether the story has traits to show (yes or no).",
+  "details": "Vanilla uses it to show the traits part of the situation list entry only when there are any.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.HasTugOfWarCounters",
+  "label": "Has tug-of-war counters",
+  "summary": "Whether the story has tug-of-war counters to show (yes or no).",
+  "details": "Vanilla uses it to show that part of the situation list entry only when there is one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.MakeScope",
+  "label": "As script scope",
+  "summary": "The story as a script scope, so its variables and flags can be read.",
+  "details": "Vanilla follows it with Var('name') to read a variable saved on the story, for example El Cid's liege or the loyalty counter.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Story.Self",
+  "label": "Story itself",
+  "summary": "The story itself, for passing it on to another function.",
+  "details": "Vanilla passes it to a story counter's GetTooltip in the situation list.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryCycleCounterVisualization.AccessSelf",
+  "label": "Counter itself",
+  "summary": "Going by its name, gives access to the story counter display itself.",
+  "details": "A counter display is one `basic_counter` or `tug_of_war_counter` from a story type's `visualization` block. Vanilla never uses AccessSelf on this type; the lines given follow PdxGuiWidget and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryCycleCounterVisualization.GetLabel",
+  "label": "Label",
+  "summary": "The label text of a story counter, from its `label`.",
+  "details": "Vanilla shows it with the counter in the situation list.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:96"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryCycleCounterVisualization.GetMaxLabel",
+  "label": "Maximum label",
+  "summary": "The text at the high end of a story counter, from its `max_label`.",
+  "details": "Without a `max_label` it shows the maximum value.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:89"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryCycleCounterVisualization.GetMaxValue",
+  "label": "Maximum value",
+  "summary": "The highest value of a story counter, from its `max` (default 10).",
+  "details": "Vanilla uses it as the bar's maximum.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:89"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryCycleCounterVisualization.GetMinLabel",
+  "label": "Minimum label",
+  "summary": "The text at the low end of a story counter, from its `min_label`.",
+  "details": "Without a `min_label` it shows the minimum value.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:89"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryCycleCounterVisualization.GetMinValue",
+  "label": "Minimum value",
+  "summary": "The lowest value of a story counter, from its `min` (default 0).",
+  "details": "Vanilla uses it as the bar's minimum.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:89"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryCycleCounterVisualization.GetTooltip",
+  "label": "Tooltip",
+  "summary": "The tooltip text of a story counter, from its optional `tooltip` key, filled in for a given story.",
+  "details": "Vanilla passes the story; the tooltip text can use STORY to refer to it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The story the counter belongs to.",
+    "values": "a story"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:90"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryCycleCounterVisualization.GetVariableName",
+  "label": "Variable name",
+  "summary": "The name of the story variable a counter shows, from its `variable_name`.",
+  "details": "Vanilla shows the counter only when the story has a flag with this name (HasFlag), and reads the counter's value with Story.MakeScope.Var(...) and this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryCycleCounterVisualization.Self",
+  "label": "Counter itself",
+  "summary": "Going by its name, the story counter display itself, for passing it on to another function.",
+  "details": "Vanilla never uses it on this type; the lines given follow other types and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryCycleVariableVisualization.AccessSelf",
+  "label": "Story entry itself",
+  "summary": "Going by its name, gives access to the story variable display itself.",
+  "details": "A variable display is one character, title or artifact entry (single or list) from a story type's `visualization` block. Vanilla never uses AccessSelf on this type; the lines given follow PdxGuiWidget and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryCycleVariableVisualization.GetLabel",
+  "label": "Label",
+  "summary": "The label text of a story's character, title or artifact entry, from its `label`.",
+  "details": "Vanilla shows it next to the entry in the situation list.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/story_cycles/_story_cycles.info:64"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryCycleVariableVisualization.GetVariableName",
+  "label": "Variable name",
+  "summary": "The name of the story variable (or variable list) an entry shows, from its `variable_name`.",
+  "details": "Vanilla shows a single entry only when the story has a flag with this name (HasFlag) and reads it with Story.MakeScope.Var(...), for example .Char, .Title or .Artifact. A list entry is hidden when the list from GetList(...) is empty.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryCycleVariableVisualization.Self",
+  "label": "Story entry itself",
+  "summary": "Going by its name, the story variable display itself, for passing it on to another function.",
+  "details": "Vanilla never uses it on this type; the lines given follow other types and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryInfo.AccessSelf",
+  "label": "Story info itself",
+  "summary": "Going by its name, gives access to the story info itself.",
+  "details": "Story info appears only in the game's debug watch window. Vanilla never uses AccessSelf on this type; the lines given follow PdxGuiWidget and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryInfo.GetAllDates",
+  "label": "All dates",
+  "summary": "Going by its name, all dates kept for a story, as text for the debug watch window.",
+  "details": "Vanilla shows it only in the debug watch window. Which dates these are is not documented.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/debug/window_watch.gui"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryInfo.GetDate",
+  "label": "Date",
+  "summary": "Going by its name, a date of the story, as text for the debug watch window.",
+  "details": "Vanilla shows it only in the debug watch window. Which date it is is not documented.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/debug/window_watch.gui"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryInfo.GetName",
+  "label": "Name",
+  "summary": "The story's name, as shown in the debug watch window.",
+  "details": "Vanilla uses it only in the debug watch window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/debug/window_watch.gui"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryInfo.GetScopesDebug",
+  "label": "Saved scopes (debug)",
+  "summary": "Going by its name, a debug text listing the story's saved scopes.",
+  "details": "Vanilla shows it as a tooltip in the debug watch window only.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/debug/window_watch.gui"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StoryInfo.Self",
+  "label": "Story info itself",
+  "summary": "Going by its name, the story info itself, for passing it on to another function.",
+  "details": "Vanilla never uses it on this type; the lines given follow other types and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StraitMapIcon.AccessSelf",
+  "label": "Strait icon itself",
+  "summary": "Going by its name, gives access to the strait map icon itself.",
+  "details": "A strait map icon is an icon type of the map icon layer (vanilla's gui/map_icon_layer.gui uses its tooltip). Vanilla never uses AccessSelf on this type; the lines given follow PdxGuiWidget and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StraitMapIcon.GetTooltip",
+  "label": "Tooltip",
+  "summary": "The tooltip text of a strait icon on the map.",
+  "details": "Vanilla uses it on the strait icons of the map icon layer.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "StraitMapIcon.Self",
+  "label": "Strait icon itself",
+  "summary": "Going by its name, the strait map icon itself, for passing it on to another function.",
+  "details": "Vanilla never uses it on this type; the lines given follow other types and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.AccessSelf",
+  "label": "Struggle itself",
+  "summary": "Going by its name, gives access to the struggle itself.",
+  "details": "A struggle is a game feature that moves through phases as catalysts happen (the common/struggle folder). Vanilla never uses AccessSelf on this type; the lines given follow PdxGuiWidget and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.Custom",
+  "label": "Custom text",
+  "summary": "Going by its name, a text made by a custom localization entry, evaluated for this struggle.",
+  "details": "Vanilla never uses it on this type; the lines given call Custom on characters, which works the same way there (the key names an entry in common/customizable_localization). That is a hint, not evidence for struggles.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Going by other types' use, the custom localization key.",
+    "values": "a key in quotes"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetCatalystHistory",
+  "label": "Catalyst history text",
+  "summary": "A text of the catalysts that happened for a given phase of the struggle.",
+  "details": "Vanilla passes the current leading phase in the realm window's struggle tooltip. A catalyst is an event or action that pushes the struggle towards a phase. The exact form of the text is not documented.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The phase; vanilla passes the current leading phase.",
+    "values": "a struggle phase"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/realm_window_l_english.yml:87"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetCatalystHistoryForPhase",
+  "label": "Catalyst history",
+  "summary": "Going by its name, the list of catalysts that happened for a given phase of the struggle.",
+  "details": "A catalyst is an event or action that pushes the struggle towards a phase. Vanilla uses the list in a struggle phase tooltip, passing that phase. GetCatalystHistory is a related function that returns a text.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The phase to list catalysts for.",
+    "values": "a struggle phase"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:8011"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetCharacterInvolvementTypeNoConcept",
+  "label": "Involvement (plain)",
+  "summary": "How the given character is involved in the struggle, as text.",
+  "details": "It takes one value: the character. Vanilla's struggle map tooltip shows it after \"Involvement:\", next to the character's culture and faith. Going by its name, the text comes without the link to the game concept's explanation.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The character whose involvement is shown.",
+    "values": "a character"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/struggles/struggles_l_english.yml:183"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetCharacterInvolvementTypeNoTooltip",
+  "label": "Involvement (no tooltip)",
+  "summary": "Going by its name, how a given character is involved in the struggle, as text without a tooltip.",
+  "details": "Vanilla's files never name it. Compare GetCharacterInvolvementTypeNoConcept, which vanilla uses.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Going by the related function, the character.",
+    "values": "not documented"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetCultureEffect",
+  "label": "Culture effect",
+  "summary": "Going by its name, a text of what a struggle phase does to cultures, for a given character.",
+  "details": "Vanilla shows it in a struggle phase tooltip, passing the phase and a character, in the same part as GetFaithEffect, GetOtherEffect and GetWarEffect.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The phase.",
+    "values": "a struggle phase"
+   },
+   {
+    "name": "Arg1",
+    "text": "The character the text is for.",
+    "values": "a character"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:7459"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetCurrentLeadingPhase",
+  "label": "Leading phase",
+  "summary": "The phase the struggle is currently heading towards most strongly.",
+  "details": "Vanilla compares phases with it to mark the leading one in progress tooltips and passes it to GetCatalystHistory.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetCurrentPhase",
+  "label": "Current phase",
+  "summary": "The phase the struggle is in now.",
+  "details": "Vanilla shows its name in the realm window and the situation list, and the top bar uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetCurrentPhaseStartDate",
+  "label": "Phase start date",
+  "summary": "The date the struggle's current phase began.",
+  "details": "Vanilla turns it into text with GetString in the current phase tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetEndingPhaseEffectDesc",
+  "label": "Ending effect text",
+  "summary": "Going by its name, a text of what ending the struggle in a given phase does, for a given character.",
+  "details": "Vanilla shows it in the struggle window, and shows a no-effect text instead when it is empty.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The phase.",
+    "values": "a struggle phase"
+   },
+   {
+    "name": "Arg1",
+    "text": "The character the text is for.",
+    "values": "a character"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_struggle.gui:1712"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetFaithEffect",
+  "label": "Faith effect",
+  "summary": "Going by its name, a text of what a struggle phase does to faiths, for a given character.",
+  "details": "Vanilla shows it in a struggle phase tooltip, passing the phase and a character, in the same part as GetCultureEffect and GetOtherEffect.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The phase.",
+    "values": "a struggle phase"
+   },
+   {
+    "name": "Arg1",
+    "text": "The character the text is for.",
+    "values": "a character"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:7508"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetID",
+  "label": "ID",
+  "summary": "The struggle's ID number.",
+  "details": "Vanilla passes it to ToggleGameViewData to open the struggle window or the struggle involvement window for this struggle.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetInterloperParticipants",
+  "label": "Interlopers",
+  "summary": "Going by its name, the struggle's interloper participants.",
+  "details": "Vanilla's files never name it, and the game does not say what an interloper is here. The game documents no return type; going by the name it is a list.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetInvolvedParticipants",
+  "label": "Involved participants",
+  "summary": "Going by its name, the struggle's involved participants.",
+  "details": "Vanilla's files never name it. The game documents no return type; going by the name it is a list.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetLatestCatalystHistory",
+  "label": "Latest catalysts",
+  "summary": "The list of the struggle's most recent catalysts.",
+  "details": "Vanilla uses it as the list of the catalyst history part of a struggle tooltip, and marks entries by whether their phase is the current leading phase.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:7180"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetName",
+  "label": "Name",
+  "summary": "The struggle's name.",
+  "details": "Vanilla uses it in event texts about the struggle starting and ending.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetNameNoTooltip",
+  "label": "Name (no tooltip)",
+  "summary": "The struggle's name without a tooltip.",
+  "details": "Vanilla uses it in texts that sit inside other tooltips, such as the struggle involvement window's counts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetNextPhase",
+  "label": "Next phase",
+  "summary": "The phase the struggle is moving into.",
+  "details": "Vanilla shows its name while the struggle is changing phase, with the date from GetTransitionCompeleteDate.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetNextPhasesSorted",
+  "label": "Possible next phases",
+  "summary": "The phases the struggle can move into next, as a sorted list.",
+  "details": "Vanilla shows the list in a tooltip. The sort order is not documented.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetNextPhasesStringList",
+  "label": "Possible next phases text",
+  "summary": "The phases the struggle can move into next, as one text.",
+  "details": "Vanilla uses it in the sentence that current events may take the struggle into these phases.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetNumCompletionsOfCatalystForPhase",
+  "label": "Catalyst count",
+  "summary": "How many times a given catalyst has happened for a given phase of the struggle.",
+  "details": "A whole number. Vanilla's struggle window shows the count only when it is above 0.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The phase; vanilla passes the phase selected in the struggle window.",
+    "values": "a struggle phase"
+   },
+   {
+    "name": "Arg1",
+    "text": "The catalyst to count.",
+    "values": "a catalyst"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetNumCountiesWithCulture",
+  "label": "Counties with culture",
+  "summary": "How many counties in the struggle's region have a given culture.",
+  "details": "A whole number. Vanilla shows it in the struggle involvement window.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The culture to count.",
+    "values": "a culture"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetNumCountiesWithFaith",
+  "label": "Counties with faith",
+  "summary": "How many counties in the struggle's region follow a given faith.",
+  "details": "A whole number. Vanilla shows it in the struggle involvement window.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The faith to count.",
+    "values": "a faith"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetOtherEffect",
+  "label": "Other effects",
+  "summary": "Going by its name, a text of what else a struggle phase does (beyond culture and faith), for a given character.",
+  "details": "Vanilla shows it in a struggle phase tooltip, passing the phase and a character, next to the culture, faith and war effects.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The phase.",
+    "values": "a struggle phase"
+   },
+   {
+    "name": "Arg1",
+    "text": "The character the text is for.",
+    "values": "a character"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:7557"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetPhaseDescription",
+  "label": "Phase description",
+  "summary": "The description of a given phase of the struggle.",
+  "details": "Vanilla shows it in the struggle phase tooltip.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The phase to describe.",
+    "values": "a struggle phase"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetPhaseDurationValue",
+  "label": "Phase goal",
+  "summary": "The number of points a phase needs before the struggle reaches it.",
+  "details": "A whole number. Vanilla shows it after GetPhaseValue as progress/total, and a vanilla text says that reaching this score towards an ending phase applies its effects and ends the struggle.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/struggles/struggles_l_english.yml:195"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetPhaseValue",
+  "label": "Phase progress",
+  "summary": "How far the struggle has progressed towards a given phase.",
+  "details": "A whole number. Vanilla shows it against GetPhaseDurationValue for phases that advance by points, and alone for phases that advance by time.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The phase.",
+    "values": "a struggle phase"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetPlayerInvolvementDesc",
+  "label": "Player involvement text",
+  "summary": "A text describing how the player is involved in the struggle.",
+  "details": "Vanilla shows it in the struggle window and the struggle involvement window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetPlayerInvolvementDetails",
+  "label": "Player involvement details",
+  "summary": "A more detailed text about the player's involvement in the struggle.",
+  "details": "Vanilla shows it in the struggle involvement window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetProgress",
+  "label": "Progress",
+  "summary": "The struggle's progress as a number, for a progress bar.",
+  "details": "A decimal number. Vanilla uses it as the value of the struggle's bar in the top bar. What it measures is not documented.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetStruggleStartDate",
+  "label": "Start date",
+  "summary": "The date the struggle began.",
+  "details": "Vanilla turns it into text with GetString.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetSummary",
+  "label": "Summary",
+  "summary": "Going by its name, a short summary text of the struggle.",
+  "details": "Vanilla never names it on this type; the lines given use GetSummary on ruler objective advice and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetTransitionCompeleteDate",
+  "label": "Phase change date",
+  "summary": "The date the struggle finishes moving into its next phase.",
+  "details": "Vanilla shows the time until then with GetTimeToDate. The name has a typo in the game (Compelete); it must be written exactly so.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Struggle.GetType",
+  "label": "Struggle type",
+  "summary": "The struggle's type.",
+  "details": "Vanilla takes the struggle's illustration from it in the situation list.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ }
+]

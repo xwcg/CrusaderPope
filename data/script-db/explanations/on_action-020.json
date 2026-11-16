@@ -1,0 +1,402 @@
+[
+ {
+  "kind": "on_action",
+  "key": "spawn_celestial_governance_contract_on_action",
+  "label": "Celestial governance contract",
+  "summary": "Creates a governance contract for a celestial government by trying the civic pool first and the military pool second.",
+  "details": "It picks the first of the two on_actions that is allowed to run, and only that one. Script fires it, not the game's code. The game documents no scope for it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "spawn_celestial_military_governance_contract_on_action",
+  "label": "Celestial military contract",
+  "summary": "Creates one random military-style governance contract for a celestial government.",
+  "details": "It only runs if the vassal contract has the flag celestial_province_military or celestial_province_protectorate (a military administration). Then it picks one of seven contract on_actions with equal weight: five Celestial ones (unsafe highways, escaped justice, forced conscription, combat train monks, missing equipment) and two reused ones from the EP3 expansion (rampant bandits, raiding peasants; vanilla's comment calls them thematically fitting). Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "spawn_mandala_realm_contract_on_action",
+  "label": "Mandala realm contract",
+  "summary": "Creates one random contract for a mandala realm ruler, chosen from a pool of 41 contract on_actions.",
+  "details": "It only runs if scope:mandala_ruler has a capital province, so the caller must have saved that scope. The pool is grouped by aspect (Any, Creation, Destruction, Serenity, Trickery); most entries weigh 100, some 75 and one 125. Vanilla comments mark some contracts as also usable as generic ones. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "spawn_natural_disaster_contract_on_action",
+  "label": "Natural disaster contract",
+  "summary": "Creates one random natural disaster contract, for every kind of administrative government.",
+  "details": "It has no condition. It picks with equal weight between food shortage, ravaged buildings, medieval medicine and disaster displacement. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "spouse_councillor_default_on_action",
+  "label": "Spouse councillor task",
+  "summary": "Gives the character's spouse councillor a chance to trigger one of five council task on_actions.",
+  "details": "It only runs if the character has a spouse councillor and that councillor is scope:councillor. The pool has equal weights for court politics, chivalry, court intrigue, manage domain and patronage tasks. A base chance (a game constant) applies, and for AI rulers the chance of no event is raised (by 30 for kingdom tier or higher, 70 for duchy tier or higher, 95 otherwise), which vanilla's comments say saves performance. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "standard_abduct_method_setup",
+  "label": "Abduct, standard method",
+  "summary": "Picks the opening event for the standard way of carrying out an abduction scheme.",
+  "details": "One of three events is chosen with equal weight: seizing the victim from the roadside, on the way, or unwelcome guests (names from the vanilla comments). The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "standard_claim_throne_method_setup",
+  "label": "Claim throne, standard method",
+  "summary": "Picks the opening event for the standard way of carrying out a claim throne scheme.",
+  "details": "One of two events is chosen with equal weight: a distant relation or a mythical founder (names from the vanilla comments). A third event, previous holder promise, is commented out and never runs. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "steal_back_artifact_failure",
+  "label": "Steal back artifact failed",
+  "summary": "Runs when a steal back artifact scheme fails: fires the standard failure event and notifies the scheme's puppeteer.",
+  "details": "The failure event steal_back_artifact_outcome.2001 always fires. The effect then calls vanilla's notify_puppeteer_of_scheme_outcome_effect with a bad-outcome toast type, using scope:owner and scope:target, so those must be saved by the caller. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "steal_back_artifact_ongoing",
+  "label": "Steal back artifact in progress",
+  "summary": "Runs while a steal back artifact scheme is under way and may fire a random event, most often none.",
+  "details": "It only runs if the character is not travelling. The pool has a weight of 100 for no event, 2 for bribing the antiquarian to lower security, 2 for a generic intrigue bribe and 3 for the wrapper of the general agent events. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "steal_back_artifact_success",
+  "label": "Steal back artifact succeeded",
+  "summary": "Runs when a steal back artifact scheme succeeds: fires the standard success event, tells the puppeteer and may make a knight eligible for the scoundrel accolade.",
+  "details": "The success event steal_back_artifact_outcome.1001 always fires. The effect calls vanilla's notify_puppeteer_of_scheme_outcome_effect with a good-outcome toast type (needs scope:owner and scope:target). On scope:owner there is also a small chance (2, scaled by accolade progress, zero if no knight can unlock the scoundrel attribute) that a random eligible knight (acclaimed ones are favoured) is marked as able to unlock it, the owner's accolade progress is reset to 0, and an interface message is sent. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "steal_herd_failure",
+  "label": "Steal herd failed",
+  "summary": "Runs when a steal herd scheme fails and picks the failure event.",
+  "details": "The standard failure event is almost always chosen (weight 100). With weight 2 the target steals the owner's herd instead (vanilla comment). The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "steal_herd_ongoing",
+  "label": "Steal herd in progress",
+  "summary": "Runs while a steal herd scheme is under way and sometimes fires a random event.",
+  "details": "Only a 5 percent chance applies that any event fires at all (chance_to_happen = 5). If one fires, it is one of two scheme events (talking with a knight or peasant; sending someone as a herder, from the vanilla comments), a generic intrigue bribe (weight 2) or the wrapper of the general agent events (weight 3). The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "steal_herd_success",
+  "label": "Steal herd succeeded",
+  "summary": "Runs when a steal herd scheme succeeds: picks the success event and may make a knight eligible for the scoundrel accolade.",
+  "details": "The main success event is almost always chosen (weight 100; vanilla comment says 20 percent or more of the herd is stolen). With weight 5 another success event is chosen (vanilla's comment suggests the thief thinks about taking something else). The effect gives scope:owner a small chance (2, scaled by accolade progress, zero if no knight can unlock the scoundrel attribute) to mark a random eligible knight (acclaimed ones are favoured) as able to unlock it, reset the owner's accolade progress to 0 and send an interface message. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stewardship_duty_special_2000_mediation_background_events",
+  "label": "Mediation background events",
+  "summary": "Picks a background event for the stewardship vassal mediation chain.",
+  "details": "One of three events (2051, 2052, 2053) is chosen with equal weight. The chain belongs to the event stewardship_duty_special.2000, Vassal Mediation, which the stewardship uncommon pool offers. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stewardship_duty_special_2000_mediation_stage_1",
+  "label": "Mediation, stage 1",
+  "summary": "Picks an event for the first stage of the stewardship vassal mediation chain.",
+  "details": "One of seven events (2011 to 2015, 2018 and 2019) is chosen with equal weight. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stewardship_duty_special_2000_mediation_stage_2",
+  "label": "Mediation, stage 2",
+  "summary": "Picks an event for the second stage of the stewardship vassal mediation chain.",
+  "details": "One of five events (2021, 2022, 2025, 2026, 2027) is chosen. Event 2026 is rarer (weight 20 against 100). The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stewardship_lifestyle_common_events",
+  "label": "Stewardship common events",
+  "summary": "The pool of common stewardship lifestyle events, one of which a character gets roughly every 24 months.",
+  "details": "Vanilla says most lifestyle events should be common. The pool has general, wealth, domain, duty and one clan event, mostly at weight 100 (Domineering Guild 200, one martial strategy event 75). It is also the fallback of the uncommon pool. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stewardship_lifestyle_domesday",
+  "label": "Domesday Book chain",
+  "summary": "Picks the next event in the Domesday Book chain of the stewardship lifestyle.",
+  "details": "One of six events is chosen with equal weight (upset priest, concerned noble, resentful guilds, bandit attack, corrupt steward, upset merchants). If none can fire, the game runs stewardship_lifestyle_domesday_end, which ends the chain. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stewardship_lifestyle_domesday_end",
+  "label": "Domesday Book end",
+  "summary": "Fires the final event of the Domesday Book chain.",
+  "details": "It fires stewardship_domain_special.1590. It is the fallback of stewardship_lifestyle_domesday. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stewardship_lifestyle_ongoing_events",
+  "label": "Stewardship ongoing events",
+  "summary": "The general event pool of the stewardship lifestyle: decides whether the character gets an event now and how rare it is.",
+  "details": "It only runs if the character is available. It has a 10 percent chance to give an event (vanilla comment: about one per 18 months); AI rulers get a higher chance of no event (30 for kingdom tier or higher, 70 for duchy tier or higher, 95 otherwise) to save performance. If an event comes, it is from the common pool 80 percent of the time, the uncommon pool 15 and the rare pool 5. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stewardship_lifestyle_progress_pulse",
+  "label": "Stewardship lifestyle pulse",
+  "summary": "The regular check, four times a year, that may give a stewardship lifestyle character an event.",
+  "details": "It only runs for a playable character with the stewardship lifestyle and a capital province. A player must also have had their focus for more than 30 days. It is skipped while one of the variables had_recent_lifestyle_ongoing_event or the three stewardship special-event flags is set. Then it runs the first of two pools that is valid: the ongoing events, or the pool for unavailable characters. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stewardship_lifestyle_rare_events",
+  "label": "Stewardship rare events",
+  "summary": "The pool of rare stewardship lifestyle events, one of which a character gets roughly every 30 years.",
+  "details": "Vanilla says character-defining and easter egg events belong here. The pool has the missing village, the Domesday Book and two stewardship nickname events, all at equal weight. If none can fire, it falls back to the uncommon pool. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stewardship_lifestyle_unavailable_events",
+  "label": "Stewardship events, unavailable",
+  "summary": "The event pool for stewardship lifestyle characters who are not available (imprisoned, leading an army, infirm and so on).",
+  "details": "It only runs if the character is not available. A 10 percent chance applies that an event fires. The four events are bankruptcy, war taxes, convincing a vassal to leave a faction and lowering a faction's discontent during war. Vanilla warns that every event in this pool needs its own is_available trigger. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stewardship_lifestyle_uncommon_events",
+  "label": "Stewardship uncommon events",
+  "summary": "The pool of uncommon stewardship lifestyle events, one of which a character gets roughly every 10 years.",
+  "details": "Vanilla says longer chains and lucrative opportunities belong here. The pool has wealth, domain and duty events at equal weight, for example the inn keeping chain, a bad harvest, a charter fair, a road, and vassal mediation. If none can fire, it falls back to the common pool. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stewardship_road_building_chain",
+  "label": "Road building chain",
+  "summary": "Picks the next step of the stewardship road building chain.",
+  "details": "It takes the first of two events that can fire (1392, then 1391). If neither can, it runs stewardship_road_building_events. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stewardship_road_building_events",
+  "label": "Road building events",
+  "summary": "Picks one random event of the road building project.",
+  "details": "One of twelve events (1311 to 1321 and 1395) is chosen with equal weight. It is the fallback of stewardship_road_building_chain. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "story_cycle_cat_pet_decision_on_actions",
+  "label": "Pet the cat",
+  "summary": "Picks the event shown when the character pets their cat.",
+  "details": "One of two variants of the event is chosen with equal weight. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "story_cycle_dog_pet_decision_on_actions",
+  "label": "Pet the dog",
+  "summary": "Picks the event shown when the character pets their dog.",
+  "details": "Two plain petting events share most of the weight (50 each). With weight 1 each, the dog finds a claim, or lashes out (vanilla comments). The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "story_cycle_pet_dog_removal",
+  "label": "Pet dog removal",
+  "summary": "Ends every pet dog story the character owns.",
+  "details": "It goes through each story the character owns whose type is story_cycle_pet_dog and ends it. Vanilla keeps it in the death file, so it presumably runs when the owner dies, but the input does not show who fires it. The game documents no scope for it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "stress_loss_athletic",
+  "label": "Athletic stress relief",
+  "summary": "Picks the event for an athletic character relieving stress.",
+  "details": "One of four events is chosen with equal weight (default, heavier is more, friendly competition, exercise companion; from the vanilla comments). The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stress_loss_comfort_eater",
+  "label": "Comfort eater stress relief",
+  "summary": "Picks the event for a comfort eater relieving stress.",
+  "details": "The main event (5501) is almost always chosen (weight 100); the other (5502) is rare (weight 10). The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stress_loss_confider",
+  "label": "Confider stress relief",
+  "summary": "Picks the event for a confider relieving stress.",
+  "details": "One of two events (7001, 7002) is chosen with equal weight. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stress_loss_contrite",
+  "label": "Contrite stress relief",
+  "summary": "Picks the event for a contrite character relieving stress.",
+  "details": "The main event (5001) is almost always chosen (weight 100); the other (5002) is rare (weight 10). The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stress_loss_drunkard",
+  "label": "Drunkard stress relief",
+  "summary": "Picks the event for a drunkard relieving stress.",
+  "details": "Three events can be chosen: 1001 (weight 100), 1002 (weight 10) and 1004 (weight 5). The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stress_loss_flagellant",
+  "label": "Flagellant stress relief",
+  "summary": "Fires the event for a flagellant relieving stress.",
+  "details": "Only one event (3501) is in the pool, so it always fires. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stress_loss_hashishiyah",
+  "label": "Hashishiyah stress relief",
+  "summary": "Fires the event for a hashishiyah character relieving stress.",
+  "details": "Only one event (1501) is in the pool, so it always fires. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stress_loss_improvident",
+  "label": "Improvident stress relief",
+  "summary": "Fires the event for an improvident character relieving stress.",
+  "details": "Only one event (4501) is in the pool, so it always fires. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stress_loss_inappetetic",
+  "label": "Inappetetic stress relief",
+  "summary": "Fires the event for an inappetetic character relieving stress.",
+  "details": "Only one event (6001) is in the pool, so it always fires. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stress_loss_irritable",
+  "label": "Irritable stress relief",
+  "summary": "Fires the event for an irritable character relieving stress.",
+  "details": "Only one event (3001) is in the pool, so it always fires. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "stress_loss_journaller",
+  "label": "Journaller stress relief",
+  "summary": "Fires the event for a journaller relieving stress.",
+  "details": "Only one event (6501) is in the pool, so it always fires. The root is a character. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

@@ -2,7 +2,7 @@
  * The terrain's materials for the 3D map (docs/map.md, "3D map"), as the game's terrain shader blends them
  * (clausewitz cw/pdxterrain.fxh `CalculateDetails`): gfx/map/terrain/detail_index.tga and detail_intensity.tga give
  * each map pixel up to 4 materials and how much of each (RGBA8, the province map's size, bottom row first), the
- * materials are materials.settings' list (`diffuse`, `normal`, `material` DDS — BC3, vanilla 1024², AGOT 512² — and an
+ * materials are materials.settings' list (`diffuse`, `normal`, `material` DDS (BC3, vanilla 1024², AGOT 512²) and an
  * optional `tile_factor`), settings.terrain how they tile. Built once per version of the files on mapTerrainWorker.js
  * into the map cache folder: `<key>-detail.bin` (per pixel 4 × Uint16: layer | intensity << 8, bottom row first),
  * `<key>-materials.bin` (the diffuse, normal and properties arrays of the materials in use: BC3 blocks from 512² down
@@ -15,10 +15,11 @@ import { parse, type PNode } from '../indexer/parser.ts';
 import { decodeDds, parseDds } from '../images/dds.ts';
 import { encodeDds, halfSize, type RgbaImage } from '../images/ddsEncode.ts';
 
+import { tr } from '../../shared/i18n.ts';
 /** Bumped when the files change shape (old cache files are then not read). */
 export const DETAIL_VERSION = 1;
 /**
- * The materials' size in the arrays: vanilla's 1024² top level is left out — at the nearest zoom step a tile (27 map
+ * The materials' size in the arrays: vanilla's 1024² top level is left out: at the nearest zoom step a tile (27 map
  * pixels) spans ~270 screen pixels, so 256² already has a texel per pixel.
  */
 export const MATERIAL_SIZE = 512;
@@ -165,7 +166,7 @@ export function tgaPixels(tga: Uint8Array): { width: number; height: number; dat
     const topFirst = (tga[17] & 0x20) !== 0;
 
     if ((type !== 2 && type !== 10) || depth !== 32)
-        throw new Error(`Unsupported TGA (type ${type}, ${depth} bits)`);
+        throw new Error(tr('Unsupported TGA (type {type}, {depth} bits)', { type, depth }));
 
     const start = 18 + tga[0] + (tga[1] ? (tga[5] | (tga[6] << 8)) * Math.ceil(tga[7] / 8) : 0);
     const n = width * height * 4;
@@ -202,7 +203,7 @@ export function tgaPixels(tga: Uint8Array): { width: number; height: number; dat
     }
 
     if (data.length < n)
-        throw new Error('Truncated TGA');
+        throw new Error(tr('Truncated TGA'));
 
     if (topFirst)
     {
@@ -329,7 +330,7 @@ export async function buildDetail(input: DetailInput): Promise<DetailMeta>
     const intensity = tgaPixels(input.intensity);
 
     if (index.width !== intensity.width || index.height !== intensity.height)
-        throw new Error('detail_index.tga and detail_intensity.tga differ in size');
+        throw new Error(tr('detail_index.tga and detail_intensity.tga differ in size'));
 
     const n = index.width * index.height * 4;
     const ix = index.data;
@@ -348,7 +349,7 @@ export async function buildDetail(input: DetailInput): Promise<DetailMeta>
             layers.push(m);
 
     if (!layers.length)
-        throw new Error('No terrain material is used');
+        throw new Error(tr('No terrain material is used'));
 
     const layerOf = new Uint8Array(256).fill(255);
     layers.forEach((m, l) => (layerOf[m] = l));

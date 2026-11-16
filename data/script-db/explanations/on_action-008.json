@@ -1,0 +1,362 @@
+[
+ {
+  "kind": "on_action", "key": "mpo_migration_finished",
+  "label": "Migration finished",
+  "summary": "Runs after a nomad migration has finished, and tidies up after the move.",
+  "details": "Script fires it; the game's code does not. Vanilla sends an event after one day if the ruler migrated into a tributary's lands (marked by a variable). It marks the ruler as recently migrated for 3 years and lowers county control by 50 in held counties of the duchy that holds the ruler's capital. It removes the recently looted modifier from provinces in the realm, queues the migration contract on_action (twice for duke-tier or higher), and moves the ruler's and every vassal's domicile to their capital province. It also removes the migrating accolade modifiers and a coronation-preserving variable.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "mpo_the_great_steppe_monthly_pulse",
+  "label": "Great Steppe monthly pulse",
+  "summary": "A monthly pulse for the Great Steppe that vanilla leaves empty.",
+  "details": "Script fires it. Vanilla's definition has no content, so it does nothing unless a mod adds to it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "mpo_the_great_steppe_yearly_pulse",
+  "label": "Great Steppe yearly pulse",
+  "summary": "A yearly pulse for the Great Steppe that can set off situation catalysts tied to the passing of time.",
+  "details": "Script fires it. Vanilla first checks a situation condition for the passing-of-time blessing catalyst and that the sky blessing has not happened yet (a global variable). It then rolls a chance that starts at 5 and gets bigger with the years since game start (the comment says 100 percent in total over 1000 years), and fires that catalyst. A second check starts the same way for the havsarsan catalyst. The shown text is cut off, so further checks may follow.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "mpo_the_great_steppe_yearly_pulse_random",
+  "label": "Great Steppe random yearly pulse",
+  "summary": "A yearly pulse that makes AI nomad rulers act, for example giving up counties they cannot hold.",
+  "details": "Script fires it. The shown vanilla text only acts for AI rulers who are not at war and have a nomadic government. A county-tier ruler without a liege who is over their domain limit picks one of their counties to abandon, preferring ones that are coastal or border foreign land, and with lower fertility getting a higher weight. It also creates a herder character with no dynasty, apparently to take the county over (inferred, the text is cut off before that part). More follows that is not shown.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "mpo_tributary_check_pulse",
+  "label": "Tributary check pulse",
+  "summary": "Frees the tributaries of a landless ruler who is not migrating or at war.",
+  "details": "Script fires it. It only runs for a ruler without land who is not migrating, not at war and has at least one tributary. Each tributary gets an interface message that they broke free, and their tributary relationship ends. The ruler gets a matching bad-news message.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "mpo_yearly_events_nomads",
+  "label": "Yearly nomad events",
+  "summary": "Picks one of the yearly flavor events for a nomadic ruler.",
+  "details": "Script fires it for a character; it needs the DLC that vanilla's check (has_mpo_dlc_trigger) tests for and a nomadic government. It is a weighted random pick with a 100 percent chance that something happens. Vanilla's list mixes event chains, herd and neighbor events, spouse and court scenes, hunting sightings and season-specific events. Higher numbers make an event more likely.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "murder_failure_child_event_list_on_action",
+  "label": "Failed child murder events",
+  "summary": "Picks the event that shows how a murder attempt on a child fails.",
+  "details": "The pre-filter on_action calls it when the target is not an adult and is neither incapable nor imprisoned. The five events are equally likely and cover things like luring the child into a forest, a stabbing, an insect bite, poisoned candy and a push. A vanilla comment says it is for free children who can move on their own.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "murder_failure_imprisoned_event_list_on_action",
+  "label": "Failed imprisoned murder events",
+  "summary": "Picks the event that shows how a murder attempt on an imprisoned target fails.",
+  "details": "The pre-filter on_action calls it when the target is in house arrest or the dungeons (and is not incapable). The two events are equally likely: a beating in prison, or an unwelcome guest during house arrest.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "murder_failure_incapable_event_list_on_action",
+  "label": "Failed incapable murder events",
+  "summary": "Picks the event that shows how a murder attempt on a bedridden target fails.",
+  "details": "The pre-filter on_action calls it when the target is incapable. Vanilla has only one event, a failed strangling, so it is always chosen.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "murder_failure_pre_filter_on_action",
+  "label": "Failed murder pre-filter",
+  "summary": "Chooses which kind of failed-murder event list to use, based on the victim's state.",
+  "details": "Script fires it. It works as the scheme's owner and looks at the scheme's target. An incapable target gets the incapable list, then an imprisoned one the imprisoned list, then a non-adult the child list. Anyone else gets the standard list.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "murder_failure_standard_event_list_on_action",
+  "label": "Failed standard murder events",
+  "summary": "Picks the event that shows how a murder attempt on a free adult fails.",
+  "details": "The pre-filter on_action calls it for anyone not covered by the other lists. Eight events are possible, such as a hired assassin or thugs, poison, creepy-crawlies, a mob, immurement or a sunk boat. The hired assassin event is three times as likely as each other one.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "murder_ongoing",
+  "label": "Murder scheme ongoing",
+  "summary": "Runs while a murder scheme is being planned and may fire a random event for it.",
+  "details": "Script fires it for a character; it needs a scheme to exist. Vanilla always fires one fixed event, murder_ongoing.3302. It also rolls a 10 percent chance for a weighted random event from general scheme events, agent events, lifestyle events and assassination events. One entry in that list has weight 200 and the value 0 instead of an event, which looks like a 'no event' slot. The shown text is cut off.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "murder_success_child_event_list_on_action",
+  "label": "Successful child murder events",
+  "summary": "Picks the event that shows how a child is murdered.",
+  "details": "The pre-filter on_action calls it when the target is not an adult and is neither incapable nor imprisoned. The five events are equally likely: left in the forest, a stabbing, an insect bite, poisoned candy or a push.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "murder_success_imprisoned_event_list_on_action",
+  "label": "Successful imprisoned murder events",
+  "summary": "Picks the event that shows how an imprisoned target is murdered.",
+  "details": "The pre-filter on_action calls it for targets in house arrest or the dungeons (who are not incapable). Two events are equally likely: a beating in prison or an unwelcome guest during house arrest.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "murder_success_incapable_event_list_on_action",
+  "label": "Successful incapable murder events",
+  "summary": "Picks the event that shows how a bedridden target is murdered.",
+  "details": "The pre-filter on_action calls it when the target is incapable. Vanilla has a single event, a strangling, so it is always chosen.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "murder_success_pre_filter_on_action",
+  "label": "Successful murder pre-filter",
+  "summary": "Chooses which kind of murder event list to use, and handles shared murder effects.",
+  "details": "Script fires it. Acting as the scheme's owner, it picks the incapable, imprisoned, child or standard list by the target's state, in that order. It also plays the murder music cue. For the owner's murder schemes it then checks several achievement conditions, such as a spouse of the target being the owner's lover, the owner being the target's heir, or the target being the owner's spouse, and sets the matching achievement flags. The shown text is cut off.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "murder_success_standard_event_list_on_action",
+  "label": "Successful standard murder events",
+  "summary": "Picks the event that shows how a free adult is murdered.",
+  "details": "The pre-filter on_action calls it for anyone not covered by the other lists. Eight events are possible, such as an assassin, thugs, poisoned food or drink, creepy-crawlies, a mob, immurement or a sunk boat. The assassin event is three times as likely as each other one.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "murders_at_court_confrontation",
+  "label": "Murders at court confrontation",
+  "summary": "Picks the event where the murders-at-court story comes to a head.",
+  "details": "Script fires it for a character. Two equally likely events: a confrontation, or catching someone in the act.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "murders_at_court_events",
+  "label": "Murders at court events",
+  "summary": "Picks a random event of the murders-at-court story.",
+  "details": "Script fires it for a character. Vanilla's events include bodies being found, a spouse, child, courtier or heir found dead, and a visit from a character called Watson. The child event is half as likely as most others.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "muslim_arrival_events",
+  "label": "Muslim pilgrim arrival events",
+  "summary": "Picks an arrival event for a Muslim pilgrim at one of the holy sites.",
+  "details": "Script fires it. It only works for characters of the Islamic religion whose activity is in Medina, Sinai or Jerusalem. Equally likely events are one for each of those three places and a repeat meeting with the mystic. Vanilla notes that Mecca is handled elsewhere, as part of the Hajj.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "mystic_communion_side_effect_events",
+  "label": "Mystic communion side effects",
+  "summary": "Picks a side effect event after a mystic communion.",
+  "details": "Script fires it for a character. Nine events are equally likely: the court chaplain, the religious head or a zealous vassal disapproving, a zealous vassal approving, a reputation loss or gain, becoming ill or recovering, and a fellow mystic approving. A regular outcome event is the fallback with a weight of only 1.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "natural_disaster_earthquake_maintenance_pulse",
+  "label": "Earthquake maintenance pulse",
+  "summary": "Rolls whether an earthquake event is fired.",
+  "details": "The global pulse calls it. A random pick gives the event natural_disaster.9901 a weight of 10 unless earthquakes are disabled in the game rules. The other option has weight 0, but the game rule for few earthquakes adds 10 to it, so only about half the rolls fire the event.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "natural_disaster_flavor_events",
+  "label": "Natural disaster flavor events",
+  "summary": "Picks a flavor event from the natural disaster group.",
+  "details": "Script fires it for a character. Four equally likely events: As Scavengers Gather, Waking Nightmare, Desperate Souls and Selfless Acts.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "natural_disaster_flood_maintenance_pulse",
+  "label": "Flood maintenance pulse",
+  "summary": "Rolls whether a flood event is fired.",
+  "details": "The global pulse calls it. A random pick gives the event natural_disaster.9902 a weight of 10 unless floods are disabled in the game rules. The other option has weight 0, but the game rule for few floods adds 10 to it, so only about half the rolls fire the event.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "natural_disaster_impact_events",
+  "label": "Natural disaster impact events",
+  "summary": "Picks one of the impact events of a natural disaster.",
+  "details": "Script fires it for a character. Four equally likely events, by their comments: development damage, fortification damage, exodus and pasture damage.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "natural_disaster_join_events",
+  "label": "Natural disaster join events",
+  "summary": "Gives a player character the warning, impact and recovery events of a natural disaster.",
+  "details": "Script fires it for a character. It only runs for players, since a vanilla comment says only players need these events. All three events are in the list: warning, impact and recovery.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "natural_disaster_maintenance_global_pulse",
+  "label": "Natural disaster global pulse",
+  "summary": "Runs the earthquake and flood pulses once the initial grace period is over.",
+  "details": "Script fires it. It does nothing while the global variable for the initial grace period exists. After that it calls the earthquake and the flood maintenance pulses.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "natural_disaster_warning_events",
+  "label": "Natural disaster warning events",
+  "summary": "Picks one of the warning events of a natural disaster.",
+  "details": "Script fires it for a character. Four equally likely events: tremors, animals fleeing, a swelling river and a great storm.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "natural_primitivism_on_16th_birthday",
+  "label": "Naturism court at 16",
+  "summary": "Applies the naturist court effect when a courtier turns 16 at a court that promotes naturism.",
+  "details": "Script fires it from the 16th birthday on_action. It only runs if the character is a courtier whose liege or court owner has the flag for an active promoted naturism. The liege or court owner is saved as the new employer, and vanilla's join-active-naturist-court effect is run.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "nerge_flavor_events_ai_attending_on_action",
+  "label": "Nerge hunt events (AI attending)",
+  "summary": "Picks a nerge hunt flavor event, with a large chance of none for AI characters.",
+  "details": "Script fires it for a character; vanilla keeps it with the hunt activity's on_actions. For an AI character, the weight of 'no event' is 50; for a player it is 0. The events are things like an eagle bringing a pelt, a displeased guest, animals charging, arguments over the spoils and a bird of prey attacking someone. Three of them (someone running out of formation, animals charging, the bird of prey) have weight 1, the rest 15 or 25.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "nerge_flavor_events_on_action",
+  "label": "Nerge hunt events",
+  "summary": "Picks a flavor event during a nerge hunt.",
+  "details": "Script fires it for a character; vanilla keeps it with the hunt activity's on_actions. Weighted events include an eagle bringing a pelt, an unimpressed guest, someone breaking formation, animals charging, a warning that game is running low, arguments over spoils, a new tactic, a bird of prey, a found bow and animals in the way.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "norse_arrival_events",
+  "label": "Norse pilgrim arrival events",
+  "summary": "Picks an arrival event for a pilgrim of the Germanic religion at Paderborn.",
+  "details": "Script fires it. It only works for characters of the Germanic religion whose activity is in Paderborn. Two equally likely events: the Paderborn arrival and meeting the mystic again.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_10th_birthday",
+  "label": "10th birthday",
+  "summary": "Runs for a character on their 10th birthday.",
+  "details": "Script fires it. Vanilla uses it to fire an event that assigns the child a sexuality. Two house feud events are commented out.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_15th_birthday",
+  "label": "15th birthday",
+  "summary": "Runs for a character on their 15th birthday.",
+  "details": "Script fires it. Vanilla uses it to fire three events: a witch event, a secret faith event and the Eccentric trait event with the imaginary friend.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_16th_birthday",
+  "label": "16th birthday",
+  "summary": "Runs for a character on their 16th birthday and handles coming of age.",
+  "details": "Script fires it. Vanilla fires many events: making sure education and sexuality are set, turning childhood bully, victim and crush into opinions, the coming-of-age events for each skill, accolade events, junior emperors becoming co-emperors, and a warhorse event. For an AI child in an entrenched regency it fires a diarchy event 6 to 24 months later. In Japan a house head gets a 'challenged as house head' event. A nomad warden's yurt can give the child the mystic trait. The same name is also defined in a second place that calls the naturism court on_action.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_3rd_birthday",
+  "label": "3rd birthday",
+  "summary": "Runs for a character on their 3rd birthday.",
+  "details": "Script fires it. Vanilla uses it to randomize a childhood personality and to remove the sickly trait.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_6th_birthday",
+  "label": "6th birthday",
+  "summary": "Runs for a character on their 6th birthday.",
+  "details": "Script fires it. Vanilla uses it to fire the event that assigns the education matching the child's trait.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_absent_from_royal_court",
+  "label": "Absent from royal court",
+  "summary": "Runs when a character is now counted as absent from visiting their royal court.",
+  "details": "The game's code fires it. The root is the character, and scope:value holds the months since their last visit. The limit is a game constant for the months it takes to count as absent. Vanilla fires one court maintenance event.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_accolade_acclaimed_death",
+  "label": "Acclaimed knight dies",
+  "summary": "Runs when an accolade's acclaimed knight dies.",
+  "details": "The game's code fires it, with the accolade as the root. Saved scopes include the old acclaimed knight and whether there is a new accolade type. Vanilla stores the old knight in a variable, saves the accolade as succeeding_accolade, and has the accolade's owner get a notification with the glory reset because of death.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_accolade_acclaimed_removal",
+  "label": "Acclaimed knight removed",
+  "summary": "Runs when an accolade's acclaimed knight is removed.",
+  "details": "The game's code fires it, with the accolade as the root. Saved scopes include the old acclaimed knight, the new accolade type and the new owner. Vanilla stores the old knight in a variable, saves the accolade as succeeding_accolade, and notifies the owner with the glory reset and the reason set to invalid. The death case has its own on_action.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

@@ -1,0 +1,422 @@
+[
+ {
+  "kind": "trigger",
+  "key": "days_since_province_infection",
+  "label": "Days since infection",
+  "summary": "Whether the number of days since a given epidemic infected the province matches the comparison.",
+  "details": "Runs on a province. The epidemic is named with `target`, for example `scope:epidemic`. Compare with <, <=, =, !=, > or >=.",
+  "fields": [
+   { "name": "value", "text": "The comparison against the number of days.", "values": "a comparison such as `>= 20`", "required": true },
+   { "name": "target", "text": "The epidemic whose infection of this province is measured.", "values": "an epidemic, such as `scope:epidemic`", "required": true }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "days_since_sponsorship",
+  "label": "Days since sponsorship",
+  "summary": "Whether the number of days since the sponsorship of the inspiration started matches the comparison.",
+  "details": "Runs on an inspiration (the thing a character can sponsor). Compare with <, <=, =, !=, > or >=, for example `> 5`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "days_since_vassal_contract_liege_dynasty_reign_start",
+  "label": "Days under liege's dynasty",
+  "summary": "Whether the number of days since the vassal's liege's dynasty began ruling over this vassal matches the comparison.",
+  "details": "Runs on the vassal. Vanilla compares it with 18250 days and 36500 days (about 50 and 100 years).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "days_travelled",
+  "label": "Days travelled",
+  "summary": "Whether the total number of days since the travel plan started matches the comparison.",
+  "details": "Runs on a travel plan. The game's documentation also lists a valid date as an accepted value, but gives no example of that use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "days_until_ghw_launch",
+  "label": "Days until holy war launch",
+  "summary": "Whether the number of days until the great holy war (GHW) launches its war matches the comparison.",
+  "details": "Runs on a great holy war. Vanilla uses it with values around 100 to 200 days, such as `<= 200`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "de_jure_drift_progress",
+  "label": "De jure drift progress",
+  "summary": "Whether the de jure drift of the title towards another title has reached the given progress.",
+  "details": "Runs on the title that is drifting. De jure drift is the slow change of which higher title a lower title belongs to by law. The `target` is the title it drifts towards. Vanilla always passes the primary title of the root (the scope the script started from) as target and checks that the progress is above 0. The documented example spells the key with a typo, so write it as in the key name.",
+  "fields": [
+   { "name": "target", "text": "The title the drift goes towards.", "values": "a title, such as `root.primary_title`", "required": true },
+   { "name": "value", "text": "The comparison against the drift progress.", "values": "a comparison such as `> 50`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "de_jure_drifting_towards",
+  "label": "De jure drifting towards",
+  "summary": "Whether the title is de jure drifting towards the given title.",
+  "details": "Runs on a title; the value is the title it may be drifting towards. De jure drift is the slow change of which higher title a lower title belongs to by law. Vanilla mostly gives it the primary title of a liege or top liege, and once a saved title.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "death_reason",
+  "label": "Death reason",
+  "summary": "Whether the character died from the given death reason.",
+  "details": "Written with the key of a death reason, such as `death_natural_causes`. Vanilla uses it often, most with `death_murder`, `death_execution` and `death_battle`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "debt_level",
+  "label": "Debt level",
+  "summary": "Whether the character's debt level matches the comparison.",
+  "details": "Debt levels count up from 0 for the first threshold. The value is -1 when the character meets no debt threshold. It is calculated from the current situation, so it can differ from the debt modifier the character actually has right now, which may lag behind. Vanilla uses it with numbers from 0 to 7.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "debug_log",
+  "label": "Log result",
+  "summary": "Writes to the log whether the trigger around it succeeded or failed.",
+  "details": "Meant for debugging; the game documents nothing more about its use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "debug_log_details",
+  "label": "Log result in detail",
+  "summary": "Writes to the log whether the trigger around it succeeded or failed, and which of its child triggers succeeded or failed.",
+  "details": "Meant for debugging; it logs more than the plain log version.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "debug_only",
+  "label": "Debug mode",
+  "summary": "Whether the game is running in debug mode.",
+  "details": "Vanilla uses it 123 times, always written as `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+}
+,
+ {
+  "kind": "trigger",
+  "key": "defender_war_score",
+  "label": "Defender war score",
+  "summary": "Whether the war score of the defending side of the war matches the comparison.",
+  "details": "Runs on a war. Vanilla compares it with plain numbers (from -50 to 100) and with named values.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "departure_date",
+  "label": "Departure date",
+  "summary": "Whether the date the travel plan started matches the comparison.",
+  "details": "Runs on a travel plan. Compare with a date using <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "development_level",
+  "label": "Development level",
+  "summary": "Whether the county has the required development level.",
+  "details": "Runs on a county title. Vanilla compares it with numbers such as 5, 10, 30 and 50, and with named levels such as `bad_development_level`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "development_rate",
+  "label": "Development rate",
+  "summary": "Whether the development progress the county gains each month matches the comparison.",
+  "details": "Runs on a county title.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "development_rate_modifier",
+  "label": "Development rate multiplier",
+  "summary": "Whether the multiplier applied to the county's development progress matches the comparison.",
+  "details": "Runs on a county title.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "development_towards_level_increase",
+  "label": "Progress to next development level",
+  "summary": "Whether the county's progress towards its next development level matches the comparison.",
+  "details": "Runs on a county title. It counts only the progress made since the current level. The documented example: if level 1 is at 100 and level 2 at 300 (set in the game's defines) and the county has 150 in total, the value is 50. Vanilla compares it with named gain and loss values.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "diarch_aptitude",
+  "label": "Diarch aptitude",
+  "summary": "Whether the character's aptitude score as a diarch (or possible diarch) matches the comparison.",
+  "details": "Runs on the character who is or could be the diarch.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "diarch_loyalty",
+  "label": "Diarch loyalty",
+  "summary": "Whether the loyalty score of the character as a diarch (or possible diarch) matches the comparison.",
+  "details": "Runs on the diarch, for example `scope:diarch = { diarch_loyalty >= 50 }`. Vanilla mostly compares it with the named thresholds for a visibly loyal and a visibly disloyal diarch.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "diarchy_swing",
+  "label": "Diarchy swing",
+  "summary": "Whether the swing of the diarchy's scales of power matches the comparison.",
+  "details": "Runs on a character, for example `scope:liege = { diarchy_swing > 50 }`. Vanilla compares it with values between 45 and 100.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "diplomacy",
+  "label": "Diplomacy skill",
+  "summary": "Whether the character's diplomacy skill matches the comparison.",
+  "details": "Vanilla compares it with plain numbers such as 8 and with named skill ratings such as `high_skill_rating`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "diplomacy_diff",
+  "label": "Diplomacy difference",
+  "summary": "Whether the difference between the character's diplomacy skill and another character's matches the comparison.",
+  "details": "Written as a block. The game's documentation does not give the direction; vanilla's use (`value >= -5` described as being able to match the other) suggests it is the character's skill minus the target's. Set `abs = yes` to ignore the sign. The documented example names the key `diplomacy` by mistake; use `diplomacy_diff`.",
+  "fields": [
+   { "name": "target", "text": "The character to compare against.", "values": "a character, such as `liege` or `scope:vizier`", "required": true },
+   { "name": "value", "text": "The comparison against the difference.", "values": "a comparison such as `>= 5` or a script value", "required": true },
+   { "name": "abs", "text": "Whether to use the absolute difference.", "values": "yes or no", "required": false, "default": "no" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "diplomacy_for_portrait",
+  "label": "Diplomacy for portrait",
+  "summary": "Whether the character's diplomacy skill, scaled to between 0.0 and 1.0 for portraits, matches the comparison.",
+  "details": "Compare with a decimal number from 0 to 1.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "diplomacy_lifestyle_perk_points",
+  "label": "Diplomacy perk points",
+  "summary": "Whether the number of available perk points the character has matches the comparison.",
+  "details": "The game's documentation does not say that it only counts the diplomacy lifestyle. Vanilla compares it with the limit of perks per lifestyle.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "diplomacy_lifestyle_perks",
+  "label": "Diplomacy lifestyle perks",
+  "summary": "Whether the number of perks the character has from the diplomacy lifestyle matches the comparison.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "diplomacy_lifestyle_unlockable_perks",
+  "label": "Unlockable diplomacy perks",
+  "summary": "Whether the number of diplomacy lifestyle perks the character can unlock right now matches the comparison.",
+  "details": "A perk counts when the character has its parent perks and its own conditions (`can_be_picked`) are met. Perk points are not checked, so a perk can count even if the character cannot afford it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "diplomacy_lifestyle_xp",
+  "label": "Diplomacy lifestyle XP",
+  "summary": "Whether a number of the character's diplomacy lifestyle, probably its experience, matches the comparison.",
+  "details": "This rests on the name only: the game's documentation repeats the perk points text and vanilla does not use it. Treat what it measures as unconfirmed.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "disallowed_retreat",
+  "label": "Retreat disallowed",
+  "summary": "Whether script has forbidden this side of the battle from retreating.",
+  "details": "Runs on a side of a combat. The ban is set with the effect `set_disallowed_retreat = yes`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "discontent_per_month",
+  "label": "Faction discontent per month",
+  "summary": "Whether the amount the faction's discontent grows each month matches the comparison.",
+  "details": "Runs on a faction. Vanilla always checks that it is above 0, meaning discontent is rising.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "divergence",
+  "label": "Rite divergence",
+  "summary": "Whether the divergence between this rite and another rite matches the comparison.",
+  "details": "Runs on a rite. It can be written as a block with a `target` rite and a `value`, or in the short form `\"divergence(scope:target_rite)\" > 60`.",
+  "fields": [
+   { "name": "target", "text": "The rite to compare with.", "values": "a rite, such as `scope:target_rite`", "required": true },
+   { "name": "value", "text": "The comparison against the divergence.", "values": "a comparison such as `> 60`", "required": true }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "doctrine_divergence",
+  "label": "Doctrine divergence",
+  "summary": "Whether the divergence between a rite holding this doctrine and a rite holding another doctrine matches the comparison.",
+  "details": "Runs on a doctrine. It counts like rite divergence: the distance between the two in steps for ordered doctrine groups, and both values for category groups. Doctrines from different groups give 0. It can be written as a block with `target` and `value`, or as `\"doctrine_divergence(doctrine:doctrine_polygamy)\" >= 20`.",
+  "fields": [
+   { "name": "target", "text": "The doctrine to compare with.", "values": "a doctrine, such as `scope:other_doctrine`", "required": true },
+   { "name": "value", "text": "The comparison against the divergence.", "values": "a comparison such as `> 10`", "required": true }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "doctrine_fulfillment_value",
+  "label": "Doctrine fulfillment value",
+  "summary": "Whether the base fulfillment a character would get under a doctrine, from its virtues and sins, matches the comparison.",
+  "details": "Only the doctrine's virtue and sin traits count, not those of a rite. It can be written in the short form `\"doctrine_fulfillment_value(scope:some_doctrine)\" > 0` on a character, or as a block with `target` and `value` (the game's documentation shows this block on a rite).",
+  "fields": [
+   { "name": "target", "text": "The doctrine to measure against.", "values": "a doctrine, such as `scope:some_doctrine`", "required": true },
+   { "name": "value", "text": "The comparison against the fulfillment value.", "values": "a comparison such as `> 0`", "required": true }
+  ],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "doctrine_has_sin",
+  "label": "Doctrine sees trait as sin",
+  "summary": "Whether the given trait is a sin under this doctrine.",
+  "details": "Runs on a doctrine, for example `doctrine_has_sin = gluttonous`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "doctrine_has_virtue",
+  "label": "Doctrine sees trait as virtue",
+  "summary": "Whether the given trait is a virtue under this doctrine.",
+  "details": "Runs on a doctrine, for example `doctrine_has_virtue = chaste`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "doctrine_in_same_group",
+  "label": "Doctrine in same group",
+  "summary": "Whether this doctrine is in the same doctrine group as the given doctrine.",
+  "details": "Runs on a doctrine, for example `doctrine_in_same_group = doctrine:doctrine_monogamy`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "does_ai_liege_in_vassal_contract_desire_admin_province_obligation_change",
+  "label": "AI liege wants admin obligation change",
+  "summary": "Whether the AI liege in a vassal contract wants to change an obligation level, counting only obligations of the administrative province type.",
+  "details": "Use `yes` or `no`. See the similar trigger without the admin limit for all obligation types.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "does_ai_liege_in_vassal_contract_desire_obligation_change",
+  "label": "AI liege wants obligation change",
+  "summary": "Whether the AI liege in a vassal contract wants to change an obligation level.",
+  "details": "Use `yes` or `no`. A variant exists that only counts administrative province obligations.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "does_ai_subject_in_subject_contract_desire_admin_province_obligation_change",
+  "label": "AI subject wants admin obligation change",
+  "summary": "Whether the AI subject in a subject contract wants to change an obligation level, counting only obligations of the administrative province type.",
+  "details": "Use `yes` or `no`. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "does_ai_subject_in_subject_contract_desire_obligation_change",
+  "label": "AI subject wants obligation change",
+  "summary": "Whether the AI subject in a subject contract wants to change an obligation level.",
+  "details": "Use `yes` or `no`. A variant exists that only counts administrative province obligations.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

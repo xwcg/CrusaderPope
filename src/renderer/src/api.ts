@@ -9,7 +9,7 @@ declare global
     }
 }
 
-/** The preload's API; a call that returns a promise is counted while in flight (pending.ts — the test API waits). */
+/** The preload's API; a call that returns a promise is counted while in flight (pending.ts; the test API waits). */
 export const api: RendererApi = Object.fromEntries(
     Object.entries(window.api).map(([k, f]) => [
         k,

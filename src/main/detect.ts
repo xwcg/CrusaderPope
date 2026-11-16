@@ -2,7 +2,9 @@
  * Finds the Crusader Kings III folders on this machine (the first-run wizard, docs/app-architecture.md "Settings"):
  *   - the install: Steam's libraries (Windows: Steam's registry key; Linux / macOS: Steam's home folders) read from
  *     `steamapps/libraryfolders.vdf`, plus Windows' uninstall entry of Steam app 1158310;
- *   - the user folder: Documents\Paradox Interactive\Crusader Kings III (Linux: ~/.local/share/Paradox Interactive/…).
+ *   - the user folder: Documents\Paradox Interactive\Crusader Kings III (Linux: ~/.local/share/Paradox Interactive/…;
+ *     the Windows game run through Proton keeps it in Steam's prefix of the game: `steamapps/compatdata/1158310/pfx/
+ *     drive_c/users/steamuser/Documents/…`, in the library the game is installed in).
  * Only folders that exist and hold the game (or user data) are returned; nothing is written.
  */
 import { execFileSync } from 'node:child_process';
@@ -89,7 +91,15 @@ export function findInstalls(home: string): string[]
 /** The game's user folders found (mods, playsets, saves), the usual one first. */
 export function findUserDirs(documents: string, home: string): string[]
 {
-    return [join(documents, 'Paradox Interactive', GAME), join(home, '.local', 'share', 'Paradox Interactive', GAME), join(home, 'Documents', 'Paradox Interactive', GAME)].filter(
-        (d, i, all) => existsSync(d) && all.indexOf(d) === i
-    );
+    const dirs = [join(documents, 'Paradox Interactive', GAME), join(home, '.local', 'share', 'Paradox Interactive', GAME), join(home, 'Documents', 'Paradox Interactive', GAME)];
+
+    // (Proton: the Windows game's Documents inside its prefix, in each Steam library)
+    if (process.platform !== 'win32')
+    {
+        for (const root of steamRoots(home))
+            for (const lib of libraries(root))
+                dirs.push(join(lib, 'steamapps', 'compatdata', APP_ID, 'pfx', 'drive_c', 'users', 'steamuser', 'Documents', 'Paradox Interactive', GAME));
+    }
+
+    return dirs.filter((d, i, all) => existsSync(d) && all.indexOf(d) === i);
 }

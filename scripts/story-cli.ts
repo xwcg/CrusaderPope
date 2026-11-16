@@ -1,13 +1,19 @@
 // Prints the readable story/card of entities as indented text (to tune the describer without the UI).
 // Usage: node --experimental-strip-types scripts/story-cli.ts <type> <name> [<type> <name> …]
-import { GameIndex, resolveGameDir } from '../src/main/indexer/gameIndex.ts';
+// The index: scripts/fast-index.ts (parse threads, cached in %TEMP%/ckp-index-cache; FRESH=1 builds it anew).
+import { resolveGameDir } from '../src/main/indexer/gameIndex.ts';
 import { StoryBuilder } from '../src/main/describe/stories.ts';
+import { GuiLibrary } from '../src/main/gui/library.ts';
+import { guiFind, guiItem } from '../src/main/gui/detail.ts';
 import type { DescNode, FollowUp, Line, Rich } from '../src/shared/api.ts';
 import { defaultInstall } from './ck3-install.ts';
+import { fastIndex } from './fast-index.ts';
 
-const idx = new GameIndex(resolveGameDir(defaultInstall())!, 'english');
-idx.build();
+const idx = await fastIndex(resolveGameDir(defaultInstall())!, { cache: true });
 const sb = new StoryBuilder(idx);
+let gui: GuiLibrary | undefined;
+sb.guiUsers = (name) => (gui ??= new GuiLibrary(idx.vfs)).usedBy('scriptedGui', name).map(guiItem);
+sb.d.guiFind = (name) => guiFind(gui ??= new GuiLibrary(idx.vfs), name);
 const showHidden = process.env.HIDDEN === '1';
 
 const r = (x: Rich): string => x.map((s) => (typeof s === 'string' ? s : s.kind === 'entity' ? `‹${s.text}›` : s.kind === 'scope' ? `[${s.text}]` : s.text)).join('');
@@ -82,6 +88,13 @@ for (let i = 0; i < args.length; i += 2)
 
         console.log('CONDITIONS:');
         lines(ev.conditions);
+
+        if (ev.weight?.length)
+        {
+            console.log('WEIGHT:');
+            lines(ev.weight);
+        }
+
         console.log('IMMEDIATE:');
         lines(ev.immediate);
         fu(ev.immediateFollowUps);
@@ -110,8 +123,18 @@ for (let i = 0; i < args.length; i += 2)
         lines(oa.conditions);
         console.log('events:'), fu(oa.events);
         console.log('random:'), fu(oa.randomEvents);
-        console.log('noEvent: ' + oa.noEventChance);
+        console.log('first_valid:'), fu(oa.firstValid);
+        console.log('notes: ' + (oa.notes ?? []).join(' · '));
+
+        for (const [key, l] of Object.entries(oa.lists ?? {}))
+        {
+            if (l.lines.length || l.plural?.length)
+                console.log(`${key} rows: ${l.lines.map((x) => x.text.map((p) => (typeof p === 'string' ? p : p.text)).join('')).join(' | ')}${l.plural?.length ? ` (written random_on_actions: ${l.plural.join(', ')})` : ''}`);
+        }
         console.log('on_actions:'), fu(oa.onActions);
+        console.log('random_on_action:'), fu(oa.randomOnActions);
+        console.log('first_valid_on_action:'), fu(oa.firstValidOnActions);
+        console.log('fallbacks:'), fu(oa.fallbacks);
         lines(oa.effects);
         console.log('origins: ' + oa.origins.map((o) => o.label).join('; '));
     }

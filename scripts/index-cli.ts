@@ -2,11 +2,13 @@
 // Usage: node --experimental-strip-types scripts/index-cli.ts [installDir] [entityType entityName]
 // With mods: MODS=<launcher playset name | game> node --experimental-strip-types --experimental-sqlite scripts/index-cli.ts …
 // (the list's mods are layered over the game as the app does; prints how they touch the entry and its definitions)
+// The index: scripts/fast-index.ts (parse threads, cached in %TEMP%/ckp-index-cache; FRESH=1 builds it anew).
 import { homedir } from 'node:os';
 import { join } from 'node:path';
-import { GameIndex, resolveGameDir } from '../src/main/indexer/gameIndex.ts';
+import { resolveGameDir } from '../src/main/indexer/gameIndex.ts';
 import { GameFiles } from '../src/main/mods/gamefiles.ts';
 import { defaultInstall } from './ck3-install.ts';
+import { fastIndex } from './fast-index.ts';
 
 const install = process.argv[2] ?? defaultInstall();
 const gameDir = resolveGameDir(install);
@@ -30,14 +32,16 @@ if (process.env.MODS)
     console.log('mods:', files.sources.map((s) => s.name).join(' → '));
 }
 
-const idx = new GameIndex(files, 'english');
 let lastPhase = '';
-idx.build((p) =>
-{
-    if (p.phase !== lastPhase)
+const idx = await fastIndex(files, {
+    cache: true,
+    progress: (p) =>
     {
-        console.log(`[${((performance.now() / 1000) | 0)}s] ${p.phase}`);
-        lastPhase = p.phase;
+        if (p.phase !== lastPhase)
+        {
+            console.log(`[${((performance.now() / 1000) | 0)}s] ${p.phase}`);
+            lastPhase = p.phase;
+        }
     }
 });
 console.log(idx.stats, `heap ${(process.memoryUsage().heapUsed / 1e6) | 0} MB`);
@@ -54,7 +58,7 @@ const d = idx.detail(type, name);
 
 if (d)
 {
-    console.log(`\n== ${d.typeLabel} ${d.name} "${d.display}" — ${d.description?.slice(0, 80)}`);
+    console.log(`\n== ${d.typeLabel} ${d.name} "${d.display}": ${d.description?.slice(0, 80)}`);
 
     if (d.mod)
         console.log(`mods: ${d.mod.state} by ${d.mod.mods.join(', ')}`);

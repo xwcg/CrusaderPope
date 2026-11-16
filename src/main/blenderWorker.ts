@@ -19,6 +19,7 @@ import { importMesh } from './blender/importMesh.ts';
 import type { ModInfo } from '../shared/api.ts';
 import type { ModelExportPlan } from './blender/types.ts';
 
+import { tr } from '../shared/i18n.ts';
 interface Job
 {
     /** exportFile / replaceFile: an asset's ⋯ menu (one file) */
@@ -44,7 +45,7 @@ async function exportFile(vfs: GameFiles, job: Job): Promise<unknown>
     const bytes = f && vfs.read(f);
 
     if (!bytes)
-        throw new Error(`${job.rel} could not be read.`);
+        throw new Error(tr('{rel} could not be read.', { rel: job.rel }));
 
     let data: Uint8Array = bytes;
 
@@ -60,8 +61,8 @@ async function exportFile(vfs: GameFiles, job: Job): Promise<unknown>
 }
 
 /**
- * The user's file as the asset (`rel`): a texture converted to the asset's format (a PNG into the DDS's own format —
- * BC1 / BC3 with mips, else BGRA8 —, a DDS as it is; a DDS into a PNG asset decoded), a .mesh as it is (checked to be
+ * The user's file as the asset (`rel`): a texture converted to the asset's format (a PNG into the DDS's own format,
+ * BC1 / BC3 with mips, else BGRA8; a DDS as it is; a DDS into a PNG asset decoded), a .mesh as it is (checked to be
  * one); saved under the asset's path and name, whatever the file was called.
  */
 async function replaceFile(vfs: GameFiles, job: Job): Promise<unknown>
@@ -74,7 +75,7 @@ async function replaceFile(vfs: GameFiles, job: Job): Promise<unknown>
     const notes: string[] = [];
 
     if (basename(rel).toLowerCase() !== given.toLowerCase())
-        notes.push(`Saved as ${basename(rel)} (the file was ${given}).`);
+        notes.push(tr('Saved as {basename} (the file was {given}).', { basename: basename(rel), given }));
 
     let data: Uint8Array;
     let what: string;
@@ -82,7 +83,7 @@ async function replaceFile(vfs: GameFiles, job: Job): Promise<unknown>
     if (/\.mesh$/i.test(rel))
     {
         if (!(src[0] === 0x40 && src[1] === 0x40 && src[2] === 0x62 && src[3] === 0x40))
-            throw new Error(`${given} is no .mesh file (Paradox binary).`);
+            throw new Error(tr('{given} is no .mesh file (Paradox binary).', { given }));
 
         data = src;
         what = 'mesh (as given)';
@@ -103,13 +104,13 @@ async function replaceFile(vfs: GameFiles, job: Job): Promise<unknown>
             const info = orig ? parseDds(orig) : undefined;
             const target = ddsTargetFor(info, orig, img);
             data = encodeDds(img, target);
-            what = `texture (PNG → DDS ${target.format}${target.mips ? ' with mips' : ''}, ${img.width}×${img.height})`;
+            what = `texture (PNG → DDS ${target.format}${target.mips ? tr(' with mips') : ''}, ${img.width}×${img.height})`;
 
             if (info && (info.width !== img.width || info.height !== img.height))
-                notes.push(`The image is ${img.width}×${img.height}; the game's was ${info.width}×${info.height}.`);
+                notes.push(tr('The image is {width}×{height}; the game\'s was {width2}×{height2}.', { width: img.width, height: img.height, width2: info.width, height2: info.height }));
         }
         else
-            throw new Error(`${given} is neither a PNG nor a DDS image.`);
+            throw new Error(tr('{given} is neither a PNG nor a DDS image.', { given }));
     }
     else if (/\.png$/i.test(rel))
     {
@@ -124,7 +125,7 @@ async function replaceFile(vfs: GameFiles, job: Job): Promise<unknown>
         what = 'image (PNG)';
     }
     else
-        throw new Error(`${rel}: this kind of file can't be replaced here (textures: .dds / .png, meshes: .mesh).`);
+        throw new Error(tr('{rel}: this kind of file can\'t be replaced here (textures: .dds / .png, meshes: .mesh).', { rel }));
 
     return { writes: [{ rel, data, what }], shapes: [], removed: [], notes, warnings: [] };
 }
@@ -150,10 +151,10 @@ async function encodeScene(job: Job): Promise<unknown>
         what = `event scene (PNG → DDS BC1, ${img.width}×${img.height})`;
 
         if (img.width !== 1592 || img.height !== 848)
-            notes.push(`The image is ${img.width}×${img.height}; the game's scenes are 1592×848.`);
+            notes.push(tr('The image is {width}×{height}; the game\'s scenes are 1592×848.', { width: img.width, height: img.height }));
     }
     else
-        throw new Error(`${basename(job.file)} is neither a PNG nor a DDS image.`);
+        throw new Error(tr('{basename} is neither a PNG nor a DDS image.', { basename: basename(job.file) }));
 
     return { writes: [{ rel: job.rel!, data, what }], shapes: [], removed: [], notes, warnings: [] };
 }
@@ -178,7 +179,7 @@ async function run(job: Job): Promise<unknown>
         const meshBytes = meshFile && vfs.read(meshFile);
 
         if (!meshFile || !meshBytes)
-            throw new Error(`${job.plan.mesh} could not be read.`);
+            throw new Error(tr('{mesh} could not be read.', { mesh: job.plan.mesh }));
 
         if (job.op === 'export')
         {
@@ -208,7 +209,7 @@ async function run(job: Job): Promise<unknown>
                 const f = vfs.get(w.rel, { engine: true });
 
                 if (f && f.source > active)
-                    out.notes.push(`${vfs.sources[f.source].name} loads after ${vfs.sources[active].name} and has ${w.rel} too, so its version keeps winning — move ${vfs.sources[active].name} below it in the load order.`);
+                    out.notes.push(tr('{name} loads after {name2} and has {rel} too, so its version keeps winning — move {name2} below it in the load order.', { name: vfs.sources[f.source].name, name2: vfs.sources[active].name, rel: w.rel }));
             }
         }
 

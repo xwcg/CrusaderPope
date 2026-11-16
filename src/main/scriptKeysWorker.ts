@@ -1,10 +1,10 @@
 /**
- * Thread collecting the effect and trigger keys the loaded script uses (describe/scriptKeys.ts) — the statement
+ * Thread collecting the effect and trigger keys the loaded script uses (describe/scriptKeys.ts): the statement
  * picker's "Other effect… / Other condition…" list. Started by the index worker on first request; parses the script
  * files once more (≈ 2–4 s), or reads the result kept next to the index cache while the index fingerprint matches.
  *
  * With an editable mod loaded it stays: an incremental index update posts `{ rescan: paths }` and gets the keys again
- * (only those files read again — an editable mod's files are kept per file; a change of any other file scans all),
+ * (only those files read again; an editable mod's files are kept per file; a change of any other file scans all),
  * `{ cache: { file, fingerprint } }` writes the keys as they are now under the index's new fingerprint.
  */
 import { parentPort, workerData } from 'node:worker_threads';
@@ -13,17 +13,15 @@ import { dirname } from 'node:path';
 import { createHash } from 'node:crypto';
 import { GameFiles, type GameFile } from './mods/gamefiles.ts';
 import { ScriptKeyScanner } from './describe/scriptKeys.ts';
-import type { ModInfo, ScriptKeys } from '../shared/api.ts';
+import type { ScriptKeys } from '../shared/api.ts';
+import type { KeyScanJob } from './scriptKeysThread.ts';
+import { applyScriptFacts } from '../shared/scriptFacts.ts';
 
-interface Job
-{
-    gameDir: string;
-    mods: ModInfo[];
-    /** cache file and the index fingerprint it must carry (absent: no cache) */
-    cache?: { file: string; fingerprint: string; };
-}
+const job = workerData as KeyScanJob;
 
-const job = workerData as Job;
+// (the script database's links count as scope switches; a scan kept under other facts is not reused: `code` below)
+if (job.facts)
+    applyScriptFacts(job.facts);
 
 /** this thread's code: a changed scan is not answered from an old cache (the index fingerprint does not cover it) */
 function codeVersion(): string
@@ -37,11 +35,12 @@ function codeVersion(): string
         return '';
     }
 }
-const code = codeVersion();
+const code = codeVersion() + (job.facts ? `:${job.facts.version}:${job.facts.links.length}` : '');
 
 function cached(): ScriptKeys | null
 {
-    if (!job.cache)
+    // (read: false: the files changed since the fingerprint was taken; what is kept under it lacks the change)
+    if (!job.cache || job.cache.read === false)
         return null;
 
     try
@@ -97,7 +96,8 @@ if (!keys)
         parentPort!.postMessage({ error: String((err as Error)?.message ?? err) });
     }
 
-    if (keys && job.cache)
+    // (not under a fingerprint the files no longer match: the recache's `{ cache }` writes them under the new one)
+    if (keys && job.cache && job.cache.read !== false)
         writeCache(job.cache, keys);
 }
 

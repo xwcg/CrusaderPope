@@ -6,6 +6,7 @@ import type { MapThing } from '../../../shared/api.ts';
 import { bodyOf, fieldOf, once, perCounty, Things, type LayerCtx, type LayerDef } from '../layers.ts';
 import { countyKeys, thingsOf } from './basic.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 /** Colours of the religion families, in their load order (they have none of their own). */
 const FAMILY_COLORS = ['#2a78d6', '#eb6834', '#1baf7a', '#eda100', '#e87ba4', '#4a3aa7', '#008300', '#e34948'];
 
@@ -72,7 +73,7 @@ const religion: LayerDef = {
     {
         const r = religions(ctx);
         const values = countyKeys(ctx, 'faith').map((k) => (k ? (r.religionOf.get(k) ?? -1) : -1));
-        return { id: 'religion', label: 'Religions', title: 'The counties’ religions (their faiths grouped) at the date', row: 'Religion', historical: true, things: r.religions, values };
+        return { id: 'religion', label: tr('Religions'), title: tr('The counties’ religions (their faiths grouped) at the date'), row: tr('Religion'), historical: true, things: r.religions, values };
     }
 };
 
@@ -86,14 +87,14 @@ const religionFamily: LayerDef = {
             const i = k ? r.religionOf.get(k) : undefined;
             return i !== undefined ? r.familyOf[i] : -1;
         });
-        return { id: 'religion_family', label: 'Religion families', title: 'The families of the counties’ religions at the date', row: 'Religion family', historical: true, things: r.families, values };
+        return { id: 'religion_family', label: tr('Religion families'), title: tr('The families of the counties’ religions at the date'), row: tr('Religion family'), historical: true, things: r.families, values };
     }
 };
 
 /**
- * Holy sites (common/religion/holy_site_types: `county = c_x`, `barony = b_y` — the barony the site is shown on, else
+ * Holy sites (common/religion/holy_site_types: `county = c_x`, `barony = b_y`: the barony the site is shown on, else
  * the county's capital) and the faiths naming them (`holy_site = <site>`, 1.20: `holy_sites` / `eminent_holy_sites`). The whole county is the site on
- * the map — one thing per county: vanilla has 20 counties with two or three sites (c_kufa: babylon, kufa, nadjaf),
+ * the map, one thing per county: vanilla has 20 counties with two or three sites (c_kufa: babylon, kufa, nadjaf),
  * named together and linked to the first; its colour is the religion's of the first faith naming one. Name: loc
  * `holy_site_<key>_name`.
  */
@@ -127,12 +128,12 @@ const holySite: LayerDef = {
             const faithList = (who: string[]): string =>
             {
                 const names = who.map((f) => ctx.name(T_FAITH, f));
-                return names.length > 6 ? `${names.slice(0, 5).join(', ')} and ${names.length - 5} more faiths` : names.join(', ');
+                return names.length > 6 ? tr('{join} and {value} more faiths', { join: names.slice(0, 5).join(', '), value: names.length - 5 }) : names.join(', ');
             };
 
             for (const [county, keys] of sites)
             {
-                // (sites of one name — toledo and toledo_mozarabic — are one)
+                // (sites of one name, toledo and toledo_mozarabic, are one)
                 const byName = new Map<string, string[]>();
 
                 for (const k of keys)
@@ -142,12 +143,12 @@ const holySite: LayerDef = {
                     .flat()
                     .map((f) => r.religionOf.get(f))
                     .find((i) => i !== undefined);
-                const notes = [...byName].map(([name, who]) => (byName.size > 1 ? name + ': ' : '') + (who.length ? `holy to ${faithList(who)}` : 'no faith names it'));
+                const notes = [...byName].map(([name, who]) => (byName.size > 1 ? name + ': ' : '') + (who.length ? tr('holy to {faithList}', { faithList: faithList(who) }) : tr('no faith names it')));
                 const note = notes.join('; ');
                 siteOf.set(county, things.of(keys[0], () => ({ name: [...byName.keys()].join(' / '), color: rel !== undefined ? r.religions[rel].color : '#8a8a8a', type: 'religion/holy_site_types', note: note.charAt(0).toUpperCase() + note.slice(1) })));
             }
 
-            return { id: 'holy_site', label: 'Holy sites', title: 'The faiths’ holy sites', row: 'Holy site', things: things.list, values: perCounty(ctx, (ci) => siteOf.get(ci) ?? -1) };
+            return { id: 'holy_site', label: tr('Holy sites'), title: tr('The faiths’ holy sites'), row: tr('Holy site'), things: things.list, values: perCounty(ctx, (ci) => siteOf.get(ci) ?? -1) };
         })
 };
 

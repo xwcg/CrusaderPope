@@ -3,7 +3,7 @@
  *
  * Meshes stay in game space (Y up, left-handed): the mirror to three.js' right-handed space is part of the
  * ViewProjectionMatrix we hand the engine code, triangle winding is flipped instead. The engine's constant buffers
- * are plain uniforms of the same names — camera, sun, environment cubemap, shadow settings — filled from a
+ * are plain uniforms of the same names (camera, sun, environment cubemap, shadow settings), filled from a
  * GameScene per view; per-object data (`Data[]`: world matrix, opacity, user colours) and the material textures per
  * mesh.
  */
@@ -15,6 +15,7 @@ import { viewerShaderRequest } from '../../../shared/shaders';
 import { effectMarker } from './shaderErrors';
 import { gameRenderer, hsvLight, loadTracked, markLoading } from './pdx';
 
+import { tr } from '../../../shared/i18n';
 const MIRROR_Z = new THREE.Matrix4().makeScale(1, 1, -1);
 
 export interface ViewEnvironment
@@ -42,7 +43,7 @@ export const PREVIEW_ENVIRONMENT: ViewEnvironment = {
 };
 
 /**
- * Portraits: gfx/portraits/environments/portrait_environments.txt, environment_standard — castle cubemap at
+ * Portraits: gfx/portraits/environments/portrait_environments.txt, environment_standard: castle cubemap at
  * @main_cubemap_intensity 0.4, fixed exposure 1.5 plus the bloom lift the portrait viewer approximates (×1.85).
  */
 export const PORTRAIT_ENVIRONMENT: ViewEnvironment = {
@@ -203,7 +204,7 @@ function halveRgba(src: Uint8Array, size: number): Uint8Array
  * A decal texture array for the whole list: every path a layer with a full mip chain, raw bytes (the engine does not
  * sRGB-decode decal arrays). AGOT reads its codes with texelFetch at `AGOT_MarkerLod()` = 6 − (10 − log2(size)), the
  * 16×16 level: that level is the DDS's own 16×16 mip, not a filtered one (the codes are painted into it); the levels
- * between are box-filtered from the top. Uploaded as an uncompressed CompressedArrayTexture — three.js uploads user
+ * between are box-filtered from the top. Uploaded as an uncompressed CompressedArrayTexture: three.js uploads user
  * mip levels only for those (a DataArrayTexture would filter its own and lose the codes).
  */
 async function decalArray(paths: string[]): Promise<THREE.CompressedArrayTexture | null>
@@ -284,7 +285,7 @@ export interface GameScene
     /** game texture, loaded once per view (disposed with it) */
     texture(path: string, srgb: boolean): THREE.Texture;
     /**
-     * A baked normal map (x in R, y in G — see decals.ts) re-packed to the game's "RRxG" layout (x in G, y in A) as a raw
+     * A baked normal map (x in R, y in G; see decals.ts) re-packed to the game's "RRxG" layout (x in G, y in A) as a raw
      * data texture, so no browser alpha handling touches it.
      */
     bakedNormal(dataUrl: string): THREE.Texture;
@@ -301,12 +302,17 @@ export interface GameScene
      */
     textureArray(paths: (string | undefined)[], fill: [number, number, number, number]): THREE.IUniform;
     /**
-     * Portraits: the decal list the shaders read — only the data decals the bake leaves out (PortraitData.dataDecals):
+     * A data texture from the decoded DDS pixels (not the image protocol's PNG, which drops the colour of pixels with
+     * alpha 0: a pattern mask's red under alpha 0 is data); `fill` until loaded.
+     */
+    textureRaw(path: string, fill: [number, number, number, number]): THREE.IUniform;
+    /**
+     * Portraits: the decal list the shaders read, only the data decals the bake leaves out (PortraitData.dataDecals):
      * DecalDataBuffer records, DecalDiffuseArray with their 16×16 mips, DecalCount / PreSkinColorDecalCount.
      */
     setDecals(decals: NonNullable<PortraitData['dataDecals']>): void;
     /**
-     * Creatures and their model previews: the whole decal list their shaders walk (PortraitDecal — AGOT's dragons are
+     * Creatures and their model previews: the whole decal list their shaders walk (PortraitDecal; AGOT's dragons are
      * coloured by it), every decal texture a layer of the diffuse / normal / properties arrays (see decalArray).
      */
     setDecalList(decals: PortraitDecal[]): void;
@@ -316,6 +322,7 @@ export interface GameScene
 }
 
 /** Uniforms of one view: camera, lights (camera sun or portrait rig), environment cubemap, shadows off. */
+
 export function createGameScene(renderer: THREE.WebGLRenderer, env: ViewEnvironment = PREVIEW_ENVIRONMENT): GameScene
 {
     // the shadow sampler needs a real depth texture with compare mode (three's empty stand-in fails every draw with
@@ -363,10 +370,10 @@ export function createGameScene(renderer: THREE.WebGLRenderer, env: ViewEnvironm
         FogOfWarAlpha: { value: NEUTRAL.white },
         GlobalTime: { value: 0 },
         PdxViewerExposure: { value: env.exposure },
-        // portrait shaders (jomini/portrait.shader): three lights of their own — here one directional light = the
+        // portrait shaders (jomini/portrait.shader): three lights of their own; here one directional light = the
         // preview sun (type 1; the shader lights along -Direction), the others off (type 0); decals baked on the CPU
         // (counts 0 unless setDecals hands over data decals)
-        // (arrays longer than any program declares: three reads as many entries as the program has — the court
+        // (arrays longer than any program declares: three reads as many entries as the program has; the court
         // shader declares the same names with 20 lights)
         Light_Color_Falloff: { value: vec4s(32, new THREE.Vector4(sun.r * env.sunIntensity, sun.g * env.sunIntensity, sun.b * env.sunIntensity, 0)) },
         Light_Direction_Type: { value: vec4s(32, new THREE.Vector4(0, -1, 0, 1)) },
@@ -409,7 +416,7 @@ export function createGameScene(renderer: THREE.WebGLRenderer, env: ViewEnvironm
             camera.updateMatrixWorld();
             const view = new THREE.Matrix4().multiplyMatrices(camera.matrixWorldInverse, MIRROR_Z);
             // the engine's halves: its view space looks down +z and its projection takes w = z, three's look down -z with
-            // w = -z — the same product (a flip of z on both sides), but code rebuilding the camera from its vectors (AGOT's
+            // w = -z; the same product (a flip of z on both sides), but code rebuilding the camera from its vectors (AGOT's
             // particle cards: View_Matrix_From, Projection_Matrix_From) needs the engine's convention
             const engineView = view.clone().premultiply(MIRROR_Z);
             (u.ViewMatrix.value as THREE.Matrix4).copy(engineView);
@@ -533,7 +540,7 @@ export function createGameScene(renderer: THREE.WebGLRenderer, env: ViewEnvironm
 
             // 15 values per decal (portrait_decals.fxh GetDecalData): diffuse / normal / properties index (65535 = none),
             // body part, diffuse / normal / properties blend mode, weight (16-bit unorm), atlas position, UV offset, UV
-            // tiling, atlas size — one value per texel of the buffer emulation (element i at (i % 4096, i / 4096))
+            // tiling, atlas size; one value per texel of the buffer emulation (element i at (i % 4096, i / 4096))
             const px = new Uint32Array(15 * n * 4);
             decals.forEach((d, i) =>
             {
@@ -622,9 +629,9 @@ export function createGameScene(renderer: THREE.WebGLRenderer, env: ViewEnvironm
 
             for (
                 const [kind, name] of [
-                    ['diffuse', 'DecalDiffuseArray'],
-                    ['normal', 'DecalNormalArray'],
-                    ['properties', 'DecalPropertiesArray']
+                    ['diffuse', tr('DecalDiffuseArray')],
+                    ['normal', tr('DecalNormalArray')],
+                    ['properties', tr('DecalPropertiesArray')]
                 ] as const
             )
             {
@@ -640,6 +647,39 @@ export function createGameScene(renderer: THREE.WebGLRenderer, env: ViewEnvironm
                     u[name].value = tex;
                 });
             }
+        },
+        textureRaw(path, fill)
+        {
+            const key = 'raw:' + path.toLowerCase();
+            let uniform = arrays.get(key);
+
+            if (uniform)
+                return uniform;
+
+            const stub = new THREE.DataTexture(new Uint8Array(fill), 1, 1);
+            stub.needsUpdate = true;
+            textures.set('raw-stub:' + key, stub);
+            uniform = { value: stub };
+            arrays.set(key, uniform);
+            const u = uniform;
+            const data = api.textureData(path).catch(() => null);
+            markLoading(u, data);
+            void data.then((d) =>
+            {
+                if (disposed || !d)
+                    return;
+
+                const tex = new THREE.DataTexture(d.rgba, d.width, d.height);
+                tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping; // the game's PatternMask sampler clamps
+                tex.magFilter = THREE.LinearFilter;
+                tex.minFilter = THREE.LinearMipmapLinearFilter;
+                tex.generateMipmaps = true;
+                tex.anisotropy = 8;
+                tex.needsUpdate = true;
+                textures.set(key, tex);
+                u.value = tex;
+            });
+            return uniform;
         },
         textureArray(paths, fill)
         {
@@ -696,7 +736,7 @@ export function createGameScene(renderer: THREE.WebGLRenderer, env: ViewEnvironm
 
 const programs = new Map<string, Promise<ShaderProgram>>();
 
-/** Compiled programs belong to one build — the loaded mods can replace FX files: dropped when the index is rebuilt. */
+/** Compiled programs belong to one build (the loaded mods can replace FX files): dropped when the index is rebuilt. */
 export function resetShaderPrograms(): void
 {
     programs.clear();
@@ -869,7 +909,7 @@ export function gameMaterial(prog: ShaderProgram, part: PortraitPart, scene: Gam
     data[6].set(1, 1, 1, 1);
     data[7].set(0, 0, 1, 1);
     // portrait user data at 5 + 24: random number, colour override offset (-1 = none), colour mask interval 0..1
-    // (palette-coloured parts whose palette is already baked in — decal-baked skin — get the interval 0..0: no second tint)
+    // (palette-coloured parts whose palette is already baked in (decal-baked skin) get the interval 0..0: no second tint)
     const baked = (part.kind === 'skin' || part.kind === 'eye' || part.kind === 'hair' || part.kind === 'teeth') && !part.color && !!part.diffuse?.startsWith('data:');
     data[5 + 24].set(0.5, -1, 0, baked ? 0 : 1);
     // accessory variation (jomini/portrait_user_data.fxh, SVariationRenderConstants): per mask channel the pattern's UV
@@ -887,7 +927,7 @@ export function gameMaterial(prog: ShaderProgram, part: PortraitPart, scene: Gam
             const q = i < 2 ? v.patterns[4 + i] : null;
             data[5 + i].set(p?.scale || 1, p?.rotation ?? 0, p?.offset[0] ?? 0, p?.offset[1] ?? 0);
             data[5 + 4 + i].set(q?.scale || 1, q?.rotation ?? 0, q?.offset[0] ?? 0, q?.offset[1] ?? 0);
-            // inner_exp / inner_scale / rim_exp / rim_scale: no vanilla file sets them — neutral (colour × 1)
+            // inner_exp / inner_scale / rim_exp / rim_scale: no vanilla file sets them; neutral (colour × 1)
             data[5 + 8 + i].set(1, 0, 0, 1);
             data[5 + 12 + i].set(1, 0, 0, 1);
         }
@@ -931,7 +971,7 @@ export function gameMaterial(prog: ShaderProgram, part: PortraitPart, scene: Gam
         else if (v && s.name === 'PatternPropertyMaps')
             uniforms[s.name] = scene.textureArray(layers.map((p) => p?.properties), [255, 64, 0, 200]);
         else if (v && s.name === 'PatternMask')
-            uniforms[s.name] = { value: scene.texture(v.mask, false) };
+            uniforms[s.name] = scene.textureRaw(v.mask, [255, 0, 0, 0]);
         else if (v && s.name === 'PatternColorPalette')
             uniforms[s.name] = { value: scene.palette(v.palette) };
         // the view's decal list (setDecals: data decals' 16×16 mips; setDecalList: every layer; empty otherwise)
@@ -986,7 +1026,7 @@ export function gameMaterial(prog: ShaderProgram, part: PortraitPart, scene: Gam
         mat.blendSrc = (BLEND[(blend.SourceBlend ?? 'SRC_ALPHA').toUpperCase()] ?? THREE.SrcAlphaFactor) as THREE.BlendingSrcFactor;
         mat.blendDst = (BLEND[(blend.DestBlend ?? 'INV_SRC_ALPHA').toUpperCase()] ?? THREE.OneMinusSrcAlphaFactor) as THREE.BlendingDstFactor;
 
-        // the alpha channel's own factors (hair: ONE / INV_SRC_ALPHA — the canvas stays opaque where hair covers the face)
+        // the alpha channel's own factors (hair: ONE / INV_SRC_ALPHA; the canvas stays opaque where hair covers the face)
         if (blend.SourceAlpha)
             mat.blendSrcAlpha = (BLEND[blend.SourceAlpha.toUpperCase()] ?? null) as THREE.BlendingSrcFactor | null;
 
@@ -1035,11 +1075,11 @@ function skinProblem(prog: ShaderProgram, part: PortraitPart): string | undefine
         return undefined;
 
     if (!part.skin)
-        return `${prog.effect} places vertices by their bones (GPU skinning): this part brings no skin data`;
+        return tr('{effect} places vertices by their bones (GPU skinning): this part brings no skin data', { effect: prog.effect });
 
     const joints = part.skin.joints.length / 12;
     const capacity = jointCapacity(prog);
-    return capacity && joints > capacity ? `${prog.effect}: ${joints} joints, the program holds ${capacity}` : undefined;
+    return capacity && joints > capacity ? tr('{effect}: {joints} joints, the program holds {capacity}', { effect: prog.effect, joints, capacity }) : undefined;
 }
 
 /** The engine's skinned vertex streams: 4 bone indices (integer), 3 weights, positions in the rig's scaled space. */
@@ -1077,8 +1117,8 @@ function jointUniform(prog: ShaderProgram, part: PortraitPart): THREE.IUniform |
 }
 
 /**
- * Where a part's vertices are drawn (game space): a skinned program poses them with the part's joints — the model
- * preview frames that (AGOT's particle rigs sit at the origin in bind pose) — others take them as they are.
+ * Where a part's vertices are drawn (game space): a skinned program poses them with the part's joints (the model
+ * preview frames that (AGOT's particle rigs sit at the origin in bind pose)); others take them as they are.
  */
 export function drawnPositions(part: PortraitPart, prog: ShaderProgram | null | undefined): Float32Array
 {
@@ -1118,7 +1158,7 @@ export function drawnPositions(part: PortraitPart, prog: ShaderProgram | null | 
 
 /**
  * Debug aid (DevTools or scripts/drive.mjs): every program in the shader store compiled and drawn once in an
- * offscreen WebGL renderer — WebGL compile/link errors land in logs/shaders.log like those of the viewers.
+ * offscreen WebGL renderer; WebGL compile/link errors land in logs/shaders.log like those of the viewers.
  */
 async function checkAllShaders(): Promise<{ checked: number; webglErrors: number; compileFailures: number; }>
 {
@@ -1164,7 +1204,7 @@ async function checkAllShaders(): Promise<{ checked: number; webglErrors: number
     const result = { checked: programs.length, webglErrors, compileFailures: failures.length };
     void api.logShader({
         kind: 'CHECK',
-        title: `WebGL check: ${programs.length} programs, ${webglErrors} WebGL errors; ${failures.length} failed to compile (see SUMMARY / COMPILE)`
+        title: tr('WebGL check: {programsCount} programs, {webglErrors} WebGL errors; {failuresCount} failed to compile (see SUMMARY / COMPILE)', { programsCount: programs.length, webglErrors, failuresCount: failures.length })
     });
     return result;
 }

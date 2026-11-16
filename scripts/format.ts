@@ -1,5 +1,5 @@
 // Formats the sources the way scripts/card-survey.ts shows it (docs/dev-gotchas.md, "Code style"): dprint
-// (dprint.json — 4 spaces, semicolons, braces on a line of their own, else / catch on the next line, a single
+// (dprint.json: 4 spaces, semicolons, braces on a line of their own, else / catch on the next line, a single
 // statement's body on the next line) after two passes it has no option for: a blank line around control statements
 // (if, for, while, do, switch, try) and a call per line in chains of three calls or more.
 // Usage: node --experimental-strip-types --no-warnings scripts/format.ts [--check] [file …]   (default: every source)
@@ -72,7 +72,7 @@ function blankLines(sf: ts.SourceFile, text: string, eol: string, edits: Edit[])
     visit(sf);
 }
 
-/** `this.idx`, `Object`, `a.b` — a chain's start its first call stays on (else every call gets a line of its own). */
+/** `this.idx`, `Object`, `a.b`: a chain's start its first call stays on (else every call gets a line of its own). */
 function simple(e: ts.Expression): boolean
 {
     if (ts.isIdentifier(e) || e.kind === ts.SyntaxKind.ThisKeyword || e.kind === ts.SyntaxKind.SuperKeyword)

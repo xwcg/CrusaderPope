@@ -159,7 +159,7 @@ export function markLoading(o: object, done: Promise<unknown>): void
     );
 }
 
-/** Settles when the texture's (uniform's) pixels are there — at once for anything not loading. */
+/** Settles when the texture's (uniform's) pixels are there, at once for anything not loading. */
 export function loaded(o: object): Promise<void>
 {
     return loading.get(o) ?? Promise.resolve();
@@ -264,7 +264,7 @@ function variationShader(part: PortraitPart, shader: THREE.WebGLProgramParameter
 /**
  * Skin translucency like the game's SKIN_SCATTERING/TRANSLUCENCY (jomini translucency.fxh): per light
  * (VdotH^2 with the half vector distorted by 0.3·N, plus NdotL wrapped by 0.2) × light × thickness (properties red)
- * × diffuse × saturated skin colour — thin parts (ears, nostrils) glow when lit from behind.
+ * × diffuse × saturated skin colour: thin parts (ears, nostrils) glow when lit from behind.
  */
 const SKIN_TRANSLUCENCY = `
 #if NUM_DIR_LIGHTS > 0

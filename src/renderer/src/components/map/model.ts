@@ -1,20 +1,21 @@
 /**
- * The map's modes and groups (docs/map.md): what each province belongs to in a mode — realm, a de jure title, a
- * layer's thing (culture, faith …) or a numeric layer's band — with names, colours, links and each group's area.
+ * The map's modes and groups (docs/map.md): what each province belongs to in a mode (realm, a de jure title, a
+ * layer's thing (culture, faith …) or a numeric layer's band), with names, colours, links and each group's area.
  */
 import type { MapInfo, MapLayer } from '../../../../shared/api';
 
+import { tr } from '../../../../shared/i18n';
 /** 'realm', 'vassal', a tier letter (h e k d c b) or a layer's id */
 export type Mode = string;
 export type Style = 'terrain' | 'paper' | 'plain';
 
 export const TIER_NAMES: Record<string, [string, string]> = {
-    h: ['Hegemony', 'Hegemonies'],
-    e: ['Empire', 'Empires'],
-    k: ['Kingdom', 'Kingdoms'],
-    d: ['Duchy', 'Duchies'],
-    c: ['County', 'Counties'],
-    b: ['Barony', 'Baronies']
+    h: [tr('Hegemony'), tr('Hegemonies')],
+    e: [tr('Empire'), tr('Empires')],
+    k: [tr('Kingdom'), tr('Kingdoms')],
+    d: [tr('Duchy'), tr('Duchies')],
+    c: [tr('County'), tr('Counties')],
+    b: [tr('Barony'), tr('Baronies')]
 };
 export const WATER = new Set(['sea', 'lake', 'river', 'impassable_sea']);
 
@@ -33,10 +34,10 @@ export function modesOf(info: MapInfo): ModeDef[]
     const tiers = ['h', 'e', 'k', 'd', 'c', 'b'].filter((t) => info.titles.some((x) => x.tier === t));
     const layer = (l: MapLayer): ModeDef => ({ id: l.id, label: l.label, title: l.title, historical: !!l.historical });
     return [
-        { id: 'realm', label: 'Realms', title: 'Independent realms at the date', historical: true },
-        { id: 'vassal', label: 'Vassals', title: "The realms' direct vassals at the date", historical: true },
+        { id: 'realm', label: tr('Realms'), title: tr('Independent realms at the date'), historical: true },
+        { id: 'vassal', label: tr('Vassals'), title: tr('The realms\' direct vassals at the date'), historical: true },
         ...info.layers.filter((l) => l.historical).map(layer),
-        ...tiers.map((t) => ({ id: t, label: TIER_NAMES[t][1], title: `De jure ${TIER_NAMES[t][1].toLowerCase()} at the date`, historical: true })),
+        ...tiers.map((t) => ({ id: t, label: TIER_NAMES[t][1], title: tr('De jure {tier} at the date', { tier: TIER_NAMES[t][1].toLowerCase() }), historical: true })),
         ...info.layers.filter((l) => !l.historical).map(layer)
     ];
 }
@@ -276,5 +277,5 @@ export function provinceName(info: MapInfo, p: number): string
 {
     const b = info.province.barony[p];
     const n = info.province.name[p]?.replace(/_/g, ' ');
-    return b >= 0 ? info.titles[b].name : n ? n.charAt(0).toUpperCase() + n.slice(1) : `Province ${p}`;
+    return b >= 0 ? info.titles[b].name : n ? n.charAt(0).toUpperCase() + n.slice(1) : tr('Province {p}', { p });
 }

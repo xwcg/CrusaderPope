@@ -8,13 +8,14 @@ import { OverrideButton } from './OverrideMenu';
 import { SourceEditor } from './InPlaceEdit';
 import { useActiveMod } from '../modStore';
 
+import { tr } from '../../../shared/i18n';
 const MAX_LINES = 2500;
 
 /** @param entity the entry the definitions belong to: its winning definition offers "Override in the active mod" */
 export function SourceView(props: { defs: DefSiteView[]; navigate: Navigate; entity?: EntityKey; }): React.JSX.Element
 {
     // the winning definition: the last one outside files a mod hid (a landed title written only as the way to one inside
-    // it changes nothing — the one before it, unless that is all there is)
+    // it changes nothing: the one before it, unless that is all there is)
     let win = -1;
     let path = -1;
     props.defs.forEach((d, i) =>
@@ -109,25 +110,22 @@ function DefSite({ def, navigate, entity }: { def: DefSiteView; navigate: Naviga
                     {def.file}:{def.line}–{def.endLine}
                 </span>
                 <HiddenNote origin={def.origin} />
-                {def.overridden && <span className="chip warn" title="A later definition with the same key replaces this one">overridden</span>}
+                {def.overridden && <span className="chip warn" title={tr('A later definition with the same key replaces this one')}>{tr('overridden')}</span>}
                 {def.path && (
-                    <span className="chip" title="Written only as the way to a title inside it (nothing but its de jure vassals): the game adds it to the title it has, so it changes nothing here">
-                        only the way in
-                    </span>
+                    <span className="chip" title={tr('Written only as the way to a title inside it (nothing but its de jure vassals): the game adds it to the title it has, so it changes nothing here')}>
+                        {tr('only the way in')}</span>
                 )}
-                {def.local && <span className="chip">file-local</span>}
+                {def.local && <span className="chip">{tr('file-local')}</span>}
                 {entity && !editable && <OverrideButton type={entity.type} name={entity.name} navigate={navigate} compact />}
                 {editable && (
-                    <button className={'override-btn compact' + (editing ? ' on' : '')} onClick={() => setEditing((v) => !v)} title={`Edit this definition of ${active.mod?.name} here (checked before saving; undo in the notice)`}>
-                        ✎ {editing ? 'Editing' : 'Edit'}
+                    <button className={'override-btn compact' + (editing ? ' on' : '')} onClick={() => setEditing((v) => !v)} title={tr('Edit this definition of {name} here (checked before saving; undo in the notice)', { name: active.mod?.name })}>
+                        ✎ {editing ? tr('Editing') : tr('Edit')}
                     </button>
                 )}
-                <button onClick={() => void api.openFile(def.absPath, def.line)} title={openTitle(def.absPath, `Open ${def.file}:${def.line} in VS Code`)}>
-                    Open in VS Code
-                </button>
-                <button onClick={() => void api.revealFile(def.absPath)} title={revealTitle(def.absPath, 'Show the file in its folder')}>
-                    Reveal
-                </button>
+                <button onClick={() => void api.openFile(def.absPath, def.line)} title={openTitle(def.absPath, tr('Open {file}:{line} in VS Code', { file: def.file, line: def.line }))}>
+                    {tr('Open in VS Code')}</button>
+                <button onClick={() => void api.revealFile(def.absPath)} title={revealTitle(def.absPath, tr('Show the file in its folder'))}>
+                    {tr('Reveal')}</button>
             </header>
             {def.doc && <pre className="doc-comment">{def.doc}</pre>}
             {editing && def.src ? <SourceEditor src={def.src} onClose={() => setEditing(false)} /> : (
@@ -138,8 +136,7 @@ function DefSite({ def, navigate, entity }: { def: DefSiteView; navigate: Naviga
             )}
             {totalLines > MAX_LINES && !showAll && !editing && (
                 <div className="truncated-note">
-                    Showing {MAX_LINES} of {totalLines} lines.
-                    <button onClick={() => setShowAll(true)}>Show all</button>
+                    {tr('Showing {MAX_LINES} of {totalLines} lines.', { MAX_LINES, totalLines })}<button onClick={() => setShowAll(true)}>{tr('Show all')}</button>
                 </div>
             )}
             {menu && (
@@ -280,7 +277,7 @@ function lex(src: string): Tok[]
     return toks;
 }
 
-function highlight(src: string, links: LinkSpan[]): ReactNode[]
+export function highlight(src: string, links: LinkSpan[]): ReactNode[]
 {
     const toks = lex(src);
     const out: ReactNode[] = [];

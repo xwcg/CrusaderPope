@@ -147,6 +147,14 @@
   font-size: 10.5px;
   color: var(--text-faint);
 }
+/* a toggle row's state ("Known"), after the hint */
+.pk-state {
+  margin-left: auto;
+  padding-left: 10px;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--accent);
+}
 .pk-arrow {
   flex: none;
   width: 8px;
@@ -186,6 +194,8 @@
   z-index: 3;
 }
 .pk-crumbs {
+  cursor: move;
+  user-select: none;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -209,7 +219,7 @@
 .pk-crumb.last {
   color: var(--accent);
 }
-/* (a fixed height: the menus above keep their place while the preview's content changes — both halves scroll) */
+/* (a fixed height: the menus above keep their place while the preview's content changes; both halves scroll) */
 .pk-preview {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
@@ -338,6 +348,12 @@
   flex-direction: column;
   gap: 5px;
 }
+
+/* the last card while the highlighted entry's loads */
+.pk-card.stale {
+  opacity: 0.45;
+}
+
 .pk-card-head {
   display: flex;
   align-items: center;
@@ -357,4 +373,89 @@
   font-style: italic;
   color: var(--text-dim);
   line-height: 1.4;
+}
+
+/* a game key explained (the script database): summary, details, fields, the game's own text folded away */
+.pk-doc code {
+  font-family: var(--font-code);
+  font-size: 11.5px;
+  color: var(--tok-key);
+}
+.pk-doc-summary {
+  line-height: 1.4;
+}
+.pk-doc-details,
+.pk-doc-example {
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+.pk-doc-fields {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.pk-doc-field {
+  display: grid;
+  grid-template-columns: minmax(90px, max-content) minmax(0, 1fr);
+  gap: 8px;
+}
+.pk-doc-field dt {
+  display: flex;
+  flex-direction: column;
+}
+.pk-doc-field dd {
+  margin: 0;
+  line-height: 1.35;
+}
+.pk-doc-tag,
+.pk-doc-values {
+  color: var(--text-faint);
+  font-size: 11px;
+}
+.pk-doc-values {
+  display: block;
+}
+.pk-doc-uncertain {
+  color: var(--text-faint);
+  font-size: 12px;
+  font-style: italic;
+}
+.pk-doc-toggle {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-faint);
+  font-size: 11px;
+  cursor: pointer;
+}
+.pk-doc-toggle:hover {
+  color: var(--accent);
+}
+.pk-doc-raw {
+  margin: 0;
+  padding: 5px 7px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: var(--font-code);
+  font-size: 11px;
+  white-space: pre-wrap;
+  color: var(--text-dim);
+}
+/* a plain menu's colour swatch (mode 'choice': the map's cultures, faiths) */
+.pk-swatch {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  margin-right: 6px;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+}
+/* plain menus (mode 'choice'): no script, only the highlighted row's note, in a short panel */
+.pk-preview.choice {
+  height: auto;
+  min-height: 34px;
+  grid-template-columns: 1fr;
 }

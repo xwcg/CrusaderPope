@@ -1,7 +1,7 @@
 /**
  * Lines over the 2D map (docs/map.md, "Rivers and sea crossings"), on a 2D canvas between the GL map and the names:
- * the rivers as quadratic B-splines through their points (overlay-data.ts) — the level of detail by the zoom, only
- * runs in view, one path per look (width on screen, strength) — as wide as they are on the map, thin ones fading out
+ * the rivers as quadratic B-splines through their points (overlay-data.ts), the level of detail by the zoom, only
+ * runs in view, one path per look (width on screen, strength), as wide as they are on the map, thin ones fading out
  * when zoomed out, wide ones with a lighter middle; the sea crossings as dashed arcs (the game's strait: rounded olive
  * dashes, gfx/map/adjacencies/strait_diffuse.dds).
  */
@@ -11,7 +11,7 @@ import type { Style } from './model';
 import { CLASS_STEPS, overlaysNow, riverWidth, type Overlays } from './overlay-data';
 
 /**
- * The rivers per style (rgb): the water — the 2D map's river provinces, a little bluer; on paper ink — and the middle
+ * The rivers per style (rgb): the water (the 2D map's river provinces, a little bluer; on paper ink) and the middle
  * of wide ones, lighter (on paper the paper's pale water between ink banks, as it paints its big rivers): `share` of
  * what the river is wider than `from` CSS pixels. Opaque: overlapping ends of paths would show.
  */
@@ -129,7 +129,7 @@ function drawRivers(ctx: CanvasRenderingContext2D, o: Overlays, view: View, styl
 
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    // (the narrow first: a wider river stays on top where a tributary joins; the middles after all of them — a width step
+    // (the narrow first: a wider river stays on top where a tributary joins; the middles after all of them, as a width step
     // along a river would cut them)
     const order = looks.map((_, i) => i).sort((a, b) => looks[a].width - looks[b].width);
     const { water, core } = RIVER[style];

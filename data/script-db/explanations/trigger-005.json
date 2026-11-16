@@ -1,0 +1,423 @@
+[
+ {
+  "kind": "trigger",
+  "key": "court_positions_currently_filled",
+  "label": "Filled court positions",
+  "summary": "Whether the number of court positions the character currently has filled meets a comparison.",
+  "details": "It counts the court positions the character has staffed at the moment. Vanilla compares it with the number of positions available (`< court_positions_currently_available`) or with a plain number such as 10.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "create_faction_type_chance",
+  "label": "Faction creation chance",
+  "summary": "Whether the chance that the character creates a faction of a given type against a target is above or below a value.",
+  "details": "The chance is the one the game works out for that faction type and target. The comparison is written inside the block as `value > 50` and the like. Vanilla does not use it in the base game, so the details rest on the game's own description.",
+  "fields": [
+    { "name": "type", "text": "The kind of faction (the game's documentation says an ongoing faction).", "values": "a faction type", "required": true },
+    { "name": "target", "text": "The character the faction would be aimed at.", "values": "a character", "required": true },
+    { "name": "value", "text": "The chance to compare against.", "values": "a comparison with a number or script value, for example `value >= 50`", "required": true }
+  ],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "cultural_acceptance",
+  "label": "Cultural acceptance",
+  "summary": "Whether the cultural acceptance between the culture and a target culture meets a comparison.",
+  "details": "The game words it as the acceptance of the culture the check runs on with the target culture. Vanilla targets are things like `root.culture`, the liege's culture or a faction target's culture, and the values are mostly thresholds between 20 and 50.",
+  "fields": [
+    { "name": "target", "text": "The culture the acceptance is measured against.", "values": "a culture", "required": true },
+    { "name": "value", "text": "The acceptance to compare against.", "values": "a comparison with a number, for example `value >= 50`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "culture_age",
+  "label": "Culture age",
+  "summary": "Whether the culture's age in years meets a comparison.",
+  "details": "A culture with no creation date set makes the check return the current year instead of an age. Vanilla compares it with cooldown values for culture divergence and hybridization, and with plain years like 50.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "culture_can_know_innovation",
+  "label": "Culture can learn innovation",
+  "summary": "Whether the given culture is able to make progress toward this innovation.",
+  "details": "It runs on an innovation, and the value is the culture to test. Written in the innovation's own definition, for example `culture_can_know_innovation = scope:target_culture`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "culture_has_any_fascination",
+  "label": "Has fascination",
+  "summary": "Whether the culture is currently fascinated by some innovation.",
+  "details": "Use `yes` to require a fascination and `no` to require that there is none.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "culture_number_of_counties",
+  "label": "Number of counties",
+  "summary": "Whether the number of counties that have this culture meets a comparison.",
+  "details": "Vanilla mostly uses it to check that a culture still has at least one county (`> 0`), and sometimes for larger thresholds such as 15 or 70.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "culture_overlaps_geographical_region",
+  "label": "In geographical region",
+  "summary": "Whether any county of this culture lies in the given geographical region.",
+  "details": "The value is the key of a geographical region. Vanilla uses large regions such as `world_europe`, `world_india` and `world_asia_china`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "current_computer_date",
+  "label": "Computer date",
+  "summary": "Whether the real date on the player's computer meets a comparison.",
+  "details": "This is a user interface check and can only be used in specific places. It compares against a date written as year.month.day. It does not use the in-game date; for that see the current date check.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "current_computer_date_day",
+  "label": "Computer day of month",
+  "summary": "Whether the day of the month on the player's computer meets a comparison.",
+  "details": "This is a user interface check and works only in specific places. It reads the real clock, not the game's calendar.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "current_computer_date_month",
+  "label": "Computer month",
+  "summary": "Whether the month on the player's computer meets a comparison.",
+  "details": "This is a user interface check and works only in specific places. It reads the real clock, not the game's calendar.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "current_computer_date_year",
+  "label": "Computer year",
+  "summary": "Whether the year on the player's computer meets a comparison.",
+  "details": "This is a user interface check and works only in specific places. It reads the real clock, not the game's calendar.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "current_danger_value",
+  "label": "Danger of current province",
+  "summary": "Whether the danger value of the province a travel plan is currently in meets a comparison.",
+  "details": "The danger value runs from -100 to +100. It is checked on a travel plan, for the province the traveller is in right now.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "current_date",
+  "label": "Current date",
+  "summary": "Whether the in-game date meets a comparison.",
+  "details": "The value is a date written as `year.month.day`, for example `>= 1066.1.1`. Vanilla mostly writes it as a lower bound, such as `>= 1178.1.1`. It is the game's calendar, not the computer's clock.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "current_day",
+  "label": "Current day of month",
+  "summary": "Whether the in-game day of the month (1 to 31) meets a comparison.",
+  "details": "Vanilla uses it rarely, for example `> 15` to test for the second half of a month.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "current_domain_fertility",
+  "label": "Domain fertility",
+  "summary": "Whether the fertility of the character's domain meets a comparison.",
+  "details": "Vanilla compares it with the named level `terrible_county_fertility_level` (`<`).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "current_military_strength",
+  "label": "Military strength",
+  "summary": "Whether the character's current military strength meets a comparison.",
+  "details": "The right-hand side is often another character's strength or a named value, such as `< root.current_military_strength`. Vanilla also writes it as a block with `value` and `multiply`, so one strength can be compared with a scaled version of another.",
+  "fields": [
+    { "name": "value", "text": "The strength to compare against (block form).", "values": "a number or script value, for example another character's `current_military_strength`", "required": true },
+    { "name": "multiply", "text": "A factor applied to `value` before comparing (vanilla uses 0.5).", "values": "a number" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "current_month",
+  "label": "Current month",
+  "summary": "Whether the in-game month (1 to 12) meets a comparison.",
+  "details": "Vanilla uses it both with a comparison like `>= 11` and as a plain number such as `current_month = 5`, to limit something to a time of the year.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "current_raised_military_strength",
+  "label": "Raised army strength",
+  "summary": "Whether the strength of the armies the character has currently raised meets a comparison.",
+  "details": "It is the raised-army counterpart of the plain military strength check; the game documents nothing more. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "current_tooltip_depth",
+  "label": "Open tooltip depth",
+  "summary": "Whether the number of tooltips open right now meets a comparison.",
+  "details": "This is a user interface check and works only in specific places. Vanilla tests `>= 2`, so at least two tooltips open at once.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "current_weight",
+  "label": "Weight",
+  "summary": "Whether the character's weight meets a comparison.",
+  "details": "The scale can go negative; vanilla uses values like `< -10` as well as `>= 50`. It also compares with the named limits `overweight_value` and `underweight_value`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "current_weight_for_portrait",
+  "label": "Portrait weight",
+  "summary": "Whether the character's weight, scaled to a range of 0.0 to 1.0 for portraits, meets a comparison.",
+  "details": "It is the same weight as the plain weight check, but squeezed into the 0 to 1 range that the portrait uses. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "current_year",
+  "label": "Current year",
+  "summary": "Whether the in-game year meets a comparison.",
+  "details": "Vanilla uses it very often to start content from a certain year, for example `>= 1066`. It can also be written as a block with `value` and `add`, which compares with another year plus an offset, such as a legend's start date plus 100.",
+  "fields": [
+    { "name": "value", "text": "The year to compare against (block form).", "values": "a number or script value", "required": true },
+    { "name": "add", "text": "Years added to `value` before comparing.", "values": "a number" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "custom_description",
+  "label": "Custom description",
+  "summary": "Groups triggers and shows your own text for them in the tooltip instead of the automatic one.",
+  "details": "The triggers inside still decide the result. Only the displayed description changes. The subject defaults to the current scope. Vanilla often wraps a single check, such as a `NOT` block, to give it a clear named text.",
+  "fields": [
+    { "name": "text", "text": "The localization key of the text to show.", "values": "a trigger localization key", "required": true },
+    { "name": "subject", "text": "The thing the text is about. Defaults to the current scope.", "values": "a scope, for example `scope:recipient`" },
+    { "name": "object", "text": "A second thing the text can refer to.", "values": "a scope" },
+    { "name": "value", "text": "A number the text can show.", "values": "a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "custom_title_name",
+  "label": "Custom title name",
+  "summary": "Whether the title uses the given custom name localization key.",
+  "details": "Titles can carry a custom name text. This tests whether the one on this title is the key you give. Vanilla uses it once, with a dynasty realm name.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "custom_tooltip",
+  "label": "Custom tooltip",
+  "summary": "Shows your own text for the enclosed triggers in the tooltip instead of their automatic one.",
+  "details": "The triggers inside still decide the result. Only the displayed text changes. It can also be written as a plain text key with no block. It is very common in vanilla.",
+  "fields": [
+    { "name": "text", "text": "The localization key of the text to show.", "values": "a localization key", "required": true },
+    { "name": "subject", "text": "The thing the text is about.", "values": "a scope" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "day_of_month_of_birth",
+  "label": "Birth day of month",
+  "summary": "Whether the day of the month the character was born on meets a comparison.",
+  "details": "The day goes from 1 to 31, and no higher than the month allows (28 in February in the documented example).",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "day_of_year_of_birth",
+  "label": "Birth day of year",
+  "summary": "Whether the day of the year (1 to 365) the character was born on meets a comparison.",
+  "details": "The documented example says day 40 is February 9.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "days_as_ruler",
+  "label": "Days as ruler",
+  "summary": "Whether the number of days the character has been a ruler meets a comparison.",
+  "details": "A character who is not a ruler gives -1, so a check like `>= 0` also tests that they rule.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "days_in_prison",
+  "label": "Days in prison",
+  "summary": "Whether the number of days the character has been imprisoned meets a comparison.",
+  "details": "A character who is not imprisoned gives 0. Vanilla uses it for long stays, like `>= 400` or `>= 500` days.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "days_of_continuous_peace",
+  "label": "Days of peace",
+  "summary": "Whether the number of days the character has been at peace without a break meets a comparison.",
+  "details": "A character at war gives 0, and raids count as not being at peace. Vanilla uses thresholds such as 1825 days (5 years) and 3650 days (10 years).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "days_of_continuous_war",
+  "label": "Days of war",
+  "summary": "Whether the number of days the character has been at war without a break meets a comparison.",
+  "details": "The game's description is a copy of the peace check's text (it speaks of peace twice), so the direction here follows the name: a character at peace should give 0. Vanilla uses it with values like `> 150` and `>= 9125`, which fits war days.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "days_since_birth",
+  "label": "Age in days",
+  "summary": "Whether the character's age, counted in days, meets a comparison.",
+  "details": "It is finer than the age in years. The documented example, `> 395`, asks whether the character is over one year and 30 days old.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "days_since_creation",
+  "label": "Days since creation",
+  "summary": "Whether the number of days since the inspiration was created meets a comparison.",
+  "details": "It runs on an inspiration. Vanilla uses it once, with `> 3650` (about ten years).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "days_since_death",
+  "label": "Days since death",
+  "summary": "Whether the number of days since the character died meets a comparison.",
+  "details": "Vanilla uses `<= 365` to find characters who died within the last year.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "days_since_joined_court",
+  "label": "Days at current court",
+  "summary": "Whether the number of days since the character joined their current court meets a comparison.",
+  "details": "Vanilla compares it with `days_to_gain_court_type_trait` (`>=`); going by that name, it is a waiting time for a court type trait.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "days_since_legend_completion",
+  "label": "Days since legend completed",
+  "summary": "Whether the number of days since the legend was completed meets a comparison.",
+  "details": "It runs on a legend. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "days_since_legend_start_date",
+  "label": "Days since legend started",
+  "summary": "Whether the number of days since the legend was created meets a comparison.",
+  "details": "It runs on a legend. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "days_since_max_war_score",
+  "label": "Days at max war score",
+  "summary": "Whether the number of days the war score has been at its maximum (+100 or -100) meets a comparison.",
+  "details": "It returns -1 when the war score is not at +100 or -100. It runs on a war.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "days_since_outbreak_start",
+  "label": "Days since outbreak",
+  "summary": "Whether the number of days since the epidemic outbreak began meets a comparison.",
+  "details": "It runs on an epidemic, for example `days_since_outbreak_start >= 20`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ }
+]

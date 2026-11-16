@@ -32,7 +32,7 @@ def edit(e):
         o = bpy.data.objects[name]
         o.scale = (o.scale[0] * f, o.scale[1] * f, o.scale[2] * f)
     if 'move' in e:
-        # moves the upper half of an object's vertices up (Blender Z) — in every shape key, as editing the basis in
+        # moves the upper half of an object's vertices up (Blender Z), in every shape key, as editing the basis in
         # Edit Mode does (with shape keys, the mesh's own coordinates are not what is exported)
         name, dz = e['move']
         o = bpy.data.objects[name]

@@ -1,6 +1,6 @@
 /**
  * Cards of looks: colours, coats of arms (common/coat_of_arms), genes and DNA (common/genes, dna_data,
- * bookmark_portraits, portrait_types — docs/portraits.md), modifier icons. Compact: the portrait viewer and the
+ * bookmark_portraits, portrait_types; docs/portraits.md), modifier icons. Compact: the portrait viewer and the
  * pictures show the rest.
  */
 import type { PNode } from '../../indexer/parser.ts';
@@ -11,6 +11,7 @@ import type { CardFn } from './types.ts';
 import { capitalize, formatNumber, humanize, rich } from '../text.ts';
 import { colorText, firstValidLines, join, kids, lineComment, note, pictureSeg, str, values, words } from './presentation-util.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 // ---------------------------------------------------------------------------
 // Coats of arms
 // ---------------------------------------------------------------------------
@@ -37,12 +38,12 @@ function colorSeg(b: StoryBuilder, list: PNode[], i: number, src: string): Rich
     const x = listed(list, i);
 
     if (x.list)
-        return [note(`one of “${humanize(x.list)}”`, `list "${x.list}"`)];
+        return [note(tr('one of “{humanize}”', { humanize: humanize(x.list) }), tr('list "{list}"', { list: x.list }))];
 
     const slot = /^color(\d)$/.exec(x.v ?? '');
 
     if (slot)
-        return [note(`colour ${slot[1]}`, x.v)];
+        return [note(tr('colour {slot}', { slot: slot[1] }), x.v)];
 
     const e = x.v ? b.idx.get('named_colors', x.v) : undefined;
     return [e ? { text: humanize(x.v!), kind: 'entity', ref: { type: e.type, name: e.name }, tip: x.v } : { text: humanize(x.v ?? '?'), kind: 'value' }];
@@ -73,7 +74,7 @@ function coaPicture(b: StoryBuilder, list: PNode[], key: string, type: string): 
     const x = listed(list, i);
 
     if (x.list)
-        return [note(`one of “${humanize(x.list)}”`, `list "${x.list}"`)];
+        return [note(tr('one of “{humanize}”', { humanize: humanize(x.list) }), tr('list "{list}"', { list: x.list }))];
 
     return x.v ? [pictureSeg(b, x.v, type, /^(pattern|ce|te)_/)] : undefined;
 }
@@ -87,12 +88,12 @@ function coaLines(b: StoryBuilder, list: PNode[], ctx: Ctx, type: string): Line[
     const cols = colors(b, list, ctx.src);
 
     if (pattern || cols)
-        out.push({ text: rich('Field: ', pattern ?? 'plain', cols ? rich(' in ', cols) : ''), icon: 'note' });
+        out.push({ text: rich(tr('Field: '), pattern ?? 'plain', cols ? rich(tr(' in '), cols) : ''), icon: 'note' });
 
     const parent = str(list, 'parent');
 
     if (parent)
-        out.push({ text: rich('Based on ', b.d.ref(parent, ['coat_of_arms/coat_of_arms'])) });
+        out.push({ text: rich(tr('Based on '), b.d.ref(parent, ['coat_of_arms/coat_of_arms'])) });
 
     for (const n of list)
     {
@@ -105,13 +106,13 @@ function coaLines(b: StoryBuilder, list: PNode[], ctx: Ctx, type: string): Line[
         {
             const times = inner.filter((c) => c.k === 'instance').length;
             const ecols = n.k === 'colored_emblem' ? colors(b, inner, ctx.src) : undefined;
-            out.push(at(n, { text: rich('Emblem: ', coaPicture(b, inner, 'texture', type) ?? '?', ecols ? rich(' in ', ecols) : '', times > 1 ? ` ×${times}` : '', inner.some((c) => c.k === 'mask') ? ' (masked)' : ''), icon: 'note', tip: n.k }));
+            out.push(at(n, { text: rich(tr('Emblem: '), coaPicture(b, inner, 'texture', type) ?? '?', ecols ? rich(tr(' in '), ecols) : '', times > 1 ? ` ×${times}` : '', inner.some((c) => c.k === 'mask') ? tr(' (masked)') : ''), icon: 'note', tip: n.k }));
         }
         else if (n.k === 'sub')
         {
             // (another coat of arms drawn into a part of this one)
             const p = str(inner, 'parent');
-            out.push(at(n, { text: rich('Part: ', p ? b.d.ref(p, ['coat_of_arms/coat_of_arms']) : 'its own'), children: coaLines(b, inner.filter((c) => c.k !== 'parent'), ctx, type), tip: 'sub' }));
+            out.push(at(n, { text: rich(tr('Part: '), p ? b.d.ref(p, ['coat_of_arms/coat_of_arms']) : tr('its own')), children: coaLines(b, inner.filter((c) => c.k !== 'parent'), ctx, type), tip: 'sub' }));
         }
     }
 
@@ -151,7 +152,7 @@ function dnaLines(b: StoryBuilder, genes: PNode[], ctx: Ctx): { lines: Line[]; m
         if (!dom || (/^(eye|teeth|eyelashes)_accessory$/.test(g.k) && /^normal_/.test(dom) && (!rec || rec === dom)))
             continue;
 
-        const l: Line = { text: rich(b.d.ref(g.k, ['genes']), ': ', { text: words(dom), kind: 'value', tip: dom }, rec && rec !== dom ? rich(' ', note(`(recessive: ${words(rec).toLowerCase()})`)) : ''), tip: `${g.k} = { ${values(g).join(' ')} }` };
+        const l: Line = { text: rich(b.d.ref(g.k, ['genes']), ': ', { text: words(dom), kind: 'value', tip: dom }, rec && rec !== dom ? rich(' ', note(tr('(recessive: {toLowerCase})', { toLowerCase: words(rec).toLowerCase() }))) : ''), tip: `${g.k} = { ${values(g).join(' ')} }` };
 
         if (ctx.file)
             l.src = b.d.anchor(g, ctx, 'other', false);
@@ -166,7 +167,7 @@ const PEOPLE: Record<string, string> = { male: 'men', female: 'women', boy: 'boy
 
 /**
  * A gene template's detail: the attributes a morph changes, or the accessories per sex (`boy = male`: boys use the
- * men's — said only when not the usual boys as men, girls as women).
+ * men's; said only when not the usual boys as men, girls as women).
  */
 function templateDetail(t: PNode[]): string
 {
@@ -181,7 +182,7 @@ function templateDetail(t: PNode[]): string
         if (typeof s.v === 'string')
         {
             if (!(s.k === 'boy' && s.v === 'male') && !(s.k === 'girl' && s.v === 'female'))
-                sexes.push(`${PEOPLE[s.k]} as ${PEOPLE[s.v] ?? s.v}`);
+                sexes.push(tr('{PEOPLE} as {value}', { PEOPLE: PEOPLE[s.k], value: PEOPLE[s.v] ?? s.v }));
 
             continue;
         }
@@ -189,7 +190,7 @@ function templateDetail(t: PNode[]): string
         const acc = s.v.filter((x) => x.k && /^\d+$/.test(x.k)).length;
 
         if (acc)
-            sexes.push(`${acc} for ${PEOPLE[s.k]}`);
+            sexes.push(tr('{acc} for {PEOPLE}', { acc, PEOPLE: PEOPLE[s.k] }));
 
         for (const x of s.v)
             if (x.k === 'setting')
@@ -200,24 +201,24 @@ function templateDetail(t: PNode[]): string
             }
     }
 
-    return attrs.size ? `changes ${[...attrs].join(', ')}` : sexes.join(', ');
+    return attrs.size ? tr('changes {join}', { join: [...attrs].join(', ') }) : sexes.join(', ');
 }
 
 const SEX: Record<string, string> = { male: 'Man', female: 'Woman', boy: 'Boy', girl: 'Girl' };
 
 export const LOOK_CARDS: Record<string, CardFn> = {
-    // common/named_colors: `name = { r g b }` (0–1, or 0–255), `hsv { }`, `hsv360 { }` — coats of arms and cultures use them by name
+    // common/named_colors: `name = { r g b }` (0–1, or 0–255), `hsv { }`, `hsv360 { }`: coats of arms and cultures use them by name
     named_colors: (b, { node, card, ctx }) =>
     {
         if (typeof node.v === 'string')
         {
-            card.facts.push(rich('Same as ', b.d.ref(node.v, ['named_colors'])));
+            card.facts.push(rich(tr('Same as '), b.d.ref(node.v, ['named_colors'])));
             return true;
         }
 
         const t = colorText(node, ctx.src);
-        card.facts.push(t ? rich('Colour ', t) : ['Not a colour']);
-        card.facts.push([{ text: `${node.tag ?? (values(node).some((v) => Number(v) > 1) ? 'rgb 0–255' : 'rgb 0–1')}: ${values(node).join(' ')}`, kind: 'code', tip: 'As written' }]);
+        card.facts.push(t ? rich(tr('Colour '), t) : [tr('Not a colour')]);
+        card.facts.push([{ text: `${node.tag ?? (values(node).some((v) => Number(v) > 1) ? 'rgb 0–255' : 'rgb 0–1')}: ${values(node).join(' ')}`, kind: 'code', tip: tr('As written') }]);
         return true;
     },
     // common/coat_of_arms/coat_of_arms: pattern + color1–5, colored_emblem / textured_emblem { texture color1–3 instance mask }, sub, parent
@@ -236,7 +237,7 @@ export const LOOK_CARDS: Record<string, CardFn> = {
             if (name)
                 seg = { ...seg, text: name };
 
-            card.facts.push(rich(of.type === 'dynasties' ? 'Arms of the dynasty ' : of.type === 'dynasty_houses' ? 'Arms of the house ' : 'Arms of ', seg));
+            card.facts.push(rich(of.type === 'dynasties' ? tr('Arms of the dynasty ') : of.type === 'dynasty_houses' ? tr('Arms of the house ') : tr('Arms of '), seg));
         }
 
         // (`79 = { # Thouars`)
@@ -250,13 +251,15 @@ export const LOOK_CARDS: Record<string, CardFn> = {
 
         if (!str(body, 'pattern') && inner.length)
         {
-            card.facts.push([`${inner.length} template${inner.length === 1 ? '' : 's'}`]);
+            card.facts.push([tr('{length} template{value}', { length: inner.length, value: inner.length === 1 ? '' : 's' })]);
             const lines = inner.map((t): Line => ({ text: [words(t.k!)], children: coaLines(b, kids(t), ctx, e.type), collapsed: true, src: b.d.anchor(t, ctx, 'other', true), tip: t.k! }));
-            card.sections.push({ title: 'Templates', lines, src: own('other') });
+            card.sections.push({ title: tr('Templates'), lines, src: own('other') });
             return true;
         }
 
-        card.sections.push({ title: 'Coat of arms', lines: coaLines(b, body, ctx, e.type), src: own('other') });
+        // (its colours are named once each: a colour written twice is still read)
+        b.known('color1', 'color2', 'color3', 'color4', 'color5');
+        card.sections.push({ title: tr('Coat of arms'), lines: coaLines(b, body, ctx, e.type), src: own('other') });
         return true;
     },
     // common/coat_of_arms/dynamic_definitions: a title's `item = { trigger coat_of_arms }`, the first that fits (root: the title)
@@ -265,15 +268,15 @@ export const LOOK_CARDS: Record<string, CardFn> = {
         const t = b.idx.get('landed_titles', e.name);
 
         if (t)
-            card.facts.push(rich('Arms of ', b.d.entitySeg(t)));
+            card.facts.push(rich(tr('Arms of '), b.d.entitySeg(t)));
 
         const items = body.filter((c) => c.k === 'item' && Array.isArray(c.v));
         const lines = firstValidLines(b, items, { ...ctx, scopeType: 'landed_title', scope: 'the title' }, (list) =>
         {
             const coa = str(list, 'coat_of_arms');
-            return { text: [coa ? b.d.ref(coa, ['coat_of_arms/coat_of_arms']) : '(none set)'] };
+            return { text: [coa ? b.d.ref(coa, ['coat_of_arms/coat_of_arms']) : tr('(none set)')] };
         });
-        card.sections.push({ title: 'Coat of arms — the first that fits, else its own', lines, src: own('other') });
+        card.sections.push({ title: tr('Coat of arms — the first that fits, else its own'), lines, src: own('other') });
         return true;
     },
     // common/coat_of_arms/template_lists: weighted picks (`10 = "red"`), `special_selection = { trigger … }` for some
@@ -283,18 +286,18 @@ export const LOOK_CARDS: Record<string, CardFn> = {
         {
             const w = list.filter((c) => c.k && /^\d+$/.test(c.k) && typeof c.v === 'string');
             const shown = w.slice(0, 12).map((c): Rich => rich({ text: words(c.v as string, /^(pattern|ce|te)_/).toLowerCase(), kind: 'value', tip: c.v as string }, ` ${c.k}`));
-            return rich(join(shown, ', '), w.length > 12 ? ` … ${w.length - 12} more` : '');
+            return rich(join(shown, ', '), w.length > 12 ? tr(' … {value} more', { value: w.length - 12 }) : '');
         };
         const lines = body
             .filter((c) => c.k && Array.isArray(c.v))
             .map((l): Line =>
             {
                 const specials = kids(l).filter((c) => c.k === 'special_selection' && Array.isArray(c.v));
-                const children = firstValidLines(b, specials, ctx, (list) => ({ text: rich('Instead: ', picks(list)) }));
+                const children = firstValidLines(b, specials, ctx, (list) => ({ text: rich(tr('Instead: '), picks(list)) }));
                 return { text: rich(capitalize(humanize(l.k!)), ': ', picks(kids(l))), children, collapsed: children.length > 0, src: b.d.anchor(l, ctx, 'other', true), tip: 'weight = pick' };
             });
-        card.facts.push([`${lines.length} lists`]);
-        card.sections.push({ title: 'Lists (pick and weight)', lines, src: own('other') });
+        card.facts.push([tr('{length} lists', { length: lines.length })]);
+        card.sections.push({ title: tr('Lists (pick and weight)'), lines, src: own('other') });
         return true;
     },
     // common/coat_of_arms/options: `atlas = { tile_size nr_of_tiles actual_size fallback }` (the last one written counts here)
@@ -303,11 +306,11 @@ export const LOOK_CARDS: Record<string, CardFn> = {
         const pair = (n: PNode | undefined): string => values(n).join(' × ');
         const tile = body.find((c) => c.k === 'tile_size');
         const n = str(body, 'nr_of_tiles');
-        card.facts.push([`${n ?? '?'} tiles of ${pair(tile)} pixels`]);
+        card.facts.push([tr('{value} tiles of {pair} pixels', { value: n ?? '?', pair: pair(tile) })]);
         const lines = body
             .filter((c) => c.k === 'actual_size' || c.k === 'fallback')
-            .map((c): Line => ({ text: rich(c.k === 'fallback' ? 'Fallback sizes: ' : 'Sizes drawn: ', kids(c).map(pair).join(', ')), src: b.d.anchor(c, ctx, 'other', false) }));
-        card.sections.push({ title: 'Atlas', lines, src: own('other') });
+            .map((c): Line => ({ text: rich(c.k === 'fallback' ? tr('Fallback sizes: ') : tr('Sizes drawn: '), kids(c).map(pair).join(', ')), src: b.d.anchor(c, ctx, 'other', false) }));
+        card.sections.push({ title: tr('Atlas'), lines, src: own('other') });
         return true;
     },
     // common/genes: colour genes (color, blend_range), age presets (mode, curve), morph and accessory genes (templates by index)
@@ -318,29 +321,29 @@ export const LOOK_CARDS: Record<string, CardFn> = {
 
         if (color)
         {
-            card.facts.push([`Colour gene: ${color}`]);
+            card.facts.push([tr('Colour gene: {color}', { color })]);
             const [lo, hi] = values(body.find((c) => c.k === 'blend_range')).map(Number);
 
             if (lo !== undefined)
-                lines.push({ text: [!lo && !hi ? 'Children get the dominant parent’s colour' : `Children get a colour ${Math.round(lo * 100)}–${Math.round(hi * 100)}% of the way from the dominant to the other parent’s`], tip: 'blend_range' });
+                lines.push({ text: [!lo && !hi ? tr('Children get the dominant parent’s colour') : tr('Children get a colour {round}–{round2}% of the way from the dominant to the other parent’s', { round: Math.round(lo * 100), round2: Math.round(hi * 100) })], tip: 'blend_range' });
 
             const sync = str(body, 'sync_inheritance_with');
 
             if (sync)
-                lines.push({ text: rich('Inherited together with ', b.d.ref(sync, ['genes'])) });
+                lines.push({ text: rich(tr('Inherited together with '), b.d.ref(sync, ['genes'])) });
         }
         else if (body.some((c) => c.k === 'curve'))
         {
             const mode = str(body, 'mode');
-            card.facts.push([`Age curve: ${mode === 'add' ? 'adds to' : 'multiplies'} the gene`]);
+            card.facts.push([tr('Age curve: {value} the gene', { value: mode === 'add' ? 'adds to' : 'multiplies' })]);
             const pts = kids(body.find((c) => c.k === 'curve')).map((p) => values(p).map(Number));
-            lines.push({ text: rich('By age: ', join(pts.map(([x, y]) => rich(`${Math.round(x * 100)} → `, { text: formatNumber(y), kind: 'value' })), ', ')), tip: 'curve: { age/100 value }' });
+            lines.push({ text: rich(tr('By age: '), join(pts.map(([x, y]) => rich(`${Math.round(x * 100)} → `, { text: formatNumber(y), kind: 'value' })), ', ')), tip: 'curve: { age/100 value }' });
         }
         else
         {
             const templates = body.filter((c) => c.k && Array.isArray(c.v) && kids(c).some((x) => x.k === 'index'));
             const group = str(body, 'group');
-            card.facts.push([`${templates.length} template${templates.length === 1 ? '' : 's'}${group ? ` · ${group}` : ''}`]);
+            card.facts.push([tr('{length} template{value}{value2}', { length: templates.length, value: templates.length === 1 ? '' : 's', value2: group ? ` · ${group}` : '' })]);
             // (`pose = { # Keeping this gene because the game expects it to be there`)
             const why = lineComment(ctx.src, node);
 
@@ -348,17 +351,17 @@ export const LOOK_CARDS: Record<string, CardFn> = {
                 card.facts.push([note(why)]);
 
             if (str(body, 'inheritable') === 'no')
-                card.facts.push(['Not inherited']);
+                card.facts.push([tr('Not inherited')]);
 
             const ugly = values(body.find((c) => c.k === 'ugliness_feature_categories'));
 
             if (ugly.length)
-                card.facts.push([`Ugliness shows on the ${ugly.map(humanize).join(', ')}`]);
+                card.facts.push([tr('Ugliness shows on the {join}', { join: ugly.map(humanize).join(', ') })]);
 
             for (const t of templates.slice(0, 60))
             {
                 const d = templateDetail(kids(t));
-                const l: Line = { text: rich(words(t.k!), str(kids(t), 'visible') === 'no' ? rich(' ', note('(hidden)')) : '', d ? rich(' ', note(`— ${d}`)) : ''), tip: `${t.k} (index ${str(kids(t), 'index')})` };
+                const l: Line = { text: rich(words(t.k!), str(kids(t), 'visible') === 'no' ? rich(' ', note('(hidden)')) : '', d ? note(`: ${d}`) : ''), tip: tr('{k} (index {str})', { k: t.k, str: str(kids(t), 'index') }) };
 
                 if (ctx.file)
                     l.src = b.d.anchor(t, ctx, 'other', true);
@@ -367,11 +370,11 @@ export const LOOK_CARDS: Record<string, CardFn> = {
             }
 
             if (templates.length > 60)
-                lines.push({ text: [`… and ${templates.length - 60} more`] });
+                lines.push({ text: [tr('… and {value} more', { value: templates.length - 60 })] });
         }
 
         if (lines.length)
-            card.sections.push({ title: color || body.some((c) => c.k === 'curve') ? 'How it works' : 'Templates', lines, src: own('other') });
+            card.sections.push({ title: color || body.some((c) => c.k === 'curve') ? tr('How it works') : tr('Templates'), lines, src: own('other') });
 
         return true;
     },
@@ -384,19 +387,19 @@ export const LOOK_CARDS: Record<string, CardFn> = {
             card.facts.push([note(label)]);
 
         if (str(body, 'enabled') === 'no')
-            card.facts.push(['Switched off']);
+            card.facts.push([tr('Switched off')]);
 
         if (str(body, 'dna'))
-            card.facts.push(['Written as a DNA string']);
+            card.facts.push([tr('Written as a DNA string')]);
 
         const genes = kids(kids(body.find((c) => c.k === 'portrait_info')).find((c) => c.k === 'genes'));
         const { lines, morphs } = dnaLines(b, genes, ctx);
 
         if (genes.length)
-            card.facts.push([`${morphs} face and body genes`]);
+            card.facts.push([tr('{morphs} face and body genes', { morphs })]);
 
         if (lines.length)
-            card.sections.push({ title: 'Wears', lines });
+            card.sections.push({ title: tr('Wears'), lines });
 
         return true;
     },
@@ -406,16 +409,16 @@ export const LOOK_CARDS: Record<string, CardFn> = {
         const id = /History database id:\s*(\d+)/.exec(b.idx.winningDef(e)?.doc ?? '')?.[1];
 
         if (id)
-            card.facts.push(rich('Portrait of ', b.d.ref(id, ['characters'])));
+            card.facts.push(rich(tr('Portrait of '), b.d.ref(id, ['characters'])));
 
         const type = str(body, 'type');
         const age = Number(str(body, 'age'));
         card.facts.push([[type ? (SEX[type] ?? capitalize(type)) : '', Number.isFinite(age) ? `age ${Math.round(age * 100)}` : ''].filter(Boolean).join(', ')]);
         const { lines, morphs } = dnaLines(b, kids(body.find((c) => c.k === 'genes')), ctx);
-        card.facts.push([`${morphs} face and body genes`]);
+        card.facts.push([tr('{morphs} face and body genes', { morphs })]);
 
         if (lines.length)
-            card.sections.push({ title: 'Wears', lines });
+            card.sections.push({ title: tr('Wears'), lines });
 
         return true;
     },
@@ -432,7 +435,7 @@ export const LOOK_CARDS: Record<string, CardFn> = {
                 .map((c) => rich(`${c.k} `, pictureSeg(b, c.v as string, e.type)));
 
             if (pics.length)
-                lines.push({ text: rich(k === 'colors' ? 'Colour palettes: ' : 'Material palettes: ', join(pics)), src: n && b.d.anchor(n, ctx, 'other', true) });
+                lines.push({ text: rich(k === 'colors' ? tr('Colour palettes: ') : tr('Material palettes: '), join(pics)), src: n && b.d.anchor(n, ctx, 'other', true) });
         }
 
         for (const [k, label] of Object.entries(SEX))
@@ -446,7 +449,7 @@ export const LOOK_CARDS: Record<string, CardFn> = {
             const min = str(l, 'minimum_age');
             const max = str(l, 'maximum_age');
             const code = (v: string | undefined): RichSeg => ({ text: v ? words(v) : '?', kind: 'code', tip: v });
-            lines.push({ text: rich(`${label}${min ? ` (${min} and older)` : max ? ` (under ${max})` : ''}: head `, code(str(l, 'head')), ', body ', code(str(l, 'torso'))), src: b.d.anchor(n, ctx, 'other', true) });
+            lines.push({ text: rich(tr('{label}{value}: head ', { label, value: min ? ` (${min} and older)` : max ? ` (under ${max})` : '' }), code(str(l, 'head')), tr(', body '), code(str(l, 'torso'))), src: b.d.anchor(n, ctx, 'other', true) });
         }
 
         const attach = body.find((c) => c.k === 'attach');
@@ -456,17 +459,17 @@ export const LOOK_CARDS: Record<string, CardFn> = {
             const joints = kids(attach)
                 .filter((c) => c.k === 'joint_attachment')
                 .map((j) => `${str(kids(j), 'child_joint')} → ${str(kids(j), 'parent_joint')}`);
-            lines.push({ text: rich(`The ${str(kids(attach), 'what') ?? '?'} is attached to the ${str(kids(attach), 'where') ?? '?'}: `, { text: joints.join(', '), kind: 'code' }), src: b.d.anchor(attach, ctx, 'other', true) });
+            lines.push({ text: rich(tr('The {value} is attached to the {value2}: ', { value: str(kids(attach), 'what') ?? '?', value2: str(kids(attach), 'where') ?? '?' }), { text: joints.join(', '), kind: 'code' }), src: b.d.anchor(attach, ctx, 'other', true) });
         }
 
-        card.sections.push({ title: 'Portrait', lines, src: own('other') });
+        card.sections.push({ title: tr('Portrait'), lines, src: own('other') });
         return true;
     },
     // common/modifier_icons: `positive` (also for 0, and without `negative`), `negative`; `default = yes`: the fallback icon
     modifier_icons: (b, { e, body, card, ctx, own }) =>
     {
         if (str(body, 'default') === 'yes')
-            card.facts.push(['The default icon']);
+            card.facts.push([tr('The default icon')]);
 
         const lines: Line[] = [];
 
@@ -475,10 +478,10 @@ export const LOOK_CARDS: Record<string, CardFn> = {
             if ((c.k !== 'positive' && c.k !== 'negative') || typeof c.v !== 'string')
                 continue;
 
-            lines.push({ text: rich(c.k === 'positive' ? 'For positive values: ' : 'For negative values: ', pictureSeg(b, c.v, e.type)), src: b.d.anchor(c, ctx, 'other', false), tip: `${c.k} = ${c.v}` });
+            lines.push({ text: rich(c.k === 'positive' ? tr('For positive values: ') : tr('For negative values: '), pictureSeg(b, c.v, e.type)), src: b.d.anchor(c, ctx, 'other', false), tip: `${c.k} = ${c.v}` });
         }
 
-        card.sections.push({ title: 'Icons', lines, src: own('other') });
+        card.sections.push({ title: tr('Icons'), lines, src: own('other') });
         return true;
     }
 };

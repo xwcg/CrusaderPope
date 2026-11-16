@@ -42,7 +42,7 @@ export function viewerShaderRequest(file: string, effect: string, uv1: boolean, 
         defines: [...(uv1 ? ['PDX_MESH_UV1'] : []), 'NO_FOG', ...extra.filter((d) => !REMOVE.includes(d.split(/\s/)[0]))],
         // blend shapes and bone morphs are applied on the CPU (PDX_MESH_BLENDSHAPES would read a buffer we don't fill)
         remove: REMOVE,
-        // Data[]: world matrix, constants, user data — portraits keep variation, colour mask interval and body part
+        // Data[]: world matrix, constants, user data; portraits keep variation, colour mask interval and body part
         // index up to user offset + 25
         arrays: { Data: 48 },
         post: true

@@ -1,0 +1,402 @@
+[
+ {
+  "kind": "on_action",
+  "key": "on_graceful_aging_birthday",
+  "label": "Graceful aging birthday",
+  "summary": "A birthday hook that the game's script (not its code) fires for a character; vanilla uses it to reward members of a dynasty that has the perk kin_legacy_5.",
+  "details": "Vanilla only continues when the character's dynasty has the perk kin_legacy_5 and the character is at least the perk's start age (the comment says 40). It also saves the value kin_legacy_5_age_modulo as a temporary number (the age check) and continues only when that is 0. Then it fires the dynasty event dynasty_legacy.0001, which the comment says gives a random skill point.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_great_building_rebuilt",
+  "label": "Great building rebuilt",
+  "summary": "Fires when a great building in a province has been rebuilt.",
+  "details": "The game's code fires it. The root is the holder of the province that did the rebuilding, and scope:province is the province with the great building. Vanilla gives that holder piety experience, puts a 10-year mandala_rise_from_the_ashes_modifier on them and creates a memory of the rebuilding. In a hidden part it also removes an older copy of that modifier and adds the flag devaraja_flag when a Mandala aspect check passes.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_great_holy_war_countdown_end",
+  "label": "Holy war countdown ends",
+  "summary": "Fires when the launch countdown of a great holy war reaches zero.",
+  "details": "The game's code fires it, and the root is the great holy war. Vanilla only fires the event great_holy_war.0005 when the attackers' strength is at least a third of the defenders' strength. The comment says that if no war is started at this point, the great holy war becomes invalid; that skips on_potential_great_holy_war_invalidation but not on_great_holy_war_invalidation.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_great_holy_war_invalidation",
+  "label": "Holy war invalidated",
+  "summary": "Fires when a great holy war is about to be destroyed because no new target was found.",
+  "details": "The game's code fires it, and the root is the great holy war. It comes after on_potential_great_holy_war_invalidation found no new target, so there is no way out. Vanilla fires the event great_holy_war.0055, which the comment says notifies the players.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_great_holy_war_participant_replaced",
+  "label": "Holy war participant replaced",
+  "summary": "Fires when a character in a great holy war is replaced by someone else.",
+  "details": "The game's code fires it. It only happens after the war has begun, when a participant dies and someone of the right faith takes their place. The root is the character being replaced, scope:great_holy_war is the war and scope:replacement is the new character. Vanilla fires the event great_holy_war.0027, which the comment says refreshes the beneficiary for the AI.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_guardian_arrive_at_home",
+  "label": "Guardian arrives home",
+  "summary": "Fires when a guardian arrives back home from their ward.",
+  "details": "Script fires it, not the game's code, and the game's documentation names no root; vanilla treats the root as the guardian and saves it as scope:guardian. It reads the ward and the realm from the variables ward_educated and ward_educated_realm. The guardian's liege gets an interface message that the guardian returned (a different text when there is a ward), and the guardian returns to court. Last it removes the two variables.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_guardian_arrive_at_ward",
+  "label": "Guardian arrives at ward",
+  "summary": "Fires when a guardian arrives at their ward after travelling there.",
+  "details": "Script fires it, not the game's code. Vanilla first checks that the guardian is alive and has at most one ward, and that the ward they were travelling to is still alive, not an adult, a playable character and without a guardian. If so, the guardian visits the ward's court and gets the ward relation, an opinion effect applies, and the culture or faith conversion setup is passed on to the guardian's relation. The ward, and the ward's liege if different, then get the event char_interaction.0082. If the check fails, toasts tell the ward and their liege that the trip was invalidated. The input cuts off before the end of that part.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_guardian_depart_for_home",
+  "label": "Guardian leaves for home",
+  "summary": "Meant to fire when a guardian sets off for home, but the game's own version of it is empty.",
+  "details": "Script fires it, not the game's code. Vanilla defines it with no content, so on its own it does nothing; it is a place for mods to add effects. When exactly it fires comes from the name only.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "on_guardian_depart_for_ward",
+  "label": "Guardian leaves for ward",
+  "summary": "Meant to fire when a guardian sets off to their ward, but the game's own version of it is empty.",
+  "details": "Script fires it, not the game's code. Vanilla defines it with no content, so on its own it does nothing; it is a place for mods to add effects. When exactly it fires comes from the name only.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "on_guardian_depart_travel_planner_exit",
+  "label": "Guardian leaves travel planner",
+  "summary": "A guardian travel hook whose game version is empty; the game documents nothing more.",
+  "details": "Script fires it, not the game's code. Vanilla defines it with no content. By its name it has to do with the guardian's departure from the travel planner, but the input does not say more.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "on_guest_arrived_from_pool",
+  "label": "Guest arrives from pool",
+  "summary": "Fires when a character from the character pool has appeared at a court as a guest.",
+  "details": "The game's code fires it. The root and scope:guest are the guest. The host is the owner of the court, and the characters list holds everyone moving together, the guest included. Vanilla fires courtier_guest_management.1001 (a development effect and a message if the guest is great, says the comment) and court_events.1001 (the comment says it adds opinion of the greatest court holder if the guest visited them and got the special event).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_guest_ready_to_move_to_pool",
+  "label": "Guest ready to leave",
+  "summary": "Fires after a set delay once a guest has decided to leave the court, so they can move back to the pool.",
+  "details": "The game's code fires it, after the delay named GUEST_MOVE_TO_POOL_DELAY_MONTHS. The root and scope:guest are the guest, scope:destination is where they go, and the host and the group of characters moving together are available too. Vanilla fires the event courtier_guest_management.0500, which the comment calls 'Guest leaves'.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_holding_razed",
+  "label": "Holding razed",
+  "summary": "Fires when a holding in a province has been razed.",
+  "details": "The game's code fires it. The root is the holder of the province doing the razing, and scope:province is the province with the holding. Vanilla sets the variable was_razed on the county and sends the root a toast that gives gold, a minor amount plus the county's development level. If the province is the county's main province and the county has development level 1 or more, development progress drops by 10 per level; where the county uses fertility, it changes the fertility. If the province has a university building, vanilla removes it. The input cuts off before the end of that part.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_holy_order_destroyed",
+  "label": "Holy order destroyed",
+  "summary": "Fires when a holy order (military order) has been destroyed.",
+  "details": "The game's code fires it. The root is the faith the order belonged to, scope:title is the order's title and scope:leader its leader. Vanilla gives the Jomsvikings special handling: Jomsberg's name is reset and an event goes to every player of the Norse pagan faith or in diplomatic range of the leader. For every other order it sends a toast to each non-AI ruler of the faith. In both cases it then goes through the characters on the leader's owes_me_money list and clears their loan variables.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_holy_order_hired",
+  "label": "Holy order hired",
+  "summary": "Fires when a ruler hires a holy order (military order).",
+  "details": "The game's code fires it. The root is the order, scope:actor is the hiring character and scope:patron is the order's current patron, if any. Vanilla sends an interface message to the old patron when it is someone else, and a toast to each war enemy of the hirer. It also runs an effect whose name ties it to a Christian church clergy catalyst.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_holy_order_new_lease",
+  "label": "Holy order gets a lease",
+  "summary": "Fires when a holy order gets a new barony to lease.",
+  "details": "The game's code fires it. The root is the order, scope:barony is the new title and scope:patron the current patron, if any. Vanilla only reacts when there is a patron (or the leader has a puppeteer), the barony's holder is neither the patron nor a direct vassal of the patron, and the leader does not have the flag just_swapped_lease. It then saves the order and the former holder and sends the patron an interface message, and the leader's puppeteer too when that is someone else. The input cuts off before the end.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_holy_site_artifact_enshrined",
+  "label": "Artifact enshrined",
+  "summary": "Fires when an artifact has been placed in a holy site, whether the slot was empty or an older artifact was replaced.",
+  "details": "The game's code fires it. The root is the artifact, scope:holy_site the site, scope:actor the character who did it and scope:replacing the replaced artifact, if any. Vanilla saves a yes/no value for whether the replacement is better: it is no when the replaced artifact is a holy relic of the actor's faith with an equal or higher rarity level. For a relic of the actor's faith that is not a better replacement, it saves a piety value taken from the replaced artifact's rarity. The input cuts off before the rest.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_holy_site_artifact_removed",
+  "label": "Artifact removed from site",
+  "summary": "Fires when an artifact has been taken out of a holy site and back into the actor's inventory.",
+  "details": "The game's code fires it, only from the explicit enshrining and removing effects, not from generic inventory changes. The root is the removed artifact, scope:holy_site the site, scope:actor the character who removed it, and scope:replacing the artifact that takes its place in a swap. Unless the removal counts as a better replacement, vanilla gives the religious head of each holy-site faith that has followers (and for which the artifact is a holy relic) a lasting opinion modifier against the actor. For a relic of the actor's own faith it also costs the actor piety by the artifact's rarity. The input cuts off before the rest.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_hook_used",
+  "label": "Hook used",
+  "summary": "Fires when any hook is used, after the hook's own effect has run.",
+  "details": "The game's code fires it. The root is the character using the hook and scope:target is the character it is used on. Vanilla uses it for struggle catalysts: unless the user is a landless adventurer, if the target is involved in a struggle where the catalyst check passes, the catalyst for using a hook on a very important character is activated.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_hostage_arrive_at_home_court",
+  "label": "Hostage arrives home",
+  "summary": "Fires when a hostage has travelled back to their home court.",
+  "details": "Script fires it, not the game's code. Vanilla saves the hostage, their warden (from one of three duration variables) and their liege (the home court). If that liege is alive and a playable character, the hostage is moved to the liege's capital if needed and scope:home_court gets the event bp2_hostage_system.0510. Vanilla also writes a debug log line. Vanilla reads scope:home_court for the event but saves the liege as hostage_home_court, which looks like a possible mismatch.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "on_hostage_arrive_at_warden",
+  "label": "Hostage arrives at warden",
+  "summary": "Fires when a hostage has travelled to their warden and arrives.",
+  "details": "Script fires it, not the game's code. Vanilla checks whether the trip is still valid. It is cancelled if the warden is dead or not landed, the warden is at war with the home court, the hostage is jailed or has become a ruler, or the hostage is no longer a child, grandchild, sibling or nibling of the liege (or the liege no longer exists). If it is no longer valid, toasts go to both sides and the travel plan is cancelled. The input cuts off before the valid case.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_hostage_depart_for_home_court",
+  "label": "Hostage leaves for home",
+  "summary": "Meant to fire when a hostage sets off for their home court, but the game's own version of it is empty.",
+  "details": "Script fires it, not the game's code. Vanilla defines it with no content, so on its own it does nothing. When exactly it fires comes from the name only.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "on_hostage_depart_for_warden",
+  "label": "Hostage leaves for warden",
+  "summary": "Fires when a hostage sets off to their warden; vanilla uses it to prompt a parent's event.",
+  "details": "Script fires it, not the game's code; the exact moment comes from the name. Vanilla only acts if the bp2 DLC check (has_bp2_dlc_trigger) passes, the hostage is a child older than 6 and their liege is an adult parent who has a hostage-created memory marked as a childhood memory and no bp2_hostage_blues flag. Then it stores the child in a variable on the parent, stores the memory in another variable and fires the event bp2_yearly.4032 for the parent.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "on_hostage_depart_travel_planner_exit",
+  "label": "Hostage leaves travel planner",
+  "summary": "A hostage travel hook; vanilla uses it to remove the hostage_travelling_to_warden variable from the hostage.",
+  "details": "Script fires it, not the game's code. Vanilla removes the variable only if the hostage has it. By its name it fires when the hostage leaves the travel planner, but the input does not confirm the exact moment.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "on_hostage_invalidated",
+  "label": "Hostage invalidated",
+  "summary": "Fires when a hostage arrangement ends for a reason other than a normal release.",
+  "details": "The game's code fires it, and on_hostage_released is skipped then. The root is the former hostage, with scope:warden, scope:home_court and sometimes scope:imprisoner (the one who imprisoned the hostage). scope:reason is one of invalid, ruler, imprisoner, warden or home_court. Vanilla sets a 5-day variable recently_invalidated_hostage and picks a starting location (the warden's capital or location, else where the hostage is). If the warden is the hostage's father or mother (the comment calls this adopted), the hostage is returned and becomes the warden's courtier. With inherited land the destination is the new capital; otherwise the home court's capital. The input cuts off after that.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_hostage_released",
+  "label": "Hostage released",
+  "summary": "Fires when a hostage is released to their home court.",
+  "details": "The game's code fires it. The root is the hostage (same as scope:hostage), with scope:warden and scope:home_court. Vanilla creates a memory for each of the three: hostage, warden and home court. The hostage's memory also stores variables for the warden's primary title, location, culture and faith. The input cuts off before the rest.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_hostage_taken",
+  "label": "Hostage taken",
+  "summary": "Fires when a character becomes a hostage.",
+  "details": "The game's code fires it. The root is the hostage (same as scope:hostage), with scope:warden and scope:home_court (the hostage's original liege). Vanilla creates a memory for the hostage, the warden and the home court; a child hostage's memory is marked as a childhood memory. A child hostage whose warden has a wet nurse at court gets that wet nurse.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_house_aspiration_changed",
+  "label": "House aspiration changed",
+  "summary": "Fires when a house changes its house aspiration (house power).",
+  "details": "The game's code fires it. The root is a character, and scope:house is the house. Vanilla only handles Mandala governments. For a house head whose house has the peaceful-rule parameter, it starts counting increments of peace (a variable, a modifier and follow-up events). For the aspect of creation it gives or refreshes the Creator modifier, depending on how many years were accumulated. The comment says 'House Power was changed', which matches the key's 'aspiration' by name only. The input cuts off before the rest.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_house_aspiration_upgraded",
+  "label": "House aspiration upgraded",
+  "summary": "Fires when a house's aspiration (house power) has just been upgraded.",
+  "details": "The game's code fires it. The root is a character, and scope:house is the house. Vanilla only handles Mandala governments. It creates a memory for the character: a 'completed' one when the house is at level 05 of the aspect of creation, serenity, destruction or trickery, or an 'upgraded' one for that aspect when the house is not at level 01 of any of them. The input cuts off before the rest.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_house_in_admin_realm_became_dominant",
+  "label": "House became dominant",
+  "summary": "Fires when a house inside an administrative realm has just become dominant.",
+  "details": "The game's code fires it, and the root is the house. Vanilla only reacts when the dominant house is not the top liege's own: it saves the house and its head, then fires the event ep3_emperor_yearly.2420 for the top liege and for the top liege's vassals who head a different house.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_house_in_admin_realm_became_powerful",
+  "label": "House became powerful",
+  "summary": "Fires when a house inside an administrative realm has just become powerful.",
+  "details": "The game's code fires it, and the root is the house. Vanilla waits until at least one month after the game start. The house head gets the event ep3_emperor_yearly.2401. Other house heads among the top liege's vassals (only those whose government does not allow merit) get events, or only a message if they have the cooldown flag 8020_powerful_family_cooldown. The top liege gets a message only.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_house_relation_created",
+  "label": "House relation created",
+  "summary": "Fires when a new relation between two houses has just been created.",
+  "details": "The game's code fires it, and the root is the house relation. Vanilla sets the variable house_relation_duration_years to 0 on it, which starts a year counter for the relation.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_house_relation_destroyed",
+  "label": "House relation destroyed",
+  "summary": "Fires when a relation between two houses is just about to be destroyed.",
+  "details": "The game's code fires it, and the root is the house relation. Vanilla leaves it empty, so it does nothing on its own; it is a place for mods.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_house_relation_level_changed",
+  "label": "House relation level changed",
+  "summary": "Fires when an existing relation between two houses has just changed its level.",
+  "details": "The game's code fires it, and the root is the house relation. Vanilla leaves it empty, so it does nothing on its own; it is a place for mods.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_imprison",
+  "label": "Character imprisoned",
+  "summary": "Fires when a character is being imprisoned.",
+  "details": "The game's code fires it. The root is the prisoner and scope:imprisoner is the one who imprisons them. Vanilla ends the prisoner's activity if they host it (otherwise removes them from it), and aborts their travel plan if they own it (otherwise removes them from it). It removes the weight-change modifiers, and adds 6140_animal_guardian_modifier when the imprisoner has 6140_pet_modifier and is a torturer, callous or sadistic. It also activates the imprison-important struggle catalyst for important characters. The input cuts off after that.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_influence_level_gain",
+  "label": "Influence level gained",
+  "summary": "Fires when a character gains an influence level.",
+  "details": "The game's code fires it. Vanilla sends the character a toast about it, but only if their government has influence (the flag government_has_influence).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_influence_level_loss",
+  "label": "Influence level lost",
+  "summary": "Fires when a character loses an influence level.",
+  "details": "The game's code fires it. Vanilla sends the character a toast about it, but only if their government has influence (the flag government_has_influence).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_join_court",
+  "label": "Joins a court",
+  "summary": "Fires when a character joins a court.",
+  "details": "The game's code fires it, but not for newly generated characters. The root is the character, scope:new_employer is the new employer and scope:old_employer the previous one, if any. Vanilla fires court_maintenance.0005 (gives the order member trait to those joining a military order court) and natural_primitivism.0004 (offers court naturism).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_join_war_as_secondary",
+  "label": "Joins war as secondary",
+  "summary": "Fires when a character joins a war as a secondary participant (not the main attacker or defender).",
+  "details": "The game's code fires it. The root is the joiner, and scope:war is the war. Vanilla saves the joiner and the main ally and main enemy on the joiner's side. The joiner gets a 'joined an ally's war' memory with those two. If the joiner is a house head and the ally has a house and is allied to a main party of the war, the joiner's house takes minor house-relation damage with the enemy's house. The input cuts off after that.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_kurultai_succession_chaotic",
+  "label": "Chaotic Kurultai succession",
+  "summary": "Fires from the game's code right after a Kurultai succession has been resolved; what makes it 'chaotic' is not explained.",
+  "details": "The root is the new heir. Scope:was_kurultai says whether the heir was on the predecessor's Kurultai council, and lists exist for the old council and for the obedient and disobedient electors. Vanilla only continues for a ruler under the single-heir Kurultai succession law whose primary title is held less than a year. Obedient electors then like the heir more for 5 years, and siblings and disobedient electors who fit the faith's gender rule get pressed claims on the heir's county-or-higher titles. The input cuts off after that.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ }
+]

@@ -1,6 +1,6 @@
 /**
  * The 3D map's shaders (docs/map.md, "3D map"): the terrain patches displaced by the height raster, the water plane,
- * and what both draw on the map — the mode's colours from the province raster and palettes (as the 2D map, gl2d.ts),
+ * and what both draw on the map: the mode's colours from the province raster and palettes (as the 2D map, gl2d.ts),
  * borders, rivers, hover and selection. The terrain style shades like the game's terrain shader (gfx/FX
  * pdxterrain.shader, cw/pdxterrain.fxh, jomini/map_lighting.fxh): the materials of the detail maps blended by
  * intensity and height, the colour map laid over them (soft light), their normal maps on the relief's normals, the
@@ -8,6 +8,8 @@
  * contrast, TonyMcMapface). World units: x = map pixel column, z = map pixel row, y = height; the game's own z runs
  * north from the map's bottom edge (`game(p)`).
  */
+
+import { FOG_APPLY } from './fogShaders';
 
 /** Uniforms, samplers and functions of both materials. */
 const COMMON = `
@@ -42,6 +44,11 @@ uniform float uWaterLevel;
 // the hovered and the selected group + 1 (0: none)
 uniform uint uHover;
 uniform uint uSel;
+// the selected province when it has no group in the mode (0: none); it is highlighted itself
+uniform uint uSelId;
+/** Whether a province / group is the selection. */
+bool selected(uint id, uint g) { return (uSel != 0u && g == uSel) || (uSelId != 0u && id == uSelId); }
+bool selecting() { return uSel != 0u || uSelId != 0u; }
 // towards the sun, its colour × intensity; the environment cubemap's intensity (0: not loaded)
 uniform vec3 uLight;
 uniform vec3 uSunColor;
@@ -73,7 +80,7 @@ vec2 game(vec2 p) { return vec2(p.x, uSize.y - p.y); }
 vec3 toLinear(vec3 c) { return pow(max(c, 0.0), vec3(2.2)); }
 
 /**
- * The game's shadow tint at a map point (shadow_tint.fxh GetShadowTintData): shadow_color.dds repeated over the map —
+ * The game's shadow tint at a map point (shadow_tint.fxh GetShadowTintData): shadow_color.dds repeated over the map;
  * its colour (linear) and the strength × its alpha. No shadow map or cloud shadows here: ShadowTerm 1, CloudMask 0.
  */
 vec4 shadowTint(vec2 p) {
@@ -86,10 +93,10 @@ float tintLit(vec3 n, vec3 l) { return smoothstep(uTintSet.y, uTintSet.z, clamp(
 /**
  * Near (a map pixel over more than a screen pixel), as the 2D map (gl2d.ts smoothAt): each group's and province's
  * indicator smoothed by a quadratic B-spline over the 3 × 3 pixels around p; p is in the highest, the border where it
- * ties with the next — its distance (map pixels) is the difference over the difference's gradient. Stair steps
+ * ties with the next; its distance (map pixels) is the difference over the difference's gradient. Stair steps
  * become curves; the id and group are the smoothed ones.
  */
-void smoothAt(vec2 p, out uint id, out uint g, out uint gNext, out float dG, out float dP) {
+void smoothAt(vec2 p, out uint id, out uint g, out uint gNext, out float dG, out float dP, out uint idNext) {
   vec2 q = p - 0.5;
   vec2 c = floor(q + 0.5);
   vec2 t = q - c;
@@ -131,6 +138,7 @@ void smoothAt(vec2 p, out uint id, out uint g, out uint gNext, out float dG, out
   int pb = -1;
   for (int k = 0; k < np; k++) if (k != pa && (pb < 0 || pw[k] > pw[pb])) pb = k;
   id = pv[pa];
+  idNext = pb < 0 ? id : pv[pb];
   dP = pb < 0 ? 1e3 : (pw[pa] - pw[pb]) / max(length(pd[pa] - pd[pb]), 1e-3);
 }
 
@@ -145,10 +153,13 @@ vec3 borders(vec2 p, float d, out uint id, out uint g) {
   float dP = 0.0;
   vec3 r = vec3(0.0);
   if (d < 1.0) {
-    smoothAt(p, id, g, gNext, dG, dP);
+    uint idNext;
+    smoothAt(p, id, g, gNext, dG, dP, idNext);
     float hw = mix(0.8, 1.5, clamp(-log2(d) / 4.0, 0.0, 1.0));
     float aG = clamp(hw + 0.5 - dG / d, 0.0, 1.0);
-    r = vec3(aG, clamp(1.0 - dP / d, 0.0, 1.0), uSel != 0u && (g == uSel || gNext == uSel) ? aG : 0.0);
+    // (the selected group's edge a pixel wider)
+    float sel = uSelId != 0u ? (id == uSelId || idNext == uSelId ? clamp(hw + 1.5 - dP / d, 0.0, 1.0) : 0.0) : uSel != 0u && (g == uSel || gNext == uSel) ? clamp(hw + 1.5 - dG / d, 0.0, 1.0) : 0.0;
+    r = vec3(aG, clamp(1.0 - dP / d, 0.0, 1.0), sel);
   } else {
     ivec2 q = ivec2(floor(p));
     id = idAt(q);
@@ -164,7 +175,7 @@ vec3 borders(vec2 p, float d, out uint id, out uint g) {
     uint g4 = groupOf(i4);
     bool ge = g1 != g || g2 != g || g3 != g || g4 != g;
     bool pe = i1 != id || i2 != id || i3 != id || i4 != id;
-    bool se = ge && uSel != 0u && (g == uSel || g1 == uSel || g2 == uSel || g3 == uSel || g4 == uSel);
+    bool se = uSelId != 0u ? pe && (id == uSelId || i1 == uSelId || i2 == uSelId || i3 == uSelId || i4 == uSelId) : ge && uSel != 0u && (g == uSel || g1 == uSel || g2 == uSel || g3 == uSel || g4 == uSel);
     r = vec3(ge ? 1.0 : 0.0, pe ? 1.0 : 0.0, se ? 1.0 : 0.0);
   }
   return r;
@@ -224,6 +235,7 @@ vec3 riverTone() {
 vec3 fogged(vec3 col, vec3 world) {
   return mix(col, uFog, smoothstep(uFogRange.x, uFogRange.y, distance(world, cameraPosition)));
 }
+${FOG_APPLY}
 
 // --- the game's lighting (cw/lighting.fxh with PDX_SimpleLighting, jomini/map_lighting.fxh) ---------------------
 
@@ -312,7 +324,7 @@ vec3 post(vec3 c) {
 /**
  * A mode's colour as the game paints it on the terrain (bordercolor.fxh GetBorderColorAndBlendGameLerp): 10 %
  * desaturated, the map modes' pattern (gfx/map/textures/political_mapmode_pattern.dds, 30 × 15 tiles over the map)
- * overlaid — here around the pattern's mean, so the colour keeps its brightness.
+ * overlaid, here around the pattern's mean, so the colour keeps its brightness.
  */
 vec3 painted(vec3 c, vec2 p) {
   vec2 uv = p / uSize;
@@ -322,8 +334,8 @@ vec3 painted(vec3 c, vec2 p) {
 }
 
 /**
- * How a group's colour lies on the terrain (the game's gradient borders, gfx/map/map_modes: realms "hollow" near —
- * a band along the border, the land inside showing —, "filled" from zoom step 9 on, wholly from 15): x = coverage at
+ * How a group's colour lies on the terrain (the game's gradient borders, gfx/map/map_modes: realms "hollow" near (a
+ * band along the border, the land inside showing), "filled" from zoom step 9 on, wholly from 15): x = coverage at
  * \`dist\` map pixels from the group's border, y / z = the blend before and after lighting.
  */
 vec3 overlayAt(float dist) {
@@ -417,7 +429,7 @@ void details(vec2 g, out vec4 diffuse, out vec3 normal, out vec4 props) {
   diffuse = s[0] * bf.x + s[1] * bf.y + s[2] * bf.z + s[3] * bf.w;
   vec4 ns = vec4(0.0);
   props = vec4(0.0);
-  // (a slot without intensity can get a share when the blend range is wide — AGOT's is 1 —, as in the game)
+  // (a slot without intensity can get a share when the blend range is wide (AGOT's is 1), as in the game)
   for (int i = 0; i < 4; i++) {
     if (bf[i] <= 0.0) continue;
     vec3 at = vec3(uv * k[i], float(idx[i]));
@@ -433,7 +445,7 @@ void details(vec2 g, out vec4 diffuse, out vec3 normal, out vec4 props) {
   normal = vec3(nx, ny, sqrt(clamp(1.0 - nx * nx - ny * ny, 0.0, 1.0)));
 }
 
-/** ReorientNormal (cw/utility.fxh): a detail normal (z up) onto the relief's normal (y up) — game space. */
+/** ReorientNormal (cw/utility.fxh): a detail normal (z up) onto the relief's normal (y up), in game space. */
 vec3 reorient(vec3 base, vec3 detail) {
   vec3 t = base + vec3(0.0, 0.0, 1.0);
   vec3 u = detail * vec3(-1.0, -1.0, 1.0);
@@ -468,7 +480,7 @@ vec3 terrainLook(vec2 p, float d, bool grouped, vec3 mode, float field) {
     details(g, diffuse, dn, props);
     albedo = softLight(diffuse.rgb, colormap, 1.0 - props.r);
   }
-  // the relief (CalculateNormal: heights a normal step apart, or the pixel's footprint when far) — game space
+  // the relief (CalculateNormal: heights a normal step apart, or the pixel's footprint when far), in game space
   float lodH = max(0.0, log2(d * uHSize.x / uSize.x));
   float s = max(d, uSize.x / uHSize.x);
   float hl = heightAt(p - vec2(s, 0.0), lodH);
@@ -506,7 +518,7 @@ void main() {
   bool water = (kind & 1) != 0;
   bool grouped = (kind & 2) != 0;
   vec3 col;
-  // (the terrain style: ground wherever it is — the water plane covers what lies below the water level —, lakes and
+  // (the terrain style: ground wherever it is (the water plane covers what lies below the water level), lakes and
   // river provinces above the water level still water: the game draws them as meshes of their own)
   if (uStyle == 0 && ((kind & 4) == 0 || vHeight < uWaterLevel)) col = terrainLook(p, d, grouped && !water, c.rgb, texture(uField, p / uSize).r * 63.75);
   else if (uStyle == 0) {
@@ -533,18 +545,20 @@ void main() {
   if (!water && uStyle != 1) col = mix(col, riverTone(), riverAt(p, d) * 0.9);
 
   if (g != 0u && g == uHover) col = mix(col, vec3(1.0), 0.18);
-  if (g != 0u && g == uSel) col = mix(col, vec3(1.0, 0.93, 0.7), 0.3);
+  // the selection: everything else dimmed, the group itself lighter
+  if (selecting() && !selected(id, g)) col *= 0.68;
+  if (selected(id, g)) col = mix(col, vec3(1.0, 0.93, 0.7), 0.22);
   // provinces faintly, only near
   if (!water) col *= mix(1.0, mix(0.72, 1.0, clamp((d - 0.4) / 0.8, 0.0, 1.0)), e.y * (1.0 - e.x));
   // (group lines lighter far away, where they are a pixel wide)
   col = mix(col, col * (water ? 0.8 : mix(0.45, 0.62, clamp(d - 1.0, 0.0, 1.0))), e.x);
-  col = mix(col, vec3(1.0, 0.9, 0.55), e.z);
-  fragColor = vec4(fogged(col, vec3(p.x, vHeight, p.y)), 1.0);
+  col = mix(col, vec3(1.0, 0.86, 0.45), e.z);
+  fragColor = vec4(fogged(fowApply(col, vec3(p.x, vHeight, p.y)), vec3(p.x, vHeight, p.y)), 1.0);
 }
 `;
 
 /**
- * The sky (map3d.ts): a dome around the eye — the horizon's colour (the fog's: far land fades into it) to a darker one
+ * The sky (map3d.ts): a dome around the eye, from the horizon's colour (the fog's: far land fades into it) to a darker one
  * above. Drawn first, without depth.
  */
 export const SKY_VERT = `
@@ -581,18 +595,21 @@ void main() {
 /**
  * The water surface at the water level: in the terrain style wherever the ground is below it, lit like the game's
  * water (jomini_water_default.fxh CalcWater: its colour map, three layers of wave normals, the sky's cubemap by
- * Fresnel, the sun's glint), see-through where shallow — the sea floor's materials show along the coasts; else over
+ * Fresnel, the sun's glint), see-through where shallow (the sea floor's materials show along the coasts); else over
  * water provinces in the 2D map's tones. Around the map too.
  */
 export const WATER_FRAG = `${COMMON}
 uniform sampler2D uWaves;
+// seconds (set while the map animates: the rivers' flow, near), the layers' scroll speeds (water.settings)
+uniform float uTime;
+uniform vec3 uWaveSpeed;
 in vec3 vWorld;
 out vec4 fragColor;
 
-/** A layer of wave normals (SampleNormalMapTexture: rotated, scaled, flattened ×2) — game space, y up. */
-vec3 wave(vec2 uv, float scale, float rot) {
+/** A layer of wave normals (SampleNormalMapTexture: rotated, scaled, scrolled by its speed, flattened ×2), in game space, y up. */
+vec3 wave(vec2 uv, float scale, float rot, float speed) {
   vec2 r = vec2(cos(rot), sin(rot));
-  vec3 n = texture(uWaves, vec2(uv.x * r.x - uv.y * r.y, uv.x * r.y + uv.y * r.x) * scale).rgb * 2.0 - 1.0;
+  vec3 n = texture(uWaves, vec2(uv.x * r.x - uv.y * r.y, uv.x * r.y + uv.y * r.x) * scale + vec2(uTime * speed)).rgb * 2.0 - 1.0;
   n = n.xzy;
   n.xz = vec2(n.x * r.x + n.z * r.y, -n.x * r.y + n.z * r.x);
   return normalize(vec3(n.x, n.y * 2.0, -n.z));
@@ -613,11 +630,13 @@ void main() {
   float alpha = 1.0;
   vec3 col;
   uint g = 0u;
+  uint wid = 0u;
   vec4 c = vec4(0.0);
   vec3 e = vec3(0.0);
   if (outside <= 0.0) {
     uint id;
     vec3 eb = borders(p, d, id, g);
+    wid = id;
     c = texelFetch(uColor, palAt(id), 0);
     bool sea = (kindOf(c) & 1) != 0;
     // (the terrain style has water wherever the ground is below the water level, as the game; the maps over water provinces)
@@ -635,7 +654,7 @@ void main() {
     // layers × 7, 0.7, 0.3 turned −0.35, −1.6, 1.7 rad), the sky by Fresnel (bias 0.1, power 4), the sun's glint;
     // shallow water lets the sea floor through
     vec2 wuv = game(p) * vec2(1.0, -1.0) * 0.05;
-    vec3 gn = normalize(wave(wuv, 7.0, -0.35) + wave(wuv, 0.7, -1.6) + wave(wuv, 0.3, 1.7));
+    vec3 gn = normalize(wave(wuv, 7.0, -0.35, uWaveSpeed.x) + wave(wuv, 0.7, -1.6, uWaveSpeed.y) + wave(wuv, 0.3, 1.7, uWaveSpeed.z));
     vec3 lin = waterLit(wtex, vec3(gn.x, gn.y, -gn.z), v);
     if ((kindOf(c) & 2) != 0) lin = mix(lin, toLinear(c.rgb) * 0.8, 0.55);
     col = post(hazed(lin, vWorld));
@@ -656,17 +675,18 @@ void main() {
   if (outside > 0.0) col = mix(col, uFog, smoothstep(0.0, uSize.y * 0.25, outside));
   else {
     if (g != 0u && g == uHover) col = mix(col, vec3(1.0), 0.18);
-    if (g != 0u && g == uSel) col = mix(col, vec3(1.0, 0.93, 0.7), 0.3);
+    if (selecting() && !selected(wid, g)) col *= 0.68;
+    if (selected(wid, g)) col = mix(col, vec3(1.0, 0.93, 0.7), 0.22);
     col = mix(col, col * 0.8, e.x);
     col = mix(col, vec3(1.0, 0.9, 0.55), e.z);
   }
-  fragColor = vec4(fogged(col, vWorld), alpha);
+  fragColor = vec4(fogged(fowApply(col, vWorld), vWorld), alpha);
 }
 `;
 
 /**
- * Map objects (map3d-objects.ts): a mesh part instanced per object — game x, y over the ground, game z (aPos), yaw
- * and scale (aTurn) — on the terrain's height at its origin (at least the water level when `uClamp`); game space
+ * Map objects (map3d-objects.ts): a mesh part instanced per object (game x, y over the ground, game z (aPos), yaw
+ * and scale (aTurn)) on the terrain's height at its origin (at least the water level when `uClamp`); game space
  * mirrored in z like the map. Objects under a screen pixel tall are dropped (`vSize`: the height in pixels). The
  * ground's normal at the origin (`vGround`, as the terrain's relief) goes to the shadow tint.
  */
@@ -806,7 +826,8 @@ void main() {
   if (grouped) col = mix(col, pm * mix(0.7, 1.06, clamp(dot(n, uLight), 0.0, 1.0)), o.z * o.x);
   uint g = groupOf(id);
   if (g != 0u && g == uHover) col = mix(col, vec3(1.0), 0.18);
-  if (g != 0u && g == uSel) col = mix(col, vec3(1.0, 0.93, 0.7), 0.3);
-  fragColor = vec4(fogged(col, vWorld), alpha);
+  if (selecting() && !selected(id, g)) col *= 0.68;
+  if (selected(id, g)) col = mix(col, vec3(1.0, 0.93, 0.7), 0.22);
+  fragColor = vec4(fogged(fowApply(col, vWorld), vWorld), alpha);
 }
 `;

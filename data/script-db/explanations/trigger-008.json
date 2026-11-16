@@ -1,0 +1,557 @@
+[
+ {
+  "kind": "trigger",
+  "key": "fertility_equilibrium",
+  "label": "County fertility equilibrium",
+  "summary": "Whether the county's projected fertility equilibrium compares in the given way to a number.",
+  "details": "The game warns that this check is very heavy and should only be used at your own risk. Works on a county (a title). Compare with `<`, `<=`, `=`, `!=`, `>` or `>=`.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "fervor",
+  "label": "Faith fervor",
+  "summary": "Whether the faith's fervor compares in the given way to a number.",
+  "details": "Works on a faith. Vanilla compares it against plain numbers (for example `>= 60` or `< 75`) and against named script values such as `medium_fervor_value`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "final_destination_arrival_date",
+  "label": "Arrival date",
+  "summary": "Whether the estimated date of arrival at the travel plan's final destination compares in the given way to a date.",
+  "details": "Works on a travel plan. The value must be a valid date, for example `1100.1.1`. Supports `<`, `<=`, `=`, `>` and `>=` (not `!=`).",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "final_destination_arrival_days",
+  "label": "Days until arrival",
+  "summary": "Whether the estimated number of days until the travel plan reaches its final destination compares in the given way to a number.",
+  "details": "Works on a travel plan. The game's documentation calls the value an estimate. Supports `<`, `<=`, `=`, `!=`, `>` and `>=`.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "final_destination_progress",
+  "label": "Travel progress",
+  "summary": "Whether the travel plan's progress towards its final destination, a value from 0.0 to 1.0, compares in the given way to a number.",
+  "details": "Works on a travel plan. Progress is measured in time, counted from the departure date at the very start of the plan. For example `> 0.5` means more than half the time has passed.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "focus_progress",
+  "label": "Focus progress",
+  "summary": "Whether the character's progress in their current focus compares in the given way to a number.",
+  "details": "Works on a character. The game's documentation does not say what scale the progress uses, and vanilla gives no examples in the input.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "fort_level",
+  "label": "Fort level",
+  "summary": "Whether the province's fort level compares in the given way to a number.",
+  "details": "Works on a province. Vanilla uses it both with exact values from 0 to 4 and with comparisons such as `> 0` and `>= 10`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "fp1_adventure_legacy_track_perks",
+  "label": "Adventure legacy perks",
+  "summary": "Whether the number of perks the dynasty has in the Adventure legacy track compares in the given way to a number.",
+  "details": "Works on a dynasty. The game's documentation only says 'perks in the lifestyle' and names no track. The Adventure track is an inference from the key name, so treat it as likely, not confirmed.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "fp1_pillage_legacy_track_perks",
+  "label": "Pillage legacy perks",
+  "summary": "Whether the number of perks the dynasty has in the Pillage legacy track compares in the given way to a number.",
+  "details": "Works on a dynasty. The game's documentation only says 'perks in the lifestyle' and names no track. The Pillage track is an inference from the key name, so treat it as likely, not confirmed.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "fp2_coterie_legacy_track_perks",
+  "label": "Coterie legacy perks",
+  "summary": "Whether the number of perks the dynasty has in the Coterie legacy track compares in the given way to a number.",
+  "details": "Works on a dynasty. The game's documentation only says 'perks in the lifestyle' and names no track. The Coterie track is an inference from the key name, so treat it as likely, not confirmed.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "fp2_urbanism_legacy_track_perks",
+  "label": "Urbanism legacy perks",
+  "summary": "Whether the number of perks the dynasty has in the Urbanism legacy track compares in the given way to a number.",
+  "details": "Works on a dynasty. The game's documentation only says 'perks in the lifestyle' and names no track. The Urbanism track is an inference from the key name, so treat it as likely, not confirmed.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "fp3_khvarenah_legacy_track_perks",
+  "label": "Khvarenah legacy perks",
+  "summary": "Whether the number of perks the dynasty has in the Khvarenah legacy track compares in the given way to a number.",
+  "details": "Works on a dynasty. The game's documentation only says 'perks in the lifestyle' and names no track. The Khvarenah track is an inference from the key name, so treat it as likely, not confirmed.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "free_building_slots",
+  "label": "Free building slots",
+  "summary": "Whether the number of free building slots in the province compares in the given way to a number.",
+  "details": "A building that is still under construction counts as using a slot. Works on a province. Vanilla mostly checks `> 0`, `0` or `>= 1`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "free_external_domicile_building_slots",
+  "label": "Free external domicile slots",
+  "summary": "Whether the number of free external building slots of the domicile compares in the given way to a number.",
+  "details": "Works on a domicile. The documented example is `scope:domicile = { free_external_domicile_building_slots < 1 }`. Vanilla mostly checks `>= 1` up to `>= 6`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "free_personal_tenet_slots",
+  "label": "Free personal tenet slots",
+  "summary": "Whether the number of personal tenets the character can still choose compares in the given way to a number.",
+  "details": "Works on a character. It is always 0 for dead or non-playable characters. Vanilla mostly checks `> 0`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "free_tradition_slot",
+  "label": "Free tradition slots",
+  "summary": "Whether the number of free tradition slots of the culture compares in the given way to a number.",
+  "details": "Works on a culture. The documented example is `scope:culture = { free_tradition_slot > 1 }`. Vanilla uses it once, as `> 0`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "game_start_date",
+  "label": "Game start date",
+  "summary": "Whether the start date of the bookmark the game was launched from compares in the given way to a date.",
+  "details": "The input lists no required target, so it needs no particular scope. Vanilla uses it to tell the bookmarks apart: exact dates such as `1066.9.15`, `867.1.1` and `1178.10.1`, or comparisons like `>= 1066.1.1`. Supports `<`, `<=`, `=`, `>` and `>=`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "geographical_region",
+  "label": "In region",
+  "summary": "Whether the province lies in the given geographical region.",
+  "details": "Works on a province. Write the key of a region from the game's geographical regions, for example `world_europe` or `world_india`. Vanilla uses it very often.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The region to check against.",
+    "values": "a geographical region key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "ghw_attackers_strength",
+  "label": "GHW attackers' strength",
+  "summary": "Whether the maximum military strength of the pledged attackers in the Great Holy War compares in the given way to a number.",
+  "details": "Works on a Great Holy War. 'Maximum' means the strength if all levies were fully reinforced. Vanilla compares it with a named script value.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "ghw_defenders_strength",
+  "label": "GHW defenders' strength",
+  "summary": "Whether the maximum military strength of the pledged defenders in the Great Holy War compares in the given way to a number.",
+  "details": "Works on a Great Holy War. 'Maximum' means the strength if all levies were fully reinforced.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "ghw_war_chest_gold",
+  "label": "GHW war chest gold",
+  "summary": "Whether the amount of gold in the Great Holy War's war chest compares in the given way to a number.",
+  "details": "Works on a Great Holy War.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "ghw_war_chest_piety",
+  "label": "GHW war chest piety",
+  "summary": "Whether the amount of piety in the Great Holy War's war chest compares in the given way to a number.",
+  "details": "Works on a Great Holy War.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "ghw_war_chest_prestige",
+  "label": "GHW war chest prestige",
+  "summary": "Whether the amount of prestige in the Great Holy War's war chest compares in the given way to a number.",
+  "details": "Works on a Great Holy War.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "global_variable_list_size",
+  "label": "Global list size",
+  "summary": "Whether the number of entries in a global variable list compares in the given way to a number or script value.",
+  "details": "The list is a global variable list, found by its name. The documented usage line is written for `variable_list_size` (with a `target` field), but vanilla uses this key with `name` and `value`, as in `{ name = laamps_tally value >= 1 }`.",
+  "fields": [
+   {
+    "name": "name",
+    "text": "The name of the global variable list.",
+    "values": "a variable name",
+    "required": true
+   },
+   {
+    "name": "value",
+    "text": "The comparison for the list's size.",
+    "values": "a comparison such as `>= 1` with a number or script value",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "glory_legacy_track_perks",
+  "label": "Glory legacy perks",
+  "summary": "Whether the number of perks the dynasty has in the Glory legacy track compares in the given way to a number.",
+  "details": "Works on a dynasty. The game's documentation only says 'perks in the lifestyle' and names no track. The Glory track is an inference from the key name, so treat it as likely, not confirmed.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "gold",
+  "label": "Gold",
+  "summary": "Whether the character has the required amount of gold.",
+  "details": "Works on a character. Vanilla mostly writes a comparison such as `> 0` or `>= 500`, or a named script value; it also uses `< 0`, so the amount can be negative. Vanilla also has a block form with `value` and `multiply` (for example `{ value = feudalize_holding_interaction_cost multiply = 4 }`). Going by the field names, it checks the value times the factor; the input does not document that form.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The amount to check against (block form).",
+    "values": "a number or script value",
+    "required": false
+   },
+   {
+    "name": "multiply",
+    "text": "A factor the value is multiplied by (block form).",
+    "values": "a number",
+    "required": false
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "government_allows",
+  "label": "Government allows",
+  "summary": "Whether the character's government allows the named thing.",
+  "details": "Works on a character. The game's documentation does not list the possible names; the ones seen in vanilla are `merit`, `noble_families`, `state_faith` and `barter`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "government_disallows",
+  "label": "Government disallows",
+  "summary": "Whether the character's government forbids the named thing.",
+  "details": "Works on a character. Going by its name it is the reverse of `government_allows`. The input shows no vanilla use, so which names are valid is not confirmed here.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "government_has_flag",
+  "label": "Government has flag",
+  "summary": "Whether the character's government has the given flag.",
+  "details": "Works on a character. Vanilla uses it mostly to tell the kind of government apart, with flags like `government_is_nomadic`, `government_is_tribal`, `government_is_theocracy` and `government_is_feudal`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "government_has_mechanic",
+  "label": "Government has mechanic",
+  "summary": "Whether the character's government has the given mechanic.",
+  "details": "Works on a character. The game's documentation lists these mechanics: feudal, mercenary, holy_order, clan, theocracy, administrative, landless_adventurer, herder, nomad, mandala. Vanilla uses `administrative` almost every time.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "government_type_has_flag",
+  "label": "Government type has flag",
+  "summary": "Whether the government type has the given flag.",
+  "details": "Works on a government type itself, not on a character. Vanilla checks flags such as `government_is_theocracy`, `government_is_feudal` and `government_is_clan`. To check a character's government, use `government_has_flag` instead.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "great_project_build_progress",
+  "label": "Project build progress",
+  "summary": "Whether the great project's build progress, from 0 to 1, compares in the given way to a number.",
+  "details": "Works on a great project. If the project is not being built, the value is 0. For example `> 0.5` means more than half is built.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "great_project_construction_phase_is",
+  "label": "Construction phase",
+  "summary": "Whether the great project is in the given construction phase.",
+  "details": "Works on a great project. The phases are `planned` (gathering funds), `in_progress` (building has started) and `completed`. The documented example writes `great_project_construction_phase`, without `_is`; vanilla uses the `_is` key shown here.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The phase to check for.",
+    "values": "planned, in_progress or completed",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "great_project_days_to_completion",
+  "label": "Days to completion",
+  "summary": "Whether the number of days until the great project is built compares in the given way to a number.",
+  "details": "Works on a great project. The estimate includes progress bonuses from the current province holder. If the project is not being built, the value is -1.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "great_project_type",
+  "label": "Project type",
+  "summary": "Whether the great project is of the given type.",
+  "details": "Works on a great project. Write the key of the project type from its definition, for example `great_wall`.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The project type to check for.",
+    "values": "a great project type key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "great_project_type_is_important",
+  "label": "Project type is important",
+  "summary": "Whether the great project type is marked as important.",
+  "details": "Works on a great project type, not on a project. The game uses the mark to drive its notifications. Write `yes` or `no`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "guile_legacy_track_perks",
+  "label": "Guile legacy perks",
+  "summary": "Whether the number of perks the dynasty has in the Guile legacy track compares in the given way to a number.",
+  "details": "Works on a dynasty. The game's documentation only says 'perks in the lifestyle' and names no track. The Guile track is an inference from the key name, so treat it as likely, not confirmed.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_access_to_maa",
+  "label": "Has access to MaA",
+  "summary": "Whether the character has access to the given men-at-arms type.",
+  "details": "Works on a character. Men-at-arms access gained through tributaries does not count. Write the key of a men-at-arms type, for example `horse_archers` or `kheshig`.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The men-at-arms type to check for.",
+    "values": "a men-at-arms type key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_accolade_category",
+  "label": "Accolade category",
+  "summary": "Whether any of the accolade types has the given category flag.",
+  "details": "Works on an accolade. The documented wording ('any of the Accolades types') does not say which types are meant. Vanilla uses categories such as `men_at_arms`, `ethical`, `aggressive`, `defensive` and `champion`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_accolade_parameter",
+  "label": "Accolade parameter",
+  "summary": "Whether any unlocked rank of the accolade has the given parameter flag.",
+  "details": "Works on an accolade. Only ranks already unlocked count. Vanilla checks parameters such as `accolade_increase_control_bonus` and `acclaimed_knight_prestige_from_victory`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ }
+]

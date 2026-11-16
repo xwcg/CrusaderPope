@@ -1,0 +1,567 @@
+[
+ {
+  "kind": "trigger",
+  "key": "does_ai_vassal_in_vassal_contract_desire_obligation_change",
+  "label": "AI vassal wants obligation change",
+  "summary": "Whether the AI-controlled vassal in a vassal contract wants to change one of the contract's obligation levels.",
+  "details": "Written as yes or no. Vanilla uses it once, with yes.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "domain_limit",
+  "label": "Domain limit",
+  "summary": "Whether the character's domain limit (the cap the game sets on the size of their domain) compares as given with a number.",
+  "details": "Use it with <, <=, =, !=, > or >=, for example `domain_limit >= 5`.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "domain_limit_available",
+  "label": "Free domain space",
+  "summary": "Whether the character has this much room left under their domain limit.",
+  "details": "A negative value works too, so `< 0` finds characters who are over their limit. Vanilla mostly asks `> 0` (room left) or `< 0` (over the limit).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "domain_limit_percentage",
+  "label": "Domain size vs limit",
+  "summary": "Whether the character's domain is this big compared with their domain limit.",
+  "details": "It is a comparison with <, <=, =, !=, > or >=. The game does not say whether the number is a percent or a fraction, and vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "domain_size",
+  "label": "Domain size",
+  "summary": "Whether the size of the character's domain compares as given with a number.",
+  "details": "Vanilla often compares it with the character's own limit, as in `domain_size < domain_limit` (still room) or `domain_size >= domain_limit` (at or over the limit), and with small numbers such as `>= 4`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "domain_size_excluding_grace_period",
+  "label": "Domain size without grace titles",
+  "summary": "Whether the size of the character's domain compares as given with a number, leaving out titles that are still in their grace period.",
+  "details": "It works like the plain domain size check, except that titles in a grace period are not counted. Use it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "domicile_building_has_free_internal_slot",
+  "label": "Domicile building has free slot",
+  "summary": "Whether the domicile has the named building and that building still has a free internal building slot.",
+  "details": "Written as the building's key, for example `domicile_building_has_free_internal_slot = chancery_01`. It runs on a domicile. Vanilla uses it with many building keys, such as `church_school_01` and `japanese_manor_main_01`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "domicile_uses_culture_and_faith",
+  "label": "Domicile uses culture and faith",
+  "summary": "Whether the domicile uses culture and faith.",
+  "details": "Written as yes or no. The game does not explain what that means in more detail. Vanilla uses it with yes.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "domicile_uses_provisions",
+  "label": "Domicile uses provisions",
+  "summary": "Whether the domicile uses provisions.",
+  "details": "Written as yes or no. Vanilla uses it once, with yes.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "dread",
+  "label": "Dread",
+  "summary": "Whether the character's dread (how much others fear them) compares as given with a number.",
+  "details": "Use it with <, <=, =, !=, > or >=. Vanilla uses plain numbers such as `>= 50` and named values such as `>= medium_dread` or `>= high_dread`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "dread_modified_ai_boldness",
+  "label": "Boldness changed by dread",
+  "summary": "Whether the AI character's boldness, after the effect of another character's dread, compares as given with a number.",
+  "details": "The checked character is the one in scope; the character whose dread affects them is named in the block. Vanilla compares the value with plain numbers, including negative ones such as `<= -50`, and with named AI values. The game's documentation example names the field `character`, but every vanilla use writes `dreaded_character`.",
+  "fields": [
+   {
+    "name": "dreaded_character",
+    "text": "The character whose dread affects the checked character.",
+    "values": "a character, such as root or scope:holder",
+    "required": true
+   },
+   {
+    "name": "value",
+    "text": "The boldness value to compare with.",
+    "values": "a comparison with a number or a named AI value, such as `<= -50` or `>= low_positive_ai_value`",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "dynasty_can_unlock_relevant_perk",
+  "label": "Dynasty can unlock a relevant perk",
+  "summary": "Whether the dynasty can unlock a relevant perk.",
+  "details": "A relevant perk is any perk that is not the first one of its track, unless the dynasty has no partly filled tracks. Written as yes or no. Vanilla uses it once, with yes.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "dynasty_has_base_name",
+  "label": "Dynasty has base name",
+  "summary": "Whether the dynasty has the given base name.",
+  "details": "The value is the dynasty name's key, such as `dynn_Cai_8521`. Characters can be lowborn and have no dynasty, so check it through `dynasty ?= { ... }`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "dynasty_num_unlocked_perks",
+  "label": "Unlocked dynasty perks",
+  "summary": "Whether the number of dynasty perks the dynasty has unlocked compares as given with a number.",
+  "details": "Use it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "dynasty_prestige",
+  "label": "Dynasty prestige",
+  "summary": "Whether the dynasty's prestige compares as given with a number.",
+  "details": "Use it with <, <=, =, !=, > or >=. Vanilla mostly compares it with named values, such as `>= medium_dynasty_prestige_value` or `>= take_vows_dynasty_prestige_cost_value`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "dynasty_prestige_level",
+  "label": "Dynasty prestige level",
+  "summary": "Whether the dynasty's prestige level compares as given with a number.",
+  "details": "This is the prestige level, not the prestige amount itself (that is `dynasty_prestige`). Use it with <, <=, =, !=, > or >=. Vanilla compares it with numbers such as `>= 7` and with named levels.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "effective_age",
+  "label": "Effective age",
+  "summary": "Whether the character's age compares as given with a number, using the age they became immortal at if they are immortal.",
+  "details": "Use it with <, <=, =, !=, > or >=, for example `effective_age >= 40`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "eminent_holy_sites_max",
+  "label": "Most eminent holy sites",
+  "summary": "Whether the largest number of eminent holy sites that faiths of the religion can have compares as given with a number.",
+  "details": "It runs on a religion, for example `religion = { eminent_holy_sites_max > 3 }`. Use it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "eminent_holy_sites_min",
+  "label": "Fewest eminent holy sites",
+  "summary": "Whether the smallest number of eminent holy sites that faiths of the religion can have compares as given with a number.",
+  "details": "It runs on a religion, for example `religion = { eminent_holy_sites_min > 0 }`. Use it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "employs_court_position",
+  "label": "Employs court position",
+  "summary": "Whether the character has someone employed in the given court position type.",
+  "details": "Written as the court position's key, for example `court_physician_court_position`. Vanilla uses it often, with the position types of the court.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "employs_tax_collector",
+  "label": "Employs tax collector",
+  "summary": "Whether the character has any tax collectors employed.",
+  "details": "Written as yes or no.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "ep1_culture_legacy_track_perks",
+  "label": "Culture legacy perks",
+  "summary": "Whether the number of perks the dynasty has in the ep1 culture legacy track compares as given with a number.",
+  "details": "Going by its name, the track is the culture legacy track of the first expansion (ep1). The game's own text only says \"perks in the lifestyle\" and vanilla does not use it. Use it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "ep2_activities_legacy_track_perks",
+  "label": "Activities legacy perks",
+  "summary": "Whether the number of perks the dynasty has in the ep2 activities legacy track compares as given with a number.",
+  "details": "Going by its name, the track is the activities legacy track of the second expansion (ep2). The game's own text only says \"perks in the lifestyle\" and vanilla does not use it. Use it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "ep3_administrative_legacy_track_perks",
+  "label": "Administrative legacy perks",
+  "summary": "Whether the number of perks the dynasty has in the ep3 administrative legacy track compares as given with a number.",
+  "details": "Going by its name, the track is the administrative legacy track of the third expansion (ep3). Vanilla uses it twice, with `>= 1` and `>= 3`. Use it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "epidemic_resistance",
+  "label": "Epidemic resistance",
+  "summary": "Whether the province's epidemic resistance compares as given with a number.",
+  "details": "Use it with <, <=, =, !=, > or >=, for example `epidemic_resistance >= 20`. Vanilla compares it with numbers from 10 to 100.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "erudition_legacy_track_perks",
+  "label": "Erudition legacy perks",
+  "summary": "Whether the number of perks the dynasty has in the erudition legacy track compares as given with a number.",
+  "details": "Going by its name, the track is the erudition legacy track. The game's own text only says \"perks in the lifestyle\" and vanilla does not use it. Use it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "estimated_faith_strength",
+  "label": "Faith strength",
+  "summary": "Whether the estimated strength of the faith compares as given with a number, where 1 stands for 1000 men.",
+  "details": "The check is expensive, so save the value in a scope if you need it more than once. The scale is 1000 because the game's number type tops out near 2 million. Use it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "exists",
+  "label": "Exists",
+  "summary": "Whether the given scope or link leads to something, that is, is not empty.",
+  "details": "For example `exists = liege` is true when the character has a liege. The target can be a chain such as `from.owner.var:cool_var.mother`. Vanilla uses it very often, with scopes, links and plain names.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "expected_rite_fulfillment_change",
+  "label": "Expected rite fulfillment change",
+  "summary": "Whether the expected change in the character's spiritual fulfillment, if they practiced the target rite instead of their current one, compares as given with a number.",
+  "details": "It is the fulfillment score of the target rite minus the score of the rite the character practices now. It can be written as a block with `target` (the rite) and `value`, or in the short form `\"expected_rite_fulfillment_change(scope:some_rite)\" > 0`. Use it with <, <=, =, !=, > or >=.",
+  "fields": [
+   {
+    "name": "target",
+    "text": "The rite to compare with the one the character practices now.",
+    "values": "a rite, such as scope:some_rite",
+    "required": true
+   },
+   {
+    "name": "value",
+    "text": "The change to compare with.",
+    "values": "a comparison with a number, such as `> 0`",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "expected_tenet_fulfillment_change",
+  "label": "Expected tenet fulfillment change",
+  "summary": "Whether the expected change in fulfillment for the target tenet, caused by changed weights of virtues and sins, compares as given with a number.",
+  "details": "It can be written in the short form `\"expected_tenet_fulfillment_change(scope:some_tenet)\" > 0` on a character, or as a block with `target` and `value`. The game's example for the block form runs it on a rite scope, while its scope list names the character, so check where it works before relying on it. Use it with <, <=, =, !=, > or >=.",
+  "fields": [
+   {
+    "name": "target",
+    "text": "The tenet to check.",
+    "values": "a tenet, such as scope:some_tenet",
+    "required": true
+   },
+   {
+    "name": "value",
+    "text": "The change to compare with.",
+    "values": "a comparison with a number, such as `> 0`",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "external_domicile_building_slots",
+  "label": "External building slots",
+  "summary": "Whether the domicile's total number of external building slots compares as given with a number.",
+  "details": "It runs on a domicile, for example `external_domicile_building_slots == 5`. Use it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "faction_can_press_demands",
+  "label": "Faction can press demands",
+  "summary": "Whether the faction is able to press its demands.",
+  "details": "Written as yes or no. Vanilla uses it with yes.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "faction_discontent",
+  "label": "Faction discontent",
+  "summary": "Whether the faction's current discontent compares as given with a number.",
+  "details": "Use it with <, <=, =, !=, > or >=. Vanilla uses it once, with `>= 15`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "faction_is_at_war",
+  "label": "Faction is at war",
+  "summary": "Whether the faction is at war.",
+  "details": "Written as yes or no.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "faction_is_type",
+  "label": "Faction type",
+  "summary": "Whether the faction is of the given type.",
+  "details": "Written as the faction type's key, for example `claimant_faction`. Vanilla also uses it with the types of its other factions, such as independence or populist factions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "faction_power",
+  "label": "Faction power",
+  "summary": "Whether the faction's current power compares as given with a number.",
+  "details": "Use it with <, <=, =, !=, > or >=. Vanilla compares it with plain numbers, with named thresholds such as `>= faction_power_threshold`, and with a host's military strength.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "faction_power_threshold",
+  "label": "Faction power threshold",
+  "summary": "Whether the faction's current power threshold compares as given with a number.",
+  "details": "Use it with <, <=, =, !=, > or >=. The game's text only says \"current power threshold\" and vanilla does not use it as a check.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "faith_hostility_level",
+  "label": "Hostility to another faith",
+  "summary": "Whether the faith's hostility level towards the target faith compares as given with a number.",
+  "details": "The checked faith is the one in scope. Vanilla compares the value with named levels, such as `>= faith_hostile_level` or `>= faith_evil_level`, and most often takes the target from a character's faith, such as `root.faith`.",
+  "fields": [
+   {
+    "name": "target",
+    "text": "The faith whose hostility from the checked faith is looked at.",
+    "values": "a faith, such as root.faith or scope:actor.faith",
+    "required": true
+   },
+   {
+    "name": "value",
+    "text": "The hostility level to compare with.",
+    "values": "a comparison with a number or a named level, such as `>= faith_hostile_level`",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "faith_hostility_level_comparison",
+  "label": "Compare hostility to two faiths",
+  "summary": "Whether the faith is more or less hostile towards one faith than towards another.",
+  "details": "The block is written as `faith1 > faith2`: the first faith is the one on the left and the second the one on the right, and the comparison tells how the checked faith's hostility to the first relates to its hostility to the second. In vanilla the faiths are written as references, such as `prev.holder.faith >= scope:defender.faith`, and use <, <=, >= or >.",
+  "fields": [
+   {
+    "name": "faith1 / faith2",
+    "text": "Two faiths with a comparison between them, written like `faith1 > faith2`. The checked faith's hostility towards the left faith is compared with its hostility towards the right faith.",
+    "values": "two faiths such as `prev.holder.faith >= scope:defender.faith`, joined by <, <=, >= or >",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "fertility",
+  "label": "Fertility",
+  "summary": "Whether the character's fertility compares as given with a number.",
+  "details": "Use it with <, <=, =, !=, > or >=. Vanilla uses small fractions such as `< 0.1` or `>= 0.5`, `> 0`, and the named value `low_fertility`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ }
+]

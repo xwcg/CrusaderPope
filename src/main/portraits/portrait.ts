@@ -1,5 +1,5 @@
 /**
- * Builds a 3D portrait (body, head, hair, clothes) for a character from game data — see docs/portraits.md.
+ * Builds a 3D portrait (body, head, hair, clothes) for a character from game data; see docs/portraits.md.
  *
  * DNA (bookmark portrait, dna_data, or generated from the culture's ethnicity) → genes → attributes (common/genes)
  * → blend shapes and additive bone animations of each entity → body posed with its idle animation, head attached to
@@ -12,12 +12,14 @@ import type { Entity, GameIndex } from '../indexer/gameIndex.ts';
 import { compose, decompose, invert, m4, mul, qinv, qmul, sampleJoint, type AnimFile, type Bone, type M4, type MeshPart, type Quat, type V3 } from './mesh.ts';
 import { AssetLibrary, field, kids, scalar, splitTags, tagsMatch, type AssetInfo, type EntityDecl, type MeshDecl, type MeshSettings, type PortraitKind, type Range } from './assets.ts';
 import type { DnaEditorData, DnaGene, DnaGeneInfo, PortraitData, PortraitDecal, PortraitEntityReport, PortraitPart, PortraitReport, PortraitVariation } from '../../shared/api.ts';
+import { genesNodes } from '../saves/dna.ts';
 import { bakeDecals, dataMip, transparentDecal, type Baked, type BlendMode, type DecalLayer } from './decals.ts';
 import type { Decoded } from '../images/dds.ts';
-import { BOOKMARK_DATE, freshRun, History, PortraitModifiers, type CharacterFacts, type GeneState, type GeneValue, type ScriptRun, type TraitEntry } from './modifiers.ts';
+import { BOOKMARK_DATE, dateNum, freshRun, History, PortraitModifiers, type CharacterFacts, type GeneState, type GeneValue, type ScriptRun, type TraitEntry } from './modifiers.ts';
 import { defaultEffectFile } from '../../shared/shaders.ts';
 import { GameStart } from './gameStart.ts';
 
+import { tr } from '../../shared/i18n.ts';
 type Gender = 'male' | 'female';
 
 export interface PortraitOptions
@@ -34,6 +36,8 @@ export interface PortraitOptions
     genes?: DnaGene[];
     age?: number;
     female?: boolean;
+    /** a historical character at this date (y.m.d: the preview date for age, titles, clothes); absent: the 1066 bookmark */
+    date?: string;
 }
 
 /** Triggers the portrait modifiers use to undress a character (00_clothing_triggers.txt; should_show_nudity is the game setting). */
@@ -160,6 +164,9 @@ export class PortraitBuilder
     private dataMips = new Map<string, boolean>();
 
     /** @param lib an asset library to keep (after an index update that changed no gfx file: its caches stay valid) */
+    /** a loaded save's character's DNA (docs/saves.md "Portraits"): its genes, decoded, set by the worker */
+    saveGenes?: (id: string) => DnaGene[] | undefined;
+
     constructor(idx: GameIndex, history = new History(idx), lib?: AssetLibrary)
     {
         this.idx = idx;
@@ -300,14 +307,15 @@ export class PortraitBuilder
             genes: this.parseGenes(kids(field(body, 'genes'))),
             exact: true,
             seed: bm.name,
-            source: `Bookmark portrait "${bm.name}"`,
+            source: tr('Bookmark portrait "{name}"', { name: bm.name }),
             geneNodes: kids(field(body, 'genes')),
             target: { type: 'bookmark_portraits', name: bm.name }
         };
     }
 
-    private subject(e: Entity): Subject | undefined
+    private subject(e: Entity, date?: string): Subject | undefined
     {
+        const when = dateNum(date);
         if (e.type === 'bookmark_portraits')
             return this.bookmarkSubject(e, e.name);
 
@@ -316,12 +324,32 @@ export class PortraitBuilder
             const genes = this.dnaGenes(e);
             // dress it like the historical character using this DNA; else guess the sex from the gene templates
             const user = this.idx.incomingSources(e).find((x) => x.entity.type === 'characters')?.entity;
-            const facts = user ? (this.modifiers.eval.history.facts(user.name) ?? undefined) : undefined;
+            const facts = user ? (this.modifiers.eval.history.facts(user.name, when) ?? undefined) : undefined;
             const female = facts ? facts.female : [...genes.values()].some((g) => g.template?.includes('female'));
             const age = facts ? Math.max(2, Math.min(90, facts.age)) : 35;
-            const source = `DNA "${e.name}"` + (user ? ` (worn by character ${user.name})` : '');
+            const source = tr('DNA "{name}"', { name: e.name }) + (user ? tr(' (worn by character {name})', { name: user.name }) : '');
             const target = { type: 'dna_data' as const, name: e.name, character: user?.name };
             return { label: e.name, gender: female ? 'female' : 'male', age, genes, exact: false, culture: facts?.culture, facts, seed: user?.name ?? e.name, source, geneNodes: this.dnaGeneNodes(e), target };
+        }
+
+        // a loaded save's character: its facts from the save, its face from its DNA (the save's own bytes)
+        if (e.type === 'savegame/characters')
+        {
+            const d = this.idx.defNode(e);
+            const body = d ? kids(d.node) : [];
+            const rawName = scalar(field(body, 'name'));
+            const facts = this.modifiers.eval.history.facts(e.name, when) ?? undefined;
+            const genes = this.saveGenes?.(e.name);
+            const target = { type: 'savegame/characters' as const, name: e.name };
+
+            if (genes?.length)
+            {
+                const nodes = genesNodes(genes);
+                return { label: rawName ?? e.name, gender: facts?.female ? 'female' : 'male', age: Math.max(2, Math.min(90, facts?.age ?? 35)), genes: this.parseGenes(nodes), exact: false, culture: facts?.culture, facts, seed: e.name, source: tr('DNA from the save'), geneNodes: nodes, target };
+            }
+
+            const eth = this.cultureEthnicity(facts?.culture, e.name);
+            return { label: rawName ?? e.name, gender: facts?.female ? 'female' : 'male', age: Math.max(2, Math.min(90, facts?.age ?? 35)), genes: this.ethnicityDna(eth ?? 'ethnicity_template', e.name), exact: false, culture: facts?.culture, facts, seed: e.name, source: tr('Generated (the save has no DNA for them)'), target };
         }
 
         if (e.type !== 'characters')
@@ -335,7 +363,7 @@ export class PortraitBuilder
         const body = kids(d.node);
         const rawName = scalar(field(body, 'name'));
         const label = rawName ? (this.idx.plainLoc(rawName) ?? rawName) : e.name;
-        const facts = this.modifiers.eval.history.facts(e.name) ?? undefined;
+        const facts = this.modifiers.eval.history.facts(e.name, when) ?? undefined;
         const gender: Gender = facts?.female ? 'female' : 'male';
         const culture = facts?.culture;
         const age = Math.max(2, Math.min(90, facts?.age ?? 35));
@@ -345,7 +373,7 @@ export class PortraitBuilder
         const dna = dnaKey ? this.idx.get('dna_data', dnaKey) : undefined;
 
         if (dna)
-            return { label, gender, age, genes: this.dnaGenes(dna), exact: false, culture, facts, seed: e.name, source: `DNA "${dna.name}"`, geneNodes: this.dnaGeneNodes(dna), target: { type: 'dna_data', name: dna.name, character: e.name } };
+            return { label, gender, age, genes: this.dnaGenes(dna), exact: false, culture, facts, seed: e.name, source: tr('DNA "{name}"', { name: dna.name }), geneNodes: this.dnaGeneNodes(dna), target: { type: 'dna_data', name: dna.name, character: e.name } };
 
         const bm = this.bookmarkFor(e.name);
         const fromBookmark = bm && this.bookmarkSubject(bm, label);
@@ -363,7 +391,7 @@ export class PortraitBuilder
             culture,
             facts,
             seed: e.name,
-            source: eth ? `Generated from ethnicity "${eth}"` : 'Generated from the default ethnicity',
+            source: eth ? tr('Generated from ethnicity "{eth}"', { eth }) : tr('Generated from the default ethnicity'),
             target: this.newDnaTarget(e.name)
         };
     }
@@ -485,6 +513,28 @@ export class PortraitBuilder
             b = field(tmpl, b.v);
 
         return kids(b);
+    }
+
+    /**
+     * A gene's accessory: the one a portrait modifier names (`accessory = male_beard_western_05` with its template),
+     * else the one the value picks from the template's list (accessoryFromGene). A named one is not worn where its
+     * template gives this portrait type nothing: the beard templates have no `boy` list, so a boy wears no beard even
+     * when a historical character's own modifier names his adult beard (02_all_historical_characters.txt, any age).
+     */
+    private geneAccessories(gene: string, g: GeneValue | undefined, kind: PortraitKind): string[]
+    {
+        if (!g)
+            return [];
+
+        if (!g.accessory)
+            return g.template ? this.accessoryFromGene(gene, g, kind) : [];
+
+        const tmpl = g.template ? this.geneTemplate(gene, g.template) : undefined;
+
+        if (tmpl && !this.typeBlock(tmpl, kind).some((c) => c.k && /^\d+(\.\d+)?$/.test(c.k)))
+            return [];
+
+        return [g.accessory];
     }
 
     /** Accessory picked by an accessory gene: the value (0..1) walks the cumulative weights of the template's list. */
@@ -676,7 +726,7 @@ export class PortraitBuilder
     // -------------------------------------------------------------------------
 
     /**
-     * Additive animations driven by an entity's attributes (u = default + value) — only attributes some gene setting
+     * Additive animations driven by an entity's attributes (u = default + value), only attributes some gene setting
      * drives: `body_hunchbacked`, `body_no_left_arm` and `body_clubfooted` default to 0.5 but are neutral (bind pose) at
      * u = 0, so applied from their default they bent every spine and shrank every left arm to 63 %; their genes add
      * 0..1 on top for carriers. Women's `body_prop` (default 1) is driven by gene_retargeting_fix. `active` marks the
@@ -742,7 +792,7 @@ export class PortraitBuilder
      * World matrices per bone name: local transforms from the base animation's first frame (else the bind pose),
      * additive animation deltas on top, and `attach` joints pinned to world transforms of another skeleton.
      * Additive deltas are measured from the bind pose: height or infant proportions are neutral mid-animation, fat,
-     * dwarf, cloak and prop at the start — measuring every one from u = 0.5 turned "no dwarfism" into an inverted
+     * dwarf, cloak and prop at the start: measuring every one from u = 0.5 turned "no dwarfism" into an inverted
      * dwarf morph (wide, heavy torsos, most visible on small children).
      */
     private pose(bones: Bone[], additive: { anim: AnimFile; u: number; }[], base?: AnimFile, attach?: Map<string, M4>, origin?: M4): Posed
@@ -801,7 +851,7 @@ export class PortraitBuilder
             else if (parent && attach?.has(boneName(bones[b.parent].name)))
             {
                 // below an attachment joint the body's scale places the child but does not size it (scale compensation):
-                // the head keeps its own proportions (head_infant_proportions, head_body_height) — inheriting the body's
+                // the head keeps its own proportions (head_infant_proportions, head_body_height); inheriting the body's
                 // scale gave children tiny heads on seemingly huge bodies
                 const p = decompose(parent);
                 world[i] = mul(compose(p.t, p.q, [1, 1, 1]), compose([lt[0] * p.s[0], lt[1] * p.s[1], lt[2] * p.s[2]], lq, ls));
@@ -998,14 +1048,14 @@ export class PortraitBuilder
 
             if (!target)
             {
-                note('missing', file ? 'file not found' : `blend shape "${decl.blendShape}" not declared on the pdxmesh`);
+                note('missing', file ? tr('file not found') : tr('blend shape "{blendShape}" not declared on the pdxmesh', { blendShape: decl.blendShape }));
                 continue;
             }
 
             // some legacy "nBs" targets have another topology
             if (target.positions.length !== pos.length)
             {
-                note('topology', `${target.positions.length / 3} vertices, mesh has ${pos.length / 3}`);
+                note('topology', tr('{value} vertices, mesh has {value2}', { value: target.positions.length / 3, value2: pos.length / 3 }));
                 continue;
             }
 
@@ -1026,7 +1076,7 @@ export class PortraitBuilder
 
             const n = pos.length / 3;
             const shifted = Math.hypot(off[0] / n, off[1] / n, off[2] / n) > 2;
-            note('applied', shifted ? 'rigid offset removed' : undefined);
+            note('applied', shifted ? tr('rigid offset removed') : undefined);
 
             for (let i = 0; i < pos.length; i++)
             {
@@ -1116,10 +1166,8 @@ export class PortraitBuilder
             const e = this.idx.get('genes', gene);
             const d = e && this.idx.defNode(e);
             const body = d ? kids(d.node) : [];
-            const group = scalar(field(body, 'group'));
-
-            if (!group)
-                continue;
+            // (genes the ruler designer leaves out (no `group`) under "Other": the barbershop offers every gene)
+            const group = scalar(field(body, 'group')) ?? 'other';
 
             const color = scalar(field(body, 'color'));
             const tmpls = body.filter((c) => c.k && Array.isArray(c.v) && field(kids(c), 'index'));
@@ -1128,7 +1176,7 @@ export class PortraitBuilder
                 gene,
                 label: this.idx.plainLoc(gene) ?? gene,
                 group,
-                groupLabel: this.idx.plainLoc(`RULER_DESIGNER_GROUP_${group}`) ?? group.replace(/_/g, ' '),
+                groupLabel: group === 'other' ? tr('Other') : (this.idx.plainLoc(`RULER_DESIGNER_GROUP_${group}`) ?? group.replace(/_/g, ' ')),
                 kind: color ? 'color' : 'morph',
                 palette: color ? `gfx/portraits/${color}_palette.dds` : undefined,
                 templates
@@ -1174,10 +1222,24 @@ export class PortraitBuilder
         return out;
     }
 
-    /** The barbershop's data: the subject's DNA (both pairs), the genes on offer, where a save goes. */
-    dnaEditor(e: Entity): DnaEditorData | null
+    /**
+     * The barbershop's "From ethnicity…": genes rolled from an ethnicity's weighted options (with its template and
+     * `using` chain) as the game does for a new character; `seed` makes another roll.
+     */
+    genesFromEthnicity(ethnicity: string, seed: string): DnaGene[]
     {
-        const subj = this.subject(e);
+        return [...this.ethnicityDna(ethnicity, seed)].map(([gene, g]): DnaGene =>
+        {
+            const xy = g.xy && ([Math.round(g.xy[0] * 255), Math.round(g.xy[1] * 255)] as [number, number]);
+            const value = Math.round(g.value * 255);
+            return xy ? { gene, value: 0, xy, xy2: xy } : { gene, template: g.template, value, template2: g.template, value2: value };
+        });
+    }
+
+    /** The barbershop's data: the subject's DNA (both pairs), the genes on offer, where a save goes. */
+    dnaEditor(e: Entity, date?: string): DnaEditorData | null
+    {
+        const subj = this.subject(e, date);
 
         if (!subj?.target)
             return null;
@@ -1190,12 +1252,59 @@ export class PortraitBuilder
                 const value = Math.round(g.value * 255);
                 return xy ? { gene, value: 0, xy, xy2: xy } : { gene, template: g.template, value, template2: g.template, value2: value };
             });
-        return { label: subj.label, female: subj.gender === 'female', age: subj.age, source: subj.source, genes, catalog: this.dnaCatalog(), target: subj.target };
+        return { label: subj.label, female: subj.gender === 'female', age: subj.age, source: subj.source, genes, catalog: this.dnaCatalog(), beauty: this.beautyRule(subj.gender === 'female'), ethnicity: this.cultureEthnicity(subj.culture, subj.seed) ?? 'ethnicity_template', target: subj.target };
+    }
+
+    /**
+     * The genetic constraints of the top beauty trait (beauty_good_3: `genetic_constraint_all = beauty_3`, and the
+     * men's / women's ones) as the ethnicity constraint templates write them: per gene the options naming it.
+     */
+    private beautyRule(female: boolean): DnaEditorData['beauty']
+    {
+        const trait = this.idx.get('traits', 'beauty_good_3');
+        const tn = trait ? kids(this.idx.defNode(trait)?.node) : [];
+        const names = new Set(['beauty_3', ...['genetic_constraint_all', female ? 'genetic_constraint_women' : 'genetic_constraint_men'].map((k) => scalar(field(tn, k))).filter((x): x is string => !!x)]);
+        const out = new Map<string, { template: string; min: number; max: number; }[]>();
+
+        for (const item of this.idx.list('ethnicities'))
+        {
+            const e = this.idx.get('ethnicities', item.name);
+
+            if (!e)
+                continue;
+
+            const consts = this.idx.fileConstants(e);
+            const num = (v: string | undefined): number => (v?.startsWith('@') ? this.resolveNum(v, consts) : parseFloat(v ?? '0') || 0);
+
+            for (const gene of kids(this.idx.defNode(e)?.node))
+            {
+                if (!gene.k || !Array.isArray(gene.v))
+                    continue;
+
+                for (const o of gene.v)
+                {
+                    if (!Array.isArray(o.v) || !kids(field(o.v, 'traits')).some((t) => names.has(t.v as string)))
+                        continue;
+
+                    const template = scalar(field(o.v, 'name'));
+                    const range = kids(field(o.v, 'range')).map((x) => num(x.v as string));
+
+                    const opt = template && range.length >= 2 ? { template, min: Math.round(range[0] * 255), max: Math.round(range[1] * 255) } : undefined;
+                    const list = out.get(gene.k) ?? out.set(gene.k, []).get(gene.k)!;
+
+                    // (ethnicities repeat the constraint template's options)
+                    if (opt && !list.some((x) => x.template === opt.template && x.min === opt.min && x.max === opt.max))
+                        list.push(opt);
+                }
+            }
+        }
+
+        return [...out].map(([gene, options]) => ({ gene, options }));
     }
 
     async build(e: Entity, opts: PortraitOptions = {}, report?: PortraitReport): Promise<PortraitData | null>
     {
-        const subj = this.withOverrides(this.subject(e), opts);
+        const subj = this.withOverrides(this.subject(e, opts.date), opts);
 
         if (!subj)
             return null;
@@ -1245,7 +1354,7 @@ export class PortraitBuilder
                 if (!g?.template && !g?.accessory && ACCESSORY_DEFAULTS[gene])
                     g = { template: ACCESSORY_DEFAULTS[gene], value: 0 };
 
-                const accs = g?.accessory ? [g.accessory] : g?.template ? this.accessoryFromGene(gene, g, kind) : [];
+                const accs = this.geneAccessories(gene, g, kind);
 
                 for (const acc of accs)
                     if (this.lib.accessory(acc))
@@ -1338,7 +1447,7 @@ export class PortraitBuilder
             const layers = this.decalLayers(allGenes, kind, subj.age, tags);
             // decals that change no texel are no work for the bake, and decals whose small mips are painted over carry
             // values for shaders, not a picture (docs/shaders.md, "Data decals"): out of the bake; shaders read them
-            // through the decal list — kept in the engine's order, pre-skin then post-skin by priority
+            // through the decal list, kept in the engine's order, pre-skin then post-skin by priority
             const data: (DecalLayer & { diffuse: string; })[] = [];
             const values = new Set<DecalLayer>();
 
@@ -1443,7 +1552,7 @@ export class PortraitBuilder
     }
 
     // -------------------------------------------------------------------------
-    // Creatures — docs/portraits.md, "Creatures"
+    // Creatures: docs/portraits.md, "Creatures"
     // -------------------------------------------------------------------------
 
     /** The script state a portrait's triggers and values read: the game start's at its date, made when first read. */
@@ -1460,8 +1569,8 @@ export class PortraitBuilder
     /**
      * A creature: a trait portrait modifier that applies to the character puts on an accessory whose entity is
      * attached at a node of the body (a locator or bone: `entity = { node = "…" entity = "…" }`). Returns those entries
-     * and the accessory genes that show creatures. Trait portrait modifiers are applied to creatures only (humans' —
-     * dwarfism, blindness … — would change their portraits; not done yet).
+     * and the accessory genes that show creatures. Trait portrait modifiers are applied to creatures only (humans',
+     * dwarfism, blindness …, would change their portraits; not done yet).
      */
     private creatureOf(facts: CharacterFacts, kind: PortraitKind, run: ScriptRun): { entries: TraitEntry[]; genes: string[]; } | undefined
     {
@@ -1607,7 +1716,7 @@ export class PortraitBuilder
     }
 
     /**
-     * For a model preview of a mesh creatures show: the decal list of the first character whose portrait shows it —
+     * For a model preview of a mesh creatures show: the decal list of the first character whose portrait shows it:
      * their shaders may take colours from it (a mesh without it can render blank).
      */
     async previewDecals(mesh: string): Promise<{ decals: PortraitDecal[]; from: string; } | undefined>
@@ -1648,8 +1757,8 @@ export class PortraitBuilder
 
     /**
      * A creature portrait: the portrait modifiers and the trait portrait modifiers run (with the script state, which
-     * can hold the creature's appearance — gameStart.ts); the human stays hidden (the modifiers collapse it, its
-     * accessories are not built) and only the creature entities are — each with its own skeleton at the body locator
+     * can hold the creature's appearance, gameStart.ts); the human stays hidden (the modifiers collapse it, its
+     * accessories are not built) and only the creature entities are, each with its own skeleton at the body locator
      * it is attached to, posed in the torso state the portrait animations pick, its genes driving blend shapes and
      * additive animations. Its shaders get the whole decal list.
      */
@@ -1679,7 +1788,7 @@ export class PortraitBuilder
         for (const gene of creature.genes)
         {
             const g = genes.get(gene);
-            const accs = g?.accessory ? [g.accessory] : g?.template ? this.accessoryFromGene(gene, g, kind) : [];
+            const accs = this.geneAccessories(gene, g, kind);
 
             for (const acc of accs)
             {
@@ -1733,7 +1842,7 @@ export class PortraitBuilder
             label: subj.label,
             gender: subj.gender,
             age: subj.age,
-            source: subj.source + (run.read ? '; with the game start’s script state' : ''),
+            source: subj.source + (run.read ? tr('; with the game start’s script state') : ''),
             colors: {
                 skin: await this.sample(PALETTES.skin, genes.get('skin_color')?.xy ?? [0.3, 0.3]),
                 hair: await this.sample(PALETTES.hair, genes.get('hair_color')?.xy ?? [0.5, 0.5]),
@@ -1753,7 +1862,7 @@ export class PortraitBuilder
 /** The portrait type the builder knows (common/portrait_types); trait portrait modifiers are keyed by it. */
 const PORTRAIT_TYPE = 'human';
 
-/** Quaternion of Euler angles in degrees, applied X, then Y, then Z (locator rotations — the order is assumed). */
+/** Quaternion of Euler angles in degrees, applied X, then Y, then Z (locator rotations; the order is assumed). */
 function eulerDegrees([x, y, z]: V3): Quat
 {
     const h = Math.PI / 360;
@@ -1761,7 +1870,7 @@ function eulerDegrees([x, y, z]: V3): Quat
 }
 
 /**
- * The matrix normals go through: the inverse transpose of the upper 3×3 (bone morphs scale bones unevenly — an eye's
+ * The matrix normals go through: the inverse transpose of the upper 3×3 (bone morphs scale bones unevenly: an eye's
  * bones squashed turn the plain matrix's normals away from the surface: eyelash cards then faced away from every
  * light and rendered black).
  */
@@ -1866,7 +1975,7 @@ function transformVertex(pos: Float32Array, nrm: Float32Array, v: number, ms: M4
         oy += bw * (m[1] * x + m[5] * y + m[9] * z + m[13]);
         oz += bw * (m[2] * x + m[6] * y + m[10] * z + m[14]);
         const q = ns[k];
-        // (each bone's normal, weighted by its share: a normal matrix's scale is its determinant's — normalised first)
+        // (each bone's normal, weighted by its share: a normal matrix's scale is its determinant's, normalised first)
         const qx = q[0] * nx + q[4] * ny + q[8] * nz;
         const qy = q[1] * nx + q[5] * ny + q[9] * nz;
         const qz = q[2] * nx + q[6] * ny + q[10] * nz;

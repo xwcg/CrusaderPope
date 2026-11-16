@@ -1,6 +1,7 @@
 import { dismissNotice, useNotices } from '../notices';
 import '../styles/edit.css';
 
+import { tr } from '../../../shared/i18n';
 /** The app-wide notices (notices.ts), bottom right, until dismissed. */
 export function Notices(): React.JSX.Element | null
 {
@@ -27,7 +28,7 @@ export function Notices(): React.JSX.Element | null
                             </div>
                         )}
                     </div>
-                    <button className="ghost notice-close" onClick={() => dismissNotice(n.id)} title="Dismiss">
+                    <button className="ghost notice-close" onClick={() => dismissNotice(n.id)} title={tr('Dismiss')}>
                         ✕
                     </button>
                 </div>

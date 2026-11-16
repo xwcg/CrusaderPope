@@ -1,61 +1,59 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import type { ModInfo, ModsState, NewModRequest } from '../../../shared/api';
+import type { DeleteModPlan, ModInfo, ModsState, NewModRequest } from '../../../shared/api';
 import { descriptorTextProblem, folderFromName, modFolderProblem, supportedVersionFor, versionMatches } from '../../../shared/modRules';
 import { api } from '../api';
+import { errorText } from '../errors';
 import { Select } from './Select';
 
+import { tr, trn } from '../../../shared/i18n';
+import { fold, foldHas } from '../../../shared/fold';
 // Pieces of the Mods view (ModsView.tsx): mod facts, thumbnails, dialogs.
 
-export const SOURCE_LABEL: Record<ModInfo['source'], string> = { steam: 'Steam Workshop', pdx: 'Paradox Mods', local: 'Local' };
+export const SOURCE_LABEL: Record<ModInfo['source'], string> = { steam: tr('Steam Workshop'), pdx: tr('Paradox Mods'), local: tr('Local') };
 
 /** Tags the launcher and the Workshop offer for CK3 mods. */
+// (the launcher's own tag names: written into descriptors as they are, never translated)
 const STANDARD_TAGS = [
-    'Alternative History',
-    'Balance',
-    'Bookmarks',
-    'Character Focuses',
-    'Character Interactions',
-    'Culture',
-    'Decisions',
-    'Events',
-    'Fixes',
-    'Gameplay',
-    'Graphics',
-    'Historical',
-    'Map',
-    'Portraits',
-    'Religion',
-    'Schemes',
-    'Sound',
-    'Total Conversion',
-    'Translation',
-    'Utilities',
-    'Warfare'
+    tr('Alternative History'),
+    tr('Balance'),
+    tr('Bookmarks'),
+    tr('Character Focuses'),
+    tr('Character Interactions'),
+    tr('Culture'),
+    tr('Decisions'),
+    tr('Events'),
+    tr('Fixes'),
+    tr('Gameplay'),
+    tr('Graphics'),
+    tr('Historical'),
+    tr('Map'),
+    tr('Portraits'),
+    tr('Religion'),
+    tr('Schemes'),
+    tr('Sound'),
+    tr('Total Conversion'),
+    tr('Translation'),
+    tr('Utilities'),
+    tr('Warfare')
 ];
 
-/** An IPC error without Electron's "Error invoking remote method …" wrapper. */
-export function errorText(e: unknown): string
-{
-    const m = e instanceof Error ? e.message : String(e);
-    return m.replace(/^Error invoking remote method '[^']*': /, '').replace(/^Error: /, '');
-}
+// (errorText moved to ../errors.ts; MergeDialog and MigrateDialog still import it from here)
+export { errorText };
 
 export function StatusChip({ mod }: { mod: ModInfo; }): React.JSX.Element
 {
     if (mod.status === 'missing')
-        return <span className="chip bad" title="Neither the mod's folder nor its zip exists">Missing</span>;
+        return <span className="chip bad" title={tr('Neither the mod\'s folder nor its zip exists')}>{tr('Missing')}</span>;
 
     if (mod.archive && !mod.root)
         return (
-            <span className="chip" title={'Packed: ' + mod.archive}>
-                Packed
-            </span>
+            <span className="chip" title={tr('Packed: ') + mod.archive}>
+                {tr('Packed')}</span>
         );
 
     return (
-        <span className="chip" title={'Unpacked: ' + mod.root}>
-            Unpacked
-        </span>
+        <span className="chip" title={tr('Unpacked: ') + mod.root}>
+            {tr('Unpacked')}</span>
     );
 }
 
@@ -65,12 +63,12 @@ export function SupportedChip({ mod, game }: { mod: ModInfo; game?: string; }): 
     const sv = mod.supportedVersion;
 
     if (!sv)
-        return <span className="chip" title="The descriptor names no supported game version">game ?</span>;
+        return <span className="chip" title={tr('The descriptor names no supported game version')}>{tr('game ?')}</span>;
 
     const fits = versionMatches(sv, game);
     return (
-        <span className={'chip' + (fits === false ? ' warn' : '')} title={fits === false ? `Made for game version ${sv}; the installed game is ${game}` : `Supports game version ${sv}`}>
-            {fits === false ? '⚠ ' : ''}game {sv}
+        <span className={'chip' + (fits === false ? ' warn' : '')} title={fits === false ? tr('Made for game version {sv}; the installed game is {game}', { sv, game }) : tr('Supports game version {sv}', { sv })}>
+            {fits === false ? '⚠ ' : ''}{tr('game {sv}', { sv })}
         </span>
     );
 }
@@ -79,13 +77,13 @@ export function SupportedChip({ mod, game }: { mod: ModInfo; game?: string; }): 
 export function modWarning(mod: ModInfo | undefined, game?: string): string | undefined
 {
     if (!mod)
-        return 'not found';
+        return tr('not found');
 
     if (mod.status === 'missing')
-        return 'files missing';
+        return tr('files missing');
 
     if (versionMatches(mod.supportedVersion, game) === false)
-        return 'other game version';
+        return tr('other game version');
 
     return undefined;
 }
@@ -145,12 +143,75 @@ export function Modal(props: { title: string; wide?: boolean; onClose: () => voi
         return () => window.removeEventListener('keydown', onKey);
     }, [onClose]);
     return (
-        <div className="modal-backdrop" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+        <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label={props.title} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
             <div className={'modal mods-modal' + (props.wide ? ' wide' : '')}>
                 <h2>{props.title}</h2>
                 {props.children}
             </div>
         </div>
+    );
+}
+
+/**
+ * Deleting a mod of one's own (docs/mods.md "Deleting a mod"): what goes and what it's taken out of, then a box to tick
+ * before Delete works, as it is destructive (the folder goes to the Recycle Bin).
+ */
+export function DeleteModDialog(props: { mod: ModInfo; onDelete: () => void; onClose: () => void; }): React.JSX.Element
+{
+    const [plan, setPlan] = useState<DeleteModPlan | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [sure, setSure] = useState(false);
+
+    useEffect(() =>
+    {
+        void api.deleteModPlan(props.mod.id).then(setPlan, (e) => setError(errorText(e)));
+    }, [props.mod.id]);
+
+    return (
+        <Modal title={tr('Delete “{name}”?', { name: props.mod.name })} onClose={props.onClose}>
+            <div className="mods-confirm">
+                {!plan && !error && <p className="dim">{tr('Reading the mod…')}</p>}
+                {error && <p className="warn-text">{error}</p>}
+                {plan && (
+                    <>
+                        <p>{tr('These go to the Recycle Bin:')}</p>
+                        <ul>
+                            <li><code>{plan.folder}</code> {trn('({n} file)', '({n} files)', plan.files)}</li>
+                            {plan.descriptor && <li><code>{plan.descriptor}</code></li>}
+                        </ul>
+                        {(plan.lists.length > 0 || plan.gameList || plan.active) && (
+                            <p>
+                                {[
+                                    plan.lists.length ? tr('It is taken out of: {lists}.', { lists: plan.lists.join(', ') }) : '',
+                                    plan.gameList ? tr('The game’s list (dlc_load.json) no longer names it (a backup first).') : '',
+                                    plan.active ? tr('It is no longer the active mod.') : ''
+                                ].filter(Boolean).join(' ')}
+                            </p>
+                        )}
+                        {plan.playsets.length > 0 && <p className="warn-text">{tr('Launcher playsets naming it keep it as missing — remove it there: {playsets}.', { playsets: plan.playsets.join(', ') })}</p>}
+                        <p className="dim">{tr('Its undo steps go too.')}</p>
+                        <label className="delete-sure">
+                            <input type="checkbox" checked={sure} onChange={(e) => setSure(e.target.checked)} />{' '}
+                            {tr('I understand that “{name}” and its files are deleted.', { name: plan.name })}
+                        </label>
+                    </>
+                )}
+            </div>
+            <div className="actions">
+                <button onClick={props.onClose}>{tr('Cancel')}</button>
+                <button
+                    className="danger"
+                    disabled={!plan || !sure}
+                    onClick={() =>
+                    {
+                        props.onClose();
+                        props.onDelete();
+                    }}
+                >
+                    {tr('Delete')}
+                </button>
+            </div>
+        </Modal>
     );
 }
 
@@ -160,7 +221,7 @@ export function ConfirmDialog(props: { title: string; confirm: string; danger?: 
         <Modal title={props.title} onClose={props.onClose}>
             <div className="mods-confirm">{props.children}</div>
             <div className="actions">
-                <button onClick={props.onClose}>Cancel</button>
+                <button onClick={props.onClose}>{tr('Cancel')}</button>
                 <button
                     className={props.danger ? 'danger' : 'primary'}
                     autoFocus
@@ -203,7 +264,7 @@ export function PromptDialog(props: { title: string; label: string; initial: str
                 />
             </div>
             <div className="actions">
-                <button onClick={props.onClose}>Cancel</button>
+                <button onClick={props.onClose}>{tr('Cancel')}</button>
                 <button className="primary" disabled={!ok} onClick={submit}>
                     {props.confirm}
                 </button>
@@ -219,16 +280,16 @@ export function AddModsDialog(props: { state: ModsState; listName: string; inLis
     const game = props.state.gameVersion;
     const mods = useMemo(() =>
     {
-        const f = q.trim().toLowerCase();
+        const f = fold(q.trim());
         return props.state.mods
-            .filter((m) => !f || [m.name, m.id, m.version ?? '', SOURCE_LABEL[m.source], ...m.tags].some((s) => s.toLowerCase().includes(f)))
+            .filter((m) => !f || [m.name, m.id, m.version ?? '', SOURCE_LABEL[m.source], ...m.tags].some((s) => foldHas(s, f)))
             .sort((a, b) => a.name.localeCompare(b.name));
     }, [props.state.mods, q]);
     return (
-        <Modal title={`Add mods to “${props.listName}”`} wide onClose={props.onClose}>
-            <input className="mods-search" autoFocus placeholder={`Search ${props.state.mods.length} mods by name, tag, source…`} value={q} onChange={(e) => setQ(e.target.value)} spellCheck={false} />
+        <Modal title={tr('Add mods to “{listName}”', { listName: props.listName })} wide onClose={props.onClose}>
+            <input className="mods-search" autoFocus placeholder={tr('Search {modsCount} mods by name, tag, source…', { modsCount: props.state.mods.length })} value={q} onChange={(e) => setQ(e.target.value)} spellCheck={false} />
             <div className="mods-picker">
-                {mods.length === 0 && <div className="list-empty">No mods match.</div>}
+                {mods.length === 0 && <div className="list-empty">{tr('No mods match.')}</div>}
                 {mods.map((m) =>
                 {
                     const added = props.inList.has(m.id.toLowerCase());
@@ -246,18 +307,16 @@ export function AddModsDialog(props: { state: ModsState; listName: string; inLis
                                     <SupportedChip mod={m} game={game} />
                                 </div>
                             </div>
-                            {added ? <span className="pr-added">In the list</span> : <button onClick={() => props.onAdd(m.id)}>Add</button>}
+                            {added ? <span className="pr-added">{tr('In the list')}</span> : <button onClick={() => props.onAdd(m.id)}>{tr('Add')}</button>}
                         </div>
                     );
                 })}
             </div>
             <div className="actions">
                 <span className="hint" style={{ flex: 1 }}>
-                    Added mods go to the end of the load order, enabled.
-                </span>
+                    {tr('Added mods go to the end of the load order, enabled.')}</span>
                 <button className="primary" onClick={props.onClose}>
-                    Done
-                </button>
+                    {tr('Done')}</button>
             </div>
         </Modal>
     );
@@ -291,12 +350,12 @@ export function NewModDialog(props: {
     const folderValue = folderEdited ? folder : folderFromName(name);
     const taken = props.state.mods.some((m) => m.id.toLowerCase() === `mod/${folderValue}.mod`.toLowerCase());
     const allTags = [...tags, ...otherTags.split(',').map((t) => t.trim())].filter(Boolean);
-    const problem = (name.trim() ? undefined : 'Enter a name.') ??
+    const problem = (name.trim() ? undefined : tr('Enter a name.')) ??
         descriptorTextProblem('Name', name) ??
         modFolderProblem(folderValue) ??
-        (taken ? `mod/${folderValue}.mod exists already.` : undefined) ??
+        (taken ? tr('mod/{folder}.mod exists already.', { folder: folderValue }) : undefined) ??
         descriptorTextProblem('Version', version) ??
-        (supported.trim() && !/^v?[0-9*]+(\.[0-9*]+){0,3}$/i.test(supported.trim()) ? 'Supported version: numbers or * separated by dots, like 1.19.*' : undefined) ??
+        (supported.trim() && !/^v?[0-9*]+(\.[0-9*]+){0,3}$/i.test(supported.trim()) ? tr('Supported version: numbers or * separated by dots, like 1.19.*') : undefined) ??
         allTags.map((t) => descriptorTextProblem('Tags', t)).find(Boolean);
     const customs = props.state.lists.filter((l) => l.kind === 'custom');
     const fits = versionMatches(supported, game);
@@ -325,13 +384,13 @@ export function NewModDialog(props: {
     };
 
     return (
-        <Modal title="New mod" onClose={props.onClose}>
+        <Modal title={tr('New mod')} onClose={props.onClose}>
             <div className="field">
-                <label>Name</label>
-                <input ref={nameRef} value={name} onChange={(e) => setName(e.target.value)} placeholder="My Mod" spellCheck={false} onKeyDown={(e) => e.key === 'Enter' && void create()} />
+                <label>{tr('Name')}</label>
+                <input ref={nameRef} value={name} onChange={(e) => setName(e.target.value)} placeholder={tr('My Mod')} spellCheck={false} onKeyDown={(e) => e.key === 'Enter' && void create()} />
             </div>
             <div className="field">
-                <label>Folder</label>
+                <label>{tr('Folder')}</label>
                 <div className="row folder-row">
                     <span className="affix">{props.state.userDir.replace(/[\\/]+$/, '')}\mod\</span>
                     <input
@@ -345,24 +404,23 @@ export function NewModDialog(props: {
                     />
                 </div>
                 <span className="hint">
-                    Creates the folder with its descriptor.mod, and mod\{folderValue || '…'}.mod for the game and the launcher.
-                </span>
+                    {tr('Creates the folder with its descriptor.mod, and mod\\{folderValue}.mod for the game and the launcher.', { folderValue: folderValue || '…' })}</span>
             </div>
             <div className="field-pair">
                 <div className="field">
-                    <label>Version</label>
+                    <label>{tr('Version')}</label>
                     <input value={version} onChange={(e) => setVersion(e.target.value)} spellCheck={false} />
                 </div>
                 <div className="field">
-                    <label>Supported game version</label>
+                    <label>{tr('Supported game version')}</label>
                     <input value={supported} onChange={(e) => setSupported(e.target.value)} spellCheck={false} />
                     <span className={'hint' + (fits === false ? ' warn-text' : '')}>
-                        {game ? `The installed game is ${game}${fits === false ? ' — this does not match it' : ''}.` : 'Game version unknown.'}
+                        {game ? tr('The installed game is {game}{mismatch}.', { game, mismatch: fits === false ? tr(' — this does not match it') : '' }) : tr('Game version unknown.')}
                     </span>
                 </div>
             </div>
             <div className="field">
-                <label>Tags</label>
+                <label>{tr('Tags')}</label>
                 <div className="tag-picks">
                     {STANDARD_TAGS.map((t) => (
                         <button key={t} className={'tag-pick' + (tags.includes(t) ? ' on' : '')} onClick={() => setTags((v) => (v.includes(t) ? v.filter((x) => x !== t) : [...v, t]))}>
@@ -370,27 +428,27 @@ export function NewModDialog(props: {
                         </button>
                     ))}
                 </div>
-                <input value={otherTags} onChange={(e) => setOtherTags(e.target.value)} placeholder="Other tags, comma separated" spellCheck={false} />
+                <input value={otherTags} onChange={(e) => setOtherTags(e.target.value)} placeholder={tr('Other tags, comma separated')} spellCheck={false} />
             </div>
             <div className="field">
-                <label>Add to a mod list</label>
+                <label>{tr('Add to a mod list')}</label>
                 <Select value={target} onChange={(e) => setTarget(e.target.value)}>
-                    <option value="new">A new list “{name.trim() || 'the mod’s name'}” (the game plus this mod)</option>
+                    <option value="new">{tr('A new list “{name}” (the game plus this mod)', { name: name.trim() || 'the mod’s name' })}</option>
                     {customs.map((l) => (
                         <option key={l.ref} value={l.ref}>
                             {l.name}
-                            {props.state.selected === l.ref ? ' (loaded in the explorer)' : ''}
+                            {props.state.selected === l.ref ? tr(' (loaded in the explorer)') : ''}
                         </option>
                     ))}
-                    <option value="">Don’t add it to a list</option>
+                    <option value="">{tr('Don’t add it to a list')}</option>
                 </Select>
-                <span className="hint">The mod becomes the active mod (the one being edited). Launcher playsets can list it once the launcher has registered it.</span>
+                <span className="hint">{tr('The mod becomes the active mod (the one being edited). Writing a list with it to a launcher playset registers it in the launcher too.')}</span>
             </div>
             {(error || (problem && name.trim())) && <div className="mods-error">{error ?? problem}</div>}
             <div className="actions">
-                <button onClick={props.onClose}>Cancel</button>
+                <button onClick={props.onClose}>{tr('Cancel')}</button>
                 <button className="primary" disabled={!!problem || busy} onClick={() => void create()}>
-                    {busy ? 'Creating…' : 'Create mod'}
+                    {busy ? tr('Creating…') : tr('Create mod')}
                 </button>
             </div>
         </Modal>

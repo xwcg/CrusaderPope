@@ -1,6 +1,7 @@
 /** Minimal PNG encoder (RGBA8, no filtering) and decoder (every standard PNG → RGBA8) using Node's zlib. */
 import { deflateSync, inflateSync } from 'node:zlib';
 
+import { tr } from '../../shared/i18n.ts';
 const CRC_TABLE = (() =>
 {
     const t = new Uint32Array(256);
@@ -99,7 +100,7 @@ export function decodePng(input: Uint8Array): PngImage
     const buf = Buffer.from(input.buffer, input.byteOffset, input.byteLength);
 
     if (!isPng(buf))
-        throw new Error('Not a PNG file');
+        throw new Error(tr('Not a PNG file'));
 
     let pos = 8;
     let width = 0;
@@ -137,12 +138,12 @@ export function decodePng(input: Uint8Array): PngImage
     }
 
     if (!width || !height)
-        throw new Error('PNG without image header');
+        throw new Error(tr('PNG without image header'));
 
     const channels = ({ 0: 1, 2: 3, 3: 1, 4: 2, 6: 4 } as Record<number, number>)[type];
 
     if (!channels)
-        throw new Error(`Unsupported PNG colour type ${type}`);
+        throw new Error(tr('Unsupported PNG colour type {type}', { type }));
 
     const raw = inflateSync(Buffer.concat(idat));
     const bitsPerPixel = channels * depth;

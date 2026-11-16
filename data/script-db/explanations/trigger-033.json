@@ -1,0 +1,434 @@
+[
+ {
+  "kind": "trigger",
+  "key": "perks_in_wanderer_lifestyle",
+  "label": "Wanderer perks",
+  "summary": "Whether the number of perks in the wanderer lifestyle is above, below or equal to a number.",
+  "details": "The game does not say what it counts (perks the character has unlocked or perks the lifestyle has in total), and the input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "phase_has_catalyst",
+  "label": "Phase has catalyst",
+  "summary": "Whether any of the struggle's future phases is affected by the given catalyst.",
+  "details": "Write the catalyst's key after the equals sign. It runs on a struggle. Vanilla uses it a lot, with catalyst keys such as `catalyst_gain_claim_on_title_fp3` and `catalyst_ransom_important`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "phase_takeover_duration_days",
+  "label": "Phase takeover days left",
+  "summary": "Whether the number of takeover days left for a future phase in this sub-region is above, below or equal to a value.",
+  "details": "Write the future phase's key after a colon, then the comparison: `phase_takeover_duration_days:future_phase_key <= value`. The value is a script value. It runs on a situation sub-region. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "phase_takeover_points",
+  "label": "Phase takeover points",
+  "summary": "Whether the takeover points of a future phase in this sub-region are above, below or equal to a value.",
+  "details": "Write the future phase's key after a colon, then the comparison: `phase_takeover_points:future_phase_key >= value`. The value is a script value. It runs on a situation sub-region. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "piety",
+  "label": "Piety",
+  "summary": "Whether the character's piety is above, below or equal to an amount.",
+  "details": "Compare it with a number or a script value, for example `piety >= 0`. Vanilla compares it with named values such as `major_piety_value`, with 0, and with costs such as `divorce_cost`. Vanilla also has a block form with `value`, and an `if` block with `limit` and `multiply` inside it that changes the value when the limit holds.",
+  "fields": [
+    { "name": "value", "text": "The amount to compare against, in the block form.", "values": "a name, number or script value; a comparison such as `< name` also appears in vanilla" },
+    { "name": "if", "text": "Changes the value when its `limit` is true, for example `multiply = 1.5`.", "values": "a block with `limit` and `multiply`" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "piety_level",
+  "label": "Piety level",
+  "summary": "Whether the character's piety level is above, below or equal to a number.",
+  "details": "This checks the level, not the piety amount (use `piety` for that). Vanilla compares it with plain numbers (`>= 3`) or named values such as `high_piety_level`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "place_in_line_of_succession",
+  "label": "Place in line of succession",
+  "summary": "Whether a given character's place in the line of succession of this title is above, below or equal to a number.",
+  "details": "It runs on a title. `target` is the character whose place is checked. Vanilla mostly writes `target = prev` or `target = root` with `value <= 3`, and also uses plain values such as 1, 2 and 3. The game's own documentation line describes it as the character's place while its scope is the title, so it is read here as the place in that title's succession.",
+  "fields": [
+    { "name": "target", "text": "The character whose place in the line is checked.", "values": "a character, such as `root`, `prev` or `scope:name`", "required": true },
+    { "name": "value", "text": "The place to compare against.", "values": "a number or comparison such as `<= 3`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "player_heir_position",
+  "label": "Position in player heirs",
+  "summary": "Whether the target character's position in this character's player heir list is above, below or equal to a number.",
+  "details": "The game's documentation example writes `position = 0`, but vanilla writes the number as `value` (for example `value = 0` or `value <= 2`). The game's documentation does not say whether counting starts at 0 or 1.",
+  "fields": [
+    { "name": "target", "text": "The character whose position in the list is checked.", "values": "a character, such as `scope:name`", "required": true },
+    { "name": "value", "text": "The position to compare against.", "values": "a number or comparison such as `<= 2`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "pregnancy_days",
+  "label": "Days pregnant",
+  "summary": "Whether the character has been pregnant for more, fewer or exactly a number of days.",
+  "details": "The days count from conception, not from the moment the pregnancy was revealed.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "prestige",
+  "label": "Prestige",
+  "summary": "Whether the character's prestige is above, below or equal to an amount.",
+  "details": "Compare it with a number or a script value, for example `prestige >= 150`. Vanilla compares it with named values such as `major_prestige_value` and with prestige costs. The block form takes a `value` and can scale it with `multiply`, `add` and `round`.",
+  "fields": [
+    { "name": "value", "text": "The amount to compare against, in the block form.", "values": "a number or script value" },
+    { "name": "multiply", "text": "Multiplies the value.", "values": "a number or script value" },
+    { "name": "add", "text": "Adds to the value.", "values": "a number or script value" },
+    { "name": "round", "text": "Whether the result is rounded.", "values": "`yes` or `no`" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "prestige_level",
+  "label": "Prestige level",
+  "summary": "Whether the character's prestige level is above, below or equal to a number.",
+  "details": "This checks the level, not the prestige amount (use `prestige` for that). Vanilla compares it with plain numbers (`>= 3`) or named values such as `high_prestige_level` and `max_prestige_level`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "province_infection_date",
+  "label": "Province infection date",
+  "summary": "Whether the date on which a given epidemic infected this province is before, after or equal to a date.",
+  "details": "It runs on a province. The game's documentation says it takes the target epidemic and a valid date, and allows `<`, `<=`, `=`, `>` and `>=` (not `!=`). The game's documentation does not show how the epidemic is named, and the input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "province_infection_rate",
+  "label": "Province infection rate",
+  "summary": "Whether the infection rate of a given epidemic in this province is above, below or equal to a value.",
+  "details": "It runs on a province. The game's documentation example checks `value >= 20` for an epidemic. Vanilla uses it once, with `value >= 100`.",
+  "fields": [
+    { "name": "target", "text": "The epidemic whose infection rate is checked.", "values": "an epidemic, such as `scope:epidemic`", "required": true },
+    { "name": "value", "text": "The infection rate to compare against.", "values": "a comparison such as `>= 20`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "provision_cost_to_domicile",
+  "label": "Provision cost to domicile",
+  "summary": "Whether the provision cost between the character (the domicile's owner) and the domicile's current location is above, below or equal to a value.",
+  "details": "The game works the cost out in three steps: it checks whether the two provinces are direct neighbours, then whether they are part of a travel plan the owner has, and otherwise finds a path between them and uses that. It runs on a character. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "provision_cost_to_owner",
+  "label": "Provision cost to owner",
+  "summary": "Whether the provision cost from the domicile's current location to its owner is above, below or equal to a value.",
+  "details": "The game works the cost out in three steps: it checks whether the two provinces are direct neighbours, then whether they are part of a travel plan the owner has, and otherwise finds a path between them and uses that. It runs on a domicile. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "provisions",
+  "label": "Provisions",
+  "summary": "Whether the domicile has more, fewer or exactly a number of provisions.",
+  "details": "It runs on a domicile. Vanilla compares against fixed numbers (`>= 250`) or named values such as `max_provisions`. The block form takes a `value` that vanilla scales with `multiply`.",
+  "fields": [
+    { "name": "value", "text": "The amount to compare against, in the block form.", "values": "a number or script value" },
+    { "name": "multiply", "text": "Multiplies the value.", "values": "a number or script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "prowess",
+  "label": "Prowess",
+  "summary": "Whether the character's prowess skill level is above, below or equal to a number.",
+  "details": "Compare it with a number or a named value, for example `prowess >= 12` or `prowess >= high_skill_rating`. `prowess_no_portrait` is the version that ignores the `prowess_no_portrait` modifier.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "prowess_diff",
+  "label": "Prowess difference",
+  "summary": "Whether the difference between the character's prowess and another character's is above, below or equal to a value.",
+  "details": "Vanilla writes `target` and `value`, for example `value <= -10`. Neither the game's documentation nor vanilla says which prowess is subtracted from which, so the meaning of the sign is not certain. The game's documentation also mentions an optional `abs = yes/no`, default `no`; going by the name it ignores the sign. The documented usage line names the key `prowess` by mistake.",
+  "fields": [
+    { "name": "target", "text": "The character this one is compared with.", "values": "a character, such as `scope:name`", "required": true },
+    { "name": "value", "text": "The difference to compare against.", "values": "a comparison such as `<= -10`", "required": true },
+    { "name": "abs", "text": "Whether only the size of the difference counts, without its sign (inferred from the name).", "values": "`yes` or `no`", "default": "no" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "prowess_for_portrait",
+  "label": "Prowess for portrait",
+  "summary": "Whether the character's prowess, scaled to a value between 0.0 and 1.0 for portraits, is above, below or equal to a number.",
+  "details": "It is the scaled number meant for portraits, not the normal prowess skill. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "prowess_no_portrait",
+  "label": "Prowess without portrait modifier",
+  "summary": "Whether the character's prowess skill level, ignoring the prowess_no_portrait modifier, is above, below or equal to a number.",
+  "details": "It works like `prowess`, except that the modifier named `prowess_no_portrait` is left out. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "raid_intent",
+  "label": "Raid intent",
+  "summary": "Whether the army has the given raid intent.",
+  "details": "It runs on an army. Write the intent's key, for example `raze_intent`. Vanilla also uses `destruction_intent` and `plunder_intent_nomadic`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "raid_loot",
+  "label": "Raid loot carried",
+  "summary": "Whether the amount of raid loot the army is carrying is above, below or equal to a number.",
+  "details": "It runs on an army. Vanilla uses it twice, both times as `>= 10`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "ransom_cost",
+  "label": "Ransom cost",
+  "summary": "Whether the character's ransom cost is above, below or equal to a number.",
+  "details": "The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "rarity",
+  "label": "Rarity",
+  "summary": "Whether the artifact has the given rarity.",
+  "details": "It runs on an artifact. Vanilla uses `common`, `masterwork`, `famed` and `illustrious`. To compare rarities as a ladder (at least masterwork) use `rarity_level`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "rarity_level",
+  "label": "Rarity level",
+  "summary": "Whether the artifact's rarity level is above, below or equal to a given level.",
+  "details": "It runs on an artifact. The level can be a number (1 is common), a script number, or a rarity name such as `masterwork`. Vanilla mostly writes `rarity_level >= masterwork`. Unlike `rarity`, it can check for \"at least\" or \"at most\".",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "realm_law_group_at_maximum_level",
+  "label": "Law group at maximum",
+  "summary": "Whether the character has the maximum level of the given realm law group.",
+  "details": "Write the law group's key, for example `celestial_bureaucracy`. The input does not say what the levels of a group are or how they are ordered.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "realm_law_group_at_minimum_level",
+  "label": "Law group at minimum",
+  "summary": "Whether the character has the minimum level of the given realm law group.",
+  "details": "Write the law group's key, for example `celestial_bureaucracy`. The input does not say what the levels of a group are or how they are ordered.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "realm_size",
+  "label": "Realm size",
+  "summary": "Whether the number of counties in the realm of the character's top liege is above, below or equal to a number.",
+  "details": "It counts the realm of the top liege above the character, not only the character's own lands. Vanilla uses plain numbers (`>= 50`) and named values such as `minor_realm_size`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "realm_to_title_distance_squared",
+  "label": "Realm distance to title",
+  "summary": "Whether the squared map distance between the character's realm and a title is above, below or equal to a value.",
+  "details": "The distance is in map pixels and is squared, which keeps the check fast. So a value of 10000 means 100 pixels. Vanilla mostly checks it against the character's capital county, with named values such as `squared_distance_massive`.",
+  "fields": [
+    { "name": "target", "text": "The title the distance is measured to.", "values": "a title, such as `root.capital_county` or `scope:name`", "required": true },
+    { "name": "value", "text": "The squared distance to compare against.", "values": "a comparison such as `<= squared_distance_massive`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "recent_history",
+  "label": "Recent title history",
+  "summary": "Whether the title has a history entry of the given type within the last given time.",
+  "details": "If you leave out `type`, entries of every type count. Give the time as `days`, `months` or `years`. Types in the game's documentation: conquest, conquest_holy_war, conquest_claim, conquest_populist, election, inheritance, abdication, created, destroyed, usurped, granted, revoked, independency, leased_out, lease_revoked, returned, faction_demand, swear_fealty, stepped_down, appointment, appointment_succession, migration, confederation. Vanilla mostly uses `conquest` or `granted` with `years = 10`.",
+  "fields": [
+    { "name": "type", "text": "The kind of history entry to look for.", "values": "one of the types listed above", "default": "any type" },
+    { "name": "days", "text": "How far back to look, in days.", "values": "a number" },
+    { "name": "months", "text": "How far back to look, in months.", "values": "a number" },
+    { "name": "years", "text": "How far back to look, in years.", "values": "a number" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "region_is_adjacent",
+  "label": "Region is adjacent",
+  "summary": "Whether the given geographical region touches or overlaps the region this runs on.",
+  "details": "It runs on a geographical region or a situation sub-region, and the target is a geographical region. Vanilla writes it as `region_is_adjacent = geographical_region:key`. To check against a situation sub-region instead, use `region_is_adjacent_situation_subregion`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "region_is_adjacent_situation_subregion",
+  "label": "Sub-region is adjacent",
+  "summary": "Whether the given situation sub-region touches or overlaps the region this runs on.",
+  "details": "It runs on a geographical region or a situation sub-region, and the target is a situation sub-region. To check against a geographical region instead, use `region_is_adjacent`. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "related_building_type",
+  "label": "Holy site building",
+  "summary": "Whether the holy site's barony currently has a building of the given type.",
+  "details": "It runs on a holy site. Only buildings whose type has the `holy_building` flag count. Write the building type's key, for example `temple_01`. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "release_only",
+  "label": "Is release mode",
+  "summary": "Whether the game runs in release mode.",
+  "details": "Write `yes` to check that it does, `no` to check that it does not. The input lists no scope for it and shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "religion_tag",
+  "label": "Religion tag",
+  "summary": "Whether the religion that the faith belongs to has the given tag.",
+  "details": "It runs on a faith and looks at its religion, not the faith itself. Write the religion's key, for example `christianity_religion` or `islam_religion`. Vanilla uses it a lot.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "remaining_saint_relics",
+  "label": "Saint relics left",
+  "summary": "Whether the number of relics that can still be taken from this saint is above, below or equal to a number.",
+  "details": "It runs on a character. The count is 0 when the character is not a saint. The game's documentation example is `remaining_saint_relics > 0`. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "require_capital_in_sub_region",
+  "label": "Capital must be in sub-region",
+  "summary": "Whether a participant group requires its participants' capitals to be in the sub-region.",
+  "details": "Write `yes` or `no`. It runs on a situation participant group. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "require_domain_in_sub_region",
+  "label": "Domain must be in sub-region",
+  "summary": "Whether a participant group requires some part of its participants' domain to be in the sub-region.",
+  "details": "Write `yes` or `no`. It runs on a situation participant group. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "require_realm_in_sub_region",
+  "label": "Realm must be in sub-region",
+  "summary": "Whether a participant group requires some part of its participants' realm to be in the sub-region.",
+  "details": "Write `yes` or `no`. It runs on a situation participant group. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "reserved_gold",
+  "label": "Reserved gold",
+  "summary": "Whether the character's gold in the AI category called reserved is above, below or equal to an amount.",
+  "details": "The game's documentation words it as \"does the character have the required gold\" and names only the AI category 'reserved'; it does not say more about how that category is filled. It is not the plain `gold` check. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ }
+]

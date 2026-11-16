@@ -1,0 +1,344 @@
+/* The Save tab (SaveView.tsx, docs/saves.md) */
+.save-manager {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 26px 32px 48px;
+}
+.save-manager > * {
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.save-manager .dim {
+  color: var(--text-faint);
+}
+.save-error {
+  color: var(--danger);
+}
+
+/* page head */
+.save-page-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: normal;
+  font-size: 26px;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+.save-page-head p {
+  margin: 4px 0 18px;
+  color: var(--text-dim);
+  font-size: 13px;
+  max-width: 720px;
+  line-height: 1.5;
+}
+
+/* the loaded save */
+.save-hero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px 24px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--bg-raised), var(--bg-panel));
+}
+.save-hero.ok {
+  border-left-color: var(--accent);
+}
+.save-hero.busy {
+  border-left-color: var(--link);
+}
+.save-hero.error {
+  border-left-color: var(--danger);
+}
+.save-hero-title {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.save-hero-name {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--text);
+}
+.save-hero-realm {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--text-dim);
+}
+.save-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.save-chip {
+  padding: 2px 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--text-dim);
+  background: var(--bg-panel);
+}
+.save-chip.gold {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+.save-chip.warn {
+  border-color: #7a5a30;
+  color: #e0b070;
+}
+.save-row-warn {
+  color: #e0b070;
+}
+.save-note {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #e0b070;
+}
+.save-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+.save-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-faint);
+  flex-shrink: 0;
+}
+.save-hero.ok .save-dot {
+  background: var(--ok);
+}
+.save-hero.busy .save-dot {
+  background: var(--link);
+  animation: save-pulse 1.2s ease-in-out infinite;
+}
+.save-hero.error .save-dot {
+  background: var(--danger);
+}
+@keyframes save-pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+.save-hero-side {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  min-width: 170px;
+}
+.save-hero-row {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+.save-hero-side .save-hero-row button {
+  flex: 1;
+}
+.save-pending {
+  grid-column: 1 / -1;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+}
+.save-pending .link {
+  color: var(--accent);
+}
+.save-edits {
+  margin: 8px 0 0;
+  padding-left: 22px;
+  color: var(--text-dim);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.save-hero .save-mods {
+  grid-column: 1 / -1;
+}
+.save-mods {
+  padding: 9px 12px;
+  border: 1px solid var(--accent-dim);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+.save-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.save-empty-mark {
+  font-size: 34px;
+  color: var(--accent-dim);
+  line-height: 1;
+}
+
+/* a binary save waiting for rakaly */
+.save-binary {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--accent-dim);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+}
+.save-binary-text {
+  font-size: 13px;
+  line-height: 1.5;
+}
+.save-binary .field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 12px 0 10px;
+}
+.save-binary .field > label {
+  font-weight: 600;
+}
+.save-binary .field .hint {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+.save-binary .field .row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* the save files */
+.save-files {
+  margin-top: 26px;
+}
+.save-files-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.save-filter {
+  width: 220px;
+}
+.save-folder {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  direction: rtl;
+  text-align: left;
+  font-size: 11px;
+  color: var(--text-faint);
+}
+.save-none {
+  padding: 18px 0;
+  color: var(--text-faint);
+}
+.save-group + .save-group {
+  margin-top: 18px;
+}
+.save-group-head {
+  margin: 0 0 6px 2px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.save-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 9px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+}
+.save-row + .save-row {
+  border-top-color: var(--border);
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.save-row:hover {
+  background: var(--bg-hover);
+}
+.save-row.on {
+  background: var(--bg-active);
+  border-color: var(--accent-dim);
+}
+.save-row.bad {
+  opacity: 0.6;
+}
+.save-row-main {
+  flex: 1;
+  min-width: 0;
+}
+.save-row-name {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: var(--text);
+}
+.save-row-realm {
+  color: var(--text-dim);
+}
+.save-badge {
+  align-self: center;
+  padding: 0 7px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.save-badge.gold {
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+.save-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+.save-row-date {
+  color: var(--accent);
+}
+.save-row-file {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 340px;
+}
+.save-row-act {
+  flex-shrink: 0;
+  min-width: 70px;
+  text-align: right;
+}
+.save-row:not(.on):not(:hover) .save-row-act button {
+  opacity: 0.55;
+}
+
+/* external tools (ExternalTools.tsx): the settings' page and the Save tab's prompt */
+.tool-state {
+  align-self: center;
+  color: var(--text);
+}
+.tool-newer {
+  color: var(--accent);
+}

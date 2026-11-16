@@ -1,0 +1,498 @@
+[
+ {
+  "kind": "effect",
+  "key": "add_dynasty_prestige",
+  "label": "Dynasty prestige",
+  "summary": "Gives the dynasty prestige, or takes it away with a negative amount.",
+  "details": "It runs on a dynasty. Vanilla writes the amount as a plain number, a named script value such as `minor_dynasty_prestige_gain`, or a block with `value` plus math fields like `multiply` or `divide`. Vanilla uses a negative multiplier to turn a cost value into a loss.",
+  "fields": [
+   { "name": "value", "text": "How much dynasty prestige to add; negative takes it away. Only used in the block form.", "values": "a number or a script value", "required": false },
+   { "name": "multiply", "text": "Multiplies the amount.", "values": "a number or a script value", "required": false },
+   { "name": "divide", "text": "Divides the amount.", "values": "a number", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_dynasty_prestige_level",
+  "label": "Dynasty prestige level",
+  "summary": "Raises the dynasty's prestige level by the given number of levels.",
+  "details": "It runs on a dynasty. Vanilla gives plain numbers (mostly 5 or 1) and once -1, so a negative number appears to lower the level. The game's text does not say how levels relate to prestige points.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "add_eminent_holy_site",
+  "label": "Eminent holy site",
+  "summary": "Makes a holy site an eminent holy site of the faith.",
+  "details": "It runs on a faith. The site should not already be a holy site of that faith. You can write the holy site alone, or a block with `target` (the holy site) and `actor` (a character). The game's documentation does not say what the actor is used for.",
+  "fields": [
+   { "name": "target", "text": "The holy site to add.", "values": "a holy site", "required": true },
+   { "name": "actor", "text": "A character tied to the change; the game's text does not say more.", "values": "a character", "required": false }
+  ],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "add_faction_discontent",
+  "label": "Faction discontent",
+  "summary": "Raises a faction's discontent, or lowers it with a negative amount.",
+  "details": "It runs on a faction. Vanilla uses large negative numbers such as -200 and named values like `massive_discontent_loss` to lower it, and values like 25 or `major_discontent_gain` to raise it. Vanilla also writes two numbers in braces, such as `{ -10 -20 }`; the input does not say how that is read.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_fascination_progress",
+  "label": "Fascination progress",
+  "summary": "Moves the culture's current fascination forward by a percentage.",
+  "details": "It runs on a culture. The value is the percentage of progress to add, so 35 adds 35 percent. It can be a script value. Vanilla uses small numbers like 5 or 2.5.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_fascination_progress_time",
+  "label": "Fascination progress by time",
+  "summary": "Moves the culture's current fascination forward by an amount of time, counted in months.",
+  "details": "It runs on a culture. The value is a number of months of progress and can be a script value. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_focus_progress",
+  "label": "Focus progress",
+  "summary": "Adds progress to something called a focus; the game documents nothing more.",
+  "details": "The game's documentation gives no scope. Vanilla uses it with a named script value `standard_lifestyle_focus_progress` (11 times) or the number 1, which suggests a character's lifestyle focus, but the input does not confirm it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "add_from_contribution_attackers",
+  "label": "Reward attackers by contribution",
+  "summary": "Rewards the allied attackers of a war for what each of them contributed.",
+  "details": "It runs on a casus belli (the war reason) and can be used only once per casus belli; a second call is an error. Each reward is given to the participating rulers: prestige, gold, piety, merit and influence to the rulers themselves, dynasty prestige to their dynasty, treasury to their primary title's treasury, herd and provisions to their domicile. Treasury, herd and provisions cause errors if the target does not support them. The `opinion` block adds an opinion modifier; vanilla's examples all use `modifier = contributed_in_war`.",
+  "fields": [
+   { "name": "prestige", "text": "Prestige given to each participating ruler.", "values": "a number or a script value such as `minor_prestige_value`", "required": false },
+   { "name": "gold", "text": "Gold given to each participating ruler.", "values": "a number or a script value", "required": false },
+   { "name": "piety", "text": "Piety given to each participating ruler.", "values": "a number or a script value", "required": false },
+   { "name": "merit", "text": "Merit given to each participating ruler.", "values": "a number or a script value", "required": false },
+   { "name": "influence", "text": "Influence given to each participating ruler.", "values": "a number or a script value", "required": false },
+   { "name": "renown", "text": "Renown, listed in the game's usage example.", "values": "a number or a script value", "required": false },
+   { "name": "dynasty_prestige", "text": "Prestige given to the rulers' dynasty.", "values": "a number or a script value", "required": false },
+   { "name": "treasury", "text": "Paid into the rulers' primary title treasury.", "values": "a number or a script value", "required": false },
+   { "name": "herd", "text": "Paid to the rulers' domicile if it supports herd.", "values": "a number or a script value", "required": false },
+   { "name": "provisions", "text": "Paid to the rulers' domicile if it supports provisions.", "values": "a number or a script value", "required": false },
+   { "name": "barter_goods", "text": "Listed in the game's usage example; the game's documentation does not say more.", "values": "a number or a script value", "required": false },
+   { "name": "opinion", "text": "An opinion modifier given to the participants; vanilla uses `{ modifier = contributed_in_war }`.", "values": "a block with `modifier = <opinion modifier>`", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_from_contribution_defenders",
+  "label": "Reward defenders by contribution",
+  "summary": "Rewards the allied defenders of a war for what each of them contributed.",
+  "details": "It runs on a casus belli (the war reason) and is the defender-side counterpart of the attacker version. Its documentation lists the same currencies and the same `opinion` block but does not say where each one is paid or whether it is limited to one call per casus belli; the attacker version's rules are only presumed to apply. Vanilla uses it as `prestige` plus `opinion = { modifier = contributed_in_war }` in most cases.",
+  "fields": [
+   { "name": "prestige", "text": "Prestige for the participating defenders.", "values": "a number or a script value such as `minor_prestige_value`", "required": false },
+   { "name": "gold", "text": "Gold for the participating defenders.", "values": "a number or a script value", "required": false },
+   { "name": "piety", "text": "Piety for the participating defenders.", "values": "a number or a script value", "required": false },
+   { "name": "merit", "text": "Merit for the participating defenders.", "values": "a number or a script value", "required": false },
+   { "name": "influence", "text": "Influence for the participating defenders.", "values": "a number or a script value", "required": false },
+   { "name": "renown", "text": "Renown, listed in the game's usage example.", "values": "a number or a script value", "required": false },
+   { "name": "treasury", "text": "Listed in the game's usage example; the attacker version pays it into the primary title's treasury.", "values": "a number or a script value", "required": false },
+   { "name": "herd", "text": "Listed in the game's usage example; the attacker version pays it to the domicile.", "values": "a number or a script value", "required": false },
+   { "name": "provisions", "text": "Listed in the game's usage example; the attacker version pays it to the domicile.", "values": "a number or a script value", "required": false },
+   { "name": "opinion", "text": "An opinion modifier given to the participants; vanilla uses `{ modifier = contributed_in_war }`.", "values": "a block with `modifier = <opinion modifier>`", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "add_geographical_region",
+  "label": "Geographical region",
+  "summary": "Adds a geographical region to a situation sub-region.",
+  "details": "It runs on a situation sub-region (a part of a game situation). Vanilla gives it a region saved earlier as a scope, for example `scope:river_region`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_glory",
+  "label": "Glory",
+  "summary": "Adds glory to an accolade.",
+  "details": "It runs on an accolade. Vanilla uses named script values such as `minor_glory_gain`, and also loss values such as `minimal_glory_loss`, so a negative amount appears to take glory away.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_gold",
+  "label": "Gold",
+  "summary": "Gives the character gold, or takes it away with a negative amount.",
+  "details": "The amount can be a plain number, a named script value such as `medium_gold_value`, or a block with `value` and math fields. Vanilla blocks use `multiply`, `min`, `max`, `add` and `round` to build the amount.",
+  "fields": [
+   { "name": "value", "text": "The base amount of gold.", "values": "a number or a script value", "required": true },
+   { "name": "multiply", "text": "Multiplies the amount.", "values": "a number or a script value", "required": false },
+   { "name": "min", "text": "A lower limit for the result.", "values": "a number", "required": false },
+   { "name": "max", "text": "An upper limit for the result.", "values": "a number or a script value", "required": false },
+   { "name": "add", "text": "Adds to the amount.", "values": "a number or a script value", "required": false },
+   { "name": "round", "text": "Rounds the result.", "values": "`yes`", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_great_building",
+  "label": "Great building",
+  "summary": "Puts a finished great building into the province at no cost.",
+  "details": "It runs on a province. A slot of the right type is added if needed. It errors and does nothing if the province already has a great building, so check with `has_any_great_building` first. The building is built at once, at no cost to the owner.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_great_building_slot",
+  "label": "Great building slot",
+  "summary": "Adds a slot for a great building of the given type to the province.",
+  "details": "It runs on a province. It errors if the province already has a great building slot, filled or not. The player can only pick buildings that pass their `can_construct_potential` check. To place the building without the player starting construction, use `add_great_building` instead.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_holy_site",
+  "label": "Holy site",
+  "summary": "Makes a holy site a minor holy site of the faith.",
+  "details": "It runs on a faith. The site should not already be a holy site of that faith. Vanilla uses the block form with `target` and sometimes `actor = root`. The game's documentation does not say what the actor is used for. Compare `add_eminent_holy_site`, which adds an eminent one.",
+  "fields": [
+   { "name": "target", "text": "The holy site to add.", "values": "a holy site", "required": true },
+   { "name": "actor", "text": "A character tied to the change; the game's text does not say more.", "values": "a character", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_hook",
+  "label": "Hook",
+  "summary": "Gives the character a hook (a favor they can call in) on the target character.",
+  "details": "The character the effect runs on holds the hook, and `target` is the character it is over: vanilla's debug Add Hook interaction writes `scope:actor = { add_hook = { target = scope:recipient type = favor_hook } }`, and `has_hook` checks it the same way round. The player gets a notification toast if they are involved; use `add_hook_no_toast` to avoid that. If you leave out the time, it comes from the hook type. The time can be a value or a range.",
+  "fields": [
+   { "name": "type", "text": "The kind of hook.", "values": "a hook type, such as `favor_hook`", "required": true },
+   { "name": "target", "text": "The character the hook is over.", "values": "a character", "required": true },
+   { "name": "secret", "text": "The secret behind the hook; needed for hook types that require one.", "values": "a secret", "required": false },
+   { "name": "days", "text": "How long the hook lasts, in days. Use one of days, months or years.", "values": "a number, a range or a script value", "required": false },
+   { "name": "months", "text": "How long the hook lasts, in months.", "values": "a number, a range or a script value", "required": false },
+   { "name": "years", "text": "How long the hook lasts, in years.", "values": "a number, a range or a script value", "required": false }
+  ],
+  "sources": ["doc", "vanilla", "vanilla: common/character_interactions/00_debug_interactions.txt:531"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_hook_no_toast",
+  "label": "Hook without notice",
+  "summary": "Gives the character a hook on the target character, without showing a notification to the player.",
+  "details": "It works like `add_hook`: the character the effect runs on holds the hook, and `target` is the character it is over. The player never gets a toast (the small pop-up message). The time comes from the hook type if left out, and a secret is needed for hook types that require one.",
+  "fields": [
+   { "name": "type", "text": "The kind of hook.", "values": "a hook type, such as `loyalty_hook`", "required": true },
+   { "name": "target", "text": "The character the hook is over.", "values": "a character", "required": true },
+   { "name": "secret", "text": "The secret behind the hook, for hook types that require one.", "values": "a secret", "required": false },
+   { "name": "days", "text": "How long the hook lasts, in days. Months or years can be used instead.", "values": "a number, a range or a script value", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_house_artifact_claim",
+  "label": "House artifact claim",
+  "summary": "Gives the house a claim on an artifact.",
+  "details": "It runs on a dynasty house. The artifact is the value, usually a saved scope in vanilla, such as `scope:head_artifact`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_house_modifier",
+  "label": "House modifier",
+  "summary": "Gives the house a modifier, optionally for a set time.",
+  "details": "It runs on a dynasty house. The game's documentation shows a short form with just the modifier name and a block form with a duration. Vanilla mostly gives durations in years. The optional `desc` is a dynamic text shown for a timed modifier.",
+  "fields": [
+   { "name": "modifier", "text": "The modifier to add.", "values": "a modifier name", "required": true },
+   { "name": "days", "text": "Duration in days. Weeks, months or years can be used instead.", "values": "a number", "required": false },
+   { "name": "years", "text": "Duration in years.", "values": "a number or a script value", "required": false },
+   { "name": "desc", "text": "A dynamic description shown for the timed modifier.", "values": "a localization key", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_house_unity_modifier",
+  "label": "House unity modifier",
+  "summary": "Gives the house a modifier, optionally for a set time.",
+  "details": "It runs on a dynasty house and is written like `add_house_modifier`. The game's documentation describes the two the same way and does not say how they differ. Vanilla uses it only with modifiers named like `unity_friendly_bailiff_modifier`, each for 10 years.",
+  "fields": [
+   { "name": "modifier", "text": "The modifier to add.", "values": "a modifier name", "required": true },
+   { "name": "years", "text": "Duration in years. Days, weeks or months can be used instead.", "values": "a number", "required": false },
+   { "name": "desc", "text": "A dynamic description shown for the timed modifier.", "values": "a localization key", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "add_innovation",
+  "label": "Innovation",
+  "summary": "Gives the culture an innovation.",
+  "details": "It runs on a culture. Vanilla gives it innovation keys directly, such as `innovation_knighthood`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_innovation_progress",
+  "label": "Innovation progress",
+  "summary": "Moves a chosen innovation of the culture forward by a percentage.",
+  "details": "It runs on a culture. The innovation can be written as `culture_innovation:<key>` or taken from a saved scope. The value is the percentage of progress to add and can be a script value.",
+  "fields": [
+   { "name": "value", "text": "The percentage of progress to add.", "values": "a number or a script value", "required": true },
+   { "name": "target", "text": "The innovation to advance.", "values": "an innovation, or a saved scope holding one", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_innovation_progress_time",
+  "label": "Innovation progress by time",
+  "summary": "Moves a chosen innovation of the culture forward by an amount of time, counted in months.",
+  "details": "It runs on a culture. The innovation can be written as `culture_innovation:<key>` or taken from a saved scope. The value is a number of months of progress and can be a script value. The input shows no vanilla use.",
+  "fields": [
+   { "name": "value", "text": "How many months of progress to add.", "values": "a number or a script value", "required": true },
+   { "name": "target", "text": "The innovation to advance.", "values": "an innovation, or a saved scope holding one", "required": true }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_internal_flag",
+  "label": "Internal flag",
+  "summary": "Adds a flag that the game reads internally; it has no effect on the game state.",
+  "details": "Vanilla writes it only as `special` (186 times) or `dangerous` (84 times). The input does not say what reads these flags or what they are used for.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "add_intrigue_lifestyle_perk_points",
+  "label": "Intrigue perk points",
+  "summary": "Gives the character perk points to spend in the intrigue lifestyle tree.",
+  "details": "Vanilla gives plain numbers, almost always 1. The documented wording is garbled (\"lifestyle per points\"); the reading as perk points is from the key name and the 1-point use.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_intrigue_lifestyle_xp",
+  "label": "Intrigue lifestyle XP",
+  "summary": "Gives the character experience in the intrigue lifestyle.",
+  "details": "Vanilla uses named script values such as `minor_lifestyle_xp`, `medium_lifestyle_xp` and `major_lifestyle_xp`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_intrigue_skill",
+  "label": "Intrigue skill",
+  "summary": "Adds to the intrigue skill, or lowers it with a negative number.",
+  "details": "The game's documentation names no scope; going by the key, it is meant for a character. Mostly a plain number like 1 or 2 is used, a range like `{ 3 5 }` is also written, and a block can use `value` with `subtract = intrigue` or `integer_range`. The input does not explain those block fields.",
+  "fields": [
+   { "name": "value", "text": "The amount to add.", "values": "a number or a script value", "required": false },
+   { "name": "subtract", "text": "Vanilla writes `subtract = intrigue` after a value; the input does not explain what it does.", "values": "a skill name", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "add_joined_faction_discontent",
+  "label": "Discontent in joined factions",
+  "summary": "Raises the discontent of the factions the character is in, or lowers it with a negative amount.",
+  "details": "It runs on a character. Vanilla uses numbers like 20 or -60 and once a named value, `grant_title_opinion_sum_discontent_calc`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_known_doctrine",
+  "label": "Known doctrine",
+  "summary": "Adds a doctrine to the doctrines the character knows.",
+  "details": "It runs on a character, who must be playable for it to work. The doctrine is written as `doctrine_type:<key>` in the documented example; vanilla uses plain doctrine keys or saved scopes.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_known_rite",
+  "label": "Known rite",
+  "summary": "Adds the tenets and doctrines of a rite to those the character knows.",
+  "details": "It runs on a character, who must be playable for it to work. Vanilla takes the rite from a faith link, such as `faith:adoptionist.main_rite`, or from a saved scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_known_tenet",
+  "label": "Known tenet",
+  "summary": "Adds a tenet to the tenets the character knows.",
+  "details": "It runs on a character, who must be playable for it to work. Vanilla gives it tenet keys like `tenet_hedonistic` or a saved scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_knows_of_killer",
+  "label": "Knows of killer",
+  "summary": "Makes the given character know who killed the scoped dead character.",
+  "details": "It runs on a character, named in the documented example as the dead person. The character on the right-hand side is the one who gains the knowledge, as in `dead_person = { add_knows_of_killer = root }`. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_learning_lifestyle_perk_points",
+  "label": "Learning perk points",
+  "summary": "Gives the character perk points to spend in the learning lifestyle tree.",
+  "details": "Vanilla gives plain numbers, almost always 1. The documented wording is garbled (\"lifestyle per points\"); the reading as perk points is from the key name and the 1-point use.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_learning_lifestyle_xp",
+  "label": "Learning lifestyle XP",
+  "summary": "Gives the character experience in the learning lifestyle.",
+  "details": "Vanilla uses named script values such as `minor_lifestyle_xp` and `medium_lifestyle_xp`. A block with `value` and `multiply` scales the amount, for example `multiply = 0.8`.",
+  "fields": [
+   { "name": "value", "text": "The base amount of experience.", "values": "a script value", "required": true },
+   { "name": "multiply", "text": "Multiplies the amount.", "values": "a number", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_learning_skill",
+  "label": "Learning skill",
+  "summary": "Adds to the learning skill, or lowers it with a negative number.",
+  "details": "The game's documentation names no scope; going by the key, it is meant for a character. Mostly a plain number like 1 or 2 is used, a range like `{ 3 5 }` is also written, and a block can use `value` with `subtract = learning` or `integer_range`. The input does not explain those block fields.",
+  "fields": [
+   { "name": "value", "text": "The amount to add.", "values": "a number or a script value", "required": false },
+   { "name": "subtract", "text": "Vanilla writes `subtract = learning` after a value; the input does not explain what it does.", "values": "a skill name", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "add_legend_county_modifier",
+  "label": "Legend county modifier",
+  "summary": "Gives a legend a modifier whose effects apply to the county.",
+  "details": "It runs on a legend. The game's documentation shows a short form with just the modifier name and a block form with a duration. The optional `desc` is a dynamic text shown for a timed modifier.",
+  "fields": [
+   { "name": "modifier", "text": "The modifier to add.", "values": "a modifier name", "required": true },
+   { "name": "days", "text": "Duration in days. Weeks, months or years can be used instead.", "values": "a number", "required": false },
+   { "name": "years", "text": "Duration in years.", "values": "a number", "required": false },
+   { "name": "desc", "text": "A dynamic description shown for the timed modifier.", "values": "a localization key", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_legend_owner_modifier",
+  "label": "Legend owner modifier",
+  "summary": "Gives a legend a modifier whose effects apply to the legend's owner.",
+  "details": "It runs on a legend. The game's documentation shows a short form with just the modifier name and a block form with a duration. The optional `desc` is a dynamic text shown for a timed modifier.",
+  "fields": [
+   { "name": "modifier", "text": "The modifier to add.", "values": "a modifier name", "required": true },
+   { "name": "days", "text": "Duration in days. Weeks, months or years can be used instead.", "values": "a number", "required": false },
+   { "name": "years", "text": "Duration in years.", "values": "a number", "required": false },
+   { "name": "desc", "text": "A dynamic description shown for the timed modifier.", "values": "a localization key", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_legend_province_modifier",
+  "label": "Legend province modifier",
+  "summary": "Gives a legend a modifier whose effects apply to the provinces.",
+  "details": "It runs on a legend. The game's documentation shows a short form with just the modifier name and a block form with a duration. The optional `desc` is a dynamic text shown for a timed modifier. The input shows no vanilla use.",
+  "fields": [
+   { "name": "modifier", "text": "The modifier to add.", "values": "a modifier name", "required": true },
+   { "name": "days", "text": "Duration in days. Weeks, months or years can be used instead.", "values": "a number", "required": false },
+   { "name": "desc", "text": "A dynamic description shown for the timed modifier.", "values": "a localization key", "required": false }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_legend_spread",
+  "label": "Legend spread",
+  "summary": "Makes a legend spread to the province.",
+  "details": "It runs on a province. The legend is the value. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_legitimacy",
+  "label": "Legitimacy",
+  "summary": "Gives a living playable character legitimacy, or takes it away with a negative amount.",
+  "details": "It works on a living playable character. Vanilla uses named script values such as `minor_legitimacy_gain` and `medium_legitimacy_loss`, or a block with `value` and math fields. A common block multiplies the amount by the tier of a primary title.",
+  "fields": [
+   { "name": "value", "text": "The base amount of legitimacy.", "values": "a number or a script value", "required": true },
+   { "name": "multiply", "text": "Multiplies the amount.", "values": "a number or a script value", "required": false },
+   { "name": "min", "text": "A lower limit for the result.", "values": "a number", "required": false },
+   { "name": "max", "text": "An upper limit for the result.", "values": "a number or a script value", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

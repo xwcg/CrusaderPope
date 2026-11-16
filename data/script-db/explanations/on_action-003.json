@@ -1,0 +1,322 @@
+[
+ {
+  "kind": "on_action", "key": "contest_ongoing_event_recital_random_pulse",
+  "label": "Recital contest pulse",
+  "summary": "Picks one random event for a character taking part in a poetry recital at a tournament contest.",
+  "details": "The game's code does not fire it; script does. It only runs if the tournament contest event condition holds. The pool has nine events (verse too similar to yours, plagiarism, stage fright, a downpour, a chance to insult an opponent, and four general contest events). Every event has the same weight of 100, and a weight-1 \"nothing\" entry sits beside them.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "convert_to_witchcraft_failure_outcome",
+  "label": "Witchcraft conversion fails",
+  "summary": "Picks the event that follows when a scheme to convert someone to witchcraft fails.",
+  "details": "Script fires it, not the game's code. It only runs if a scheme is available as the saved scope `scope:scheme`. Vanilla picks between two witch events, the first four times as likely as the second.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "coronation_failed_oath_on_action",
+  "label": "Coronation oath failed",
+  "summary": "Sends a follow-up event three days after it is fired, for a coronation whose oath has failed.",
+  "details": "Script fires it, not the game's code. It has no root character. Going by its name and vanilla's comment (\"After the Coronation Activity\"), it belongs after a coronation; its effect schedules one event, `coronation_events.0150`, to happen after 3 days.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "coronation_first_phase_guest_events",
+  "label": "Coronation prelude, guest",
+  "summary": "Picks a random event for a guest of a coronation during its first part, the prelude.",
+  "details": "Script fires it. The pool mixes guest-only events (a friend or rival is present, the host offers a council seat), events shared with the host, and events that belong to the guests' intents (the aims they came with, such as offering support). A \"no event\" chance starts at 400 and is cancelled (set back to 0) for human players and for guests listed as a major supporter or major detractor of the activity, so those guests cannot roll \"no event\".",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "coronation_first_phase_host_events",
+  "label": "Coronation prelude, host",
+  "summary": "Picks a random event for the host of a coronation during its first part, the prelude.",
+  "details": "Script fires it. The pool is large and varied: regent praising or insulting the host, a faction against the host, a guest giving an artifact, a missing crown, and similar scenes. Weights range from 5 to 100. One entry at the end belongs to the intent events (vassals ask the host to build more in their realms).",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "coronation_second_phase_events",
+  "label": "Coronation ceremony",
+  "summary": "Marks the ceremony part of a coronation; vanilla's block does nothing itself and only documents the event chains.",
+  "details": "Script fires it. It has no root character. Vanilla's effect block holds only comments: the first event of a chain starts it, and each event leads on to the next. The host's chain goes from the ceremony start through clergy, nobility and popular approval, blessing, anointment and crowning to the oath. The guest's chain is shorter and ends with a follow-up to the host's oath.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "coronation_third_phase_guest_events",
+  "label": "Coronation banquet, guest",
+  "summary": "Picks a random event for a guest during the banquet part of a coronation.",
+  "details": "Script fires it. The pool mixes coronation events, events shared with the host, guest intent events (given a high weight of 500 here; vanilla's comment says they are for intents that have not happened by this point), and many general feast events. The input shows only the first 80 lines of the definition, so the rest of the feast list is not covered here.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "coronation_third_phase_host_events",
+  "label": "Coronation banquet, host",
+  "summary": "Picks a random event for the host during the banquet part of a coronation.",
+  "details": "Script fires it. The pool has coronation scenes (a bard insults the host, a toast, gifts to supporters, seating detractors), two tribal-government events, and many general feast events. The input shows only the first 80 lines of the definition, so the rest of the feast list is not covered here.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "court_intrigue_setup",
+  "label": "Councillor spouse setup, intrigue",
+  "summary": "Rolls whether the character's spouse, serving as a councillor, gets a task event, and leans towards an intrigue task.",
+  "details": "Script fires it. It uses a chance (the vanilla constant `spouse_on_action_setup_chance`) and a \"no event\" chance that is only added for AI rulers: 30 for kings and above, 70 for dukes, 95 for any other AI. If an event is rolled, the intrigue task is five times as likely as each other task (100 against 20 each for politics, chivalry, domain and patronage).",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "court_intrigue_task_on_action",
+  "label": "Spouse councillor, intrigue task",
+  "summary": "Picks an intrigue event caused by the character's spouse working as a councillor.",
+  "details": "Script fires it. It only runs if the character has a councillor spouse (the council position `councillor_spouse`) and that spouse is the saved scope `scope:councillor`. A weight of 300 is given to nothing happening. The events include the spouse learning of a scheme or secret, adding scheme progress, giving a hook, or an administrative influence gain.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "court_ongoing",
+  "label": "Court scheme ongoing",
+  "summary": "Picks an event for a scheme to court someone while that scheme is running.",
+  "details": "Script fires it. It only runs if the scheme exists as `scope:scheme`. Events include a duel for someone's honor, fetching a gift, a compliment poem, an extreme request and a competition. One entry with weight 1000 applies a stored scheme modifier, such as exotic wares from a pilgrimage.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "court_outcome",
+  "label": "Court scheme outcome",
+  "summary": "Picks one of two rescue events at the outcome of a court scheme.",
+  "details": "Script fires it. Vanilla's two events are equally likely: you save the target from a wolf, or from an intruder. The name and the events suggest it is part of the court scheme, but the file only shows the events.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "court_politics_setup",
+  "label": "Councillor spouse setup, politics",
+  "summary": "Rolls whether the character's spouse, serving as a councillor, gets a task event, and leans towards a court politics task.",
+  "details": "Script fires it. It works like the intrigue setup, with the same chance and the same \"no event\" chance for AI rulers (30, 70 or 95). If an event is rolled, the politics task is five times as likely as each other task (100 against 20 each).",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "court_politics_task_on_action",
+  "label": "Spouse councillor, politics task",
+  "summary": "Picks a diplomacy event caused by the character's spouse working as a councillor.",
+  "details": "Script fires it. It only runs if the character has a councillor spouse who is the saved scope `scope:councillor`. A weight of 300 is given to nothing happening. Vanilla groups most entries as notification events (a kinsman's opinion improves, a child rivalry ends, the spouse gains Gregarious) and the last four as plain events (reconcile with a rival, a foreign claimant seeks an audience).",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "court_scholar_ongoing",
+  "label": "Court scholar ongoing",
+  "summary": "Picks an event for a ruler who employs a court scholar.",
+  "details": "Script fires it. The ruler must be available, an adult and landed, must employ the court scholar position, and a scholar holding it must pass a check that, going by its name, means physically able, an adult and AI-controlled. Only about half the rolls can give an event (50% chance, and a \"nothing\" entry sits among the events too). They include inspiration events and skill development.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "culture_divergence_emergence_events",
+  "label": "Culture divergence chance",
+  "summary": "Gives a small chance each time it is fired of the event that creates a divergent culture.",
+  "details": "Script fires it. It is defined in vanilla's yearly on_action file. The chance is 1 in 200 per roll (weights 1 against 199 for nothing).",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "culture_hybridization_emergence_events",
+  "label": "Culture hybridization chance",
+  "summary": "Gives a small chance each time it is fired of the event that creates a hybrid culture with the character's capital culture.",
+  "details": "Script fires it. It is defined in vanilla's yearly on_action file. The chance is 5 in 100 per roll (weights 5 against 95 for nothing).",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "cycle_vizierate_politicking_events_on_action",
+  "label": "Vizierate politicking cycle",
+  "summary": "Picks a politicking event for a character aiming for the vizierate and keeps the cycle going.",
+  "details": "Script fires it. The most likely result (500) is a do-nothing event, kept, says vanilla's comment, so that the on_action is called again later. The others (a character makes new relationships, learns languages or studies to further their candidacy, or offers to replace the vizier) have lower weights.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "debate_discussion_events",
+  "label": "Debate discussions",
+  "summary": "Picks a random event during the discussion part of a debate activity.",
+  "details": "Script fires it. All 18 events have the same weight of 100. They include a hothead disciple, recruitment attempts, poaching a disciple, an elder speaking, and a rival criticizing the liege in a poem.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "debate_events",
+  "label": "Debate, main participants",
+  "summary": "Starts a debate event for the host or the challenged movement leader of a debate.",
+  "details": "Script fires it. It only runs for the activity host or the challenged movement leader (a variable on the activity). Vanilla's comment says later debate events are triggered from an `after` block. The event used here is `debate_event.5000`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "debate_opening_on_action",
+  "label": "Debate opens",
+  "summary": "Sends an opening event to everyone attending a debate who is at the activity location.",
+  "details": "Script fires it. It has no root character. The host and the challenged movement leader get `debate_event.1010`. Every other attendee gets `debate_event.1015`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "debate_prep_opening_on_action",
+  "label": "Debate preparation opens",
+  "summary": "Sends the preparation event to everyone attending a debate who is at the activity location.",
+  "details": "Script fires it. It has no root character. Everybody gets the same event, `debate_event.1000`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "destiny_child_events",
+  "label": "Destiny child events",
+  "summary": "Picks an event about a ruler's destiny child growing up.",
+  "details": "Script fires it. The ruler must be landed and not imprisoned. All eight events have the same weight of 50. They include the child's physical growth, debating scholars, offering military advice, and training with a knight.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "diarchy_mandate_fill_coffers_random",
+  "label": "Mandate: fill coffers",
+  "summary": "Picks a random event for the diarchy mandate about filling the coffers.",
+  "details": "Script fires it. The five events have equal weight. They are ways to raise money: an extra tax on a wealthy co-vassal, stricter contract terms, resettling peasants, stricter criminal fines and taxing exempt institutions.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "diarchy_mandate_placate_movements_random",
+  "label": "Mandate: placate movements",
+  "summary": "Picks a random event for the diarchy mandate about placating movements.",
+  "details": "Script fires it. The four events have equal weight. They negotiate a powerful character out of a faction, convince an undecided ruler to join your movement, antagonize another movement, or ask a movement leader to give up their movement.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "diarchy_mandate_promote_authority_random",
+  "label": "Mandate: promote authority",
+  "summary": "Picks a random event for the diarchy mandate about promoting authority.",
+  "details": "Script fires it. The five events have equal weight. Per vanilla's comments they boost what it abbreviates as CA/TA by negotiating with powerful vassals, reset a vassal contract cooldown, take a character or a group of counties out of a faction, and raise council members' opinion of their liege.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "diarchy_mandate_promote_merit_random",
+  "label": "Mandate: promote merit",
+  "summary": "Starts the event where you try to convince an undecided ruler to join your movement.",
+  "details": "Script fires it. It holds only one event, so that is the only one it can pick (the event's own conditions may still stop it).",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "diarchy_mandate_promote_might_random",
+  "label": "Mandate: promote might",
+  "summary": "Picks a random event for the diarchy mandate about promoting military might.",
+  "details": "Script fires it. The five events have equal weight. They round up recruits, woo a hedge knight, entice professional soldiers, empty the gaols and train baronial troops. The list is the same as in the swell armies mandate.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "diarchy_mandate_swell_armies_random",
+  "label": "Mandate: swell armies",
+  "summary": "Picks a random event for the diarchy mandate about building up the armies.",
+  "details": "Script fires it. The five events have equal weight. They round up recruits, woo a hedge knight, entice professional soldiers, empty the gaols and train baronial troops. The list is the same as in the promote might mandate.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "diplomacy_foreign_special_1010_court_visit_events",
+  "label": "Court visit events",
+  "summary": "Holds the events of a court visit: a success and a failure event, and four random scenes.",
+  "details": "Script fires it. Vanilla lists two events under `events`: one for a success (the guest had a good time, maybe with extra bonuses) and one for a failure (they go home unhappy). The input does not show how `events` entries are chosen, so it is unknown whether both run. It also picks one of four equally likely scenes: hunt or luncheon, dance or church, private dinner with a relative, and a compliment.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "diplomacy_foreign_special_1010_court_visit_interesting_relation_spy_outcome_events",
+  "label": "Court visit spy report",
+  "summary": "Lists the possible reports of a spy during a court visit, going by its name a spy watching an interesting relation.",
+  "details": "Script fires it. The four events are: nothing special happened, they seem friendly, they seem to be plotting, and they seem about to sleep together. The vanilla list is under `events`, not `random_events`, so the input does not show how one is chosen.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "diplomacy_lifestyle_common_events",
+  "label": "Diplomacy common events",
+  "summary": "Picks a common event for a character following the diplomacy lifestyle.",
+  "details": "Script fires it. Vanilla's comment says a character gets one common event roughly every 24 months, and that most lifestyle events should be common ones. The pool covers foreign affairs, family and majesty events, mostly with equal weight.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "diplomacy_lifestyle_ongoing_events",
+  "label": "Diplomacy lifestyle events",
+  "summary": "Rolls whether a diplomacy lifestyle character gets an event, and from which tier.",
+  "details": "Script fires it. The character must be available. A roll has a chance of 10%, which vanilla describes as roughly one event every 18 months. AI rulers get an extra \"no event\" chance (30 for kings and above, 70 for dukes, 95 for others). If an event happens, it is common 80%, uncommon 15% and rare 5%.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "diplomacy_lifestyle_progress_pulse",
+  "label": "Diplomacy lifestyle pulse",
+  "summary": "Checks four times a year whether a diplomacy lifestyle character is due a lifestyle event.",
+  "details": "Script fires it. The character must have the diplomacy lifestyle, be a playable character with a capital, and not be in a diplomacy event chain or have had a recent lifestyle event. Players must have had their focus for over 30 days. It then uses the first of two on_actions that can run: the general event pool, else the pool for unavailable characters.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "diplomacy_lifestyle_rare_events",
+  "label": "Diplomacy rare events",
+  "summary": "Picks a rare event for a character following the diplomacy lifestyle.",
+  "details": "Script fires it. Vanilla's comment says a character gets a rare event about once every 30 years, for character-defining events. The pool has a personality conflict between an heir and a vassal, and two nicknames. Its `fallback` is the uncommon events.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "diplomacy_lifestyle_unavailable_events",
+  "label": "Diplomacy events, unavailable",
+  "summary": "Picks an event for a diplomacy lifestyle character who is not available, such as a prisoner or a commander on campaign.",
+  "details": "Script fires it. The character must be unavailable. Only 10% of the time anything happens. The one event is a battle of ideas, weighed 50 against a 50 \"nothing\" entry. Vanilla's comment says that halves it during war, but the weights as shown apply regardless. Vanilla warns that every event in this pool must set its own availability trigger.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "diplomacy_lifestyle_uncommon_events",
+  "label": "Diplomacy uncommon events",
+  "summary": "Picks an uncommon event for a character following the diplomacy lifestyle.",
+  "details": "Script fires it. Vanilla's comment says a character gets one about once every 10 years, for longer chains. The only event is a court visit. Its `fallback` is the common events.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "disbelieve_mandala_ongoing",
+  "label": "Disbelieve mandala ongoing",
+  "summary": "Picks an event while a disbelieve mandala scheme is running.",
+  "details": "Script fires it. It only runs if the scheme exists as `scope:scheme`. Only 20% of rolls can give an event, and a weight of 300 goes to nothing. The events are general intrigue scheme events (agents, paying gold for progress) and two of its own: agents spread rumours that miracles are tricks, and a fake relic is planted at the target's court.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "disease_outbreak_pulse",
+  "label": "Disease outbreak pulse",
+  "summary": "Gives a small chance that a character falls ill with a disease.",
+  "details": "Script fires it. Each roll has a 10% chance to happen, and a named script value (`disease_outbreak_pulse_chance_of_no_event`) sets the chance of nothing. The events are Ill (by far the most likely, 4000), then pneumonic, gout, leprosy, consumption, cancer, lover's pox and great pox.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "dungeon_ongoing",
+  "label": "Dungeon ongoing",
+  "summary": "Picks an event for an imprisoned character while they sit in a dungeon.",
+  "details": "Script fires it. It only runs while the character still has an imprisoner, because they may have been released since. Only 50% of rolls give an event, and nothing has weight 500, the same as each long-term event. The events include a crazy neighbour, guards threatening you, infection, and writing to a relative. Long-term events can make the prisoner ill, gain stress, or lose their prison pet.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ }
+]

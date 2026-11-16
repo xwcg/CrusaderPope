@@ -1,0 +1,2201 @@
+[
+ {
+  "kind": "data_function",
+  "key": "struggle_persia_phase_unrest",
+  "label": "Unrest",
+  "summary": "The game concept Unrest: a phase of the Persian struggle in which the caliphate crumbles under rebellions and power grabs.",
+  "details": "In a text, `[struggle_persia_phase_unrest|E]` shows \"Unrest\" linked to the concept's explanation. Unless an ending phase resolves it, the struggle moves on to Stabilization over time. Vanilla uses it in decision requirements and catalyst texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/fp3/dlc_fp3_game_concepts_l_english.yml:31",
+   "vanilla: common/game_concepts/03_fp3_game_concepts.txt:118"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "struggle_phase",
+  "label": "Struggle phase",
+  "summary": "The game concept Struggle Phase: the current mood shared by the involved characters and counties of a struggle region.",
+  "details": "In a text, `[struggle_phase|E]` shows \"Struggle Phase\" linked to the concept's explanation. A phase stands for short-term trends, for example that religious tolerance matters most for now. Vanilla uses it in faction reasons and decision requirements such as \"The current struggle phase is ...\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/fp2/dlc_fp2_game_concepts_l_english.yml:9",
+   "vanilla: common/game_concepts/03_fp2_game_concepts.txt:5"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "struggle_phase_iberia_compromise",
+  "label": "Compromise phase",
+  "summary": "The game concept Compromise Phase: a phase of the Iberian struggle in which its peoples grow closer and old differences fade.",
+  "details": "In a text, `[struggle_phase_iberia_compromise|E]` shows \"Compromise Phase\" linked to the concept's explanation. It follows Hostility or Conciliation, and new conflicts lead on to the Opportunity phase. Vanilla uses it in casus belli cost texts and other Iberian phase descriptions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/fp2/dlc_fp2_game_concepts_l_english.yml:48",
+   "vanilla: common/game_concepts/03_fp2_game_concepts.txt:53"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "struggle_phase_iberia_conciliation",
+  "label": "Conciliation phase",
+  "summary": "The game concept Conciliation Phase: a phase of the Iberian struggle with very friendly relations, where marriages across faiths are common.",
+  "details": "In a text, `[struggle_phase_iberia_conciliation|E]` shows \"Conciliation Phase\" linked to the concept's explanation. It grows out of Compromise, and broken trust brings the struggle back to Compromise. Vanilla uses it in casus belli cost texts and other Iberian phase descriptions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/fp2/dlc_fp2_game_concepts_l_english.yml:51",
+   "vanilla: common/game_concepts/03_fp2_game_concepts.txt:58"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "struggle_phase_iberia_hostility",
+  "label": "Hostility phase",
+  "summary": "The game concept Hostility Phase: a phase of the Iberian struggle with rising hatred of characters of other cultures or faiths.",
+  "details": "In a text, `[struggle_phase_iberia_hostility|E]` shows \"Hostility Phase\" linked to the concept's explanation. It follows the Opportunity phase, and in time exhaustion leads on to Compromise. Vanilla uses it in casus belli cost texts and other Iberian phase descriptions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/fp2/dlc_fp2_game_concepts_l_english.yml:45",
+   "vanilla: common/game_concepts/03_fp2_game_concepts.txt:48"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "struggle_phase_iberia_opportunity",
+  "label": "Opportunity phase",
+  "summary": "The game concept Opportunity Phase: a phase of the Iberian struggle in which complacency lets shrewd characters take advantage of others.",
+  "details": "In a text, `[struggle_phase_iberia_opportunity|E]` shows \"Opportunity Phase\" linked to the concept's explanation. It can lead to Hostility or to Conciliation. Vanilla uses it in decision requirements (forming Portugal) and casus belli cost texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/fp2/dlc_fp2_game_concepts_l_english.yml:42",
+   "vanilla: common/game_concepts/03_fp2_game_concepts.txt:43"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "struggle_phase_phase",
+  "label": "Struggle phase",
+  "summary": "Another name of the game concept Struggle Phase, shown as the word Phase (the current mood of a struggle region).",
+  "details": "In a text, `[struggle_phase_phase|E]` shows \"Phase\" linked to the concept's explanation. Vanilla uses it in effect texts about a struggle moving to a new phase.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/fp2/dlc_fp2_game_concepts_l_english.yml:10",
+   "vanilla: common/game_concepts/03_fp2_game_concepts.txt:5"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "struggle_phase_phases",
+  "label": "Struggle phase",
+  "summary": "The plural form of the game concept Struggle Phase, shown as the word Phases.",
+  "details": "In a text, `[struggle_phase_phases|E]` shows \"Phases\" linked to the concept's explanation. Vanilla uses it in the other struggle concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/fp2/dlc_fp2_game_concepts_l_english.yml:11",
+   "vanilla: common/game_concepts/03_fp2_game_concepts.txt:5"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "struggle_region",
+  "label": "Struggle region",
+  "summary": "The game concept Struggle Region: the map region a struggle is tied to.",
+  "details": "In a text, `[struggle_region|E]` shows \"Struggle Region\" linked to the concept's explanation. Where a character is within it, together with their culture and faith, decides whether they are involved, an interloper or uninvolved; its counties get modifiers that depend on the phase. Vanilla uses it in the other struggle concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/fp2/dlc_fp2_game_concepts_l_english.yml:32",
+   "vanilla: common/game_concepts/03_fp2_game_concepts.txt:29"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "struggle_region_region",
+  "label": "Struggle region",
+  "summary": "Another name of the game concept Struggle Region, shown as the word Region (the map region a struggle is tied to).",
+  "details": "In a text, `[struggle_region_region|E]` shows \"Region\" linked to the concept's explanation. Vanilla uses it in a council task text that forbids converting a county in this struggle region.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/fp2/dlc_fp2_game_concepts_l_english.yml:33",
+   "vanilla: common/game_concepts/03_fp2_game_concepts.txt:29"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "struggle_region_regions",
+  "label": "Struggle region",
+  "summary": "The plural form of the game concept Struggle Region, shown as the word Regions.",
+  "details": "In a text, `[struggle_region_regions|E]` shows \"Regions\" linked to the concept's explanation. Vanilla uses it in the Struggle concept text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/fp2/dlc_fp2_game_concepts_l_english.yml:34",
+   "vanilla: common/game_concepts/03_fp2_game_concepts.txt:29"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "struggle_struggles",
+  "label": "Struggle",
+  "summary": "The plural form of the game concept Struggle (long conflicts over large regions with many faiths and cultures).",
+  "details": "In a text, `[struggle_struggles|E]` shows \"Struggles\" linked to the concept's explanation. Vanilla uses it in the situation list window's header and in struggle concept and tutorial texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/fp2/dlc_fp2_game_concepts_l_english.yml:3",
+   "vanilla: common/game_concepts/03_fp2_game_concepts.txt:3"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "struggle_struggles_possessive",
+  "label": "Struggle",
+  "summary": "The possessive form of the game concept Struggle (a long conflict over a large region).",
+  "details": "In a text, `[struggle_struggles_possessive|E]` shows \"Struggle's\" linked to the concept's explanation. No vanilla text links it by this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/fp2/dlc_fp2_game_concepts_l_english.yml:4",
+   "vanilla: common/game_concepts/03_fp2_game_concepts.txt:3"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "struggle_uninvolved",
+  "label": "Uninvolved",
+  "summary": "The game concept Uninvolved: a character whose capital lies outside a struggle's region, an outsider to that struggle.",
+  "details": "In a text, `[struggle_uninvolved|E]` shows \"Uninvolved\" linked to the concept's explanation. Uninvolved rulers usually take harsh penalties in counties they hold inside the struggle region. Vanilla uses it in an achievement and in other struggle concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/fp2/dlc_fp2_game_concepts_l_english.yml:26",
+   "vanilla: localization/english/dlc/fp2/dlc_fp2_game_concepts_l_english.yml:27",
+   "vanilla: common/game_concepts/03_fp2_game_concepts.txt:23"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "student",
+  "label": "Student",
+  "summary": "The game concept Student: a character a mentor advises to improve one of their skills.",
+  "details": "In a text, `[student|E]` shows \"Student\" linked to the concept's explanation. Mentors come through events when the lifestyle focus is on a skill they are good at. Vanilla uses it in relation texts and in the relations and mentor concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1670",
+   "vanilla: common/game_concepts/00_game_concepts.txt:2643"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "student_possessive",
+  "label": "Student",
+  "summary": "The possessive form of the game concept Student (a character a mentor advises).",
+  "details": "In a text, `[student_possessive|E]` shows \"Student's\" linked to the concept's explanation. No vanilla text links it by this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1672",
+   "vanilla: common/game_concepts/00_game_concepts.txt:2643"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "students",
+  "label": "Student",
+  "summary": "The plural form of the game concept Student (characters a mentor advises).",
+  "details": "In a text, `[students|E]` shows \"Students\" linked to the concept's explanation. No vanilla text links it by this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1671",
+   "vanilla: common/game_concepts/00_game_concepts.txt:2643"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "students_possessive",
+  "label": "Student",
+  "summary": "The plural possessive form of the game concept Student (characters a mentor advises).",
+  "details": "In a text, `[students_possessive|E]` shows \"Students'\" linked to the concept's explanation. No vanilla text links it by this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1673",
+   "vanilla: common/game_concepts/00_game_concepts.txt:2643"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "subject",
+  "label": "Subject",
+  "summary": "The game concept Subject: any ruler who has sworn loyalty to another ruler, such as a vassal or a tributary.",
+  "details": "In a text, `[subject|E]` shows \"Subject\" linked to the concept's explanation. Each type of subject has its own rules. Vanilla uses it often, in obligation and interaction texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:100",
+   "vanilla: common/game_concepts/mpo_game_concepts.txt:147"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "subject_standing",
+  "label": "Subject standing",
+  "summary": "The game concept Subject Standing: the status a liege or suzerain gives to one of their vassals or tributaries.",
+  "details": "In a text, `[subject_standing|E]` shows \"Subject Standing\" linked to the concept's explanation. Vanilla uses it in a custom text for the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:66",
+   "vanilla: common/game_concepts/tgp_game_concepts.txt:127"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "subjects",
+  "label": "Subject",
+  "summary": "The plural form of the game concept Subject (rulers who have sworn loyalty to another ruler).",
+  "details": "In a text, `[subjects|E]` shows \"Subjects\" linked to the concept's explanation. Vanilla uses it in government rule texts and important action texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:102",
+   "vanilla: common/game_concepts/mpo_game_concepts.txt:147"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "subordinate",
+  "label": "Religious subordinate",
+  "summary": "Another name of the game concept Religious Subordinate: a character who has a religious superior in a church hierarchy.",
+  "details": "In a text, `[subordinate|E]` shows \"Subordinate\" linked to the concept's explanation. Vanilla uses it in clergy interaction texts, for example that the recipient must be your vassal, subordinate or below.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:111",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:164"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "subordinates",
+  "label": "Religious subordinate",
+  "summary": "The plural form of the game concept Religious Subordinate (characters who have a religious superior).",
+  "details": "In a text, `[subordinates|E]` shows \"Subordinates\" linked to the concept's explanation. Vanilla uses it in law texts about how easily subordinates can be made puppets.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:112",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:164"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "success_chance",
+  "label": "Scheme success chance",
+  "summary": "Another name of the game concept Scheme Success Chance: how likely a scheme is to succeed when it is carried out.",
+  "details": "In a text, `[success_chance|E]` shows \"Success Chance\" linked to the concept's explanation. It grows over time from the agents and a skill, is capped by the scheme potential, and never goes above 95% except for contract schemes. Vanilla uses it very often in scheme bonus texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1195",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1861"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "success_chance_growth_i",
+  "label": "Scheme growth",
+  "summary": "The icon form of the game concept Scheme Growth (how much a scheme's success chance rises each phase).",
+  "details": "`[success_chance_growth_i]` shows the scheme growth icon instead of a word; with `|E` it is also linked to the concept's explanation. No vanilla text uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1199",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1867"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "success_chance_i",
+  "label": "Scheme success chance",
+  "summary": "The icon form of the game concept Scheme Success Chance (how likely a scheme is to succeed).",
+  "details": "`[success_chance_i]` shows the success chance icon instead of a word; with `|E` it is also linked to the concept's explanation. Vanilla writes it before the bonus in tenet texts that raise scheme success chance.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1196",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1861"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "success_chance_max_i",
+  "label": "Scheme potential",
+  "summary": "The icon form of the game concept Scheme Potential (the highest success chance a scheme can reach).",
+  "details": "`[success_chance_max_i]` shows the scheme potential icon instead of a word; with `|E` it is also linked to the concept's explanation. Vanilla writes it in scheme agent texts, before agent types that raise the potential.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1206",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1873"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "succession",
+  "label": "Succession",
+  "summary": "The game concept Succession: when a ruler dies, their gold and titles go to their heirs by the succession laws.",
+  "details": "In a text, `[succession|E]` shows \"Succession\" linked to the concept's explanation. The player goes on as the player heir even if some titles go to others; with no player heir the game ends. Rare cases, such as losing an excommunication war, force a succession before death. Vanilla uses it often, for example in succession decision texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:116",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1764"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "succession_law",
+  "label": "Succession law",
+  "summary": "The game concept Succession Law: the rule that decides what happens to a ruler's titles on succession.",
+  "details": "In a text, `[succession_law|E]` shows \"Succession Law\" linked to the concept's explanation. A single title can have its own succession law that takes precedence over the ruler's main one. Changing it needs the right level of crown authority. Vanilla uses it in faction reasons and other concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:174",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1772"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "succession_laws",
+  "label": "Succession law",
+  "summary": "The plural form of the game concept Succession Law (the rules that decide who inherits a ruler's titles).",
+  "details": "In a text, `[succession_laws|E]` shows \"Succession Laws\" linked to the concept's explanation. Vanilla uses it in the Succession concept text and in crown authority texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:175",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1772"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "superior",
+  "label": "Religious superior",
+  "summary": "Another name of the game concept Religious Superior: a character with religious authority over one or more clergy below them in a church hierarchy.",
+  "details": "In a text, `[superior|E]` shows \"Superior\" linked to the concept's explanation. Vanilla uses it in clergy interaction texts and theocratic lease texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:106",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:140"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "supplied",
+  "label": "Supply",
+  "summary": "Another name of the game concept Supply, shown as the word Supplied (the food and equipment an army carries).",
+  "details": "In a text, `[supplied|E]` shows \"Supplied\" linked to the Supply concept's explanation. No vanilla text links it by this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1172",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1822"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "supplies",
+  "label": "Supply",
+  "summary": "Another name of the game concept Supply, shown as the word Supplies (the food and equipment an army carries).",
+  "details": "In a text, `[supplies|E]` shows \"Supplies\" linked to the Supply concept's explanation. Vanilla uses it in the effect texts for an army gaining or losing supplies.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1173",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1822"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "supply",
+  "label": "Supply",
+  "summary": "The game concept Supply: the food and equipment an army carries.",
+  "details": "In a text, `[supply|E]` shows \"Supply\" linked to the concept's explanation. An army above the local supply limit loses supply; low supply gives a battle advantage penalty, and none at all brings attrition. Supply comes back over time below the limit in friendly land. Vanilla uses it in other concept texts such as terrain and attrition.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1169",
+   "vanilla: localization/english/game_concepts_l_english.yml:1171",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1822"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "supply_limit",
+  "label": "Supply limit",
+  "summary": "The game concept Supply Limit: how many soldiers a barony can support, set by its terrain and development.",
+  "details": "In a text, `[supply_limit|E]` shows \"Supply Limit\" linked to the concept's explanation. Armies above it lose supply and in time suffer attrition. Vanilla uses it in commander and government texts, such as a penalty in hostile tribal land.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1175",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1829"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "supply_state",
+  "label": "Supply",
+  "summary": "Another name of the game concept Supply, shown as the words Supply State (the food and equipment an army carries).",
+  "details": "In a text, `[supply_state|E]` shows \"Supply State\" linked to the Supply concept's explanation. No vanilla text links it by this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1170",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1822"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "supremacy",
+  "label": "Bloc supremacy war",
+  "summary": "Another name of the game concept Bloc Supremacy War, shown as the word Supremacy: a war between the leading houses of two soryo house blocs.",
+  "details": "In a text, `[supremacy|E]` shows \"Supremacy\" linked to the Bloc Supremacy War concept's explanation. All members of both blocs join; the winner gains cohesion, the loser loses a third of its cohesion, and some of the loser's member houses switch sides. Vanilla uses it in the war's outcome texts (\"proved its supremacy\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2752",
+   "vanilla: localization/english/game_concepts_l_english.yml:2753",
+   "vanilla: common/game_concepts/tgp_game_concepts.txt:865"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "suzerain",
+  "label": "Suzerain",
+  "summary": "The game concept Suzerain: a ruler who has at least one tributary.",
+  "details": "In a text, `[suzerain|E]` shows \"Suzerain\" linked to the concept's explanation. A suzerain may be a tributary of someone else but never a vassal. Vanilla uses it often, for example in war texts warning that attacking a suzerain breaks the tributary contract.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:88",
+   "vanilla: common/game_concepts/mpo_game_concepts.txt:135"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "suzerain_possessive",
+  "label": "Suzerain",
+  "summary": "The possessive form of the game concept Suzerain (a ruler with at least one tributary).",
+  "details": "In a text, `[suzerain_possessive|E]` shows \"Suzerain's\" linked to the concept's explanation. Vanilla uses it in phrases like \"your suzerain's realm\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:92",
+   "vanilla: common/game_concepts/mpo_game_concepts.txt:135"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "suzerain_taxes",
+  "label": "Suzerain taxes",
+  "summary": "The game concept Suzerain Taxes: the taxes a tributary must pay to their suzerain as part of their obligations.",
+  "details": "In a text, `[suzerain_taxes|E]` shows \"Suzerain Taxes\" linked to the concept's explanation. Seen from the suzerain's side, the same money is called tributary taxes. Vanilla has a custom text, TAX_TO_SUZERAIN, that shows it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1247",
+   "vanilla: common/game_concepts/mpo_game_concepts.txt:193"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "suzerains",
+  "label": "Suzerain",
+  "summary": "The plural form of the game concept Suzerain (rulers with at least one tributary).",
+  "details": "In a text, `[suzerains|E]` shows \"Suzerains\" linked to the concept's explanation. Vanilla uses it in the overlord concept text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:90",
+   "vanilla: common/game_concepts/mpo_game_concepts.txt:135"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "swing_scales_of_power",
+  "label": "Swing the scales of power",
+  "summary": "The game concept Swing the Scales of Power: a liege or diarch pays prestige, piety or gold to move the scales of power in their favor.",
+  "details": "In a text, `[swing_scales_of_power|E]` shows the concept's name (\"Swing the\" followed by the scales of power concept's name) linked to its explanation. Vanilla uses it in perk effect texts about doing it more efficiently while traveling.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2702",
+   "vanilla: common/game_concepts/04_ep2_game_concepts.txt:165"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "swing_scales_of_power_interaction",
+  "label": "Swing the scales of power",
+  "summary": "Another name of the game concept Swing the Scales of Power (paying prestige, piety or gold to move the scales of power one's way).",
+  "details": "In a text, `[swing_scales_of_power_interaction|E]` shows the same name as `[swing_scales_of_power|E]`, linked to the concept's explanation. No vanilla text links it by this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2703",
+   "vanilla: common/game_concepts/04_ep2_game_concepts.txt:165"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "task_contract",
+  "label": "Contract",
+  "summary": "The game concept Contract: a task a local ruler offers to adventurers, their main way to earn gold or prestige.",
+  "details": "In a text, `[task_contract|E]` shows \"Contract\" linked to the concept's explanation. Contracts usually ask for a scheme, a journey or help in a war, may also give provisions, piety or artifacts, and add the contractor to the contact list. Higher-tier rulers offer better paid contracts; criminal ones pay well but are risky. Vanilla uses it very often.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:167",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:171",
+   "vanilla: common/game_concepts/07_ep3_game_concepts.txt:210"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "task_contract_possessive",
+  "label": "Contract",
+  "summary": "The possessive form of the game concept Contract (a task a ruler offers to adventurers).",
+  "details": "In a text, `[task_contract_possessive|E]` shows \"Contract's\" linked to the concept's explanation. Vanilla uses it in a governance text about the contract's location.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:169",
+   "vanilla: common/game_concepts/07_ep3_game_concepts.txt:210"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "task_contract_tier",
+  "label": "Contract tier",
+  "summary": "The game concept Contract Tier: a star rating of a contract that follows the title tier of the ruler who offers it.",
+  "details": "In a text, `[task_contract_tier|E]` shows \"Contract Tier\" linked to the concept's explanation. Barons and counts give one star, dukes two, kings and emperors three; rulers do not offer work to adventurers whose prestige level is too low for their rank. Vanilla uses it in contract and decision texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:174",
+   "vanilla: common/game_concepts/07_ep3_game_concepts.txt:215"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "task_contract_tier_i",
+  "label": "Contract tier",
+  "summary": "The icon form of the game concept Contract Tier (a contract's star rating).",
+  "details": "`[task_contract_tier_i]` shows the contract tier icon instead of a word; with `|E` it is also linked to the concept's explanation. No vanilla text uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:173",
+   "vanilla: common/game_concepts/07_ep3_game_concepts.txt:215"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "task_contract_tier_tier",
+  "label": "Contract tier",
+  "summary": "Another name of the game concept Contract Tier, shown as the word Tier (a contract's star rating).",
+  "details": "In a text, `[task_contract_tier_tier|E]` shows \"Tier\" linked to the concept's explanation. Vanilla uses it in the Contract concept text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:175",
+   "vanilla: common/game_concepts/07_ep3_game_concepts.txt:215"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "task_contracts",
+  "label": "Contract",
+  "summary": "The plural form of the game concept Contract (tasks rulers offer to adventurers).",
+  "details": "In a text, `[task_contracts|E]` shows \"Contracts\" linked to the concept's explanation. Vanilla uses it in government rule and important action texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:168",
+   "vanilla: common/game_concepts/07_ep3_game_concepts.txt:210"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "task_contracts_i",
+  "label": "Contract",
+  "summary": "The icon form of the game concept Contract (a task rulers offer to adventurers).",
+  "details": "`[task_contracts_i]` shows the contract icon instead of a word; with `|E` it is also linked to the concept's explanation. No vanilla text uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:166",
+   "vanilla: common/game_concepts/07_ep3_game_concepts.txt:210"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "task_contracts_possessive",
+  "label": "Contract",
+  "summary": "The plural possessive form of the game concept Contract (tasks rulers offer to adventurers).",
+  "details": "In a text, `[task_contracts_possessive|E]` shows \"Contracts'\" linked to the concept's explanation. No vanilla text links it by this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:170",
+   "vanilla: common/game_concepts/07_ep3_game_concepts.txt:210"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tax",
+  "label": "Taxes",
+  "summary": "Another name of the game concept Taxes, shown as the word Tax (a ruler's most important monthly gold income).",
+  "details": "In a text, `[tax|E]` shows \"Tax\" linked to the Taxes concept's explanation. Vanilla uses it often, for example in the tax income estimate (\"Total Tax Income\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:838",
+   "vanilla: common/game_concepts/00_game_concepts.txt:66"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tax_collector",
+  "label": "Tax collector",
+  "summary": "The game concept Tax Collector: the character who makes a tax jurisdiction work.",
+  "details": "In a text, `[tax_collector|E]` shows \"Tax Collector\" linked to the concept's explanation. Their aptitude decides how much tax and levies they collect for their liege. Vanilla uses it in effect texts about someone stopping being a tax collector.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2530",
+   "vanilla: common/game_concepts/03_fp3_game_concepts.txt:31"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tax_collectors",
+  "label": "Tax collector",
+  "summary": "The plural form of the game concept Tax Collector (characters who make tax jurisdictions work).",
+  "details": "In a text, `[tax_collectors|E]` shows \"Tax Collectors\" linked to the concept's explanation. Vanilla uses it in the tax window and important action texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2532",
+   "vanilla: common/game_concepts/03_fp3_game_concepts.txt:31"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tax_decree",
+  "label": "Tax decree",
+  "summary": "The game concept Tax Decree: a setting of a tax jurisdiction that changes the taxes and levies its taxpayers give.",
+  "details": "In a text, `[tax_decree|E]` shows \"Tax Decree\" linked to the concept's explanation. Each jurisdiction can have its own; decrees often change obligations in exchange for another penalty or bonus. Vanilla uses it in the tax window's button to change the decree.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2534",
+   "vanilla: common/game_concepts/03_fp3_game_concepts.txt:37"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tax_decrees",
+  "label": "Tax decree",
+  "summary": "The plural form of the game concept Tax Decree (settings that change what a tax jurisdiction's taxpayers give).",
+  "details": "In a text, `[tax_decrees|E]` shows \"Tax Decrees\" linked to the concept's explanation. Vanilla uses it in the tax collector window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2536",
+   "vanilla: common/game_concepts/03_fp3_game_concepts.txt:37"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tax_jurisdiction",
+  "label": "Tax jurisdiction",
+  "summary": "The game concept Tax Jurisdiction: a group of up to 12 clan vassals who pay taxes together.",
+  "details": "In a text, `[tax_jurisdiction|E]` shows \"Tax Jurisdiction\" linked to the concept's explanation. Each one needs a tax collector and can have a tax decree; how many a ruler has depends on rank, traditions and innovations. Vanilla uses it in other tax concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2538",
+   "vanilla: common/game_concepts/03_fp3_game_concepts.txt:45"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tax_jurisdictions",
+  "label": "Tax jurisdiction",
+  "summary": "The plural form of the game concept Tax Jurisdiction (groups of clan vassals who pay taxes together).",
+  "details": "In a text, `[tax_jurisdictions|E]` shows \"Tax Jurisdictions\" linked to the concept's explanation. Vanilla uses it in government rule texts (\"Uses Tax Jurisdictions\") and concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2539",
+   "vanilla: common/game_concepts/03_fp3_game_concepts.txt:45"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "taxation",
+  "label": "Taxes",
+  "summary": "Another name of the game concept Taxes, shown as the word Taxation (a ruler's most important monthly gold income).",
+  "details": "In a text, `[taxation|E]` shows \"Taxation\" linked to the Taxes concept's explanation. Vanilla uses it in concept texts such as stewardship and gold.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:839",
+   "vanilla: common/game_concepts/00_game_concepts.txt:66"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "taxation_tour",
+  "label": "Taxation tour",
+  "summary": "The game concept Taxation Tour: a kind of tour in which you try to extract wealth from your vassals and gain gold.",
+  "details": "In a text, `[taxation_tour|E]` shows \"Taxation Tour\" linked to the concept's explanation. Vanilla uses it in the tour type concept text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2497",
+   "vanilla: common/game_concepts/04_ep2_game_concepts.txt:95"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "taxes",
+  "label": "Taxes",
+  "summary": "The game concept Taxes: a ruler's most important monthly source of gold.",
+  "details": "In a text, `[taxes|E]` shows \"Taxes\" linked to the concept's explanation. Every holding a ruler has gives domain taxes each month, and most vassals pay part of their taxes to their liege. Vanilla uses it very often.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:837",
+   "vanilla: common/game_concepts/00_game_concepts.txt:66"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "taxpayer",
+  "label": "Taxpayer",
+  "summary": "The game concept Taxpayer: a clan vassal assigned to a tax jurisdiction.",
+  "details": "In a text, `[taxpayer|E]` shows \"Taxpayer\" linked to the concept's explanation. A taxpayer gives monthly tax income and levies as long as the jurisdiction has a tax collector. Vanilla uses it in the tax collector window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2547",
+   "vanilla: common/game_concepts/03_fp3_game_concepts.txt:51"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "taxpayers",
+  "label": "Taxpayer",
+  "summary": "The plural form of the game concept Taxpayer (clan vassals assigned to a tax jurisdiction).",
+  "details": "In a text, `[taxpayers|E]` shows \"Taxpayers\" linked to the concept's explanation. Vanilla uses it in the other tax concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2548",
+   "vanilla: common/game_concepts/03_fp3_game_concepts.txt:51"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "temple",
+  "label": "Temple holding",
+  "summary": "Another name of the game concept Temple Holding, shown as the word Temple: a holding type held by clergy as church property.",
+  "details": "In a text, `[temple|E]` shows \"Temple\" linked to the concept's explanation. In faiths with the lay clergy doctrine anyone can hold temples without penalty; temples give a fairly even mix of levies and taxes. Vanilla uses it in holding concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:402",
+   "vanilla: common/game_concepts/00_game_concepts.txt:492"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "temple_citadel",
+  "label": "Temple citadel holding",
+  "summary": "Another name of the game concept Temple Citadel Holding, shown as the words Temple Citadel: a holding that mixes a castle's defenses with a temple's worship.",
+  "details": "In a text, `[temple_citadel|E]` shows \"Temple Citadel\" linked to the concept's explanation. It is the standard holding type of mandala rulers and gives an even amount of levies, piety and taxes. Vanilla uses it in holding and tradition texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1412",
+   "vanilla: common/game_concepts/00_game_concepts.txt:510"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "temple_citadel_holding",
+  "label": "Temple citadel holding",
+  "summary": "The game concept Temple Citadel Holding: a holding type that mixes a castle's defenses with a temple's worship.",
+  "details": "In a text, `[temple_citadel_holding|E]` shows \"Temple Citadel Holding\" linked to the concept's explanation. It is the standard holding type of mandala rulers and gives an even amount of levies, piety and taxes. Vanilla uses it in decision and tenet texts listing holding types.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1414",
+   "vanilla: common/game_concepts/00_game_concepts.txt:510"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "temple_citadel_holdings",
+  "label": "Temple citadel holding",
+  "summary": "The plural form of the game concept Temple Citadel Holding.",
+  "details": "In a text, `[temple_citadel_holdings|E]` shows \"Temple Citadel Holdings\" linked to the concept's explanation. Vanilla uses it in a decision event text that turns tribal holdings into temple citadels.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1415",
+   "vanilla: common/game_concepts/00_game_concepts.txt:510"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "temple_citadels",
+  "label": "Temple citadel holding",
+  "summary": "The plural form of the game concept Temple Citadel Holding, shown as the words Temple Citadels.",
+  "details": "In a text, `[temple_citadels|E]` shows \"Temple Citadels\" linked to the concept's explanation. Vanilla uses it in government and cultural tradition texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1413",
+   "vanilla: common/game_concepts/00_game_concepts.txt:510"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "temple_holding",
+  "label": "Temple holding",
+  "summary": "The game concept Temple Holding: a holding type held by clergy as church property.",
+  "details": "In a text, `[temple_holding|E]` shows \"Temple Holding\" linked to the concept's explanation. In faiths with the lay clergy doctrine anyone can hold temples without penalty; temples give a fairly even mix of levies and taxes. Vanilla uses it in decision texts, such as building a temple for a monastic order.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:401",
+   "vanilla: common/game_concepts/00_game_concepts.txt:492"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "temple_holdings",
+  "label": "Temple holding",
+  "summary": "The plural form of the game concept Temple Holding.",
+  "details": "In a text, `[temple_holdings|E]` shows \"Temple Holdings\" linked to the concept's explanation. Vanilla uses it in lease concept texts and cultural tradition texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:404",
+   "vanilla: common/game_concepts/00_game_concepts.txt:492"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "temples",
+  "label": "Temple holding",
+  "summary": "The plural form of the game concept Temple Holding, shown as the word Temples.",
+  "details": "In a text, `[temples|E]` shows \"Temples\" linked to the concept's explanation. Vanilla uses it in the holding and church property concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:403",
+   "vanilla: common/game_concepts/00_game_concepts.txt:492"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "temporal_head_of_faith",
+  "label": "Temporal head of faith",
+  "summary": "The game concept Temporal Head of Faith: a head of faith who acts much like an ordinary ruler.",
+  "details": "In a text, `[temporal_head_of_faith|E]` shows \"Temporal Head of Faith\" linked to the concept's explanation. The head of faith title is destroyed if they lose all their land, and if the faith allows great holy wars they direct them (for example jihads). Vanilla uses it in succession law and important action texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:969",
+   "vanilla: common/game_concepts/00_game_concepts.txt:394"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tenet",
+  "label": "Tenet",
+  "summary": "The game concept Tenet: one of a rite's own quirks and practices, as opposed to doctrines, the issues every rite takes a stance on.",
+  "details": "In a text, `[tenet|E]` shows \"Tenet\" linked to the concept's explanation. Vanilla uses it in tenet status texts and messages about monastic orders.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1366",
+   "vanilla: common/game_concepts/00_game_concepts.txt:2301"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tenet_knowledge",
+  "label": "Religious knowledge",
+  "summary": "The game concept Religious Knowledge: which tenets and doctrines a character knows the details of.",
+  "details": "In a text, `[tenet_knowledge|E]` shows \"Religious Knowledge\" linked to the concept's explanation. Known tenets and doctrines can be used to found a new rite and taken as personal tenets, and knowing all of a rite's makes converting easier. A character knows everything of their own faith and learns more from spouses, friends and travel. Vanilla uses it in faith window and decision texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:238",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:377"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tenet_popularity",
+  "label": "Tenet popularity",
+  "summary": "The game concept Tenet Popularity: how widespread a core tenet is within a faith.",
+  "details": "In a text, `[tenet_popularity|E]` shows \"Tenet Popularity\" linked to the concept's explanation. It grows as personal tenets spread, and it makes the tenet likelier to be debated at an ecumenical council or targeted by a papal bull; higher popularity puts more clergy on its side. Vanilla uses it in interaction and decision texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:313",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:358"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tenet_status",
+  "label": "Tenet status",
+  "summary": "The game concept Tenet Status: a rite's stance on a core tenet or doctrine, one of five.",
+  "details": "In a text, `[tenet_status|E]` shows \"Tenet Status\" linked to the concept's explanation. The stances run from unknown (never heard of it) and known (aware, no ruling) to permitted and beyond. It differs from a character's own religious knowledge. Vanilla uses it in the concept texts of each stance and of ecumenical councils.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:216",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:332"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tenets",
+  "label": "Tenet",
+  "summary": "The plural form of the game concept Tenet (a rite's own quirks and practices).",
+  "details": "In a text, `[tenets|E]` shows \"Tenets\" linked to the concept's explanation. No vanilla text links it by this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1368",
+   "vanilla: common/game_concepts/00_game_concepts.txt:2301"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tenno",
+  "label": "Japanese emperor",
+  "summary": "Another name of the game concept Japanese Emperor, shown as the word Ten'nō: the official emperor of Japan, while real power usually lies with the ceremonial regent.",
+  "details": "In a text, `[tenno|E]` shows \"Ten'nō\" linked to the concept's explanation. Vanilla uses it in AI interaction reasons and Japan decision event texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_japan_game_concepts_l_english.yml:64",
+   "vanilla: common/game_concepts/tgp_game_concepts.txt:583"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tenno_possessive",
+  "label": "Japanese emperor",
+  "summary": "The possessive form of the game concept Japanese Emperor, shown as Ten'nō's.",
+  "details": "In a text, `[tenno_possessive|E]` shows \"Ten'nō's\" linked to the concept's explanation. Vanilla uses it in Japan concept texts (\"in the Ten'nō's stead\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_japan_game_concepts_l_english.yml:65",
+   "vanilla: common/game_concepts/tgp_game_concepts.txt:583"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "terrain",
+  "label": "Terrain",
+  "summary": "The game concept Terrain: the main kind of land in a barony.",
+  "details": "In a text, `[terrain|E]` shows \"Terrain\" linked to the concept's explanation. It affects supply, army speed, how well men-at-arms fight in battle and which buildings can be built; many commander traits are about terrain. Vanilla uses it often, for example in building requirements.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:950",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1444"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "terrains",
+  "label": "Terrain",
+  "summary": "The plural form of the game concept Terrain (the main kind of land in a barony).",
+  "details": "In a text, `[terrains|E]` shows \"Terrains\" linked to the concept's explanation. Vanilla uses it in a lifestyle perk text about designated terrains.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:951",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1444"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "terrified_i",
+  "label": "Terrified",
+  "summary": "The icon form of the game concept Terrified (key `cowed`): a character so afraid of another that they rarely act against them.",
+  "details": "`[terrified_i]` shows the terrified icon instead of a word; with `|E` it is also linked to the concept's explanation. Vanilla writes it right before `[cowed|E]` in an interaction acceptance text and in reasons such as being cowed of someone.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1161",
+   "vanilla: common/game_concepts/00_game_concepts.txt:2170"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "the_christian_church",
+  "label": "The Christian Church",
+  "summary": "The game concept The Christian Church: the church body over all Christians, shown as a situation that moves through a series of chapters.",
+  "details": "In a text, `[the_christian_church|E]` shows \"The Christian Church\" linked to the concept's explanation. It covers every archdiocese; every Christian ruler of county rank or higher with part of their realm in one is a member, clergy or not. Vanilla uses it in interaction and situation catalyst texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:39",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:68"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "the_christian_church_chapter_short",
+  "label": "Christian Church chapter",
+  "summary": "Another name of the game concept The Christian Church Chapter, shown as the word Chapter: one of the seven phases of the Christian Church situation.",
+  "details": "In a text, `[the_christian_church_chapter_short|E]` shows \"Chapter\" linked to the concept's explanation. The chapters are grouped in four chapter types. Vanilla uses it in requirements such as \"must be in the Conversion or Crusade Chapter\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:55",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:73"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "the_christian_church_chapter_type",
+  "label": "Chapter type",
+  "summary": "The game concept Chapter Type: one of the four groups the Christian Church's chapters fall into.",
+  "details": "In a text, `[the_christian_church_chapter_type|E]` shows \"Chapter Type\" linked to the concept's explanation. The four types are unstable, crisis, zeal and stability. Vanilla uses it in the text that names the current chapter.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:59",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:79"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "the_christian_church_chapter_types",
+  "label": "Chapter type",
+  "summary": "The plural form of the game concept Chapter Type (the four groups of the Christian Church's chapters).",
+  "details": "In a text, `[the_christian_church_chapter_types|E]` shows \"Chapter Types\" linked to the concept's explanation. Vanilla uses it in the chapter concept text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:60",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:79"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "the_christian_church_chapters_short",
+  "label": "Christian Church chapter",
+  "summary": "The plural form of the game concept The Christian Church Chapter, shown as the word Chapters.",
+  "details": "In a text, `[the_christian_church_chapters_short|E]` shows \"Chapters\" linked to the concept's explanation. Vanilla uses it in the Christian Church concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:56",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:73"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "the_christian_church_crisis",
+  "label": "Crisis chapter",
+  "summary": "The game concept Crisis Chapter: the chapter type in which the Christian Church is at its worst.",
+  "details": "In a text, `[the_christian_church_crisis|E]` shows \"Crisis Chapter\" linked to the concept's explanation. In it indulgences may be cheaper, councils more frequent, rulers may appoint their own chaplains, clergy may marry and taxes may suffer. Saeculum Obscurum and the Investiture Crisis are crisis chapters. Vanilla uses it in the church window and a tutorial.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:75",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:92"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "the_christian_church_crisis_short",
+  "label": "Crisis chapter",
+  "summary": "Another name of the game concept Crisis Chapter, shown as the word Crisis.",
+  "details": "In a text, `[the_christian_church_crisis_short|E]` shows \"Crisis\" linked to the concept's explanation. Vanilla uses it in the chapter type concept text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:76",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:92"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "the_christian_church_stability",
+  "label": "Stability chapter",
+  "summary": "The game concept Stability Chapter: the rare chapter type in which the Christian Church does well.",
+  "details": "In a text, `[the_christian_church_stability|E]` shows \"Stability Chapter\" linked to the concept's explanation. In it building in temples is cheaper, grand cathedrals progress faster, characters more often become devoted and the Great Schism may be mended. Concord is the only stability chapter. Vanilla uses it in the church window and a tutorial.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:71",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:106"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "the_christian_church_stability_short",
+  "label": "Stability chapter",
+  "summary": "Another name of the game concept Stability Chapter, shown as the word Stability.",
+  "details": "In a text, `[the_christian_church_stability_short|E]` shows \"Stability\" linked to the concept's explanation. Vanilla uses it in the chapter type concept text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:72",
+   "vanilla: common/game_concepts/pam_game_concepts.txt:106"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "the_christian_church_unstable",
+  "label": "Instability chapter",
+  "summary": "The game concept Instability Chapter: a chapter of the Christian Church in which obedience is weak.",
+  "details": "In a text, `[the_christian_church_unstable|E]` shows the words \"Instability Chapter\" linked to the concept's explanation. During such a chapter rulers are easier to sway to another rite, excommunications can happen more often, and gold may be spent for personal benefit. The Fragile Unity and Reform phases are instability chapters. Vanilla uses it in the Christian Church window and in the situation's tooltips.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:63"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "the_christian_church_unstable_short",
+  "label": "Instability chapter",
+  "summary": "A short name of the game concept Instability Chapter: a chapter of the Christian Church in which obedience is weak.",
+  "details": "In a text, `[the_christian_church_unstable_short|E]` shows the word \"Instability\" linked to the concept's explanation. Vanilla uses it when listing the four chapter types of the Christian Church.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:64"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "the_christian_church_zeal",
+  "label": "Zeal chapter",
+  "summary": "The game concept Zeal Chapter: a chapter of the Christian Church in which religious fervour turns outward.",
+  "details": "In a text, `[the_christian_church_zeal|E]` shows the words \"Zeal Chapter\" linked to the concept's explanation. During such a chapter mass conversions can happen, great holy wars and papal bulls can become more common, and converting to another faith is easier. The Conversion and Crusade phases are zeal chapters. Vanilla uses it in the Christian Church window, the situation's tooltips and a tutorial text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:67"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "the_christian_church_zeal_short",
+  "label": "Zeal chapter",
+  "summary": "A short name of the game concept Zeal Chapter: a chapter of the Christian Church in which religious fervour turns outward.",
+  "details": "In a text, `[the_christian_church_zeal_short|E]` shows the word \"Zeal\" linked to the concept's explanation. Vanilla uses it when listing the four chapter types of the Christian Church.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:68"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "the_great_steppe",
+  "label": "The Great Steppe",
+  "summary": "The game concept The Great Steppe: the situation that stands for the grasslands of the Eurasian Steppe and their climate.",
+  "details": "In a text, `[the_great_steppe|E]` shows the words \"The Great Steppe\" linked to the concept's explanation. The steppe is split into a Western, a Central and an Eastern region. Its steppe seasons bring good and bad events, open special actions for their duration and change the county fertility of each region. Only nomadic and herder rulers take part, and the Gurkhan is the strongest ruler of the whole region.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:86"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "thematic",
+  "label": "Province",
+  "summary": "Another name of the game concept Province: a title held by a governor inside a realm with an administrative (bureaucratic) government.",
+  "details": "In a text, `[thematic|E]` shows the word \"Thematic\" linked to the Province concept's explanation; it is the adjective of the Byzantine-style name \"Theme\". Vanilla uses it only in `THEME_CONCEPT_ADJECTIVE`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:255",
+   "vanilla: common/game_concepts/07_ep3_game_concepts.txt:277"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "thematic_armies",
+  "label": "Provincial army",
+  "summary": "Another name, in the plural, of the game concept Provincial Army: an army raised and kept by a governor in an administrative realm.",
+  "details": "In a text, `[thematic_armies|E]` shows the words \"Thematic Armies\" linked to the Provincial Army concept's explanation. Such armies consist only of title men-at-arms, and the governor's efficiency affects how effective they are. Vanilla uses it only in `THEMATIC_ARMIES_CONCEPT`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:288"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "thematic_army",
+  "label": "Provincial army",
+  "summary": "Another name of the game concept Provincial Army: an army raised and kept by a governor in an administrative realm.",
+  "details": "In a text, `[thematic_army|E]` shows the words \"Thematic Army\" linked to the Provincial Army concept's explanation. Such armies consist only of title men-at-arms; the liege can spend influence to take control of them, and governors may borrow troops from peers, for example allies, or by using a hook. Vanilla's custom text `GetProvincialArmyConcept` picks this wording when the top liege's culture has the Byzantine heritage.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:285",
+   "vanilla: common/customizable_localization/07_ep3_custom_loc.txt:1438"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "theme",
+  "label": "Province",
+  "summary": "Another name of the game concept Province: a title held by a governor inside a realm with an administrative (bureaucratic) government.",
+  "details": "In a text, `[theme|E]` shows the word \"Theme\" linked to the Province concept's explanation. Each province has a province administration that strongly shapes what it gives. Vanilla's custom text `GetProvinceConcept` picks this wording when the top liege's culture has the Byzantine heritage; the administration window uses it directly too.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:253",
+   "vanilla: common/customizable_localization/07_ep3_custom_loc.txt:1340"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "theme_administration",
+  "label": "Province administration",
+  "summary": "Another name of the game concept Province Administration: the specialisation each province of an administrative realm has.",
+  "details": "In a text, `[theme_administration|E]` shows the words \"Theme Administration\" linked to the concept's explanation. The liege and the governor can set it, and only one can be active per province. Vanilla uses it in an interaction text about administration types.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:245"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "theme_administrations",
+  "label": "Province administration",
+  "summary": "Another name, in the plural, of the game concept Province Administration: the specialisation each province of an administrative realm has.",
+  "details": "In a text, `[theme_administrations|E]` shows the words \"Theme Administrations\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:246"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "themes",
+  "label": "Province",
+  "summary": "Another name, in the plural, of the game concept Province: a title held by a governor inside a realm with an administrative (bureaucratic) government.",
+  "details": "In a text, `[themes|E]` shows the word \"Themes\" linked to the Province concept's explanation. Vanilla uses it in the administration window, for the kingdom and duchy level themes assigned.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:254"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "theocracies",
+  "label": "Theocracy",
+  "summary": "The plural of the game concept Theocracy: a government form that some faiths allow, depending on their doctrines.",
+  "details": "In a text, `[theocracies|E]` shows the word \"Theocracies\" linked to the concept's explanation. Vanilla uses it in concept texts saying that commoners who become landed in theocracies (and republics) do not become nobles.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:870"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "theocracy",
+  "label": "Theocracy",
+  "summary": "The game concept Theocracy: a government form that some faiths allow, depending on their doctrines.",
+  "details": "In a text, `[theocracy|E]` shows the word \"Theocracy\" linked to the concept's explanation. A theocracy is usually led by a head of faith or by a landed realm priest, and a bishop can become an independent theocratic ruler. Vanilla uses it when listing the government forms and in casus belli texts about same-faith theocracies.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:869"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "theocracy_government",
+  "label": "Theocracy",
+  "summary": "Another name of the game concept Theocracy: a government form that some faiths allow, depending on their doctrines.",
+  "details": "In a text, `[theocracy_government|E]` shows the words \"Theocratic Government\" linked to the concept's explanation. Vanilla uses it in a tooltip saying the character will take up this government.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:873"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "theocracy_i",
+  "label": "Theocracy",
+  "summary": "The icon of the game concept Theocracy: a government form that some faiths allow, depending on their doctrines.",
+  "details": "In a text, `[theocracy_i|E]` shows the theocracy government icon linked to the concept's explanation. Vanilla puts it in front of the word in opinion modifier names such as \"Theocratic Ruler Opinion\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:874"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "theocratic",
+  "label": "Theocracy",
+  "summary": "Another name of the game concept Theocracy: a government form that some faiths allow, depending on their doctrines.",
+  "details": "In a text, `[theocratic|E]` shows the word \"Theocratic\" linked to the concept's explanation. It is the adjective; vanilla uses it often, for example for theocratic rulers and their church authority.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:871"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "theocratic_government",
+  "label": "Theocracy",
+  "summary": "Another name of the game concept Theocracy: a government form that some faiths allow, depending on their doctrines.",
+  "details": "In a text, `[theocratic_government|E]` shows the words \"Theocratic Government\" linked to the concept's explanation. Vanilla uses it in the Theocratic Vassal concept and in texts about the Christian situation's clerical rulers.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:872"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "theocratic_vassal",
+  "label": "Theocratic vassal",
+  "summary": "The game concept Theocratic Vassal: a vassal whose government form is theocracy.",
+  "details": "In a text, `[theocratic_vassal|E]` shows the words \"Theocratic Vassal\" linked to the concept's explanation. How such vassals behave depends on the doctrines of their faith. Vanilla uses it in a modifier text that grows per theocratic vassal.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1735"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "theocratic_vassals",
+  "label": "Theocratic vassal",
+  "summary": "The plural of the game concept Theocratic Vassal: vassals whose government form is theocracy.",
+  "details": "In a text, `[theocratic_vassals|E]` shows the words \"Theocratic Vassals\" linked to the concept's explanation. Vanilla uses it in interaction and tenet texts, for example that a head of faith grants no claims on theocratic vassals.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1736"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title",
+  "label": "Title",
+  "summary": "The game concept Title: in effect a deed of ownership over land.",
+  "details": "In a text, `[title|E]` shows the word \"Title\" linked to the concept's explanation. The barony is the smallest unit; baronies make up counties, and counties belong de jure (by law) to a duchy, duchies to a kingdom, kingdoms to an empire. Duchies, kingdoms and empires can be without a holder, and a ruler who controls enough of their land can create them. Vanilla uses it very widely.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:18"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title_allegiance",
+  "label": "Title allegiance",
+  "summary": "The game concept Title Allegiance: vassals who are bound to a particular title instead of to their liege as a person.",
+  "details": "In a text, `[title_allegiance|E]` shows the words \"Title Allegiance\" linked to the concept's explanation. It is only possible when the title has its own succession law. When the title passes on, these vassals become vassals of its new holder. Vanilla uses it in the realm window, the title view and a law's opinion line.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1555"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title_claim",
+  "label": "Title claim",
+  "summary": "The game concept Title Claim: a legal right to own a title, which gives a reason for war over it.",
+  "details": "In a text, `[title_claim|E]` shows the words \"Title Claim\" linked to the concept's explanation. A claim also lets a liege revoke the title from a vassal who holds it. Rulers usually get claims when they lose titles to someone else, or by fabricating them. Every child of a ruler, bastards too, has an implicit claim on the ruler's titles; claims not inherited turn into pressed claims, which their children inherit as unpressed claims.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:982"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title_claims",
+  "label": "Title claim",
+  "summary": "The plural of the game concept Title Claim: legal rights to own a title, which give a reason for war over it.",
+  "details": "In a text, `[title_claims|E]` shows the words \"Title Claims\" linked to the concept's explanation. Vanilla uses it in the artifact claim concept, comparing artifact claims with title claims.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:977"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title_creation",
+  "label": "Title creation",
+  "summary": "The game concept Title Creation: a ruler who controls most of the de jure land of a title nobody has created yet can create it.",
+  "details": "In a text, `[title_creation|E]` shows the words \"Title Creation\" linked to the concept's explanation. Creating a title costs gold and gives prestige. Only duchies, kingdoms and empires can be created. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1748"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title_heir",
+  "label": "Title heir",
+  "summary": "The game concept Title Heir: the heir to one particular title that has its own succession.",
+  "details": "In a text, `[title_heir|E]` shows the words \"Title Heir\" linked to the concept's explanation. This character receives the title when its current holder dies. Vanilla uses it in the concepts about electors and elective succession.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:128"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title_heirs",
+  "label": "Title heir",
+  "summary": "The plural of the game concept Title Heir: heirs to particular titles that have their own succession.",
+  "details": "In a text, `[title_heirs|E]` shows the words \"Title Heirs\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:129"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title_i",
+  "label": "Title",
+  "summary": "The icon of the game concept Title: in effect a deed of ownership over land.",
+  "details": "In a text, `[title_i|E]` shows the titles icon linked to the concept's explanation. Vanilla mostly writes `[title_i]` without `|E`, as a bare icon in front of a word.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:25"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title_law",
+  "label": "Title law",
+  "summary": "The game concept Title Law: a succession law that belongs to one particular title.",
+  "details": "In a text, `[title_law|E]` shows the words \"Title Law\" linked to the concept's explanation. That title then passes by different rules than the other titles of the same holder. Vanilla uses it in messages about a liege passing or revoking such a law.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:100"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title_laws",
+  "label": "Title law",
+  "summary": "The plural of the game concept Title Law: succession laws that belong to one particular title.",
+  "details": "In a text, `[title_laws|E]` shows the words \"Title Laws\" linked to the concept's explanation. Vanilla uses it in the effect texts for removing all title laws.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:101"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title_men_at_arms",
+  "label": "Title men-at-arms",
+  "summary": "The game concept Title Men-at-Arms: men-at-arms that belong to a title instead of to the ruler personally.",
+  "details": "In a text, `[title_men_at_arms|E]` shows the words \"Title Men-at-Arms\" linked to the concept's explanation. Whoever holds the title owns and commands these troops. Some government forms use them, such as administrative. Vanilla uses it in government and law texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:34"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title_rank",
+  "label": "Rank",
+  "summary": "The game concept Rank: a ruler's place in the hierarchy, the personal counterpart of a title's tier.",
+  "details": "In a text, `[title_rank|E]` shows the word \"Rank\" linked to the concept's explanation. Each title tier has a rank, which limits the highest rank the holder's vassals can have. From high to low: hegemon, emperor, king, duke, count, baron.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1402"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title_ranks",
+  "label": "Rank",
+  "summary": "The plural of the game concept Rank: a ruler's place in the hierarchy, the personal counterpart of a title's tier.",
+  "details": "In a text, `[title_ranks|E]` shows the word \"Ranks\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1399"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title_specific_succession",
+  "label": "Title succession",
+  "summary": "Another name of the game concept Title Succession: a succession law of a title's own, different from the one of the holder's realm.",
+  "details": "In a text, `[title_specific_succession|E]` shows the word \"Title-Specific\" linked to the concept's explanation. Vanilla uses it in the Title Law concept.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1587"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title_succession",
+  "label": "Title succession",
+  "summary": "The game concept Title Succession: a succession law of a title's own, different from the one of the holder's realm.",
+  "details": "In a text, `[title_succession|E]` shows the words \"Title Succession\" linked to the concept's explanation. Kingdoms and empires are the likeliest to have a traditional one. The holder can add or remove such laws, usually for prestige. Domiciles also have their own title succession, which cannot be removed.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1588"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title_tier",
+  "label": "Tier",
+  "summary": "The game concept Tier: a title's place in the hierarchy, the land counterpart of a ruler's rank.",
+  "details": "In a text, `[title_tier|E]` shows the word \"Tier\" linked to the concept's explanation. A title's tier limits the highest tier its holder's vassals can have. From high to low: hegemony, empire, kingdom, duchy, county, barony. Vanilla uses it very often.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1401"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "title_tiers",
+  "label": "Tier",
+  "summary": "The plural of the game concept Tier: a title's place in the hierarchy, the land counterpart of a ruler's rank.",
+  "details": "In a text, `[title_tiers|E]` shows the word \"Tiers\" linked to the concept's explanation.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1396"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "titlepossessive",
+  "label": "Title",
+  "summary": "The possessive form of the game concept Title: in effect a deed of ownership over land.",
+  "details": "In a text, `[titlepossessive|E]` shows the word \"Title's\" linked to the concept's explanation. Vanilla uses it for example in the Title Creation concept (\"a title's de jure land\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:27"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "titles",
+  "label": "Title",
+  "summary": "The plural of the game concept Title: in effect deeds of ownership over land.",
+  "details": "In a text, `[titles|E]` shows the word \"Titles\" linked to the concept's explanation. Vanilla uses it very widely.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:26"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "titular_title",
+  "label": "Titular title",
+  "summary": "The game concept Titular Title: a title that has no de jure land on the map.",
+  "details": "In a text, `[titular_title|E]` shows the words \"Titular Title\" linked to the concept's explanation. A title with land can become titular through de jure drift. Mercenary, head of faith and holy order titles are often titular.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1939"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tolerance",
+  "label": "Faith hostility",
+  "summary": "Another name of the game concept Faith Hostility: how faiths and rites regard each other, depending on how closely related they are.",
+  "details": "In a text, `[tolerance|E]` shows the word \"Tolerance\" linked to the concept's explanation. Closeness depends on whether they share a religion or religious family and on special doctrines; faiths far apart can often holy war each other. The relations are righteous, astray, hostile and evil. Vanilla uses it in the AI's acceptance breakdown (\"Your Tolerance Towards my Faith\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:322",
+   "vanilla: localization/english/game_concepts_l_english.yml:1963"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tolerate",
+  "label": "Faith hostility",
+  "summary": "Another name of the game concept Faith Hostility: how faiths and rites regard each other, depending on how closely related they are.",
+  "details": "In a text, `[tolerate|E]` shows the word \"Tolerate\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:323"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tolerates",
+  "label": "Faith hostility",
+  "summary": "Another name of the game concept Faith Hostility: how faiths and rites regard each other, depending on how closely related they are.",
+  "details": "In a text, `[tolerates|E]` shows the word \"Tolerates\" linked to the concept's explanation. Vanilla uses it in a decision text about secret believers revealing themselves when your faith tolerates their secret faith better than their public one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:324"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "top_liege",
+  "label": "Top liege",
+  "summary": "The game concept Top Liege: the liege at the very top of a vassal hierarchy.",
+  "details": "In a text, `[top_liege|E]` shows the words \"Top Liege\" linked to the concept's explanation. The top liege is a fully independent ruler with no one above them. Vanilla uses it often.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:357"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "top_liege_possessive",
+  "label": "Top liege",
+  "summary": "The possessive form of the game concept Top Liege: the liege at the very top of a vassal hierarchy.",
+  "details": "In a text, `[top_liege_possessive|E]` shows the words \"Top Liege's\" linked to the concept's explanation. Vanilla uses it in law and decision texts, for example about the top liege's culture.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:359"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "top_lieges",
+  "label": "Top liege",
+  "summary": "The plural of the game concept Top Liege: lieges at the very top of a vassal hierarchy.",
+  "details": "In a text, `[top_lieges|E]` shows the words \"Top Lieges\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:358"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "top_realm",
+  "label": "Top realm",
+  "summary": "The game concept Top Realm: the realm of the top liege, the whole realm at the top of a vassal hierarchy.",
+  "details": "In a text, `[top_realm|E]` shows the words \"Top Realm\" linked to the concept's explanation.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:361"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "torture",
+  "label": "Torture",
+  "summary": "The game concept Torture: imprisoned characters can be tortured, which harms their health or maims them.",
+  "details": "In a text, `[torture|E]` shows the word \"Torture\" linked to the concept's explanation. Torturing lowers stress for callous and sadistic characters but adds stress for kind-natured ones. Torturing rulers can raise the torturer's dread.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1099"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tortured",
+  "label": "Torture",
+  "summary": "Another form of the game concept Torture: imprisoned characters can be tortured, which harms their health or maims them.",
+  "details": "In a text, `[tortured|E]` shows the word \"Tortured\" linked to the concept's explanation; the concept's own description uses this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1097"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "torturing",
+  "label": "Torture",
+  "summary": "Another form of the game concept Torture: imprisoned characters can be tortured, which harms their health or maims them.",
+  "details": "In a text, `[torturing|E]` shows the word \"Torturing\" linked to the concept's explanation.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1098"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "toughness",
+  "label": "Toughness",
+  "summary": "The game concept Toughness: how much damage a soldier can take in battle before becoming a casualty.",
+  "details": "In a text, `[toughness|E]` shows the word \"Toughness\" linked to the concept's explanation. A levy soldier's toughness is the define `NCombat` `LEVY_TOUGHNESS`, which the concept text shows. Vanilla uses it often, for example in council task texts and concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1458"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tour",
+  "label": "Tour",
+  "summary": "The game concept Tour: a grand activity in which a liege visits a number of their vassals for rewards.",
+  "details": "In a text, `[tour|E]` shows the word \"Tour\" linked to the concept's explanation. The rewards can be gold, dread, opinion, control and cultural acceptance.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2461"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tour_grounds",
+  "label": "Tour the grounds",
+  "summary": "Another name of the game concept Tour the Grounds: a phase of a royal tour in which the liege visits one vassal.",
+  "details": "In a text, `[tour_grounds|E]` shows the words \"Tour Grounds\" linked to the concept's explanation. The visit often raises control in the vassal's counties. Vanilla uses it in the tour phase's cost text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2481"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tour_of_the_grounds",
+  "label": "Tour the grounds",
+  "summary": "Another name of the game concept Tour the Grounds: a phase of a royal tour in which the liege visits one vassal.",
+  "details": "In a text, `[tour_of_the_grounds|E]` shows the words \"Tour of the Grounds\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2480"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tour_stop",
+  "label": "Tour stop",
+  "summary": "The game concept Tour Stop: a phase of a royal tour at one vassal, where the liege attends a hosted dinner, tours the grounds or enjoys a cultural festival.",
+  "details": "In a text, `[tour_stop|E]` shows the words \"Tour Stop\" linked to the concept's explanation. No vanilla text uses this name in the singular.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2482"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tour_stops",
+  "label": "Tour stop",
+  "summary": "The plural of the game concept Tour Stop: phases of a royal tour at one vassal each, where the liege attends a hosted dinner, tours the grounds or enjoys a cultural festival.",
+  "details": "In a text, `[tour_stops|E]` shows the words \"Tour Stops\" linked to the concept's explanation. Vanilla uses it in a text saying that a tour is mainly shaped by how many stops you make and which options you pick.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2486"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tour_success",
+  "label": "Tour success",
+  "summary": "The game concept Tour Success: the value that decides which rewards a tour gives at its end.",
+  "details": "In a text, `[tour_success|E]` shows the words \"Tour Success\" linked to the concept's explanation. Points are gained or lost through the options picked at the start and through choices that fit or go against the tour type. Vanilla uses it in the tour's reward list by level.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2487"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tour_success_point",
+  "label": "Tour success",
+  "summary": "Another name of the game concept Tour Success: the value that decides which rewards a tour gives at its end.",
+  "details": "In a text, `[tour_success_point|E]` shows the words \"Tour Success Point\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2490"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "tour_success_points",
+  "label": "Tour success",
+  "summary": "Another name of the game concept Tour Success: the value that decides which rewards a tour gives at its end.",
+  "details": "In a text, `[tour_success_points|E]` shows the words \"Tour Success Points\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2489"
+  ],
+  "uncertain": false
+ }
+]

@@ -1,0 +1,1505 @@
+[
+ {
+  "kind": "data_function",
+  "key": "Title.HasLaws",
+  "label": "Has laws",
+  "summary": "Whether the title has laws set on it.",
+  "details": "Vanilla uses it to show a law icon on titles in the My Realm window, and in the title window to show a block with the title's laws, with a plain succession text instead when there are none. That these are title laws rests on the name and those uses.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.HasLeasedOutVassal",
+  "label": "Has leased-out holdings",
+  "summary": "Whether the title includes holdings that are leased out.",
+  "details": "Vanilla uses it in a title interaction's title list to show a church-holding icon. Its tooltip lists the leased-out holdings that are included with the title (Title.GetLeasedOutVassalList).",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/interaction_templates.gui:502", "vanilla: localization/english/gui/specialinteractions_l_english.yml:642"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.HasSuccessionOrder",
+  "label": "Has succession order",
+  "summary": "Whether the title's succession follows the given order type, for example election.",
+  "details": "Vanilla calls it once, with 'election', together with a check that the title has no clerical region, to show an election part of the title window. Other order types it accepts are not shown in the game files.",
+  "fields": [{ "name": "Arg0", "text": "The succession order type to check for.", "values": "a quoted key, as in 'election'" }],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.HoldingCanBeHeldBy",
+  "label": "Holding can be held by",
+  "summary": "Whether the given character could hold the holding of this title.",
+  "details": "Vanilla passes the player (GetPlayer) in the revoke-title interaction and shows a warning icon (tooltip key GRANT_REVOKE_VIEW_WRONG_HOLDING_TYPE) when the player could not hold it, except when a landless adventurer is revoking from a herder. The rules behind the check (holding types a government may hold) are not shown in the input.",
+  "fields": [{ "name": "Arg0", "text": "The character who would hold the holding.", "values": "a character, as in GetPlayer" }],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsAdministrativeArmyAvailableForHire",
+  "label": "Army available for hire",
+  "summary": "Whether the title's administrative army can be hired at the moment.",
+  "details": "Vanilla uses it on the map icons of title troops: a green banner when it is true, a blue one when the local player has hired the troops, and a no-troops banner when neither is true. Going by its name and those icons.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/map_icon_layer.gui:1442"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsAdministrativeArmyHiredByLocalPlayer",
+  "label": "Army hired by player",
+  "summary": "Whether the local player has hired the title's administrative army.",
+  "details": "Vanilla uses it on the map icons of title troops to show the blue banner for troops the player has hired. Going by its name and those icons.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/map_icon_layer.gui:1418"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsAdministrativeArmyStatus",
+  "label": "Army status is",
+  "summary": "A yes/no game function of a title that takes one argument; going by its name, it checks the status of the title's administrative army.",
+  "details": "Vanilla never uses it, so the possible status values are unknown. The game documents nothing more.",
+  "fields": [{ "name": "Arg0", "text": "Going by the name, the status to compare with; the values are not documented.", "values": "unknown" }],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsAdministrativeProvince",
+  "label": "Is administrative province",
+  "summary": "Whether the title is an administrative province.",
+  "details": "Vanilla uses it in the administrative government window and the military window to show a theme-style icon for such titles and a crown-style coat of arms for the others. Going by its name and those uses.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsAverageFertilityBetween",
+  "label": "Average fertility in range",
+  "summary": "Whether the title's average fertility lies between the two given numbers.",
+  "details": "Vanilla calls it in the county view with the ranges 0 to 0.3, 0.3 to 0.6 and 0.6 to 1.1 to pick the red, yellow or green fertility icon. The numbers are written as fixed-point values, for example '(CFixedPoint)0.3'. Whether the ends of the range count is not documented.",
+  "fields": [
+   { "name": "Arg0", "text": "The lower end of the range.", "values": "a fixed-point number, as in '(CFixedPoint)0.3'" },
+   { "name": "Arg1", "text": "The upper end of the range.", "values": "a fixed-point number, as in '(CFixedPoint)0.6'" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsBarony",
+  "label": "Is barony",
+  "summary": "Whether the title is a barony, the lowest title tier (a single holding).",
+  "details": "Vanilla uses it in the title window to hide the history button for baronies (together with a faction check), and to keep baronies out of the create-title block. It also leaves baronies and counties out of one part of the outliner.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsClericalRegion",
+  "label": "Is clerical region",
+  "summary": "Whether the title is a clerical region.",
+  "details": "Vanilla uses it in the administrative vassal details to decide which candidacy interaction is offered: influencing the clerical candidacy for such titles, raising a theocratic heir's candidacy for others. What exactly makes a title a clerical region is not documented. Compare Title.HasClericalRegion.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsControllingOtherTitlesTroops",
+  "label": "Controls other title's troops",
+  "summary": "A yes/no game function of a title; going by its name, whether the title currently controls troops that belong to another title.",
+  "details": "Vanilla never uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsControllingOwnTitleTroops",
+  "label": "Controls own troops",
+  "summary": "A yes/no game function of a title; going by its name, whether the title controls its own troops.",
+  "details": "Vanilla never uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsCounty",
+  "label": "Is county",
+  "summary": "Whether the title is a county, the tier above barony.",
+  "details": "Vanilla uses it in the ledger, together with Title.IsLanded, to pick out counties, and in the outliner to leave out baronies and counties.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsCountyCapital",
+  "label": "Is county capital",
+  "summary": "Whether the title is the capital barony of its county.",
+  "details": "Vanilla never writes Title.IsCountyCapital directly; the county view reaches it through a holding's province title (GetProvince.GetTitle.IsCountyCapital) to mark the county's capital holding. Going by its name and those uses.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsDestroyedOnSuccession",
+  "label": "Destroyed on succession",
+  "summary": "Whether the title is destroyed when its holder dies instead of passing to an heir.",
+  "details": "Vanilla shows \"No succession\" in the title's coat of arms tooltip when this is true, instead of the line of succession, and uses it to show a block in the title window.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: localization/english/gui/common_l_english.yml:34"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsFigurehead",
+  "label": "Is figurehead",
+  "summary": "A yes/no game function of a title; going by its name, whether the title is a figurehead title (held for show, without real power).",
+  "details": "Vanilla never uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsHolyOrder",
+  "label": "Is holy order",
+  "summary": "Whether the title belongs to a holy order (a religious military order).",
+  "details": "Vanilla uses it to hide things that do not fit holy orders, such as vassal lists in the outliner and the title window, and to show a block shared with titles that have a clerical region.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsHovered",
+  "label": "Is hovered",
+  "summary": "Whether the mouse pointer is over this title in the interface.",
+  "details": "Vanilla uses it to show the hover look of a coat of arms and, together with Title.IsSelected, to show an outliner entry as pressed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsLanded",
+  "label": "Is landed",
+  "summary": "Whether the title is a landed title (one tied to land).",
+  "details": "Vanilla uses it in the ledger together with Title.IsCounty, and the title window checks it (together with having a holder) to show the holding block. What counts as landed rests on the name and those uses.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:651"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsLeasedOut",
+  "label": "Is leased out",
+  "summary": "Whether the title's holding is leased out (handed to someone else, such as a holy order, to run).",
+  "details": "Vanilla uses it in the county view to show one block for leased-out holdings and another for the rest.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsMercenaryCompany",
+  "label": "Is mercenary company",
+  "summary": "Whether the title is a mercenary company's title.",
+  "details": "Vanilla uses it, often together with Title.IsHolyOrder, to hide vassal lists and de jure tabs in the outliner and the title window.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsNobleFamilyTitle",
+  "label": "Is noble family title",
+  "summary": "Whether the title is a noble family title.",
+  "details": "Vanilla uses it to keep such titles out of the create-or-usurp block when they have no holder, in the outliner and in the title window. What a noble family title is rests on the name and those uses.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsNomad",
+  "label": "Is nomadic",
+  "summary": "Whether the title is a nomadic title.",
+  "details": "Vanilla uses it to show a nomad status icon on the title in the title window and in shared tooltips, and, through a title entry, in the character window's title list. Going by its name and those uses.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsPinned",
+  "label": "Is pinned",
+  "summary": "Whether the player has pinned the title to the outliner (the list on the right side of the screen).",
+  "details": "Vanilla uses it to switch the pin button of the title window between Pin and Unpin. The game documents no return type, but vanilla uses it as yes/no.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsPlayerElector",
+  "label": "Player is elector",
+  "summary": "Whether the player is one of the electors of this title.",
+  "details": "Vanilla uses it in the cardinals window to enable the vote button and to pick its tooltip (cast a vote, or not an elector), and to mark the player's own nominee.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsPrimary",
+  "label": "Is primary title",
+  "summary": "Whether the title is its holder's primary title (the main title that sets their rank).",
+  "details": "Vanilla uses it in the title window's appointment parts, and next to Title.IsSameTierAsPrimaryTitle for titles of the same tier that are not primary.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsSameTierAsPrimaryTitle",
+  "label": "Same tier as primary",
+  "summary": "Whether the title has the same tier (rank, such as kingdom) as its holder's primary title.",
+  "details": "Vanilla uses it once in the title window's appointment part, for titles of that tier that are not the primary one. That the comparison is with the holder's primary title rests on the name and that use.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsSelected",
+  "label": "Is selected",
+  "summary": "Whether the title is the one currently selected in the interface.",
+  "details": "Vanilla uses it once in the outliner, together with Title.IsHovered, to show an entry as pressed. What selects a title rests on the name and that use.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsShownInTitleView",
+  "label": "Shown in title window",
+  "summary": "Whether the title is the one open in the title window right now.",
+  "details": "Vanilla uses it to show a title as pressed in the find-title list, and to word the coat of arms click hint (go to it, or view it). The game documents no return type, but vanilla uses it as yes/no.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsUnderTheocraticLease",
+  "label": "Under theocratic lease",
+  "summary": "Whether the title is under a theocratic lease.",
+  "details": "Vanilla uses it once in the county view to show a church-property icon on a holding (tooltip key CHURCH_PROPERTY_TOOLTIP). Going by its name and that use; compare Title.IsLeasedOut.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.IsValid",
+  "label": "Is valid",
+  "summary": "Whether there really is a title here (the value is set and the title exists).",
+  "details": "Vanilla uses it to hide interface parts when no title is available, for example in the HUD and in notifications, and after getting a title from a variable.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.MakeScope",
+  "label": "Title as script scope",
+  "summary": "The title as a script scope, so interface texts can read its script values and variables.",
+  "details": "Vanilla follows it with ScriptValue('appointment_title_value') to show a title's appointment prominence score, and with Var( ... ) to read a variable stored on the title.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.OnMouseEnter",
+  "label": "Mouse enters title",
+  "summary": "Tells the game that the mouse pointer has moved onto this title in the interface.",
+  "details": "Vanilla runs it when a map icon's animation starts, in the map icon templates. What the game does in reaction (such as highlighting) is not documented.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.OnMouseLeave",
+  "label": "Mouse leaves title",
+  "summary": "Tells the game that the mouse pointer has left this title in the interface.",
+  "details": "Vanilla runs it when a map icon's animation starts, the counterpart of Title.OnMouseEnter. What the game does in reaction is not documented.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.OnPlayerNominatesSuccessor",
+  "label": "Nominate successor",
+  "summary": "Makes the player nominate the given character as their candidate for the title's succession.",
+  "details": "Vanilla runs it when the player confirms a character in the election window and in the cardinals window (papal election).",
+  "fields": [{ "name": "Arg0", "text": "The character the player nominates.", "values": "a character, as in Character.Self" }],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.ReturnTitleMaaToOwner",
+  "label": "Return hired troops",
+  "summary": "Going by its name, sends the title's men-at-arms (hired troops) back to the title they belong to.",
+  "details": "Vanilla never writes Title.ReturnTitleMaaToOwner directly; the hired-troops details and the military window call it on a hired troop item's title (HiredTroopItem.GetTitle.ReturnTitleMaaToOwner) from a button. That use is only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.SelectTitle",
+  "label": "Select title",
+  "summary": "Selects this title in the interface when clicked.",
+  "details": "Vanilla runs it from a button in the factions window. What selecting does there (such as opening the title) is not documented, and the game gives no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.Self",
+  "label": "Title itself",
+  "summary": "The title itself, for passing it on to another function.",
+  "details": "Vanilla passes Title.Self as an argument, for example to MenAtArmsType.GetStat to work out a regiment's damage and toughness for this title. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.ShowUsurp",
+  "label": "Show usurp",
+  "summary": "Whether the option to usurp the title should be shown.",
+  "details": "Vanilla uses it in the outliner, together with a check that the character is not the local player, in a block that also covers creating a title nobody holds. When it is true is not documented, and the game gives no return type; vanilla uses it as yes/no.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.ToggleTitlePinned",
+  "label": "Pin or unpin title",
+  "summary": "Pins the title to the outliner, or unpins it if it is already pinned.",
+  "details": "Vanilla runs it from the pin buttons of the title window; Title.IsPinned tells which state it is in.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.TransferMaaControlToLocalPlayer",
+  "label": "Give troop control to player",
+  "summary": "A game function of a title with no result; going by its name, hands control of the title's men-at-arms to the local player.",
+  "details": "Vanilla never uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.TransferMaaOwnershipToLocalPlayer",
+  "label": "Give troops to player",
+  "summary": "A game function of a title with no result; going by its name, hands ownership of the title's men-at-arms to the local player.",
+  "details": "Vanilla never uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleAddLawWindow.AccessSelf",
+  "label": "Add law window itself",
+  "summary": "A function of the add-law window (where a title law is picked) that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleAddLawWindow.CanSelect",
+  "label": "Can pick law",
+  "summary": "Whether the law chosen in the add-law window can be picked now.",
+  "details": "Vanilla uses it to enable the window's select button; TitleAddLawWindow.GetSelectTooltip gives its tooltip.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleAddLawWindow.Close",
+  "label": "Close add law window",
+  "summary": "Closes the add-law window.",
+  "details": "Vanilla runs it from the window's close button.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleAddLawWindow.GetLawItems",
+  "label": "Law choices",
+  "summary": "The list of laws offered in the add-law window.",
+  "details": "Vanilla uses it as the list (datamodel) of the window's entries. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleAddLawWindow.GetSelectTooltip",
+  "label": "Select button tooltip",
+  "summary": "The tooltip text of the select button in the add-law window.",
+  "details": "Going by its name and that use, it explains whether and why the law can be picked; compare TitleAddLawWindow.CanSelect.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleAddLawWindow.GetSelectedLaw",
+  "label": "Chosen law",
+  "summary": "The law currently chosen in the add-law window.",
+  "details": "Vanilla goes on from it to the law's enact cost for the player (GetEnactCostForPlayer) and the cost breakdown tooltip. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleAddLawWindow.GetTitle",
+  "label": "Title",
+  "summary": "The title the add-law window adds a law to.",
+  "details": "Vanilla passes it to Law.GetTitleEnactEffectDescriptionForPlayer to describe what enacting the law on this title does. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleAddLawWindow.HasSelectedLaw",
+  "label": "Has chosen law",
+  "summary": "Going by its name, whether a law has been chosen in the add-law window.",
+  "details": "Vanilla never uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleAddLawWindow.Select",
+  "label": "Pick law",
+  "summary": "Picks the chosen law in the add-law window.",
+  "details": "Vanilla runs it from the window's select button, which TitleAddLawWindow.CanSelect enables. Whether this enacts the law at once is not documented.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleAddLawWindow.Self",
+  "label": "Add law window itself",
+  "summary": "A function of the add-law window that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types (for example Character.Self passed as an argument); those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCapitalMapIcon.AccessSelf",
+  "label": "Capital map icon itself",
+  "summary": "A function of a title's capital icon on the map that, going by its name, hands back the icon itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCapitalMapIcon.GetTitle",
+  "label": "Title",
+  "summary": "The title that a capital icon on the map stands for.",
+  "details": "Vanilla uses it as the icon's context and checks whether the title has a holder, showing the icon faded (70 percent) when it has none.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCapitalMapIcon.Self",
+  "label": "Capital map icon itself",
+  "summary": "A function of a title's capital icon on the map that, going by its name, hands back the icon itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types; those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.AccessSelf",
+  "label": "Customization window itself",
+  "summary": "A function of the title customization window (where a title is renamed and recoloured) that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.CanClickFinish",
+  "label": "Can finish",
+  "summary": "Whether the finish button of the title customization window can be clicked.",
+  "details": "Vanilla uses it to enable that button; TitleCustomizationWindow.GetCanClickFinishText gives its tooltip.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.Close",
+  "label": "Close customization window",
+  "summary": "Closes the title customization window.",
+  "details": "Vanilla runs it from the window's close button. Whether unsaved changes are dropped is not documented.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.GetAdjectiveText",
+  "label": "Adjective text",
+  "summary": "The adjective typed for the title in the customization window (as in \"Frankish\" for a title named Francia).",
+  "details": "Vanilla shows it as the text of the adjective field; TitleCustomizationWindow.OnEditAdjectiveText reacts to edits.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.GetCanClickFinishText",
+  "label": "Finish button tooltip",
+  "summary": "The tooltip text of the finish button in the title customization window.",
+  "details": "Going by its name and that use, it says whether and why the changes can be finished; compare TitleCustomizationWindow.CanClickFinish.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.GetCoatOfArmsDesigner",
+  "label": "Coat of arms designer",
+  "summary": "The coat of arms designer inside the title customization window.",
+  "details": "Vanilla uses it as the context of the window's coat of arms editing part.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.GetMapColor",
+  "label": "Map colour",
+  "summary": "The map colour chosen for the title in the customization window.",
+  "details": "Vanilla uses it as the colour of the colour picker. The value is a colour with four parts (red, green, blue, alpha).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.GetTitle",
+  "label": "Title",
+  "summary": "The title being customized in the customization window.",
+  "details": "Vanilla uses it as a context, and also goes on to its holder (GetTitle.GetHolder). The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.GetTitleNameText",
+  "label": "Name text",
+  "summary": "The new name typed for the title in the customization window.",
+  "details": "Vanilla shows it as the text of the name field; TitleCustomizationWindow.OnEditTitleNameText reacts to edits.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.OnClickFinish",
+  "label": "Finish customization",
+  "summary": "Applies the changes made in the title customization window.",
+  "details": "Vanilla runs it from the finish button, which TitleCustomizationWindow.CanClickFinish enables. That it applies the name, adjective, colour and coat of arms rests on the window's parts and the name.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.OnEditAdjectiveText",
+  "label": "Adjective edited",
+  "summary": "Takes in the text the player has typed into the adjective field of the title customization window.",
+  "details": "Vanilla runs it whenever that field's text is edited.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.OnEditTitleNameText",
+  "label": "Name edited",
+  "summary": "Takes in the text the player has typed into the name field of the title customization window.",
+  "details": "Vanilla runs it whenever that field's text is edited.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.Self",
+  "label": "Customization window itself",
+  "summary": "A function of the title customization window that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types; those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.SetMapColor",
+  "label": "Set map colour",
+  "summary": "Takes in the map colour the player has picked in the title customization window.",
+  "details": "Vanilla runs it whenever the colour picker's colour changes.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.ShowMapColorPicker",
+  "label": "Show colour picker",
+  "summary": "Whether the title customization window shows the map colour picker.",
+  "details": "Vanilla uses it to show or hide that picker. When it is shown is not documented.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.ToggleUsesDefiniteForm",
+  "label": "Toggle definite form",
+  "summary": "Switches whether the customized title name uses the definite form (written as \"the ...\" in texts) on or off.",
+  "details": "Vanilla runs it from a checkbox in the window; TitleCustomizationWindow.UsesDefiniteForm gives its state. What the definite form changes in texts rests on the name.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleCustomizationWindow.UsesDefiniteForm",
+  "label": "Uses definite form",
+  "summary": "Whether the customized title name is set to use the definite form (written as \"the ...\" in texts).",
+  "details": "Vanilla uses it as the checked state of the checkbox that TitleCustomizationWindow.ToggleUsesDefiniteForm flips. What the definite form changes in texts rests on the name.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleHistory.AccessSelf",
+  "label": "History entry itself",
+  "summary": "A function of an entry in a title's history that, going by its name, hands back the entry itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleHistory.GetCharacter",
+  "label": "Holder",
+  "summary": "The character an entry of the title history is about, such as the holder who gained the title then.",
+  "details": "Vanilla uses it as the context of a row in the title history window.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleHistory.GetDate",
+  "label": "Date",
+  "summary": "The date of an entry in the title history.",
+  "details": "Vanilla shows it as text (GetDate.GetString) in each row of the title history window.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleHistory.GetTitleTransferName",
+  "label": "Transfer kind",
+  "summary": "A text naming how the title changed hands in this history entry (for example by inheritance or conquest).",
+  "details": "Vanilla shows it in each row of the title history window. The possible texts are not shown in the input; the examples rest on the name.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleHistory.Self",
+  "label": "History entry itself",
+  "summary": "A function of an entry in a title's history that, going by its name, hands back the entry itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types; those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleHistoryWindow.AccessSelf",
+  "label": "History window itself",
+  "summary": "A function of the title history window that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleHistoryWindow.Close",
+  "label": "Close history window",
+  "summary": "Closes the title history window.",
+  "details": "Vanilla runs it from the window's close button.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleHistoryWindow.GetHistory",
+  "label": "History entries",
+  "summary": "The list of entries in the title's history (who held it and when).",
+  "details": "Vanilla uses it as the list (datamodel) of the title history window; each item is a TitleHistory entry. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleHistoryWindow.GetTitle",
+  "label": "Title",
+  "summary": "The title whose history the title history window shows.",
+  "details": "Vanilla uses it as a context in that window. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleHistoryWindow.Self",
+  "label": "History window itself",
+  "summary": "A function of the title history window that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types; those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleItem.AccessSelf",
+  "label": "Title entry itself",
+  "summary": "A function of a title entry in an interface list that, going by its name, hands back the entry itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleItem.GetTitle",
+  "label": "Title",
+  "summary": "The title of a title entry in an interface list.",
+  "details": "Vanilla uses it in the character window's title list as a context, and to check things like whether the title is nomadic.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleItem.Self",
+  "label": "Title entry itself",
+  "summary": "A function of a title entry in an interface list that, going by its name, hands back the entry itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types; those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSelectorWindow.AccessSelf",
+  "label": "Title picker itself",
+  "summary": "A function of the title selector window (where the player picks one or more titles) that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSelectorWindow.CanConfirm",
+  "label": "Can confirm",
+  "summary": "Going by its name, whether the choice in the title selector window can be confirmed.",
+  "details": "Vanilla never names it on this type; other windows use a CanConfirm of their own to enable their confirm button, which is only a hint.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSelectorWindow.Close",
+  "label": "Close title picker",
+  "summary": "Closes the title selector window.",
+  "details": "Vanilla runs it from the window's close button.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSelectorWindow.GetSelectionHint",
+  "label": "Selection hint",
+  "summary": "A text of the title selector window; going by its name, a hint about what to pick.",
+  "details": "Vanilla never uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSelectorWindow.GetTitles",
+  "label": "Titles to pick from",
+  "summary": "The list of titles offered in the title selector window.",
+  "details": "Vanilla uses it as the window's list (datamodel), and shows a different block when the list is empty. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSelectorWindow.GetWindowTitle",
+  "label": "Window heading",
+  "summary": "The heading text of the title selector window.",
+  "details": "Vanilla shows it as the window's heading; the text depends on what the window is opened for.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSelectorWindow.IsSelected",
+  "label": "Title is picked",
+  "summary": "Whether the given title is picked in the title selector window.",
+  "details": "Vanilla passes each listed title (Title.Self) to show it as pressed and to show a mark on it.",
+  "fields": [{ "name": "Arg0", "text": "The title to check.", "values": "a title, as in Title.Self" }],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSelectorWindow.OnConfirm",
+  "label": "Confirm choice",
+  "summary": "Confirms the titles picked in the title selector window.",
+  "details": "Vanilla runs it from the window's confirm button. What happens next depends on what the window was opened for.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSelectorWindow.SelectTitle",
+  "label": "Pick title",
+  "summary": "Picks the given title in the title selector window.",
+  "details": "Vanilla runs it when a listed title (Title.Self) is clicked. Whether a second click unpicks it is not documented.",
+  "fields": [{ "name": "Arg0", "text": "The title to pick.", "values": "a title, as in Title.Self" }],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSelectorWindow.Self",
+  "label": "Title picker itself",
+  "summary": "A function of the title selector window that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types; those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSuccessionItem.AccessSelf",
+  "label": "Succession entry itself",
+  "summary": "A function of a succession entry (an heir and the titles they receive, in the My Realm window) that, going by its name, hands back the entry itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSuccessionItem.GetExceptionTitles",
+  "label": "Exception titles",
+  "summary": "The list of titles in a succession entry that pass by an exception to the normal succession rules.",
+  "details": "Vanilla shows them as a list in the My Realm window's succession part, hidden when empty. Which exceptions count is not documented; it rests on the name.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSuccessionItem.GetHeir",
+  "label": "Heir",
+  "summary": "The heir of a succession entry in the My Realm window.",
+  "details": "Vanilla uses it as the context of that entry. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSuccessionItem.GetPartitionTitles",
+  "label": "Partition titles",
+  "summary": "The list of titles that pass to this heir through partition (the realm being split among several heirs).",
+  "details": "Vanilla shows them as a list in the My Realm window's succession part, hidden when empty.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSuccessionItem.GetRequiredGovernmentTitles",
+  "label": "Government-bound titles",
+  "summary": "The list of titles in a succession entry that are tied to a required government.",
+  "details": "Vanilla shows them as a list in the My Realm window's succession part, hidden when empty. What the requirement means for the heir is not documented; it rests on the name.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSuccessionItem.GetTitlesLostToText",
+  "label": "Titles lost to text",
+  "summary": "A label text for the titles the given character loses to this heir on succession.",
+  "details": "Vanilla passes Character.Self in the My Realm window, as the label in front of the list of lost titles.",
+  "fields": [{ "name": "Arg0", "text": "The character who loses the titles.", "values": "a character, as in Character.Self" }],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_my_realm.gui:2395"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleSuccessionItem.Self",
+  "label": "Succession entry itself",
+  "summary": "A function of a succession entry that, going by its name, hands back the entry itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types; those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleTroopsMapIcon.AccessSelf",
+  "label": "Troops map icon itself",
+  "summary": "A function of a title troops icon on the map that, going by its name, hands back the icon itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleTroopsMapIcon.GetHiredTitles",
+  "label": "Hired titles",
+  "summary": "The list of titles whose troops are hired, shown on a title troops icon on the map.",
+  "details": "Vanilla uses it as a list (datamodel) on the icon, shows it only when not empty, and shows an extra part when there are more than four. Going by its name and those uses.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleTroopsMapIcon.GetTitle",
+  "label": "Title",
+  "summary": "The title a title troops icon on the map stands for.",
+  "details": "Vanilla uses it as the icon's context. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleTroopsMapIcon.IsAtWarWithMe",
+  "label": "At war with player",
+  "summary": "Whether the troops shown by a title troops icon belong to someone at war with the player.",
+  "details": "Vanilla uses it to show a part of that map icon. Going by its name and that use.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleTroopsMapIcon.IsMyAlly",
+  "label": "Player's ally",
+  "summary": "Whether the troops shown by a title troops icon belong to an ally of the player.",
+  "details": "Vanilla uses it to show a part of that map icon. Going by its name and that use.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleTroopsMapIcon.Self",
+  "label": "Troops map icon itself",
+  "summary": "A function of a title troops icon on the map that, going by its name, hands back the icon itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types; those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.AccessSelf",
+  "label": "Title window itself",
+  "summary": "A function of the title window (the view of a single title) that, going by its name, hands back the window itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.CanAddLaws",
+  "label": "Can add laws",
+  "summary": "Whether laws can be added to the title shown in the title window.",
+  "details": "Vanilla uses it, for the local player only, to show the add-law button in the title's laws part.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1386"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.CanMakePrimary",
+  "label": "Can make primary",
+  "summary": "Whether the shown title can be made the player's primary title (the main title that sets their rank).",
+  "details": "Vanilla uses it, for the local player, to show the make-primary button, unless a script variable on the player hides it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.ClickOnHolding",
+  "label": "Click holding",
+  "summary": "A function of the title window with no result; going by its name, reacts to a click on the title's holding.",
+  "details": "Vanilla never uses it; the title window's holding button uses TitleViewWindow.GoToHolding instead. The game documents nothing more.",
+  "fields": [],
+  "sources": ["doc", "vanilla: gui/window_title.gui:664"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.Close",
+  "label": "Close title window",
+  "summary": "Closes the title window.",
+  "details": "Vanilla runs it from the window's close button.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.CloseClaimants",
+  "label": "Close claimants",
+  "summary": "Closes the claimants list (characters with a claim on the title) in the title window.",
+  "details": "Vanilla runs it from a button in that part of the window. Going by its name and that use.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.CloseHistory",
+  "label": "Close history",
+  "summary": "Closes the title's history view opened from the title window.",
+  "details": "Vanilla runs it from a button in the title window. Going by its name and that use.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetClearLaws",
+  "label": "Clear laws command",
+  "summary": "The command that removes the laws from the title shown in the title window.",
+  "details": "Vanilla enables the clear-laws button only while this command is valid, and clicking it opens a confirmation popup for it. TitleViewWindow.GetClearLawsButtonTooltip gives the button's tooltip. Which laws are removed is not documented.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1374"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetClearLawsButtonTooltip",
+  "label": "Clear laws tooltip",
+  "summary": "The tooltip text of the clear-laws button in the title window.",
+  "details": "Vanilla shows it on the button that runs TitleViewWindow.GetClearLaws.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1376"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetCreateTitle",
+  "label": "Create title command",
+  "summary": "The command that makes the player create the title shown in the title window.",
+  "details": "Vanilla enables the create button only while this command is valid, and clicking it opens a confirmation popup for it. The requirements are listed above the button (counties, gold, piety and more).",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1624"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetCreateTitleButtonTooltip",
+  "label": "Create title tooltip",
+  "summary": "The tooltip text of the create-title button in the title window.",
+  "details": "Vanilla shows it on the button that runs TitleViewWindow.GetCreateTitle.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1626"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetDeJureDescription",
+  "label": "De jure description",
+  "summary": "A text about the title's de jure part (the titles that by law belong under it).",
+  "details": "Vanilla shows it at the top of the title window's de jure tab, above its list of de jure titles. Its wording is not shown in the input.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:850"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetDestroyTitle",
+  "label": "Destroy title command",
+  "summary": "The command that makes the player destroy the title shown in the title window.",
+  "details": "Vanilla enables the destroy button only while this command is valid, and clicking it opens a confirmation popup for it.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1406"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetDestroyTitleButtonTooltip",
+  "label": "Destroy title tooltip",
+  "summary": "The tooltip text of the destroy-title button in the title window.",
+  "details": "Vanilla shows it on the button that runs TitleViewWindow.GetDestroyTitle.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1408"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetDivergenceBreakdown",
+  "label": "Divergence breakdown",
+  "summary": "A game function of the title window that takes one argument; going by its name, a breakdown of something's divergence.",
+  "details": "Vanilla never names it on this type. The faith window has a GetDivergenceBreakdown of its own that takes a rite; that is only a hint. The game documents no return type.",
+  "fields": [{ "name": "Arg0", "text": "Not documented; on the faith window's function of the same name it is a rite.", "values": "unknown" }],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetGainText",
+  "label": "Gain text",
+  "summary": "A text saying what the player gains by creating the title shown in the title window.",
+  "details": "Vanilla shows it just above the create-title button, below the list of requirements. The content rests on the name and that placement.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1620"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetHiredTroopsItem",
+  "label": "Hired troops entry",
+  "summary": "The entry for the hired troops of the title shown in the title window.",
+  "details": "Vanilla uses it as the context of the window's men-at-arms (regiment type and size) part. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1060"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetHolding",
+  "label": "Holding",
+  "summary": "The holding of the title shown in the title window.",
+  "details": "Vanilla uses it as the context of the button that goes to the holding, shown for landed titles that have a holder. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:651"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetLiegeItems",
+  "label": "Liege entries",
+  "summary": "The list of entries in the title window's liege part.",
+  "details": "Vanilla uses it as a list (datamodel) and hides that part when it is empty. Going by its name, the entries are the lieges above the title's holder. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetLineOfSuccession",
+  "label": "Line of succession",
+  "summary": "The list of characters in line to inherit the title shown in the title window.",
+  "details": "Vanilla uses it as the list (datamodel) of the window's succession part. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetMeritPoolDescription",
+  "label": "Merit pool description",
+  "summary": "A description text of the title's merit pool.",
+  "details": "Vanilla shows it in the title window's appointment section only when the window has merit pool data (TitleViewWindow.HasMeritPoolData). What a merit pool is and what the text says is not documented.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:296"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetMinimumDeJureText",
+  "label": "County requirement text",
+  "summary": "The text of the county requirement (going by its name, a de jure land requirement) to create the title.",
+  "details": "Vanilla shows it in the create-title requirements, with a yes or no mark from TitleViewWindow.HasEnoughCounties; TitleViewWindow.GetMinimumDeJureTooltip is its tooltip.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1477"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetMinimumDeJureTooltip",
+  "label": "County requirement tooltip",
+  "summary": "The tooltip of the de jure land requirement to create the title shown in the title window.",
+  "details": "Vanilla shows it on the requirement whose text is TitleViewWindow.GetMinimumDeJureText.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1460"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetMinimumGoldText",
+  "label": "Gold requirement text",
+  "summary": "The text of the gold requirement to create the title shown in the title window.",
+  "details": "Vanilla shows it in the create-title requirements; TitleViewWindow.GetMinimumGoldTooltip explains it.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1502"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetMinimumGoldTooltip",
+  "label": "Gold requirement tooltip",
+  "summary": "The tooltip of the gold requirement to create the title shown in the title window.",
+  "details": "Vanilla shows it on the requirement whose text is TitleViewWindow.GetMinimumGoldText.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1486"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetMinimumPietyCostTooltip",
+  "label": "Piety cost tooltip",
+  "summary": "The tooltip of the piety cost requirement to create the title shown in the title window.",
+  "details": "Vanilla shows it on the requirement whose text is TitleViewWindow.GetMinimumPietyText.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1509"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetMinimumPietyLevelText",
+  "label": "Piety level requirement text",
+  "summary": "The text of the piety level requirement (a level of religious standing) to create the title shown in the title window.",
+  "details": "Vanilla shows it in the create-title requirements only when the title's tier frame is above 3 and the player's government has the rule considers_piety_for_title_creation.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1549"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetMinimumPietyText",
+  "label": "Piety cost text",
+  "summary": "The text of the piety requirement to create the title shown in the title window.",
+  "details": "Vanilla shows it in the create-title requirements, with TitleViewWindow.GetMinimumPietyCostTooltip as its tooltip.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1513"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetNumberOfClaimants",
+  "label": "Number of claimants",
+  "summary": "How many characters have a claim on the title shown in the title window.",
+  "details": "Vanilla shows the number on the claimants button (\"Claimants: 3\") and in its tooltip. It is a whole number.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetPrimaryAppointmentTitles",
+  "label": "Appointment titles",
+  "summary": "The list of titles shown in the title window's appointment part for the primary title.",
+  "details": "Vanilla uses it as a list (datamodel) and shows that part only when there is more than one title in it. Which titles it holds rests on the name and that use. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:678"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetPrimaryTitleText",
+  "label": "Primary title text",
+  "summary": "A text of the title window; going by its name, about the primary title.",
+  "details": "Vanilla never uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetRealmsInRegion",
+  "label": "Realms in region",
+  "summary": "The list of realms that hold land within the title shown in the title window.",
+  "details": "Vanilla uses it as a list (datamodel) in the title window, shown only when the list is not empty and the title has a holder. That the region is the title's land rests on the name. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:717"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetSuccessionScoreBreakdown",
+  "label": "Succession score breakdown",
+  "summary": "A breakdown of what makes up the given character's succession score for the title shown in the title window.",
+  "details": "Vanilla passes each candidate (Character.Self) as a context in the succession part. The game documents no return type.",
+  "fields": [{ "name": "Arg0", "text": "The candidate whose score is broken down.", "values": "a character, as in Character.Self" }],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetSuccessorCandidateList",
+  "label": "Successor candidates",
+  "summary": "The list of candidates to succeed to the title shown in the title window.",
+  "details": "Vanilla uses it as a context in several places of the title window. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetTitle",
+  "label": "Title",
+  "summary": "The title shown in the title window.",
+  "details": "Vanilla goes on from it to the title's name, for example in \"Make ... your primary title\" and in the heading of the de jure list. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetTitleAllegianceVassals",
+  "label": "Allegiance vassals",
+  "summary": "The list of vassals tied to the shown title by allegiance (vassals sorted by the title they owe loyalty to).",
+  "details": "Vanilla uses it as a list (datamodel) in the title window, and shows the window's tabs only when it is not empty. What allegiance means here rests on the name and that use. The game documents no return type.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:813"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetTitleRite",
+  "label": "Title rite",
+  "summary": "A game function of the title window; going by its name, a rite tied to the shown title.",
+  "details": "Vanilla never uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetTitlesOfTierText",
+  "label": "Titles of tier text",
+  "summary": "The text of a create-title requirement about titles of a certain tier.",
+  "details": "Vanilla shows it in the create-title requirements, with a yes or no mark and TitleViewWindow.GetTitlesOfTierTooltip as its tooltip, only when the player's government does not have the rule considers_piety_for_title_creation and the requirement is not yet met. The exact requirement rests on the name.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1539"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetTitlesOfTierTooltip",
+  "label": "Titles of tier tooltip",
+  "summary": "The tooltip of the create-title requirement about titles of a certain tier.",
+  "details": "Vanilla shows it on the requirement whose text is TitleViewWindow.GetTitlesOfTierText.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:1522"],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetTypeOfHolding",
+  "label": "Holding type text",
+  "summary": "A text of the title window; going by its name, the type of the title's holding.",
+  "details": "Vanilla never uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TitleViewWindow.GetTypeOfLanded",
+  "label": "Landed type text",
+  "summary": "A label text naming what kind of landed title the window shows.",
+  "details": "Vanilla shows it, followed by a colon, above the button to the title's holding, for landed titles that have a holder. The possible texts are not shown in the input.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: gui/window_title.gui:658"],
+  "uncertain": true
+ }
+]

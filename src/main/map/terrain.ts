@@ -1,7 +1,7 @@
 /**
  * The 3D map's terrain (docs/map.md, "3D map"): rasters of heights (map_data/heightmap.png) and rivers
  * (map_data/rivers.png) built once per version of the files (terrain-raster.ts), the terrain's materials
- * (terrain-detail.ts) and map objects (terrain-objects.ts) — each on a thread of its own (mapTerrainWorker.ts) into the
+ * (terrain-detail.ts) and map objects (terrain-objects.ts), each on a thread of its own (mapTerrainWorker.ts) into the
  * map cache folder, served as ck3://map/<key>-*.bin; the heights' scale, the water level and the camera's zoom steps
  * from common/defines; the water's colour map from gfx/map/water/water.settings; the light and post-processing from
  * gfx/map/environment/environment.txt and the map lighting shader's constants.
@@ -19,6 +19,7 @@ import { TERRAIN_VERSION, readTerrain, type TerrainRasters } from './terrain-ras
 import { DETAIL_VERSION, MATERIAL_LEVELS, MATERIAL_MAPS, MATERIAL_SIZE, materialDefs, materialTexture, readDetail, terrainSettings, type DetailMeta } from './terrain-detail.ts';
 import { objectsInput, readObjects } from './terrain-objects.ts';
 
+import { tr } from '../../shared/i18n.ts';
 /** the builds of the loaded files (per kind: the current version's, once) */
 const jobs = new Map<string, { key: string; job: Promise<unknown>; }>();
 
@@ -70,14 +71,14 @@ function thread<T>(data: Record<string, unknown>, transfer: ArrayBuffer[]): Prom
             if (m.meta)
                 resolve(m.meta);
             else
-                reject(new Error(m.error ?? 'No result'));
+                reject(new Error(m.error ?? tr('No result')));
         });
         worker.once('error', reject);
     });
 }
 
 /**
- * NJominiMap, NCamera, NMapName and NMapColors of common/defines — every file that has them, later ones win (vanilla
+ * NJominiMap, NCamera, NMapName and NMapColors of common/defines: every file that has them, later ones win (vanilla
  * 00_defines.txt: `WORLD_EXTENTS_Y = 50`, `WATERLEVEL = 3`; graphic/00_graphics.txt: `FOV = 60`, `ZOOM_STEPS = { 70 …
  * 6500 }`, `LARGE_NAMES_ZOOM_STEP = 9`, `MAP_SHADOW_TINT_STRENGTH = 0.5` …).
  */
@@ -181,7 +182,7 @@ function look(vfs: GameFiles, dir: string): Omit<MapTerrainInfo['look'], 'shadow
 
 /**
  * TonyMcMapface's lookup table (jomini/gfx/FX/jomini/post_effect/tony_mc_mapface_2d.dds: 2304 × 48, the 48 blue
- * slices side by side, RGBA half floats — D3DFMT_A16B16G16R16F): its top level as `<key>-tonemap.bin`.
+ * slices side by side, RGBA half floats, D3DFMT_A16B16G16R16F): its top level as `<key>-tonemap.bin`.
  */
 function tonemapLut(vfs: GameFiles, dir: string): MapTerrainInfo['look']['lut']
 {
@@ -249,6 +250,8 @@ function settings(vfs: GameFiles, dir: string): Omit<MapTerrainInfo, 'key' | 'wi
             largeNames: numOf(d.get('NMapName.LARGE_NAMES_ZOOM_STEP'), 9)
         },
         waterImage: (water && /"WaterColorTexturePath"\s*=\s*"([^"]+)"/.exec(water)?.[1]) || undefined,
+        // the three wave layers' scroll speeds (`"WaterWave1.Speed" = 0.01` …): the 3D water moves
+        waveSpeeds: [1, 2, 3].map((i) => parseFloat((water && new RegExp('"WaterWave' + i + '\\.Speed"\\s*=\\s*([-\\d.]+)').exec(water)?.[1]) ?? '') || [0.01, 0.016, 0.005][i - 1]) as [number, number, number],
         look: { ...look(vfs, dir), shadowTint: shadowTint(vfs, d, nums) }
     };
 }
@@ -289,7 +292,7 @@ function rasters(vfs: GameFiles, files: { provinces: string; rivers: string; hei
         const rivers = rf && vfs.read(rf);
 
         if (!provinces || !heightmap)
-            return Promise.reject(new Error('Cannot read the heightmap'));
+            return Promise.reject(new Error(tr('Cannot read the heightmap')));
 
         // (the files' bytes move to the thread: the heightmap is 122 MB in vanilla)
         const data = { kind: 'heights', heightmap: own(heightmap), rivers: rivers ? own(rivers) : undefined, mapWidth: pngHeader(provinces).width, dir, key };
@@ -315,7 +318,7 @@ async function detail(vfs: GameFiles, dir: string): Promise<MapTerrainInfo['deta
         const it = vfs.read(intensity);
 
         if (!ix || !it)
-            return Promise.reject(new Error('Cannot read the detail maps'));
+            return Promise.reject(new Error(tr('Cannot read the detail maps')));
 
         const textures = files.map((list) => list.map((f) => materialTexture(f && vfs.read(f))));
         const buffers = textures.flat().map((t) => (t && ('chain' in t ? (t.chain = own(t.chain)) : (t.file = own(t.file)))));
@@ -367,6 +370,6 @@ export async function mapTerrain(vfs: GameFiles, files: { provinces: string; def
     if (!heights)
         return null;
 
-    const [r, d, o] = await Promise.all([heights, detail(vfs, dir).catch(without('terrain materials')), objects(vfs, dir)?.catch(without('map objects'))]);
+    const [r, d, o] = await Promise.all([heights, detail(vfs, dir).catch(without(tr('terrain materials'))), objects(vfs, dir)?.catch(without(tr('map objects')))]);
     return { ...r, ...settings(vfs, dir), detail: d, objects: o };
 }

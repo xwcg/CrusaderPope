@@ -2,9 +2,21 @@ import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 're
 import type { EntityKey } from '../../../shared/api';
 import { typeColor } from '../typeColors';
 
+import { tr } from '../../../shared/i18n';
 export function TypeDot({ type }: { type: string; }): React.JSX.Element
 {
     return <span className="type-dot" style={{ background: typeColor(type) }} />;
+}
+
+/** A turning ring with what is being waited for: a view whose data has not come yet (not an empty one). */
+export function Throbber({ text, className }: { text: string; className?: string; }): React.JSX.Element
+{
+    return (
+        <div className={'throbber' + (className ? ' ' + className : '')} role="status">
+            <span className="throbber-ring" />
+            {text}
+        </div>
+    );
 }
 
 export function TypeChip({ type, label }: { type: string; label: string; }): React.JSX.Element
@@ -123,17 +135,17 @@ export function TargetMenu(props: {
 const ZIP_SEP = ' › ';
 
 /** Tooltip of an "open in the editor" action: a file inside a zip opens as a read-only copy. */
-export function openTitle(path: string, what = 'Open in VS Code'): string
+export function openTitle(path: string, what = tr('Open in VS Code')): string
 {
     const i = path.indexOf(ZIP_SEP);
-    return i < 0 ? what : `${what} — a read-only copy extracted from ${path.slice(0, i)} (edit a mod’s files after unpacking it on the Mods page)`;
+    return i < 0 ? what : tr('{what} — a read-only copy extracted from {path} (edit a mod’s files after unpacking it on the Mods page)', { what, path: path.slice(0, i) });
 }
 
 /** Tooltip of a "show in folder" action: for a file inside a zip, the zip is shown. */
-export function revealTitle(path: string, what = 'Show in folder'): string
+export function revealTitle(path: string, what = tr('Show in folder')): string
 {
     const i = path.indexOf(ZIP_SEP);
-    return i < 0 ? what : `${what} — the file is inside ${path.slice(0, i)}: shows the zip`;
+    return i < 0 ? what : tr('{what} — the file is inside {path}: shows the zip', { what, path: path.slice(0, i) });
 }
 
 export function formatCount(n: number): string

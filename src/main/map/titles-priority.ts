@@ -1,6 +1,6 @@
 /**
  * landed_titles `ai_primary_priority` (docs/map.md, "History and realms"): the script value a ruler weighs their titles
- * by when picking the primary one (root: the holder) — `add`s, also inside `if` / `else_if` / `else` whose `limit`
+ * by when picking the primary one (root: the holder): `add`s, also inside `if` / `else_if` / `else` whose `limit`
  * holds for the holder at the date. Vanilla (1515 titles: 1354 `add = @never_primary_score`, 15
  * `@always_primary_score`, the rest by culture) tests only `culture = culture:x`, `culture = { has_cultural_pillar =
  * heritage_x }`, `religion = religion:x`, `faith = faith:x`, `OR`, `AND`, `NOT`; a branch with other conditions is not
@@ -61,8 +61,10 @@ function conditionOf(c: PNode): Test
         case 'OR':
             return block ? testOf(block, c.k === 'OR') : UNKNOWN;
         case 'NOT':
+        case 'NOR':
         {
-            const inner = block ? testOf(block, false) : UNKNOWN;
+            // (several statements: true when none of them holds)
+            const inner = block ? testOf(block, true) : UNKNOWN;
             return (f) =>
             {
                 const r = inner(f);

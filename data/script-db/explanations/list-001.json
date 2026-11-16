@@ -1,0 +1,798 @@
+[
+ {
+  "kind": "list",
+  "key": "acclaimed_knight",
+  "label": "Acclaimed knight",
+  "summary": "Each acclaimed knight employed by the character.",
+  "details": "Acclaimed knights are knights with an accolade. Vanilla mostly uses it to look at the knight's accolade, for example to check the accolade's type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "accolade",
+  "label": "Accolade",
+  "summary": "Each accolade of the acclaimed knights of the character (a ruler).",
+  "details": "The items are accolades, not the knights themselves; from an accolade you can reach its knight (vanilla checks `exists = acclaimed_knight`). Vanilla uses it to find accolades that can train knights or squires.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "accolade_type",
+  "label": "Accolade type",
+  "summary": "Every accolade type defined in the game.",
+  "details": "Works from anywhere, no character needed. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "active_accolade",
+  "label": "Active accolade",
+  "summary": "Each active accolade of the character's acclaimed knights.",
+  "details": "Like the accolade list, but only the active accolades. Vanilla uses it to give glory to each active accolade, and to find accolades that give a certain bonus.",
+  "fields": [
+   {
+    "name": "accolade_parameter",
+    "text": "Only accolades that carry this accolade parameter (a bonus the accolade gives).",
+    "values": "an accolade parameter name",
+    "required": false
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "active_dynasty",
+  "label": "Active dynasty",
+  "summary": "Each dynasty that currently has a dynasty head.",
+  "details": "The game marks it as deprecated: use the plain dynasty list with its optional parameter instead. Works from anywhere. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "activity",
+  "label": "Activity",
+  "summary": "Each activity that exists in the world.",
+  "details": "Works from anywhere, not just from one character. Vanilla uses it rarely, for example to look for grand activities.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "activity_phase_location",
+  "label": "Phase location",
+  "summary": "Each province where a phase of the activity takes place.",
+  "details": "An activity can have several phases, each with a province location. The _past and _future lists cover only phases that have ended or not yet started.",
+  "fields": [
+   {
+    "name": "unique",
+    "text": "Limit the list to unique locations, so a province used by several phases is not repeated.",
+    "values": "yes or no",
+    "required": false
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "activity_phase_location_future",
+  "label": "Future phase location",
+  "summary": "Each province where a phase of the activity will take place later.",
+  "details": "Phases that have already started are not included.",
+  "fields": [
+   {
+    "name": "unique",
+    "text": "Limit the list to unique locations, so a province used by several phases is not repeated.",
+    "values": "yes or no",
+    "required": false
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "activity_phase_location_past",
+  "label": "Past phase location",
+  "summary": "Each province where a phase of the activity has already ended.",
+  "details": "Only phases that have ended are included. Vanilla uses it to compare the owners of those provinces with another character. The game's own usage line names the _future list by mistake; the parameter is the same.",
+  "fields": [
+   {
+    "name": "unique",
+    "text": "Limit the list to unique locations, so a province used by several phases is not repeated.",
+    "values": "yes or no",
+    "required": false
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "activity_type",
+  "label": "Activity type",
+  "summary": "Every activity type defined in the game.",
+  "details": "These are the kinds of activity (not running activities). Works from anywhere.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "alert_creatable_title",
+  "label": "Creatable title",
+  "summary": "Each title the character could create.",
+  "details": "The game says this is for alerts only (the notices in the game's interface). Vanilla still uses it once in an effect, to give the actor a pressed claim on each of these titles.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "alert_usurpable_title",
+  "label": "Usurpable title",
+  "summary": "Each title the character can usurp.",
+  "details": "The game says this is for alerts only (notices in the interface) and does not explain more. Vanilla does not use it in script.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "ally",
+  "label": "Ally",
+  "summary": "Each character the character has an alliance with.",
+  "details": "Vanilla uses it to break alliances with an attacker when the ally is out of diplomatic range, to count allies, and to pick the strongest ones with `order_by`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "ancestor",
+  "label": "Ancestor",
+  "summary": "Each ancestor of the character, going back up to 5 generations.",
+  "details": "Parents, grandparents and so on. Vanilla often writes `even_if_dead = yes` inside it, which suggests dead ancestors are skipped otherwise; the game's documentation does not say.",
+  "fields": [
+   {
+    "name": "even_if_dead",
+    "text": "Include ancestors who have died.",
+    "values": "yes",
+    "required": false
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "army",
+  "label": "Army",
+  "summary": "Each army the character has.",
+  "details": "Vanilla uses it to check whether armies are fighting, besieging or moving, to find raid armies, and to pick the biggest one with `order_by = army_size`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "army_in_location",
+  "label": "Local army",
+  "summary": "Each army that is currently in the province.",
+  "details": "Armies of anyone count, not only the province owner's. Vanilla uses it to find the armies in a battle or siege at a place, and to filter by owner or commander.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "army_maa_regiment",
+  "label": "Army regiment",
+  "summary": "Each men-at-arms regiment in the army.",
+  "details": "Vanilla uses it to check the unit types in an army, for example siege weapons or archers.",
+  "fields": [
+   {
+    "name": "include_hired",
+    "text": "Whether mercenary and holy order regiments are included.",
+    "values": "yes or no",
+    "required": false,
+    "default": "yes"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "artifact",
+  "label": "Artifact",
+  "summary": "Each artifact that exists anywhere in the game.",
+  "details": "Not limited to one owner. Vanilla mostly uses it to check for a variable that marks a specific artifact.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "artifact_claimant",
+  "label": "Artifact claimant",
+  "summary": "Each character who has a claim on the artifact.",
+  "details": "Vanilla uses it to send an event to each claimant, and to check whether any claimant is dead.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "artifact_house_claimant",
+  "label": "Artifact house claimant",
+  "summary": "Each dynasty house that has a claim on the artifact.",
+  "details": "The house counterpart of the artifact claimant list.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "attending_character",
+  "label": "Attending character",
+  "summary": "Each character who attends the activity.",
+  "details": "Guests who were invited but have not yet accepted or declined are not in it. It can be limited by the state a character is in.",
+  "fields": [
+   {
+    "name": "state",
+    "text": "Only characters in this state.",
+    "values": "travel, passive or active",
+    "required": false
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "available_rite",
+  "label": "Available rite",
+  "summary": "Each enabled rite.",
+  "details": "By default only rites of the same faith; the game's documentation does not say as whose faith. Vanilla uses it to look at the rites other than the character's current one.",
+  "fields": [
+   {
+    "name": "sort_by_spiritual_fulfillment",
+    "text": "Sort rites from the highest to the lowest starting spiritual fulfillment.",
+    "values": "yes or no",
+    "required": false,
+    "default": "no"
+   },
+   {
+    "name": "only_better",
+    "text": "Only rites whose starting spiritual fulfillment is higher than the current rite's.",
+    "values": "yes or no",
+    "required": false,
+    "default": "no"
+   },
+   {
+    "name": "same_faith",
+    "text": "Only rites of the same faith. Set to no to include rites of other faiths.",
+    "values": "yes or no",
+    "required": false,
+    "default": "yes"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "available_task_contract",
+  "label": "Available task contract",
+  "summary": "Each task contract at the location of the root province.",
+  "details": "The game's wording is short; it does not say whether this follows the character or the scope, or what makes a contract available. Vanilla only uses it to pick one contract and save it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "list",
+  "key": "barony",
+  "label": "Barony",
+  "summary": "Each barony in the game.",
+  "details": "Works from anywhere and covers the whole map, so use `limit` to narrow it down. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "barony_holy_site",
+  "label": "Barony holy site",
+  "summary": "Each holy site located in the barony.",
+  "details": "Works from a barony title. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "casus_belli_type",
+  "label": "Casus belli type",
+  "summary": "Every casus belli type defined in the game.",
+  "details": "These are the kinds of war reason, not running wars. Works from anywhere.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "character_active_contract",
+  "label": "Active task contract",
+  "summary": "Each task contract the character has accepted.",
+  "details": "The game says the root character's accepted contracts, while the list belongs to a character scope. Vanilla uses it to end contracts (`invalidate_contract`), complete them, and to find the one tied to a war or location.",
+  "fields": [
+   {
+    "name": "task_contract_type",
+    "text": "Only contracts of this type.",
+    "values": "a task contract type",
+    "required": false
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "character_artifact",
+  "label": "Inventory artifact",
+  "summary": "Each artifact in the character's inventory.",
+  "details": "Vanilla uses it to find artifacts by slot, modifier, equipped state or rarity, and to hand them over (`set_owner`).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "character_doctrine",
+  "label": "Doctrine",
+  "summary": "Each doctrine, seen from the character's point of view and what they know of doctrines.",
+  "details": "The game takes the character's knowledge into account, so you can ask for doctrines they know or do not know. If a rite is given, the doctrines of the faith are included too.",
+  "fields": [
+   {
+    "name": "knowledge_filter",
+    "text": "Whether the character must know the doctrine.",
+    "values": "known, unknown or all",
+    "required": false
+   },
+   {
+    "name": "rite_filter",
+    "text": "Take the doctrines adopted by this rite. Wins over faith_filter if both are set.",
+    "values": "a rite, such as scope:rite",
+    "required": false
+   },
+   {
+    "name": "faith_filter",
+    "text": "Take the doctrines adopted by this faith.",
+    "values": "a faith, such as scope:faith",
+    "required": false
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "character_epidemic",
+  "label": "Epidemic",
+  "summary": "Each epidemic that affects the character.",
+  "details": "Vanilla uses it once, only in a check with no conditions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "character_in_location",
+  "label": "Character in location",
+  "summary": "Each character who is currently in the province.",
+  "details": "Anyone currently in the province counts. Vanilla uses it to find visitors to a court, to collect characters in a list, and to send them an event.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "character_situation",
+  "label": "Situation",
+  "summary": "Each situation the character takes part in.",
+  "details": "Vanilla uses it mostly to check which situation type it is, for example the Christian church or the Great Steppe.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "character_struggle",
+  "label": "Struggle",
+  "summary": "Each struggle the character is involved in.",
+  "details": "Vanilla mostly asks for involved characters only, and checks the struggle type (for example the Iberian one) and its phase.",
+  "fields": [
+   {
+    "name": "involvement",
+    "text": "Only struggles where the character has this role.",
+    "values": "involved or interloper",
+    "required": false
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "character_task_contract",
+  "label": "Task contract",
+  "summary": "Each task contract of the character.",
+  "details": "Unlike the active-contract list, the game does not say these must be accepted ones. Vanilla uses it to count contracts and to find one of a type.",
+  "fields": [
+   {
+    "name": "task_contract_type",
+    "text": "Only contracts of this type.",
+    "values": "a task contract type",
+    "required": false
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "character_tenet",
+  "label": "Tenet",
+  "summary": "Each tenet, seen from the character's point of view and what they know of tenets.",
+  "details": "Works like the doctrine list, with one extra filter, status. If a rite is given, the faith's approved tenets are included too. Vanilla uses `status = core` to get a faith's core tenets.",
+  "fields": [
+   {
+    "name": "knowledge_filter",
+    "text": "Whether the character must know the tenet.",
+    "values": "known, unknown or all",
+    "required": false
+   },
+   {
+    "name": "rite_filter",
+    "text": "Take the tenets of this rite. Wins over faith_filter if both are set.",
+    "values": "a rite, such as scope:rite",
+    "required": false
+   },
+   {
+    "name": "faith_filter",
+    "text": "Take the tenets of this faith.",
+    "values": "a faith, such as root.faith",
+    "required": false
+   },
+   {
+    "name": "status",
+    "text": "Only tenets with this status; used together with a rite or faith filter.",
+    "values": "core, permitted, prohibited, known or unknown",
+    "required": false
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "character_to_title_neighboring_and_across_water_county",
+  "label": "Neighboring or overseas county",
+  "summary": "Each county neighboring the character, including ones across the water.",
+  "details": "The game says it goes from a character to a neighboring county and looks through the de jure lieges. It does not spell out how neighbor is decided. Vanilla uses it to find counties of other rulers, for example where to expel someone to.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "list",
+  "key": "character_to_title_neighboring_and_across_water_duchy",
+  "label": "Neighboring or overseas duchy",
+  "summary": "Each duchy neighboring the character, including ones across the water.",
+  "details": "The duchy version of the neighboring-and-across-water county list. The game does not spell out how neighbor is decided.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "list",
+  "key": "character_to_title_neighboring_and_across_water_empire",
+  "label": "Neighboring or overseas empire",
+  "summary": "Each empire neighboring the character, including ones across the water.",
+  "details": "The empire version of the neighboring-and-across-water county list. The game does not spell out how neighbor is decided; vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "list",
+  "key": "character_to_title_neighboring_and_across_water_kingdom",
+  "label": "Neighboring or overseas kingdom",
+  "summary": "Each kingdom neighboring the character, including ones across the water.",
+  "details": "The kingdom version of the neighboring-and-across-water county list. The game does not spell out how neighbor is decided; vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "list",
+  "key": "character_to_title_neighboring_county",
+  "label": "Neighboring county",
+  "summary": "Each county neighboring the character.",
+  "details": "By its name it leaves out the overseas counties that the across-water form adds. The game says it looks through the de jure lieges but not how neighbor is decided. Vanilla uses it to find neighboring counties whose holders are not the character's vassals.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "list",
+  "key": "character_to_title_neighboring_duchy",
+  "label": "Neighboring duchy",
+  "summary": "Each duchy neighboring the character.",
+  "details": "By its name it leaves out the overseas duchies. The game does not spell out how neighbor is decided.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "list",
+  "key": "character_to_title_neighboring_empire",
+  "label": "Neighboring empire",
+  "summary": "Each empire neighboring the character.",
+  "details": "By its name it leaves out the overseas empires. The game does not spell out how neighbor is decided; vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "list",
+  "key": "character_to_title_neighboring_kingdom",
+  "label": "Neighboring kingdom",
+  "summary": "Each kingdom neighboring the character.",
+  "details": "By its name it leaves out the overseas kingdoms. The game does not spell out how neighbor is decided; vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "list",
+  "key": "character_trait",
+  "label": "Trait",
+  "summary": "Each trait the character has.",
+  "details": "Vanilla uses it to pick a trait of a category (such as a personality trait), to look at opposite traits, and to collect traits into a list.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "character_war",
+  "label": "War",
+  "summary": "Each war the character is part of.",
+  "details": "Vanilla uses it to end wars, add attackers or defenders, and to find a war by its casus belli or by who leads it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "character_with_royal_court",
+  "label": "Royal court character",
+  "summary": "Each character who has a royal court.",
+  "details": "Works from anywhere. Vanilla uses it to set court grandeur and to find a ruler with a capital in a given region.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "child",
+  "label": "Child",
+  "summary": "Each child of the character.",
+  "details": "Vanilla sometimes writes `even_if_dead` or `is_alive` inside it, which suggests dead children are skipped unless asked for; the game's documentation does not say. Vanilla uses it often, for example to pick children by age and to start events for them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "claim",
+  "label": "Claim",
+  "summary": "Each title the character holds a claim on.",
+  "details": "The items are the titles, not the claims. The parameters narrow down which kind of claim counts.",
+  "fields": [
+   {
+    "name": "explicit",
+    "text": "Whether explicit claims count; the game does not explain the term.",
+    "values": "yes, no or all",
+    "required": false
+   },
+   {
+    "name": "pressed",
+    "text": "Whether pressed claims, unpressed ones, or both count.",
+    "values": "yes, no or all",
+    "required": false
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "claimant",
+  "label": "Claimant",
+  "summary": "Each character who has a claim on the title.",
+  "details": "Vanilla uses it to find claimants to remove claims from or to pick a rival.",
+  "fields": [
+   {
+    "name": "explicit",
+    "text": "Whether claims set directly on the character count. The game gives no more detail.",
+    "values": "yes, no or all",
+    "required": false,
+    "default": "yes"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "list",
+  "key": "claimed_artifact",
+  "label": "Claimed artifact",
+  "summary": "Each artifact the character has a claim on.",
+  "details": "Vanilla uses it to collect the artifacts in a list, and to check one against a saved artifact and its owner.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ }
+]

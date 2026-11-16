@@ -1,9 +1,9 @@
 /**
  * Coats of arms script sets when the game starts (docs/map.md, "Coats of arms"). The effects of `on_game_start` and
- * `on_game_start_after_lobby` are walked — an on_action's `effect`, then its `events`, then its `on_actions`; events
+ * `on_game_start_after_lobby` are walked: an on_action's `effect`, then its `events`, then its `on_actions`; events
  * sent with `trigger_event` (their `trigger` and `immediate`); scripted effects with their $PARAM$s; `if` / `else_if`
  * / `else`, character iterators (`every_ruler` …), title iterators and links (`every_held_title`, `primary_title`,
- * `every_noble_family`, `title:x`, `holder`) — for `set_coa` on a title. Each becomes a rule: which titles (a named
+ * `every_noble_family`, `title:x`, `holder`), looking for `set_coa` on a title. Each becomes a rule: which titles (a named
  * one, any a character holds, a character's primary title, noble family titles), the limits on the way (on the title,
  * on its holder, or on nothing: `game_start_date`), and the arms (an entry, the holder's house or dynasty, another
  * title's). AGOT: every ruler's held titles get `set_coa = holder.house` (events/agot_events/agot_coa_events.txt);
@@ -30,11 +30,14 @@ export interface StartRule
 /**
  * A named dynasty's renown set at game start (`dynasty:dynn_Targaryen = { … }`): renown added (`add_dynasty_prestige`),
  * levels added (`add_dynasty_prestige_level`), or its level brought up / down to a value (`while = { limit = {
- * dynasty_prestige_level < 8 } add_dynasty_prestige_level = 1 }` — AGOT's agot_set_dynasty_level_history_effect).
+ * dynasty_prestige_level < 8 } add_dynasty_prestige_level = 1 }`, AGOT's agot_set_dynasty_level_history_effect).
  */
 export interface RenownStep
 {
-    dynasty: string;
+    /** a named dynasty (`dynasty:dynn_Targaryen = { … }`), or `of`: the dynasty of a title's holder at the date
+     *  (vanilla: `title:k_chrysanthemum_throne.holder ?= { dynasty = { while … add_dynasty_prestige_level = 1 } }`) */
+    dynasty?: string;
+    of?: string;
     step: { add: number; } | { levels: number; } | { atLeast: number; } | { atMost: number; };
     /** limits on nothing (`current_date < 8001.6.1`) on the way */
     when: { list: PNode[]; not: boolean; }[];
@@ -49,6 +52,8 @@ interface Abs
     holder?: Abs;
     holderOf?: Abs;
     dynasty?: string;
+    /** a dynasty scope: the dynasty of this title's holder (whoever holds it at the date) */
+    of?: string;
 }
 
 interface Cond
@@ -271,13 +276,18 @@ export function readStart(idx: GameIndex): { arms: StartRule[]; renown: RenownSt
                 continue;
             }
 
-            if (s.t === 'dynasty' && s.dynasty)
+            if (s.t === 'dynasty' && (s.dynasty || s.of))
             {
                 const step = renownOf(c);
 
+                // (limits on a character or title on the way (`is_from_ruler_designer = yes`) can't be decided for a
+                // game start here: such a step is left out; limits on nothing (dates) stay with it)
+                if (step && conds.some((x) => x.on.t !== 'none'))
+                    continue;
+
                 if (step)
                 {
-                    renown.push({ dynasty: s.dynasty, step, when: conds.filter((x) => x.on.t === 'none').map(({ list, not }) => ({ list, not })) });
+                    renown.push({ ...(s.dynasty ? { dynasty: s.dynasty } : { of: s.of }), step, when: conds.filter((x) => x.on.t === 'none').map(({ list, not }) => ({ list, not })) });
                     continue;
                 }
             }
@@ -343,8 +353,23 @@ export function readStart(idx: GameIndex): { arms: StartRule[]; renown: RenownSt
         }
     };
 
-    /** The scope a block key leads to (undefined: not followed). */
+    /** The scope a block key leads to (undefined: not followed), a dotted path step by step (`title:k_x.holder`). */
     const enter = (k: string, s: Abs, saved: Map<string, Abs>): Abs | undefined =>
+    {
+        if (k.includes('.') && !k.startsWith('scope:'))
+        {
+            let at: Abs | undefined = s;
+
+            for (const part of k.split('.'))
+                at = at && enter1(part, at, saved);
+
+            return at;
+        }
+
+        return enter1(k, s, saved);
+    };
+
+    const enter1 = (k: string, s: Abs, saved: Map<string, Abs>): Abs | undefined =>
     {
         const key = k.startsWith('title:') ? k.slice(6) : undefined;
 
@@ -365,6 +390,10 @@ export function readStart(idx: GameIndex): { arms: StartRule[]; renown: RenownSt
 
         if (s.t === 'char' && k === 'every_noble_family')
             return { t: 'title', target: { how: 'noble' } };
+
+        // (a named title's holder's dynasty: its renown, as for Japan's imperial dynasty at game start)
+        if (s.t === 'char' && k === 'dynasty' && s.holderOf?.target?.how === 'key')
+            return { t: 'dynasty', of: s.holderOf.target.key };
 
         if (s.t === 'title' && k === 'holder')
         {

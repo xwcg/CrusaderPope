@@ -1,5 +1,5 @@
 /**
- * App-wide notices (components/Notices.tsx): results of operations started in one view that must outlive it — an
+ * App-wide notices (components/Notices.tsx): results of operations started in one view that must outlive it; an
  * override written into the active mod stays reported while the explorer re-indexes (the views are replaced by the
  * indexing screen meanwhile).
  */
@@ -31,11 +31,33 @@ const emit = (): void =>
         l();
 };
 
-/** Shows a notice (the newest first; at most three stay). Errors stay until dismissed, others go after 30 s. */
+/**
+ * Shows a notice (the newest first; at most three stay: a newer one pushes out the oldest that is not an error, so an
+ * unread error is only dropped for lack of room by newer errors). Errors stay until dismissed, others go after 30 s.
+ */
 export function pushNotice(n: Omit<Notice, 'id'>): number
 {
     const id = ++seq;
-    notices = [{ ...n, id }, ...notices].slice(0, 3);
+    const next = [{ ...n, id }, ...notices];
+
+    while (next.length > 3)
+    {
+        let drop = next.length - 1;
+
+        // (the oldest that is not an error; only errors left: the oldest)
+        for (let i = next.length - 1; i > 0; i--)
+        {
+            if (next[i].kind !== 'error')
+            {
+                drop = i;
+                break;
+            }
+        }
+
+        next.splice(drop, 1);
+    }
+
+    notices = next;
     emit();
 
     // (long enough to outlast a re-index the notice announces)

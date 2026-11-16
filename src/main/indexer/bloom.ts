@@ -1,7 +1,7 @@
 /**
  * Per-file Bloom filters of the names a file's tokens look up while references are resolved (docs/indexer.md,
  * "Incremental updates"): when an update creates or removes an entry, the files whose filter may hold its name are
- * the only ones whose references can resolve differently — they are resolved again. No false negatives; a false
+ * the only ones whose references can resolve differently: they are resolved again. No false negatives; a false
  * positive costs one needless re-parse.
  *
  * A filter is a Uint32Array of 2^n bits, three probes per name from two 32-bit string hashes (double hashing).
@@ -56,6 +56,18 @@ export function bloomAdd(words: Uint32Array, s: string): void
 
     a >>>= 0;
     b = (b | 1) >>> 0;
+    const mask = words.length * 32 - 1;
+
+    for (let k = 0; k < PROBES; k++)
+    {
+        const bit = (a + k * b) & mask;
+        words[bit >>> 5] |= 1 << (bit & 31);
+    }
+}
+
+/** Adds a name by its nameHash (the two hashes). */
+export function bloomAddHash(words: Uint32Array, a: number, b: number): void
+{
     const mask = words.length * 32 - 1;
 
     for (let k = 0; k < PROBES; k++)

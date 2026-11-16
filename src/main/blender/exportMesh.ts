@@ -3,7 +3,7 @@
  * planes too), one primitive per sub-mesh, both UV sets, normals, tangents, skin (joints named like the PDX bones,
  * hierarchy from their parents, inverse bind matrices). The game is Y-up left-handed: z is mirrored (positions,
  * normals, tangent xyz, joint matrices conjugated) and the triangle winding flipped; tangent w stays (the mirror
- * already flips the bitangent's cross product — see the doc). UVs are the game's as they are: glTF and the game both
+ * already flips the bitangent's cross product; see the doc). UVs are the game's as they are: glTF and the game both
  * put (0, 0) at the image's top left. Textures become PNGs next to the glTF; a manifest records where everything came
  * from. Plain Node (runs in the Blender worker).
  */
@@ -15,6 +15,7 @@ import { GltfBuilder, UNSIGNED_INT, type GltfDoc, type GltfMaterial, type GltfNo
 import { channelHashes, decodeTexture, normalToGltf, pixelHash, propertiesToOrm } from './textures.ts';
 import type { BlenderManifest, ManifestMaterial, ManifestTexture, ModelExportPlan, PlanPart, PlanTexture } from './types.ts';
 
+import { tr } from '../../shared/i18n.ts';
 export const GENERATOR = 'CrusaderPope';
 
 export interface ExportInput
@@ -59,6 +60,17 @@ export function txMatrix(tx: ArrayLike<number>): M4
     return m;
 }
 
+/**
+ * A bone without a pose: a rig a model uses only partly (hair: the facial bones) stores `tx` as zeros for the bones it
+ * does not weight, a singular matrix with no inverse. Its joint node cannot stand where the bone is, and an inverse bind
+ * matrix of zeros makes Blender's importer (Guess Original Bind Pose) move vertices of the bones that do have a pose.
+ */
+export function unposedTx(tx: ArrayLike<number>): boolean
+{
+    const det = tx[0] * (tx[4] * tx[8] - tx[5] * tx[7]) - tx[1] * (tx[3] * tx[8] - tx[5] * tx[6]) + tx[2] * (tx[3] * tx[7] - tx[4] * tx[6]);
+    return !Number.isFinite(det) || Math.abs(det) < 1e-9;
+}
+
 export interface PdxBone
 {
     name: string;
@@ -66,6 +78,37 @@ export interface PdxBone
     pa: number;
     tx: Float32Array;
 }
+
+/** Each bone's world matrix by bone index: the inverse of its `tx`; an unposed bone stands where its parent does. */
+function boneWorlds(bones: PdxBone[], byIx: Map<number, PdxBone>): Map<number, M4>
+{
+    const world = new Map<number, M4>();
+    const of = (b: PdxBone, depth = 0): M4 =>
+    {
+        let m = world.get(b.ix);
+
+        if (m)
+            return m;
+
+        if (!unposedTx(b.tx))
+            m = invert(txMatrix(b.tx));
+        else
+        {
+            const parent = b.pa >= 0 && b.pa !== b.ix ? byIx.get(b.pa) : undefined;
+            m = parent && depth < 256 ? of(parent, depth + 1) : txIdentity();
+        }
+
+        world.set(b.ix, m);
+        return m;
+    };
+
+    for (const b of bones)
+        of(b);
+
+    return world;
+}
+
+const txIdentity = (): M4 => new Float64Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
 
 export function bonesOf(skeleton: PdxNode): PdxBone[]
 {
@@ -103,7 +146,7 @@ export interface SubMeshMaterial
 }
 
 /**
- * The material of every sub-mesh (per shape, per mesh; file order) with the names the export gives them — the same
+ * The material of every sub-mesh (per shape, per mesh; file order) with the names the export gives them: the same
  * names come out for the same file and plan, so an import without manifest still finds them.
  */
 export function subMeshMaterials(object: PdxNode, plan: ModelExportPlan): SubMeshMaterial[][]
@@ -164,7 +207,7 @@ export async function exportMesh(input: ExportInput): Promise<ExportOutput>
     const object = find(root, 'object');
 
     if (!object)
-        throw new Error(`${plan.mesh} has no objects.`);
+        throw new Error(tr('{mesh} has no objects.', { mesh: plan.mesh }));
 
     const g = new GltfBuilder(GENERATOR);
     const doc = g.doc;
@@ -185,6 +228,8 @@ export async function exportMesh(input: ExportInput): Promise<ExportOutput>
     });
     /** per distinct skeleton: its joint node by bone index */
     const jointSets = new Map<string, Map<number, number>>();
+    /** per distinct skeleton: each bone's world matrix in the game's space by bone index */
+    const worlds = new Map<string, Map<number, M4>>();
     /** bone name → joint node (the first skeleton's; locators hang on them) */
     const jointNode = new Map<string, number>();
     /** scene roots: shape nodes (file order), then root joints and locators */
@@ -199,7 +244,8 @@ export async function exportMesh(input: ExportInput): Promise<ExportOutput>
         const nodesByIx = new Map<number, number>();
         jointSets.set(s.key, nodesByIx);
         const byIx = new Map(s.bones.map((b) => [b.ix, b]));
-        const world = new Map(s.bones.map((b) => [b.ix, invert(txMatrix(b.tx))]));
+        const world = boneWorlds(s.bones, byIx);
+        worlds.set(s.key, world);
         // bone names repeat in some rigs (a horse's four hooves): later ones get Blender's own `.001` suffixes
         const seen = new Map<string, number>();
 
@@ -254,7 +300,8 @@ export async function exportMesh(input: ExportInput): Promise<ExportOutput>
             if (b)
             {
                 joints.push(nodesByIx.get(k)!);
-                ibm.set(mirrorMatrix(txMatrix(b.tx)), k * 16);
+                // (an unposed bone: the inverse of where its node stands, so that node world × inverse bind = identity)
+                ibm.set(mirrorMatrix(unposedTx(b.tx) ? invert(worlds.get(s.key)!.get(b.ix)!) : txMatrix(b.tx)), k * 16);
             }
             else
             {
@@ -263,7 +310,7 @@ export async function exportMesh(input: ExportInput): Promise<ExportOutput>
                 otherRoots.push(n);
                 joints.push(n);
                 ibm.set([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1], k * 16);
-                warnings.push(`Bone index ${k} is not used by the skeleton: a placeholder joint stands in.`);
+                warnings.push(tr('Bone index {k} is not used by the skeleton: a placeholder joint stands in.', { k }));
             }
         }
 
@@ -306,7 +353,7 @@ export async function exportMesh(input: ExportInput): Promise<ExportOutput>
 
         if (!bytes)
         {
-            warnings.push(`Texture not found: ${path}`);
+            warnings.push(tr('Texture not found: {path}', { path }));
             return null;
         }
 
@@ -320,7 +367,7 @@ export async function exportMesh(input: ExportInput): Promise<ExportOutput>
         }
         catch (e)
         {
-            warnings.push(`${path}: ${(e as Error).message} — not exported`);
+            warnings.push(tr('{path}: {message} — not exported', { path, message: (e as Error).message }));
             return null;
         }
 
@@ -367,7 +414,7 @@ export async function exportMesh(input: ExportInput): Promise<ExportOutput>
         {
             if (!t.path)
             {
-                warnings.push(`${shapeName}: ${t.role} texture ${t.ref} not found`);
+                warnings.push(tr('{shapeName}: {role} texture {ref} not found', { shapeName, role: t.role, ref: t.ref }));
                 continue;
             }
 
@@ -419,7 +466,7 @@ export async function exportMesh(input: ExportInput): Promise<ExportOutput>
 
         if (!bytes)
         {
-            warnings.push(`Blend shape ${b.id}: ${b.file} not found`);
+            warnings.push(tr('Blend shape {id}: {file} not found', { id: b.id, file: b.file }));
             continue;
         }
 
@@ -431,7 +478,7 @@ export async function exportMesh(input: ExportInput): Promise<ExportOutput>
         }
         catch (e)
         {
-            warnings.push(`Blend shape ${b.id}: ${(e as Error).message}`);
+            warnings.push(tr('Blend shape {id}: {message}', { id: b.id, message: (e as Error).message }));
             continue;
         }
 
@@ -463,7 +510,7 @@ export async function exportMesh(input: ExportInput): Promise<ExportOutput>
         const skin = skinned ? skinFor(si) : undefined;
 
         if (skinned && skin === undefined)
-            warnings.push(`${shape.name}: skinned, but the file has no skeleton — exported without skin`);
+            warnings.push(tr('{name}: skinned, but the file has no skeleton — exported without skin', { name: shape.name }));
 
         const primitives: NonNullable<GltfDoc['meshes']>[number]['primitives'] = [];
         const entry: BlenderManifest['shapes'][number] = { name: shape.name, meshes: [] };
@@ -689,7 +736,7 @@ export async function exportMesh(input: ExportInput): Promise<ExportOutput>
     counts.blendShapes = blendShapes.length;
 
     if (unfit.size)
-        warnings.push(`${unfit.size} blend shape${unfit.size === 1 ? '' : 's'} left out — the target has other vertices than this mesh in the game already: ${[...unfit].slice(0, 6).join(', ')}${unfit.size > 6 ? ' …' : ''}`);
+        warnings.push(tr('{size} blend shape{value} left out — the target has other vertices than this mesh in the game already: {join}{value2}', { size: unfit.size, value: unfit.size === 1 ? '' : 's', join: [...unfit].slice(0, 6).join(', '), value2: unfit.size > 6 ? ' …' : '' }));
 
     const manifest: BlenderManifest = {
         crusaderpope: 'blender-export',
@@ -702,11 +749,11 @@ export async function exportMesh(input: ExportInput): Promise<ExportOutput>
         exported: new Date().toISOString(),
         gltf: input.name + '.gltf',
         notes: [
-            'Exported by CrusaderPope for Blender. Import the .gltf in Blender (File > Import > glTF 2.0), edit, export as glTF (.glb or .gltf) and bring it back with “Import from Blender…” on the model page.',
-            'Coordinates: the game is Y-up left-handed; z is mirrored here. 1 game unit = 1 Blender metre.',
-            'Normal maps are standard tangent-space maps here (the game packs x in green and y in alpha).',
-            'Properties maps: the *_orm.png (roughness in G, metalness in B) is bound in Blender; the full map (r = SSS/AO, g = specular, b = metalness, a = roughness) is the PNG named like the game texture — edit either.',
-            'Keep this file next to the export: it tells the importer which textures were changed.'
+            tr('Exported by CrusaderPope for Blender. Import the .gltf in Blender (File > Import > glTF 2.0), edit, export as glTF (.glb or .gltf) and bring it back with “Import from Blender…” on the model page.'),
+            tr('Coordinates: the game is Y-up left-handed; z is mirrored here. 1 game unit = 1 Blender metre.'),
+            tr('Normal maps are standard tangent-space maps here (the game packs x in green and y in alpha).'),
+            tr('Properties maps: the *_orm.png (roughness in G, metalness in B) is bound in Blender; the full map (r = SSS/AO, g = specular, b = metalness, a = roughness) is the PNG named like the game texture — edit either.'),
+            tr('Keep this file next to the export: it tells the importer which textures were changed.')
         ],
         shapes: manifestShapes,
         materials,

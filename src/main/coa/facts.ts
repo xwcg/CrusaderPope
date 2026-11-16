@@ -1,6 +1,6 @@
 /**
  * History at a date as coats of arms need it (docs/map.md, "Coats of arms"): who holds a title and what the holder is
- * then — culture, faith, dynasty, house, traits, primary title, liege, government — plus what the triggers of dynamic
+ * then (culture, faith, dynasty, house, traits, primary title, liege, government) plus what the triggers of dynamic
  * definitions, special selections and game start effects ask about titles, cultures, faiths and governments. Read
  * through the index's layering on first use: history/titles (holders, lieges, governments), history/provinces
  * (holdings, only when asked), characters, cultures, religions and governments by entry.
@@ -9,9 +9,9 @@
  */
 import type { GameIndex } from '../indexer/gameIndex.ts';
 import { parse, type PNode } from '../indexer/parser.ts';
-import { T_CHARACTER, T_FAITH, T_TITLE } from '../indexer/schema.ts';
-import { bodyOf as layoutBody, faithField, riteHistory } from '../indexer/layouts.ts';
-import { faithAt } from '../map/history-characters.ts';
+import { T_TITLE } from '../indexer/schema.ts';
+import { bodyOf as layoutBody, doctrinesOf, faithHasDoctrine, faithTable, riteHistory, tenetsOf } from '../indexer/layouts.ts';
+import { faithAt, holderType } from '../map/history-characters.ts';
 import { DATE_KEY, dateNum, HISTORY_DATE, lastAt, lastIndexAt, scalarOf, type Dated } from '../map/history.ts';
 
 /** title tiers by key prefix (tier_barony = 1 … tier_hegemony = 6) */
@@ -67,6 +67,8 @@ export interface PersonAt
     name: string;
     culture?: string;
     faith?: string;
+    /** 1.20: their rite: the one written, else their faith's main rite then */
+    rite?: string;
     dynasty?: string;
     house?: string;
     traits: Set<string>;
@@ -87,7 +89,35 @@ export interface FaithInfo
 {
     religion: string;
     doctrines: Set<string>;
+    own: Set<string>;
     icon?: string;
+    /** 1.20 */
+    mainRite?: string;
+}
+
+export interface RiteInfo
+{
+    doctrines: Set<string>;
+    tenets: Set<string>;
+}
+
+/** The frame settings of common/defines/graphic NCoatOfArms: the defaults of a family's frame and what overrides the culture's. */
+export interface FrameDefines
+{
+    dynasty: FamilyFrameDefines;
+    house: FamilyFrameDefines;
+    /** OVERRIDE_REALM_MASK_*: the offset and scale every government's banner gets, when enabled */
+    realm?: { offset: [number, number]; scale: [number, number]; };
+}
+
+export interface FamilyFrameDefines
+{
+    /** DEFAULT_<KIND>_COA_FRAME_NAME / _OFFSET / _SCALE */
+    name: string;
+    offset: [number, number];
+    scale: [number, number];
+    /** OVERRIDE_<KIND>_COA_FRAME_NAME (empty: none) with its offset and scale */
+    override?: { name: string; offset: [number, number]; scale: [number, number]; };
 }
 
 export interface GovernmentInfo
@@ -127,12 +157,11 @@ export class CoaFacts
     private persons = new Map<string, Person | null>();
     private dates = new Map<number, AtDate>();
     private cultures = new Map<string, CultureInfo | null>();
-    private faiths: Map<string, FaithInfo> | undefined;
-    private families = new Map<string, string | undefined>();
-    private heads = new Set<string>();
+    private rites = new Map<string, RiteInfo | null>();
     private governments: Map<string, GovernmentInfo> | undefined;
     private rules: Set<string> | undefined;
     private levels: { thresholds: number[]; step: number; } | undefined;
+    private frames: FrameDefines | undefined;
     private titleFields = new Map<string, Map<string, string>>();
 
     constructor(idx: GameIndex)
@@ -251,6 +280,17 @@ export class CoaFacts
         }
 
         return m.get(key);
+    }
+
+    /**
+     * Whether a title is a clerical elector's (a cardinal's seat, `HasClericalElector`). The game makes that state in play
+     * (`add_clerical_elector`, from scripted effects the start dates run), history does not state it; the faith types do
+     * name the seats they start with: `clerical_elector_titles` (catholic: the d_cd_* titles). Titles a script makes
+     * electors later are not known.
+     */
+    isClericalElectorSeat(title: string): boolean
+    {
+        return faithTable(this.idx).electors.has(title);
     }
 
     /** The province a title stands for (`title_province`): a barony's own, else its capital's (a county's first barony). */
@@ -542,7 +582,7 @@ export class CoaFacts
         if (p !== undefined)
             return p;
 
-        const e = this.idx.get(T_CHARACTER, id);
+        const e = this.idx.get(holderType(this.idx), id);
         const node = e && this.idx.winningDef(e) ? this.idx.defNode(e)?.node : undefined;
         p = null;
 
@@ -622,7 +662,8 @@ export class CoaFacts
             }
 
             const dead = p.death !== undefined && p.death <= when;
-            out = { id, name: p.name, culture: lastAt(p.culture, when), faith: faithAt(p.faith, p.rite, when, (r, w) => riteHistory(this.idx).faithOf(r, w)), dynasty: lastAt(p.dynasty, when), house: lastAt(p.house, when), traits, alive: !dead };
+            const faith = faithAt(p.faith, p.rite, when, (r, w) => riteHistory(this.idx).faithOf(r, w));
+            out = { id, name: p.name, culture: lastAt(p.culture, when), faith, rite: this.riteOf(p, faith, when), dynasty: lastAt(p.dynasty, when), house: lastAt(p.house, when), traits, alive: !dead };
 
             if (p.birth !== undefined && p.birth <= when)
                 out.age = Math.floor((Math.min(when, p.death ?? when) - p.birth) / 10000);
@@ -634,6 +675,43 @@ export class CoaFacts
 
         s.people.set(id, out);
         return out;
+    }
+
+    /** A person's rite at a date: the later of `rite` and `religion` / `faith` (a rite written as the faith counts), else the faith's main rite. */
+    private riteOf(p: Person, faith: string | undefined, when: number): string | undefined
+    {
+        const r = lastIndexAt(p.rite, when);
+        const f = lastIndexAt(p.faith, when);
+
+        if (r >= 0 && (f < 0 || p.rite[r].date >= p.faith[f].date))
+            return p.rite[r].v;
+
+        if (f >= 0 && this.idx.get('religion/rite_types', p.faith[f].v))
+            return p.faith[f].v;
+
+        return faith ? riteHistory(this.idx).mainRiteOf(faith, when) : undefined;
+    }
+
+    /** A faith's main rite at a date (1.20). */
+    mainRite(faith: string, when: number): string | undefined
+    {
+        return riteHistory(this.idx).mainRiteOf(faith, when);
+    }
+
+    /** A rite's doctrines and tenets (1.20); undefined for a rite the game does not have. */
+    rite(key: string): RiteInfo | undefined
+    {
+        let r = this.rites.get(key);
+
+        if (r === undefined)
+        {
+            const e = this.idx.get('religion/rite_types', key);
+            const body = e ? layoutBody(this.idx, e) : [];
+            r = e ? { doctrines: new Set(doctrinesOf(body)), tenets: new Set(tenetsOf(body).map((t) => t.name)) } : null;
+            this.rites.set(key, r);
+        }
+
+        return r ?? undefined;
     }
 
     houseDynasty(house: string): string | undefined
@@ -672,77 +750,30 @@ export class CoaFacts
     }
 
     /**
-     * Faiths: their religion, doctrines (the religion's too, 1.20 the main rite's), icon — nested in their religion, or
-     * (1.20) in religion/faith_types (docs/game-structure.md, "Layouts that changed").
+     * Faiths: their religion, doctrines (the religion's too, 1.20 the main rite's), icon; nested in their religion, or
+     * (1.20) in religion/faith_types (docs/game-structure.md, "Layouts that changed"); one table for both (layouts.ts).
      */
     faith(key: string): FaithInfo | undefined
     {
-        if (!this.faiths)
-        {
-            this.faiths = new Map();
-            const religionDoctrines = new Map<string, string[]>();
-            const doctrinesOf = (body: PNode[]): string[] => body.flatMap((c) => (c.k === 'doctrine' && typeof c.v === 'string' ? [c.v] : c.k === 'doctrines' ? kids(c).filter((x) => x.k === null && typeof x.v === 'string').map((x) => x.v as string) : []));
+        return faithTable(this.idx).faiths.get(key);
+    }
 
-            for (const religion of this.idx.names('religion/religion_types'))
-            {
-                const e = this.idx.get('religion/religion_types', religion);
-                const body = kids(e && this.idx.winningDef(e) ? this.idx.defNode(e)?.node : undefined);
-
-                if (!body.length)
-                    continue;
-
-                this.families.set(religion, field(body, 'family'));
-                const doctrines = doctrinesOf(body);
-                religionDoctrines.set(religion, doctrines);
-
-                for (const f of kids(body.find((c) => c.k === 'faiths')))
-                {
-                    if (!f.k || !Array.isArray(f.v))
-                        continue;
-
-                    const own = f.v.filter((c) => c.k === 'doctrine' && typeof c.v === 'string').map((c) => c.v as string);
-                    this.faiths.set(f.k, { religion, doctrines: new Set([...doctrines, ...own]), icon: field(f.v, 'icon') });
-                    const head = field(f.v, 'religious_head');
-
-                    if (head)
-                        this.heads.add(head.replace(/^title:/, ''));
-                }
-            }
-
-            for (const name of this.idx.names(T_FAITH))
-            {
-                const body = layoutBody(this.idx, this.idx.get(T_FAITH, name));
-                const religion = faithField(body, 'religion');
-
-                if (this.faiths.has(name) || typeof religion?.v !== 'string')
-                    continue;
-
-                const rite = field(body, 'main_rite');
-                const riteDoctrines = rite ? doctrinesOf(layoutBody(this.idx, this.idx.get('religion/rite_types', rite))) : [];
-                const icon = faithField(body, 'icon');
-                this.faiths.set(name, { religion: religion.v, doctrines: new Set([...(religionDoctrines.get(religion.v) ?? []), ...riteDoctrines, ...doctrinesOf(body)]), icon: typeof icon?.v === 'string' ? icon.v : undefined });
-                const head = faithField(body, 'religious_head');
-
-                if (typeof head?.v === 'string')
-                    this.heads.add(head.v.replace(/^title:/, ''));
-            }
-        }
-
-        return this.faiths.get(key);
+    /** Whether a faith has a doctrine at a date: its own and its religion's, and its main rite's then (layouts.ts). */
+    hasDoctrine(faith: string, doctrine: string, when: number): boolean
+    {
+        return faithHasDoctrine(this.idx, faith, doctrine, when);
     }
 
     /** A religion's `family` (rf_abrahamic …). */
     religionFamily(religion: string): string | undefined
     {
-        this.faith('');
-        return this.families.get(religion);
+        return faithTable(this.idx).families.get(religion);
     }
 
     /** The titles faiths name as their `religious_head`. */
     isHeadOfFaith(title: string): boolean
     {
-        this.faith('');
-        return this.heads.has(title);
+        return faithTable(this.idx).heads.has(title);
     }
 
     private governmentInfos(): Map<string, GovernmentInfo>
@@ -814,6 +845,53 @@ export class CoaFacts
         }
 
         return this.levels;
+    }
+
+    /** common/defines/graphic `NCoatOfArms`: the default and overriding frames of dynasties and houses, the realm mask override. */
+    frameDefines(): FrameDefines
+    {
+        if (!this.frames)
+        {
+            const fam = (name: string, offset: [number, number], scale: [number, number]): FamilyFrameDefines => ({ name, offset, scale });
+            const f: FrameDefines = { dynasty: fam('dynasty', [0, 0], [1, 1]), house: fam('house', [0, 0], [1, 1]) };
+            this.frames = f;
+
+            for (const file of this.idx.vfs.list('common/defines/graphic', { ext: /\.txt$/i, shallow: true }))
+            {
+                for (const top of parse(this.idx.vfs.readText(file) ?? ''))
+                {
+                    if (top.k !== 'NCoatOfArms')
+                        continue;
+
+                    const body = kids(top);
+                    const pair = (k: string, def: [number, number]): [number, number] =>
+                    {
+                        const v = bare(body.find((c) => c.k === k)).map(Number);
+                        return v.length === 2 && v.every(Number.isFinite) ? [v[0], v[1]] : def;
+                    };
+
+                    for (const kind of ['dynasty', 'house'] as const)
+                    {
+                        const up = kind.toUpperCase();
+                        const d = f[kind];
+                        d.name = field(body, `DEFAULT_${up}_COA_FRAME_NAME`) ?? d.name;
+                        d.offset = pair(`DEFAULT_${up}_COA_FRAME_OFFSET`, d.offset);
+                        d.scale = pair(`DEFAULT_${up}_COA_FRAME_SCALE`, d.scale);
+                        const name = field(body, `OVERRIDE_${up}_COA_FRAME_NAME`);
+
+                        if (name !== undefined)
+                            d.override = name ? { name, offset: pair(`OVERRIDE_${up}_COA_FRAME_OFFSET`, [0, 0]), scale: pair(`OVERRIDE_${up}_COA_FRAME_SCALE`, [1, 1]) } : undefined;
+                    }
+
+                    const realm = field(body, 'OVERRIDE_REALM_MASK_ENABLED');
+
+                    if (realm !== undefined)
+                        f.realm = realm === 'yes' ? { offset: pair('OVERRIDE_REALM_MASK_OFFSET', [0, 0]), scale: pair('OVERRIDE_REALM_MASK_SCALE', [1, 1]) } : undefined;
+                }
+            }
+        }
+
+        return this.frames;
     }
 
     /** The game rules' default settings (common/game_rules `default = …`): what `has_game_rule` finds in a new game. */

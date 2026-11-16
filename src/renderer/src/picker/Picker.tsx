@@ -1,6 +1,6 @@
 /**
- * The statement picker's UI (docs/picker.md): cascading menus like OS context menus — each step opens beside its
- * parent, flipping left at the window edge — driven entirely by the keyboard (mnemonic letters, ↑↓ ⏎ →, ← /
+ * The statement picker's UI (docs/picker.md): cascading menus like OS context menus (each step opens beside its
+ * parent, flipping left at the window edge), driven entirely by the keyboard (mnemonic letters, ↑↓ ⏎ →, ← /
  * Backspace back, Esc close, typing filters, `/` searches everything, digits go into number steps) or the mouse.
  * The bottom panel shows the path so far, the script and its readable sentence (api.describeScript). The states
  * and menus come from model.ts; this file keeps the history of steps, positions and the key handling.
@@ -11,11 +11,16 @@ import { scopeOf } from '../../../shared/scriptCatalog';
 import { api } from '../api';
 import { LineList, ReadCtx } from '../components/rich';
 import { GameImg } from '../img';
-import { pickerData } from './data';
-import { canFinish, menuOf, usedCreates, previewText, resultText, searchState, sentenceOf, startStates, type Item, type Menu, type State } from './model';
+import { docEntry, pickerData } from './data';
+import type { DbEntry, DbKind } from '../../../shared/scriptFacts';
+import { canFinish, createdNames, initialState, menuOf, plusRow, usedCreates, previewText, resultText, searchState, sentenceOf, startStates, type ChoiceMenu, type Item, type Menu, type State } from './model';
 import { firstSelectable, rowsOf, type Row } from './rows';
 import '../styles/picker.css';
 
+/** where the panel was dragged to (from its place at the bottom middle), kept while the app runs */
+let panelOffset = { x: 0, y: 0 };
+
+import { tr } from '../../../shared/i18n';
 interface Entry
 {
     id: number;
@@ -25,7 +30,12 @@ interface Entry
     filter: string;
     /** where the menu opens: x right beside its parent (before the cascade slides left to fit), y by the parent's row */
     pos: { x: number; y: number; };
+    /** every row shown, not the first MAX_ROWS (Space on a cut list: browsing) */
+    all?: boolean;
 }
+
+/** keys that only hold a modifier: no text, no command of the picker */
+const MODIFIER_KEYS = ['Shift', 'Control', 'Alt', 'Meta', 'CapsLock'];
 
 const MENU_W = 268;
 const WIDE_W = 360;
@@ -57,6 +67,113 @@ function ScriptText({ text }: { text: string; }): React.JSX.Element
                     <span key={i}>{p}</span>
             )}
         </>
+    );
+}
+
+/** What kind of game key a doc card explains (its small second line). */
+function docKindLabel(kind: DbKind): string
+{
+    switch (kind)
+    {
+        case 'effect':
+            return tr('Effect');
+        case 'trigger':
+            return tr('Condition');
+        case 'list':
+            return tr('List');
+        case 'link':
+            return tr('Link');
+        case 'saved_scope':
+            return tr('Saved scope');
+        case 'scope_type':
+            return tr('Scope type');
+        case 'modifier':
+            return tr('Modifier');
+        case 'on_action':
+            return tr('Game moment');
+        case 'custom_loc':
+            return tr('Text code');
+        case 'data_type':
+            return tr('Data type');
+        case 'data_function':
+            return tr('Text function');
+    }
+}
+
+/** An explanation's text with its `quoted keys` shown as code. */
+function Ticks({ text }: { text: string; }): React.JSX.Element
+{
+    return (
+        <>
+            {text.split(/(`[^`]+`)/).map((p, i) => (p.startsWith('`') && p.endsWith('`') && p.length > 2 ? <code key={i}>{p.slice(1, -1)}</code> : <span key={i}>{p}</span>))}
+        </>
+    );
+}
+
+/**
+ * A game key explained (the script database, docs/script-database.md): its label and summary, the details, its fields
+ * (what each means, its values, required or its default), a note when the explanation rests on little, and the game's own
+ * text folded away. An entry not explained yet shows the game's text open: it is all there is.
+ */
+function DocCard(props: { entry: DbEntry; stale: boolean; open: boolean; onToggle: () => void; example?: string; }): React.JSX.Element
+{
+    const { entry, stale, open, onToggle, example } = props;
+    const x = entry.explanation;
+    const raw = entry.doc.trim();
+    return (
+        <div className={'pk-card pk-doc' + (stale ? ' stale' : '')}>
+            <div className="pk-card-head">
+                <span>
+                    <b>{x?.label || entry.key}</b>
+                    <small>
+                        {docKindLabel(entry.kind)} · <code>{entry.key}</code>
+                    </small>
+                </span>
+            </div>
+            {example && <div className="pk-doc-example">{example}</div>}
+            {x?.summary && (
+                <div className="pk-doc-summary">
+                    <Ticks text={x.summary} />
+                </div>
+            )}
+            {x?.details && (
+                <div className="pk-doc-details">
+                    <Ticks text={x.details} />
+                </div>
+            )}
+            {!!x?.fields.length && (
+                <dl className="pk-doc-fields">
+                    {x.fields.map((f, i) => (
+                        <div key={i} className="pk-doc-field">
+                            <dt>
+                                <code>{f.name}</code>
+                                {f.required ? <span className="pk-doc-tag">{tr('required')}</span> : f.default ? <span className="pk-doc-tag">{tr('default: {fallback}', { fallback: f.default })}</span> : null}
+                            </dt>
+                            <dd>
+                                <Ticks text={f.text} />
+                                {f.values && (
+                                    <span className="pk-doc-values">
+                                        {tr('Values:')} <Ticks text={f.values} />
+                                    </span>
+                                )}
+                            </dd>
+                        </div>
+                    ))}
+                </dl>
+            )}
+            {x?.uncertain && <div className="pk-doc-uncertain">{tr('The game documents little about this; the explanation is worked out from the name and how the game’s own script uses it.')}</div>}
+            {raw && x && (
+                <button
+                    className="pk-doc-toggle"
+                    // (the keyboard stays with the picker: the press takes no focus)
+                    onMouseDown={(ev) => ev.preventDefault()}
+                    onClick={onToggle}
+                >
+                    {open ? '▾' : '▸'} {tr('Game’s own text')}
+                </button>
+            )}
+            {raw && (open || !x) && <pre className="pk-doc-raw">{raw}</pre>}
+        </div>
     );
 }
 
@@ -105,6 +222,11 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
     {
         // (changing a written modifier or field: its value step opens beside the root menu)
         const root = rootPos(req);
+
+        // (plain menus: pickChoice)
+        if (kind === 'choice')
+            return [{ id: ++entrySeq, state: { ...initialState('choice', scopeOf('character'), req.title), view: { v: 'choice' as const }, choice: req.choice as ChoiceMenu }, sel: 0, filter: '', pos: root }];
+
         return startStates(kind, scopeOf(req.scope), req.title, req.type, req.edit, req.subject, req.scopes, req.goal, req.event, {
             field: req.field,
             only: req.only,
@@ -117,7 +239,7 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
             elseAfter: req.elseAfter
         }).map((s, i) => ({
             id: ++entrySeq,
-            state: req.targets?.length ? { ...s.state, targets: req.targets } : s.state,
+            state: req.targets?.length || req.targetsKnown ? { ...s.state, targets: req.targets ?? [], targetsKnown: req.targetsKnown } : s.state,
             crumb: s.crumb,
             sel: 0,
             filter: '',
@@ -128,9 +250,30 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
     const [preview, setPreview] = useState<{ text: string; lines: Line[]; }>({ text: '', lines: [] });
     const menuEls = useRef(new Map<number, HTMLDivElement>());
     const panelRef = useRef<HTMLDivElement>(null);
+    /** text of the panel (the script, the reading, the crumbs) is selected: the owner copies it with Ctrl+C */
+    const selectedInPanel = (): boolean =>
+    {
+        const s = window.getSelection();
+        const panel = panelRef.current;
+        return !!s && !!panel && !s.isCollapsed && [s.anchorNode, s.focusNode].some((n) => !!n && panel.contains(n)) && !!s.toString();
+    };
+    // where each menu was placed when it opened: kept (the preview growing or shrinking moves nothing)
+    const placed = useRef(new Map<number, { top: number; limit: number; }>());
+    // the panel dragged by its header (kept for the next picker of the session; a double click puts it back)
+    const [panelAt, setPanelAt] = useState(panelOffset);
+    // (a drag still going when the picker closes: its window listeners removed)
+    const dragEnd = useRef<(() => void) | null>(null);
+    useEffect(() => () => dragEnd.current?.(), []);
     const found = useRef(new Map<number, { q: string; items: Item[]; }>());
     const waited = useRef(new WeakSet<Promise<unknown>>());
     const keyAt = useRef(0);
+    // text the keys don't give (an IME's composition, the emoji panel, a dead key): a focused input of no size takes it
+    // (the picker has no text field otherwise); `preedit` is the composition so far, shown after the filter
+    const ime = useRef<HTMLInputElement>(null);
+    const composing = useRef(false);
+    // (a press inside the panel, e.g. a text selection being dragged: the input takes the focus back at the release, not at once)
+    const panelDown = useRef(false);
+    const [preedit, setPreedit] = useState('');
     // where the mouse last was: a menu opening (or changing) under a resting cursor must not take the selection
     const pointer = useRef<{ x: number; y: number; } | null>(null);
     const closed = useRef(false);
@@ -153,7 +296,7 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
     const rowsFor = (e: Entry): Row[] =>
     {
         const f = found.current.get(e.id);
-        return rowsOf(menuFor(e.state), e.filter, f && f.q === e.filter.trim() ? f.items : undefined);
+        return rowsOf(menuFor(e.state), e.filter, f && f.q === e.filter.trim() ? f.items : undefined, e.all);
     };
     const topRows = rowsFor(top);
 
@@ -165,7 +308,30 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
         if (w && !waited.current.has(w))
         {
             waited.current.add(w);
-            void w.then(() => setTick((t) => t + 1));
+            const id = e.id;
+            void w.then(() =>
+            {
+                setTick((t) => t + 1);
+                // (while it waited nothing could be selected ("Looking up…"): the first row of the menu built again is,
+                // so Enter takes it, as after a search; a row the person moved to stays)
+                setHist((h) =>
+                {
+                    const i = h.findIndex((x) => x.id === id);
+                    const x = h[i];
+
+                    if (!x)
+                        return h;
+
+                    const rows = rowsOf(menuOf(x.state, pickerData), x.filter, found.current.get(x.id)?.items, x.all);
+                    const now = rows[x.sel];
+
+                    if (now && now.item.role !== 'info' && now.item.go)
+                        return h;
+
+                    const sel = firstSelectable(rows, !!x.filter.trim());
+                    return sel < 0 || sel === x.sel ? h : [...h.slice(0, i), { ...x, sel }, ...h.slice(i + 1)];
+                });
+            });
         }
     }
 
@@ -183,12 +349,22 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
             {
                 found.current.set(top.id, { q, items });
                 setTick((x) => x + 1);
+                // (nothing highlighted while it searched: the first result is, so Enter takes it)
+                setHist((h) =>
+                {
+                    const e = h[h.length - 1];
+
+                    if (e.id !== top.id || e.filter.trim() !== q || e.sel >= 0)
+                        return h;
+
+                    return [...h.slice(0, -1), { ...e, sel: firstSelectable(rowsOf(menuFor(e.state), e.filter, items, e.all), true) }];
+                });
             });
         }, 90);
         return () => clearTimeout(t);
     }, [top.id, top.filter, topMenu]);
 
-    // the preview: script and readable sentence — in a parameter step, as the highlighted choice would make it
+    // the preview: script and readable sentence (in a parameter step, as the highlighted choice would make it)
     let previewState = top.state;
     const selRow = topRows[top.sel];
 
@@ -196,7 +372,7 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
     {
         const n = selRow.item.go();
 
-        // (a row that finishes with a state of its own — a text code — shows that)
+        // (a row that finishes with a state of its own, a text code, shows that)
         if (!('finish' in n))
             previewState = n.state;
         else if (n.state)
@@ -204,6 +380,8 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
     }
 
     const describeText = previewText(previewState, true);
+    // (the entries made on the way, read by the name given: key → name, as a string the effect can compare)
+    const namesJson = JSON.stringify(createdNames(previewState) ?? null);
     // the highlighted entry's card (a doctrine: its description and what it does), asked once the selection rests
     const entry = selRow?.item.entry;
     const entryKey = entry ? entry.type + '\u0000' + entry.name : '';
@@ -228,10 +406,40 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [entryKey, warm]);
-    const card = entry && entryCard?.key === entryKey ? entryCard.info : null;
+    // (while the next one loads the last card stays, dimmed: the panel keeps its height and the menus, placed above it,
+    // don't jump)
+    const card = entry ? (entryCard?.info ?? null) : null;
+    const cardStale = !!card && entryCard?.key !== entryKey;
+    // the highlighted row's game key explained (the script database: what it is, its fields, the game's own text), asked
+    // like the entry card once the selection rests; a row of an entry shows the entry's card instead
+    const doc = entry ? undefined : selRow?.item.doc;
+    const docKey = doc ? `${doc.kind}\u0000${doc.key}\u0000${doc.variant ?? ''}` : '';
+    const [docCard, setDocCard] = useState<{ key: string; entry: DbEntry | null; } | null>(null);
+    const [docOpen, setDocOpen] = useState(false);
     useEffect(() =>
     {
-        if (!describeText || warm || kind === 'loc')
+        if (!doc || warm)
+            return;
+
+        let live = true;
+        const t = setTimeout(() =>
+        {
+            void docEntry(doc.kind, doc.key, doc.variant).then((e) => live && setDocCard({ key: docKey, entry: e }));
+        }, 60);
+        return () =>
+        {
+            live = false;
+            clearTimeout(t);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [docKey, warm]);
+    // (an entry with neither an explanation nor a text of the game's says nothing: the row's own help shows instead; the
+    // last card stays dimmed while the next loads, as the entry card does)
+    const docShown = doc && docCard?.entry && (docCard.entry.explanation || docCard.entry.doc.trim()) ? docCard.entry : null;
+    const docStale = !!docShown && docCard?.key !== docKey;
+    useEffect(() =>
+    {
+        if (!describeText || warm || kind === 'loc' || kind === 'choice')
         {
             setPreview({ text: '', lines: [] });
             return;
@@ -242,7 +450,7 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
         const t = setTimeout(() =>
         {
             void api
-                .describeScript(describeText, kind, req.type)
+                .describeScript(describeText, kind, req.type, (JSON.parse(namesJson) as Record<string, string> | null) ?? undefined)
                 .then((lines) => live && setPreview({ text: describeText, lines }))
                 .catch(() => undefined);
         }, 30);
@@ -251,7 +459,7 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
             live = false;
             clearTimeout(t);
         };
-    }, [describeText, kind, req.type, warm]);
+    }, [describeText, namesJson, kind, req.type, warm]);
 
     // timings: first paint after opening, paint after each key
     useEffect(() =>
@@ -281,11 +489,10 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
     from = Math.max(from, hist.length - MAX_VISIBLE);
     const visible = hist.slice(from);
 
-    // keep menus above the panel and inside the window
+    // a menu is placed when it opens (above the panel as it is then, inside the window) and keeps that place; it only
+    // moves up when its own list grows past the bottom (rows loaded, Space for all), never for the preview's size
     useLayoutEffect(() =>
     {
-        const limit = window.innerHeight - (panelRef.current?.offsetHeight ?? 180) - 16;
-
         for (const e of visible)
         {
             const el = menuEls.current.get(e.id);
@@ -293,9 +500,24 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
             if (!el)
                 continue;
 
-            el.style.maxHeight = `${Math.max(160, limit - 8)}px`;
-            const r = el.getBoundingClientRect();
-            el.style.top = `${r.height > 0 && e.pos.y + r.height > limit ? Math.max(8, limit - r.height) : e.pos.y}px`;
+            let p = placed.current.get(e.id);
+
+            if (!p)
+            {
+                const panel = panelRef.current?.getBoundingClientRect();
+                // (above the panel; the panel dragged to the top of the window: down to the window's bottom)
+                const limit = panel && panel.top > 200 ? panel.top - 8 : window.innerHeight - 8;
+                p = { top: e.pos.y, limit };
+                placed.current.set(e.id, p);
+            }
+
+            el.style.maxHeight = `${Math.max(160, p.limit - 8)}px`;
+            const h = el.getBoundingClientRect().height;
+
+            if (h > 0 && p.top + h > p.limit)
+                p.top = Math.max(8, p.limit - h);
+
+            el.style.top = `${p.top}px`;
         }
 
         const sel = menuEls.current.get(top.id)?.querySelector('.pk-row.sel');
@@ -318,16 +540,16 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
 
         const text = resultText(s);
 
-        if (kind === 'loc')
+        if (kind === 'loc' || kind === 'choice')
         {
             close({ text, caret: s.caret });
             return;
         }
 
-        const lines = preview.text === text ? preview.lines : await api.describeScript(text, kind, req.type).catch(() => [] as Line[]);
+        const lines = preview.text === text ? preview.lines : await api.describeScript(text, kind, req.type, createdNames(s)).catch(() => [] as Line[]);
         // (a scripted effect read inline says everything it does: the notice gets the start)
         const sentence = sentenceOf(lines);
-        close({ text, summary: (sentence.length > 240 ? sentence.slice(0, 239) + '…' : sentence) || undefined, creates: usedCreates(s) });
+        close({ text, summary: (sentence.length > 240 ? sentence.slice(0, 239) + '…' : sentence) || undefined, creates: usedCreates(s), ...(s.outside ? { outside: true } : {}) });
     };
 
     const setTop = (patch: Partial<Entry>): void => setHist((h) => [...h.slice(0, -1), { ...h[h.length - 1], ...patch }]);
@@ -355,7 +577,7 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
             return;
         }
 
-        // the chosen menu itself changes (a toggle) / a menu further up takes the result (a block's field, a new entry) —
+        // the chosen menu itself changes (a toggle) / a menu further up takes the result (a block's field, a new entry):
         // with its first row selected again (Done: ⏎ finishes)
         const first = firstSelectable(rowsOf(menuOf(next.state, pickerData), '', undefined));
 
@@ -382,6 +604,23 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
         setHist(nh);
     };
 
+    /** Text typed into the top menu's filter: a key, or what an IME / the emoji panel inserted. */
+    const typeText = (text: string): void =>
+    {
+        const typed = text.replace(/[\r\n\t]+/g, ' ');
+
+        if (!typed)
+            return;
+
+        setHist((h) =>
+        {
+            const e = h[h.length - 1];
+            const filter = e.filter + typed;
+            const f = found.current.get(e.id);
+            return [...h.slice(0, -1), { ...e, filter, sel: firstSelectable(rowsOf(menuFor(e.state), filter, f && f.q === filter.trim() ? f.items : undefined), !!filter.trim()) }];
+        });
+    };
+
     // keyboard: everything goes to the picker while it is open
     const handler = useRef<(e: KeyboardEvent) => void>(() =>
     {});
@@ -389,13 +628,34 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
     {
         const k = ev.key;
 
+        // (Ctrl/Cmd+C with text selected in the panel copies it: the browser's own copy, not a key of the picker)
+        if ((ev.ctrlKey || ev.metaKey) && !ev.altKey && !ev.shiftKey && k.toLowerCase() === 'c' && selectedInPanel())
+            return;
+
+        // (the input lost the focus to a press in the panel and takes it back at the first key, which ends the selection
+        // that was kept for copying; a key that only holds a modifier leaves it, Ctrl+C comes next)
+        if (!MODIFIER_KEYS.includes(k) && ime.current && document.activeElement !== ime.current)
+            ime.current.focus();
+
+        // (a composition runs in the input below: while the input has one open, and for the keys the event marks as one's, the keys are the IME's, not ours)
+        if (composing.current || ev.isComposing || ev.keyCode === 229 || k === 'Process' || k === 'Dead')
+            return;
+
         if (k === 'Tab')
         {
             ev.preventDefault();
+
+            // (a list of entries: grouped by DLC, or one list again)
+            if (topMenu.groupable && pickerData.setGrouped)
+            {
+                pickerData.setGrouped(!pickerData.grouped?.());
+                setTick((t) => t + 1);
+            }
+
             return;
         }
 
-        if (['Shift', 'Control', 'Alt', 'Meta', 'CapsLock'].includes(k))
+        if (MODIFIER_KEYS.includes(k))
             return;
 
         ev.preventDefault();
@@ -454,7 +714,8 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
         {
             if (top.filter)
             {
-                const filter = top.filter.slice(0, -1);
+                // (one character, not one UTF-16 unit: an emoji is two)
+                const filter = [...top.filter].slice(0, -1).join('');
                 setTop({ filter, sel: firstSelectable(rowsOf(topMenu, filter, undefined), !!filter.trim()) });
             }
             else
@@ -463,9 +724,10 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
         else if (k === '/' && !top.filter && top.state.view.v !== 'search' && !topMenu.typeahead)
         {
             const s = searchState({ ...top.state, pending: undefined });
-            setHist([...hist, { id: ++entrySeq, state: s, crumb: 'Search', sel: 0, filter: '', pos: hist[0].pos }]);
+            setHist([...hist, { id: ++entrySeq, state: s, crumb: tr('Search'), sel: 0, filter: '', pos: hist[0].pos }]);
         }
-        else if (k.length === 1 && !ev.ctrlKey && !ev.altKey && !ev.metaKey)
+        // (AltGr, which Windows reports as Ctrl+Alt, types characters: ą ę ł @ { } …)
+        else if ([...k].length === 1 && (ev.getModifierState('AltGraph') || (!ev.ctrlKey && !ev.altKey)) && !ev.metaKey)
         {
             if (!topMenu.typeahead && !top.filter)
             {
@@ -478,7 +740,26 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
                 }
             }
 
-            // (Space first in a menu whose letters pick rows: the letters that follow are typed — a saved scope, a chain)
+            // (`+` first: the "＋ New …" row, selected, not typed into the filter where labels hold `+`)
+            if (k === '+')
+            {
+                const pi = plusRow(rows, top.filter);
+
+                if (pi >= 0)
+                {
+                    setTop({ sel: pi });
+                    return;
+                }
+            }
+
+            // (Space on a list cut at MAX_ROWS, nothing typed: every row, to browse)
+            if (k === ' ' && !top.filter && !top.all && rows.some((r) => r.item.more))
+            {
+                setTop({ all: true });
+                return;
+            }
+
+            // (Space first in a menu whose letters pick rows: the letters that follow are typed (a saved scope, a chain))
             if (k === ' ' && !top.filter)
             {
                 if (!topMenu.typeahead)
@@ -487,9 +768,7 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
                 return;
             }
 
-            const filter = top.filter + k;
-            const f = found.current.get(top.id);
-            setTop({ filter, sel: firstSelectable(rowsOf(topMenu, filter, f && f.q === filter.trim() ? f.items : undefined), !!filter.trim()) });
+            typeText(k);
         }
     };
     useEffect(() =>
@@ -500,6 +779,7 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
         const onKey = (e: KeyboardEvent): void => handler.current(e);
         window.addEventListener('keydown', onKey, true);
         (document.activeElement as HTMLElement | null)?.blur?.();
+        ime.current?.focus();
         return () => window.removeEventListener('keydown', onKey, true);
     }, []);
 
@@ -533,27 +813,36 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
                             else
                                 menuEls.current.delete(e.id);
                         }}
-                        onMouseDown={(ev) => ev.stopPropagation()}
+                        onMouseDown={(ev) =>
+                        {
+                            // (a click keeps the keyboard where it is: the input stays focused)
+                            ev.preventDefault();
+                            ev.stopPropagation();
+                        }}
                     >
                         <div className="pk-title">{menu.title}</div>
-                        {e.filter && (
+                        {(e.filter || (isTop && preedit)) && (
                             <div className="pk-filter">
                                 <span className="pk-filter-icon">⌕</span>
                                 {e.filter}
+                                {isTop && preedit && <u className="pk-preedit">{preedit}</u>}
                                 <span className="pk-caret" />
                             </div>
                         )}
-                        <div className="pk-rows">
+                        <div className="pk-rows" role="listbox">
                             {rows.length === 0 && (
                                 <div className="pk-empty">
-                                    {menu.wait ? 'Loading…' : menu.search ? (e.filter ? (found.current.get(e.id)?.q === e.filter.trim() ? 'Nothing found' : 'Searching…') : 'Type to search') : e.filter ? 'Nothing matches' : 'Nothing here'}
+                                    {menu.wait ? tr('Loading…') : menu.search ? (e.filter ? (found.current.get(e.id)?.q === e.filter.trim() ? tr('Nothing found') : tr('Searching…')) : tr('Type to search')) : e.filter ? tr('Nothing matches') : tr('Nothing here')}
                                 </div>
                             )}
                             {rows.map((r, ri) => (
                                 <div
                                     key={ri}
                                     data-row={ri}
+                                    role={r.item.role === 'info' ? 'presentation' : 'option'}
+                                    aria-selected={r.item.role === 'info' ? undefined : ri === e.sel}
                                     className={'pk-row' + (ri === e.sel ? ' sel' : '') + (r.item.role ? ' ' + r.item.role : '')}
+                                    data-entity={r.item.entry ? `${r.item.entry.type}:${r.item.entry.name}` : undefined}
                                     title={r.item.title}
                                     onMouseMove={isTop && r.item.role !== 'info'
                                         ? (ev) =>
@@ -569,8 +858,10 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
                                 >
                                     <span className="pk-key">{r.key ? r.key.toUpperCase() : r.item.role === 'done' ? '⏎' : ''}</span>
                                     {r.item.icon && <GameImg path={r.item.icon} size={18} className="pk-icon" />}
+                                    {r.item.color && <span className="pk-swatch" style={{ background: r.item.color }} />}
                                     <span className="pk-label">{r.item.label}</span>
                                     {r.item.hint && <span className="pk-hint">{r.item.hint}</span>}
+                                    {r.item.state && <span className="pk-state">{r.item.state}</span>}
                                     <span className="pk-arrow">{r.item.sub ? '▸' : ''}</span>
                                 </div>
                             ))}
@@ -579,22 +870,98 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
                     </div>
                 );
             })}
-            <div className="pk-panel" ref={panelRef} onMouseDown={(ev) => ev.stopPropagation()}>
-                <div className="pk-crumbs">
+            {!warm && (
+                <input
+                    ref={ime}
+                    className="pk-ime"
+                    aria-hidden="true"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    spellCheck={false}
+                    style={{ position: 'absolute', left: (xs[visible.indexOf(top)] ?? 0) + 24, top: top.pos.y + 30, width: 2, height: 14, opacity: 0, padding: 0, border: 0, pointerEvents: 'none' }}
+                    onCompositionStart={() => (composing.current = true)}
+                    onCompositionUpdate={(ev) => setPreedit(ev.data)}
+                    onCompositionEnd={(ev) =>
+                    {
+                        composing.current = false;
+                        setPreedit('');
+                        ev.currentTarget.value = '';
+                        typeText(ev.data);
+                    }}
+                    onInput={(ev) =>
+                    {
+                        if (composing.current || (ev.nativeEvent as InputEvent).isComposing)
+                            return;
+
+                        const text = ev.currentTarget.value;
+                        ev.currentTarget.value = '';
+                        typeText(text);
+                    }}
+                    onBlur={() =>
+                    {
+                        // (the keyboard stays with the picker while it is open; a composition cut off by the blur must not keep the keys from us)
+                        composing.current = false;
+
+                        if (closed.current)
+                            return;
+
+                        // (a press in the panel: at the release the input takes the keyboard back, unless text of the panel is
+                        // selected: that stays selected, to copy with Ctrl+C, until the next key)
+                        if (panelDown.current)
+                        {
+                            window.addEventListener('mouseup', () => requestAnimationFrame(() => !closed.current && !selectedInPanel() && ime.current?.focus()), { once: true });
+                            return;
+                        }
+
+                        requestAnimationFrame(() => ime.current?.focus());
+                    }}
+                />
+            )}
+            <div className="pk-panel" ref={panelRef} onMouseDown={(ev) =>
+                {
+                    ev.stopPropagation();
+                    panelDown.current = true;
+                    window.addEventListener('mouseup', () => (panelDown.current = false), { once: true });
+                }} style={{ transform: `translate(calc(-50% + ${panelAt.x}px), ${panelAt.y}px)` }}>
+                <div
+                    className="pk-crumbs"
+                    title={tr('Drag to move — double-click: back to the bottom')}
+                    onPointerDown={(ev) =>
+                    {
+                        if (ev.button !== 0)
+                            return;
+
+                        ev.currentTarget.setPointerCapture(ev.pointerId);
+                        const from = { x: ev.clientX - panelAt.x, y: ev.clientY - panelAt.y };
+                        const move = (m: PointerEvent): void => setPanelAt(panelOffset = { x: m.clientX - from.x, y: Math.min(0, m.clientY - from.y) });
+                        const up = (): void =>
+                        {
+                            window.removeEventListener('pointermove', move);
+                            window.removeEventListener('pointerup', up);
+                            dragEnd.current = null;
+                        };
+                        window.addEventListener('pointermove', move);
+                        window.addEventListener('pointerup', up);
+                        dragEnd.current = up;
+                    }}
+                    onDoubleClick={() => setPanelAt(panelOffset = { x: 0, y: 0 })}
+                >
                     <span className="pk-what">
-                        {kind === 'loc'
-                            ? `Insert a code${req.title ? ' into ' + req.title : ''}`
+                        {kind === 'choice'
+                            ? (req.title ?? tr('Choose'))
+                            : kind === 'loc'
+                            ? tr('Insert a code{into}', { into: req.title ? ' into ' + req.title : '' })
                             : req.edit
-                            ? `Change: ${req.edit}`
+                            ? tr('Change: {edit}', { edit: req.edit })
                             : req.title
-                            ? `Add to: ${req.title}`
+                            ? tr('Add to: {title}', { title: req.title })
                             : kind === 'effect'
-                            ? 'New effect'
+                            ? tr('New effect')
                             : kind === 'trigger'
-                            ? 'New condition'
+                            ? tr('New condition')
                             : kind === 'modifier'
-                            ? 'New modifier'
-                            : 'New setting'}
+                            ? tr('New modifier')
+                            : tr('New setting')}
                     </span>
                     {crumbs.map((c, i) => (
                         <span key={i} className={'pk-crumb' + (i === crumbs.length - 1 ? ' last' : '')}>
@@ -602,13 +969,13 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
                         </span>
                     ))}
                 </div>
-                <div className="pk-preview">
-                    <pre className="pk-script">{shownText ? <ScriptText text={shownText} /> : <span className="pk-empty">The script appears here as you choose.</span>}</pre>
-                    <div className="pk-read">
+                <div className={'pk-preview' + (kind === 'choice' ? ' choice' : '')}>
+                    {kind !== 'choice' && <pre className="pk-script">{shownText ? <ScriptText text={shownText} /> : <span className="pk-empty">{tr('The script appears here as you choose.')}</span>}</pre>}
+                    <div className="pk-read" aria-live="polite">
                         {selRow?.item.warn && !selRow.item.role && <div className="pk-warn">⚠ {selRow.item.warn}</div>}
-                        {kind === 'loc' && selRow && !selRow.item.role && (selRow.item.icon || selRow.item.title) ?
+                        {kind === 'loc' && selRow && !selRow.item.role && !docShown && (selRow.item.icon || selRow.item.title) ?
                             (
-                                // (a text code: what it shows — the icon, or what it prints for William of Normandy in 1066)
+                                // (a text code: what it shows, the icon or what it prints for William of Normandy in 1066)
                                 <span className="pk-example">
                                     {selRow.item.icon && <GameImg path={selRow.item.icon} size={28} className="pk-icon" />}
                                     {selRow.item.icon ? selRow.item.label : selRow.item.title}
@@ -627,8 +994,8 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
                             ) :
                             card ?
                             (
-                                // (an entry: its card — icon, name, description, what it does)
-                                <div className="pk-card">
+                                // (an entry: its card (icon, name, description, what it does))
+                                <div className={'pk-card' + (cardStale ? ' stale' : '')}>
                                     <div className="pk-card-head">
                                         {card.icon && <GameImg path={card.icon} size={40} className="pk-card-icon" />}
                                         <span>
@@ -649,6 +1016,11 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
                                     )}
                                 </div>
                             ) :
+                            docShown ?
+                            (
+                                // (a game key: its explanation; a text code's example stays on top)
+                                <DocCard entry={docShown} stale={docStale} open={docOpen} onToggle={() => setDocOpen((o) => !o)} example={kind === 'loc' ? selRow?.item.title : undefined} />
+                            ) :
                             selRow?.item.explain ?
                             <span className="pk-example">{selRow.item.explain}</span> :
                             preview.lines.length > 0 && preview.text === describeText ?
@@ -662,32 +1034,25 @@ export function Picker(props: { req: PickRequest; t0: number; onDone: (r: PickRe
                                     <LineList lines={preview.lines} compact />
                                 </ReadCtx.Provider>
                             ) :
-                            <span className="pk-empty">{shownText ? '…' : 'Letters pick, ⏎ opens, ← goes back, / searches everything, Esc closes.'}</span>}
+                            <span className="pk-empty">{shownText ? '…' : tr('Letters pick, ⏎ opens, ← goes back, / searches everything, Esc closes.')}</span>}
                     </div>
                 </div>
                 <div className="pk-keys">
                     <span>
-                        <kbd>A–Z</kbd> pick
-                    </span>
+                        <kbd>A–Z</kbd> {' '}{tr('pick')}</span>
                     <span>
-                        <kbd>↑↓</kbd> <kbd>⏎</kbd>/<kbd>→</kbd> open
-                    </span>
+                        <kbd>↑↓</kbd> <kbd>⏎</kbd>/<kbd>→</kbd> {' '}{tr('open')}</span>
                     <span>
-                        <kbd>←</kbd>/<kbd>⌫</kbd> back
-                    </span>
+                        <kbd>←</kbd>/<kbd>⌫</kbd> {' '}{tr('back')}</span>
                     <span>
-                        type to filter · <kbd>Space</kbd> then a name · <kbd>/</kbd> search all · digits for numbers
-                    </span>
+                        {tr('type to filter ·')}{' '}<kbd>Space</kbd> {' '}{tr('then a name ·')}{' '}<kbd>/</kbd> {' '}{tr('search all · digits for numbers')}</span>
                     <span>
-                        <kbd>Ctrl</kbd>+<kbd>⏎</kbd> done
-                    </span>
+                        <kbd>Ctrl</kbd>+<kbd>⏎</kbd> {' '}{tr('done')}</span>
                     <span>
-                        <kbd>Esc</kbd> close
-                    </span>
+                        <kbd>Esc</kbd> {' '}{tr('close')}</span>
                     {canFinish(top.state) && (
                         <button className="primary pk-done" onClick={() => void finish(top.state)}>
-                            Done
-                        </button>
+                            {tr('Done')}</button>
                     )}
                 </div>
             </div>

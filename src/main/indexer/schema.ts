@@ -4,6 +4,7 @@
  */
 import type { PNode } from './parser.ts';
 
+import { tr } from '../../shared/i18n.ts';
 // ---------------------------------------------------------------------------
 // Type ids and presentation
 // ---------------------------------------------------------------------------
@@ -20,6 +21,10 @@ export const T_FAITH = 'faith';
 export const T_TITLE = 'landed_titles';
 export const T_IMAGE = 'images';
 export const T_MODEL = 'models';
+/** a loaded save's characters (docs/saves.md: the group Savegame; saves/project.ts writes them) */
+export const T_SAVE_CHARACTER = 'savegame/characters';
+/** a loaded save's own faiths (reformed; saves/project-state.ts) */
+export const T_SAVE_FAITH = 'savegame/faiths';
 
 /** Pinned types shown first in the sidebar, in this order. */
 export const CORE_TYPES = [
@@ -47,21 +52,23 @@ export const CORE_TYPES = [
 ];
 
 const LABEL_OVERRIDES: Record<string, string> = {
-    [T_EVENT]: 'Events',
-    [T_ON_ACTION]: 'On Actions',
-    [T_FAITH]: 'Faiths',
-    [T_TITLE]: 'Landed Titles',
-    [T_LOC]: 'Localization',
-    [T_FLAG]: 'Flags',
-    [T_VARIABLE]: 'Variables',
-    [T_CHARACTER]: 'Historical Characters',
-    [T_IMAGE]: 'Images',
-    [T_MODEL]: '3D Models',
-    law_groups: 'Law Groups',
-    game_rule_options: 'Game Rule Options',
-    'religion/religion_types': 'Religions',
-    'schemes/scheme_types': 'Schemes',
-    'activities/activity_types': 'Activities'
+    [T_EVENT]: tr('Events'),
+    [T_ON_ACTION]: tr('On Actions'),
+    [T_FAITH]: tr('Faiths'),
+    [T_TITLE]: tr('Landed Titles'),
+    [T_LOC]: tr('Localization'),
+    [T_FLAG]: tr('Flags'),
+    [T_VARIABLE]: tr('Variables'),
+    [T_CHARACTER]: tr('Historical Characters'),
+    [T_SAVE_CHARACTER]: tr('Characters'),
+    [T_SAVE_FAITH]: tr('Faiths'),
+    [T_IMAGE]: tr('Images'),
+    [T_MODEL]: tr('3D Models'),
+    law_groups: tr('Law Groups'),
+    game_rule_options: tr('Game Rule Options'),
+    'religion/religion_types': tr('Religions'),
+    'schemes/scheme_types': tr('Schemes'),
+    'activities/activity_types': tr('Activities')
 };
 
 /** Sub-folder names that mean nothing without their parent folder (court_positions/types, schemes/pulse_actions …). */
@@ -107,15 +114,20 @@ export function typeLabel(type: string): string
     const parts = type.split('/');
     const last = parts[parts.length - 1];
 
+    // (names made from folders: translated if a catalog has them (docs/localization.md); the template can't list them)
     if (parts.length > 1 && GENERIC_SUBTYPES.has(last))
-        return `${humanize(parts[parts.length - 2])}: ${humanize(last)}`;
+        return `${tr(humanize(parts[parts.length - 2]))}: ${tr(humanize(last))}`;
 
-    return humanize(last);
+    return tr(humanize(last));
 }
 
 /** Sidebar group of a type. */
 export function typeGroup(type: string): string
 {
+    // (a loaded save's own data: its group, shown first)
+    if (type.startsWith('savegame/'))
+        return 'Savegame';
+
     if (CORE_TYPES.includes(type))
         return 'Core';
 
@@ -180,6 +192,9 @@ export function displayNameCandidates(type: string, name: string): string[]
             return [`${name}_mandate`, name];
         case 'succession_election':
             return [`${name}_succession_law`, name];
+        // (task contracts: "Stand With Us" is laamp_join_war_contract_contract, next to its _desc, _desc_title and _request)
+        case 'task_contracts':
+            return [`${name}_contract`, name];
         // (the plain key can be an unrelated word: sword = "sword sheath")
         case 'artifacts/types':
             return [`artifact_${name}`, name];
@@ -301,14 +316,16 @@ export const CONTEXT_ONLY_TYPES = new Set([
     'game_rules',
     'law_groups',
     'domiciles/buildings',
-    'domiciles/types'
+    'domiciles/types',
+    // (a culture's history file is named for the culture: the name alone says nothing)
+    'history/cultures'
 ]);
 
 /** Types that can be used as a *key* (called like a function). */
 export const CALLABLE_TYPES = new Set([T_SCRIPTED_TRIGGER, T_SCRIPTED_EFFECT, 'script_values', 'scripted_modifiers']);
 
 /** Types that may be referenced by a plain number in the right context. */
-export const NUMERIC_TYPES = new Set([T_CHARACTER, 'dynasties']);
+export const NUMERIC_TYPES = new Set([T_CHARACTER, 'dynasties', T_SAVE_CHARACTER]);
 
 /**
  * Context rules: key (or `parent.key`) → preferred target types for the scalar value under it.
@@ -334,6 +351,8 @@ export const CONTEXT_RULES: Record<string, string[]> = {
     on_action: [T_ON_ACTION],
     on_actions: [T_ON_ACTION],
     random_on_actions: [T_ON_ACTION],
+    // (1.20: one of them by weight: `20 = some_on_action`)
+    random_on_action: [T_ON_ACTION],
     first_valid_on_action: [T_ON_ACTION],
     fallback: [T_ON_ACTION],
     theme: ['event_themes'],
@@ -373,8 +392,9 @@ export const CONTEXT_RULES: Record<string, string[]> = {
     capital: [T_TITLE],
     culture: ['culture/cultures'],
     set_culture: ['culture/cultures'],
-    religion: [T_FAITH, 'religion/religion_types'],
-    faith: [T_FAITH],
+    // (1.20: history and bookmarks name rites there too: `religion = shafii`, the Sunni schools are rites)
+    religion: [T_FAITH, 'religion/religion_types', 'religion/rite_types'],
+    faith: [T_FAITH, 'religion/rite_types'],
     set_character_faith: [T_FAITH],
     set_character_faith_with_conversion: [T_FAITH],
     has_perk: ['lifestyle_perks'],
@@ -422,15 +442,99 @@ export const CONTEXT_RULES: Record<string, string[]> = {
     dna: ['dna_data'],
     game_concept: ['game_concepts'],
     coat_of_arms: ['coat_of_arms/coat_of_arms'],
-    animation: ['scripted_animations'],
+    // (not `animation`: its value is a portrait animation of gfx/portraits/portrait_animations, which the index does not
+    // hold; a scripted animation is named by `scripted_animation`, below; _scripted_animations.info)
     terrain: ['terrain_types'],
     has_terrain: ['terrain_types'],
     ethnicity: ['ethnicities'],
     ethnicities: ['ethnicities'],
     court_type: ['court_types'],
     vassal_stance: ['vassal_stances'],
-    has_vassal_stance: ['vassal_stances']
+    has_vassal_stance: ['vassal_stances'],
+    // (the keys that name entries of a context-only type: without a rule here nothing links them, however often script uses them; scripts/update-audit.ts lists the ones still missing.
+    // A rule only prefers its types, a word that is no entry of them resolves as before, so the keys the game also writes other words under are listed too.)
+    previous_building: ['domiciles/buildings'],
+    has_domicile_building: ['domiciles/buildings'],
+    has_domicile_building_or_higher: ['domiciles/buildings'],
+    add_domicile_building: ['domiciles/buildings'],
+    remove_domicile_building: ['domiciles/buildings'],
+    domicile_building: ['domiciles/buildings'],
+    domicile_building_has_free_internal_slot: ['domiciles/buildings'],
+    has_domicile_construction: ['domiciles/buildings'],
+    is_domicile_type: ['domiciles/types'],
+    domicile_type: ['domiciles/types'],
+    allowed_domicile_types: ['domiciles/types'],
+    optional_features: ['artifacts/feature_groups'],
+    required_features: ['artifacts/feature_groups'],
+    achievements: ['achievements'],
+    NEW_DOMICILE_TYPE: ['domiciles/types'],
+    message_filter_type: ['message_filter_types'],
+    has_artifact_feature: ['artifacts/features'],
+    has_artifact_feature_group: ['artifacts/feature_groups'],
+    set_artifact_feature_group: ['artifacts/feature_groups'],
+    visuals: ['artifacts/visuals'],
+    in_visuals: ['artifacts/visuals'],
+    out_visuals: ['artifacts/visuals'],
+    default_visuals: ['artifacts/visuals'],
+    VISUAL: ['artifacts/visuals'],
+    COURT_TYPE: ['court_types'],
+    has_court_type: ['court_types'],
+    scripted_animation: ['scripted_animations'],
+    chain: ['tutorial_lesson_chains'],
+    start_tutorial_lesson: ['tutorial_lessons'],
+    LESSON: ['tutorial_lessons'],
+    is_tutorial_lesson_completed: ['tutorial_lessons'],
+    is_tutorial_lesson_chain_completed: ['tutorial_lesson_chains'],
+    insert: ['dynasty_house_motto_inserts'],
+    law_group: ['law_groups'],
+    realm_law_group_at_minimum_level: ['law_groups'],
+    realm_law_group_at_maximum_level: ['law_groups'],
+    STANCE: ['vassal_stances'],
+    TERRAIN: ['terrain_types'],
+    TERRAIN_2: ['terrain_types'],
+    has_personal_legend_seed: ['legends/legend_types'],
+    suggestion_type: ['suggestions'],
+    activity_group_type: ['activities/activity_group_types'],
+    // (history/cultures: the innovations and eras a culture has at a date)
+    discover_innovation: ['culture/innovations'],
+    join_era: ['culture/eras'],
+    // (a culture's `dlc_tradition ={ trait = tradition_x fallback = tradition_y }` names traditions, not traits and on_actions)
+    'dlc_tradition.trait': ['culture/traditions'],
+    'dlc_tradition.fallback': ['culture/traditions']
 };
+
+/**
+ * A scripted effect's / trigger's parameter written after a prefix (`value = flag:$TYPE$`, `has_trait = trait:$T$`): the
+ * parameter and what a value passed for it names: a prefix of PREFIX_TYPES its types (`strong`); `flag:` a flag, a
+ * variable's prefix a variable, `scope:` a saved scope's name, which links nothing ([]): these say little (a flag is often
+ * named after the entry it stands for), so they decide only for a parameter used no other way. Undefined for any other
+ * value (docs/indexer.md "Value types").
+ */
+export function prefixedParam(v: string): { param: string; types: string[]; strong: boolean; } | undefined
+{
+    const m = /^(\w+):\$([^$\s]+)\$$/.exec(v);
+
+    if (!m)
+        return undefined;
+
+    if (m[1] === 'flag')
+        return { param: m[2], types: [T_FLAG], strong: false };
+
+    if (VARIABLE_PREFIXES.has(m[1]))
+        return { param: m[2], types: [T_VARIABLE], strong: false };
+
+    if (m[1] === 'scope')
+        return { param: m[2], types: [], strong: false };
+
+    const types = PREFIX_TYPES[m[1]];
+    return types ? { param: m[2], types: [...types].sort(), strong: true } : undefined;
+}
+
+/** every `$PARAM$` name in a text (a key or a value) */
+export function paramsIn(text: string): string[]
+{
+    return [...text.matchAll(/\$([^$\s]+)\$/g)].map((m) => m[1]);
+}
 
 /** How script names an entry of a type (`trait:brave`): the first prefix of PREFIX_TYPES leading to it. */
 export function refPrefixOf(type: string): string | undefined
@@ -450,12 +554,18 @@ export const PREFIX_TYPES: Record<string, string[]> = {
     house: ['dynasty_houses'],
     court_position: ['court_positions/types'],
     court_position_type: ['court_positions/types'],
+    vassal_contract_obligation_level: ['subject_contracts/contracts'],
+    top_participant_group: ['situation/situations'],
     culture_pillar: ['culture/pillars'],
     culture_tradition: ['culture/traditions'],
     culture_innovation: ['culture/innovations'],
     doctrine: ['religion/doctrine_types'],
     tenet: ['religion/tenet_types'],
     rite: ['religion/rite_types'],
+    puppet: ['puppets/types'],
+    casus_belli_type: ['casus_belli_types'],
+    cp: ['council_positions'],
+    council_task: ['council_positions'],
     government_type: ['governments'],
     activity_type: ['activities/activity_types'],
     struggle: ['struggle/struggles'],
@@ -492,7 +602,12 @@ export const PREFIX_TYPES: Record<string, string[]> = {
     game_concept: ['game_concepts'],
     story_type: ['story_cycles'],
     dynasty_perk: ['dynasty_perks'],
-    legacy_track: ['dynasty_legacies']
+    legacy_track: ['dynasty_legacies'],
+    // (after the prefixes above: refPrefixOf names the first prefix leading to a type, and these are second ways to write the same entries)
+    aptitude: ['court_positions/types'],
+    mandate_type_qualification: ['diarchies/diarchy_mandates'],
+    // (a value: the regiments of a base type: `number_maa_regiments_of_base_type:skirmishers`)
+    number_maa_regiments_of_base_type: ['men_at_arms_types']
 };
 
 export const VARIABLE_PREFIXES = new Set(['var', 'local_var', 'global_var', 'dead_var']);
@@ -601,11 +716,25 @@ function emitTitles(n: PNode, parent: PNode | undefined, emit: (d: DefEmit) => v
 
 /**
  * Extracts definitions from a parsed file.
- * @param area 'common' | 'events' | 'history/characters'
+ * @param area 'common' | 'events' | 'history/characters' | 'savegame'
  * @param type  normalized type for common files
  */
-export function extractDefs(area: string, type: string, ast: PNode[], emit: (d: DefEmit) => void): void
+export function extractDefs(area: string, type: string, ast: PNode[], rel: string, emit: (d: DefEmit) => void): void
 {
+    // a culture's history: the file is named for the culture, its top level are dates: one entry for the whole file, which is what refers to the innovations and eras
+    if (area === 'history/cultures')
+    {
+        const name = /([^/\\]+?)\.txt$/i.exec(rel)?.[1];
+
+        if (name && !name.startsWith('_') && ast.length)
+        {
+            const first = ast[0];
+            emit({ type, name, node: { k: name, op: '=', v: ast, line: first.line, s: first.s, e: ast[ast.length - 1].e, vs: first.s, kl: 0 } });
+        }
+
+        return;
+    }
+
     if (area === 'events')
     {
         let pendingKeyword: PNode | null = null;
@@ -646,6 +775,16 @@ export function extractDefs(area: string, type: string, ast: PNode[], emit: (d: 
         return;
     }
 
+    // (a loaded save's files: one type per folder, each block an entry)
+    if (area === 'savegame')
+    {
+        for (const n of ast)
+            if (n.k && isBlock(n))
+                emit({ type, name: n.k, node: n });
+
+        return;
+    }
+
     if (SKIPPED_COMMON.has(type))
         return;
 
@@ -676,7 +815,7 @@ export function extractDefs(area: string, type: string, ast: PNode[], emit: (d: 
             }
 
             return;
-        // (1.20: top-level faiths — docs/game-structure.md, "Layouts that changed")
+        // (1.20: top-level faiths; docs/game-structure.md, "Layouts that changed")
         case 'religion/faith_types':
             for (const n of ast)
                 if (n.k && isBlock(n) && !n.k.startsWith('@'))
@@ -689,7 +828,7 @@ export function extractDefs(area: string, type: string, ast: PNode[], emit: (d: 
                 if (!n.k || !isBlock(n) || n.k.startsWith('@'))
                     continue;
 
-                // (1.20: a law naming its group — the groups are in common/law_groups)
+                // (1.20: a law naming its group; the groups are in common/law_groups)
                 if (n.v.some((c) => c.k === 'law_group_type'))
                 {
                     emit({ type: 'laws', name: n.k, node: n });

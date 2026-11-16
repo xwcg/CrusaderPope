@@ -1,15 +1,23 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import type { IndexStatus, ModChange, RendererApi } from '../shared/api.ts';
+import type { IndexStatus, MigrationProgress, ModChange, RendererApi } from '../shared/api.ts';
+import type { ScriptFacts } from '../shared/scriptFacts.ts';
 
 const api: RendererApi = {
     getSettings: () => ipcRenderer.invoke('settings:get'),
     setSettings: (s) => ipcRenderer.invoke('settings:set', s),
-    chooseGameDir: () => ipcRenderer.invoke('settings:chooseGameDir'),
-    chooseUserDir: () => ipcRenderer.invoke('settings:chooseUserDir'),
+    restartApp: () => ipcRenderer.invoke('app:restart'),
+    listDirs: (path) => ipcRenderer.invoke('folders:list', path),
+    drives: () => ipcRenderer.invoke('folders:drives'),
+    nearestFolder: (path) => ipcRenderer.invoke('folders:nearest', path),
+    makeFolder: (parent, name) => ipcRenderer.invoke('folders:mkdir', parent, name),
+    folderPlaces: () => ipcRenderer.invoke('folders:places'),
+    nativeFolder: (title, start) => ipcRenderer.invoke('folders:native', title, start),
+    nearFolder: (kind, path) => ipcRenderer.invoke('folders:near', kind, path),
     detectFolders: () => ipcRenderer.invoke('settings:detect'),
     checkDir: (kind, dir) => ipcRenderer.invoke('settings:checkDir', kind, dir),
     languages: () => ipcRenderer.invoke('settings:languages'),
     cpuCount: () => ipcRenderer.invoke('settings:cpuCount'),
+    indexCacheDisk: () => ipcRenderer.invoke('settings:indexCacheDisk'),
     status: () => ipcRenderer.invoke('index:status'),
     rebuild: (force) => ipcRenderer.invoke('index:rebuild', force),
     onStatus: (cb) =>
@@ -18,9 +26,23 @@ const api: RendererApi = {
         ipcRenderer.on('index:status', listener);
         return () => ipcRenderer.removeListener('index:status', listener);
     },
-    types: () => ipcRenderer.invoke('index:types'),
+    scriptDbFacts: () => ipcRenderer.invoke('scriptDb:facts'),
+    onScriptDbFacts: (cb) =>
+    {
+        const listener = (_e: unknown, f: ScriptFacts): void => cb(f);
+        ipcRenderer.on('scriptDb:facts', listener);
+        return () => ipcRenderer.removeListener('scriptDb:facts', listener);
+    },
+    scriptDbEntry: (kind, key, variant) => ipcRenderer.invoke('scriptDb:entry', kind, key, variant),
+    scriptDbLabels: (kind) => ipcRenderer.invoke('scriptDb:labels', kind),
+    scriptDbSearch: (text, kinds, limit) => ipcRenderer.invoke('scriptDb:search', text, kinds, limit),
+    scriptDbStatus: () => ipcRenderer.invoke('scriptDb:status'),
+    scriptDbCheckUpdate: () => ipcRenderer.invoke('scriptDb:checkUpdate'),
+    types: (counts) => ipcRenderer.invoke('index:types', counts),
     typeDoc: (type) => ipcRenderer.invoke('index:typeDoc', type),
     list: (type) => ipcRenderer.invoke('index:list', type),
+    dlcGroups: (type) => ipcRenderer.invoke('index:dlcGroups', type),
+    dlcFlags: (type) => ipcRenderer.invoke('index:dlcFlags', type),
     search: (q, opts) => ipcRenderer.invoke('index:search', q, opts),
     detail: (type, name) => ipcRenderer.invoke('index:detail', type, name),
     graph: (type, name, opts) => ipcRenderer.invoke('index:graph', type, name, opts),
@@ -28,7 +50,8 @@ const api: RendererApi = {
     story: (type, name) => ipcRenderer.invoke('index:story', type, name),
     tooltip: (type, name) => ipcRenderer.invoke('index:tooltip', type, name),
     usageAll: (type, name, userType) => ipcRenderer.invoke('index:usageAll', type, name, userType),
-    describeScript: (text, kind, type) => ipcRenderer.invoke('index:describeScript', text, kind, type),
+    describeScript: (text, kind, type, names) => ipcRenderer.invoke('index:describeScript', text, kind, type, names),
+    moreLines: (id) => ipcRenderer.invoke('index:moreLines', id),
     modifierKeys: () => ipcRenderer.invoke('index:modifierKeys'),
     fieldSuggestions: (source) => ipcRenderer.invoke('index:fieldSuggestions', source),
     createEntries: (creates) => ipcRenderer.invoke('mods:createEntries', creates),
@@ -40,6 +63,7 @@ const api: RendererApi = {
     portraitOptions: () => ipcRenderer.invoke('index:portraitOptions'),
     eventScopes: (name) => ipcRenderer.invoke('index:eventScopes', name),
     editLoc: (key, text) => ipcRenderer.invoke('mods:editLoc', key, text),
+    editGui: (req) => ipcRenderer.invoke('mods:editGui', req),
     fireEvent: (req) => ipcRenderer.invoke('mods:fireEvent', req),
     unfireEvent: (event, onAction) => ipcRenderer.invoke('mods:unfireEvent', event, onAction),
     onActions: (event) => ipcRenderer.invoke('index:onActions', event),
@@ -54,6 +78,9 @@ const api: RendererApi = {
     modelInfo: (path) => ipcRenderer.invoke('index:modelInfo', path),
     modelGeometry: (path, pdxmesh) => ipcRenderer.invoke('index:modelGeometry', path, pdxmesh),
     textureUsers: (path) => ipcRenderer.invoke('index:textureUsers', path),
+    guiList: () => ipcRenderer.invoke('index:guiList'),
+    guiDetail: (kind, name) => ipcRenderer.invoke('index:guiDetail', kind, name),
+    guiLayout: (kind, name, hidden, opts) => ipcRenderer.invoke('index:guiLayout', kind, name, hidden, opts),
     // Blender round trip (src/main/blender/ipc.ts)
     exportModel: (path, pdxmesh) => ipcRenderer.invoke('model:export', path, pdxmesh),
     importModelPlan: (path, pdxmesh) => ipcRenderer.invoke('model:importPlan', path, pdxmesh),
@@ -61,6 +88,7 @@ const api: RendererApi = {
     exportAsset: (path, as, pdxmesh) => ipcRenderer.invoke('asset:export', path, as, pdxmesh),
     replaceAsset: (path, pdxmesh, source) => ipcRenderer.invoke('asset:replace', path, pdxmesh, source),
     importEventScene: (type, name, source) => ipcRenderer.invoke('asset:eventScene', type, name, source),
+    importPicture: (folder, name, source) => ipcRenderer.invoke('asset:picture', folder, name, source),
     pickImage: (title) => ipcRenderer.invoke('asset:pickImage', title),
     assetOverride: (path, pdxmesh) => ipcRenderer.invoke('asset:override', path, pdxmesh),
     removeAssetOverride: (path, pdxmesh) => ipcRenderer.invoke('asset:removeOverride', path, pdxmesh),
@@ -69,11 +97,14 @@ const api: RendererApi = {
     mapInfo: (date) => ipcRenderer.invoke('index:mapInfo', date),
     mapStatic: () => ipcRenderer.invoke('index:mapStatic'),
     mapDated: (date) => ipcRenderer.invoke('index:mapDated', date),
+    mapHoldings: (date) => ipcRenderer.invoke('index:mapHoldings', date),
     mapTerrain: () => ipcRenderer.invoke('index:mapTerrain'),
     mapOverlays: () => ipcRenderer.invoke('index:mapOverlays'),
+    mapFog: () => ipcRenderer.invoke('index:mapFog'),
     mapEdit: (req) => ipcRenderer.invoke('mods:mapEdit', req),
     saveDna: (req) => ipcRenderer.invoke('mods:saveDna', req),
     mapCharacters: (q, date) => ipcRenderer.invoke('index:mapCharacters', q, date),
+    mapHolderSuggestions: (seeds, date, others) => ipcRenderer.invoke('index:mapHolderSuggestions', seeds, date, others),
     coatOfArms: (kind, key, date) => ipcRenderer.invoke('index:coatOfArms', kind, key, date),
     shaderPrograms: () => ipcRenderer.invoke('index:shaderPrograms'),
     logShader: (entry) => ipcRenderer.invoke('log:shader', entry),
@@ -87,6 +118,30 @@ const api: RendererApi = {
     createMod: (req) => ipcRenderer.invoke('mods:create', req),
     packMod: (id, overwrite) => ipcRenderer.invoke('mods:pack', id, overwrite),
     unpackMod: (id) => ipcRenderer.invoke('mods:unpack', id),
+    redoChange: (step) => ipcRenderer.invoke('mods:redo', step),
+    listChanges: () => ipcRenderer.invoke('mods:changes'),
+    listSaves: () => ipcRenderer.invoke('saves:list'),
+    loadSave: (file) => ipcRenderer.invoke('saves:load', file),
+    loadedSave: () => ipcRenderer.invoke('saves:loaded'),
+    writeSaveAs: (file) => ipcRenderer.invoke('saves:writeAs', file),
+    undoSaveEdit: () => ipcRenderer.invoke('saves:undoEdit'),
+    rakaly: () => ipcRenderer.invoke('saves:rakaly'),
+    migrationPlan: (id) => ipcRenderer.invoke('mods:migrationPlan', id),
+    migrateMod: (id, options) => ipcRenderer.invoke('mods:migrate', id, options),
+    mergePlan: (ref) => ipcRenderer.invoke('mods:mergePlan', ref),
+    mergeMods: (req) => ipcRenderer.invoke('mods:merge', req),
+    cancelModsTask: () => ipcRenderer.invoke('mods:cancelTask'),
+    onModsProgress: (cb) =>
+    {
+        const listener = (_e: unknown, p: MigrationProgress): void => cb(p);
+        ipcRenderer.on('mods:progress', listener);
+        return () => ipcRenderer.removeListener('mods:progress', listener);
+    },
+    installRakaly: () => ipcRenderer.invoke('saves:installRakaly'),
+    rakalyLatest: () => ipcRenderer.invoke('saves:rakalyLatest'),
+    fixModLocation: (id) => ipcRenderer.invoke('mods:fixLocation', id),
+    deleteModPlan: (id) => ipcRenderer.invoke('mods:deletePlan', id),
+    deleteMod: (id) => ipcRenderer.invoke('mods:delete', id),
     openModFolder: (id) => ipcRenderer.invoke('mods:openFolder', id),
     modThumbnail: (id) => ipcRenderer.invoke('mods:thumbnail', id),
     // editing the active mod (src/main/mods/edit.ts) and its folder watcher
@@ -106,14 +161,17 @@ const api: RendererApi = {
     },
     portrait: (type, name, opts) => ipcRenderer.invoke('index:portrait', type, name, opts),
     portraitReport: (type, name, opts) => ipcRenderer.invoke('index:portraitReport', type, name, opts),
-    dnaEditor: (type, name) => ipcRenderer.invoke('index:dnaEditor', type, name),
+    dnaEditor: (type, name, date) => ipcRenderer.invoke('index:dnaEditor', type, name, date),
+    ethnicityGenes: (ethnicity, seed) => ipcRenderer.invoke('index:ethnicityGenes', ethnicity, seed),
     characterFilter: (filter) => ipcRenderer.invoke('index:characterFilter', filter),
     characterFacets: () => ipcRenderer.invoke('index:characterFacets'),
-    familyTree: (id) => ipcRenderer.invoke('index:familyTree', id),
+    familyTree: (id, type) => ipcRenderer.invoke('index:familyTree', id, type),
+    characterLifespans: (ids) => ipcRenderer.invoke('index:characterLifespans', ids),
     searchCharacters: (q, limit) => ipcRenderer.invoke('index:searchCharacters', q, limit),
     openFile: (absPath, line) => ipcRenderer.invoke('shell:openFile', absPath, line),
     revealFile: (absPath) => ipcRenderer.invoke('shell:revealFile', absPath),
-    startTarget: () => ipcRenderer.invoke('app:startTarget')
+    startTarget: () => ipcRenderer.invoke('app:startTarget'),
+    updateInfo: () => ipcRenderer.invoke('app:updateInfo')
 };
 
 contextBridge.exposeInMainWorld('api', api);

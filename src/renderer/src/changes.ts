@@ -1,6 +1,6 @@
 /**
- * The change bar (components/ChangeBar.tsx): what the app last changed in the active mod — an in-place edit, an undo,
- * an override, a Blender import, a refused edit — shown in one bar at the bottom of the window. A new change replaces
+ * The change bar (components/ChangeBar.tsx): what the app last changed in the active mod (an in-place edit, an undo,
+ * an override, a Blender import, a refused edit), shown in one bar at the bottom of the window. A new change replaces
  * the one shown (no pile of notices); the session's changes stay listed behind "N changes".
  */
 import { useSyncExternalStore } from 'react';

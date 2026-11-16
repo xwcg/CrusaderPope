@@ -1,5 +1,5 @@
 /**
- * The game's own shaders for WebGL2 — see docs/shaders.md.
+ * The game's own shaders for WebGL2; see docs/shaders.md.
  *
  * An Effect (e.g. `standard_atlas` in gfx/FX/pdxmesh.shader) is assembled like the engine does for its OpenGL target:
  * the engine's GLSL layer (clausewitz cw/defines_glsl4.fxh maps float3 → vec3, lerp → mix, PdxTex2D → texture …),
@@ -17,7 +17,8 @@ import { GameFiles, type GameFile } from '../mods/gamefiles.ts';
 import { MAX_JOINTS } from '../../shared/shaders.ts';
 import type { ShaderProgram, ShaderRequest } from '../../shared/api.ts';
 
-interface CrossShader
+import { tr } from '../../shared/i18n.ts';
+export interface CrossShader
 {
     compile(src: string, input: { format: number; stage: number; es: boolean; glslVersion: number; }, output: { format: number; es: boolean; glslVersion: number; }): string;
     ShaderFormat: Record<string, number>;
@@ -28,10 +29,10 @@ let crossShader: Promise<CrossShader> | null = null;
 
 /**
  * The cross-shader Emscripten module, made from its factory with the .wasm bytes at hand (`wasmBinary`): the package's
- * own entry calls the factory bare, which first tries to stream-compile the file with fetch — failing in Node, logged
+ * own entry calls the factory bare, which first tries to stream-compile the file with fetch, failing in Node, logged
  * once per shader thread ("wasm streaming compile failed … falling back to ArrayBuffer instantiation").
  */
-function loadCrossShader(): Promise<CrossShader>
+export function loadCrossShader(): Promise<CrossShader>
 {
     if (!crossShader)
     {
@@ -42,7 +43,7 @@ function loadCrossShader(): Promise<CrossShader>
                 const req = createRequire(import.meta.url);
                 const factory = req('cross-shader/bin/CrossShader.js') as (opts: { wasmBinary: Uint8Array; }) => CrossShader & { onRuntimeInitialized?: () => void; onAbort?: (e: unknown) => void; };
                 const m = factory({ wasmBinary: new Uint8Array(readFileSync(req.resolve('cross-shader/bin/CrossShader.wasm'))) });
-                m.onAbort = (e) => reject(e instanceof Error ? e : new Error(`cross-shader: ${String(e)}`));
+                m.onAbort = (e) => reject(e instanceof Error ? e : new Error(tr('cross-shader: {String}', { String: String(e) })));
                 m.onRuntimeInitialized = () => resolve({ ShaderFormat: m.ShaderFormat, ShaderStage: m.ShaderStage, compile: m.compile });
             }
             catch (e)
@@ -113,8 +114,8 @@ function zero(t: string): string
 export class ShaderLibrary
 {
     /**
-     * The game's files with the loaded mods. FX files live in the engine layers — `game/gfx/FX` over `jomini/gfx/FX`
-     * over `clausewitz/gfx/FX` (the game overrides some jomini headers) — and a mod's `gfx/FX/…` file replaces them all.
+     * The game's files with the loaded mods. FX files live in the engine layers: `game/gfx/FX` over `jomini/gfx/FX`
+     * over `clausewitz/gfx/FX` (the game overrides some jomini headers), and a mod's `gfx/FX/…` file replaces them all.
      */
     readonly vfs: GameFiles;
     private files = new Map<string, FxFile | null>();
@@ -135,7 +136,7 @@ export class ShaderLibrary
         return this.vfs.get('gfx/FX/' + r, { engine: true });
     }
 
-    private text(rel: string): string | undefined
+    text(rel: string): string | undefined
     {
         const f = this.resolve(rel);
         return f ? this.vfs.readText(f) : undefined;
@@ -159,7 +160,7 @@ export class ShaderLibrary
     }
 
     /** The file and its includes, depth first, each once (includes come before the files using them). */
-    private ordered(rel: string, seen = new Set<string>(), out: FxFile[] = []): FxFile[]
+    ordered(rel: string, seen = new Set<string>(), out: FxFile[] = []): FxFile[]
     {
         const f = this.file(rel);
 
@@ -196,7 +197,7 @@ export class ShaderLibrary
 
     /**
      * Effect name → the .shader file defining it (scanned once, first wins): the mods' files first (the last mod
-     * first), then the game's FX roots in their order — game, jomini, clausewitz.
+     * first), then the game's FX roots in their order: game, jomini, clausewitz.
      */
     private effectFile(name: string): string | undefined
     {
@@ -226,6 +227,12 @@ export class ShaderLibrary
         return this.effectFiles.get(name);
     }
 
+    /** Every Effect a .shader file can use: its own and those of the files it includes (sweeps over all effects). */
+    effectsWithIncludes(rel: string): string[]
+    {
+        return [...new Set(this.ordered(rel).flatMap((f) => f.effects.map((e) => e.name)))];
+    }
+
     /** Names of the effects a file defines (for the shader browser and fallbacks). */
     effects(rel: string): string[]
     {
@@ -251,7 +258,7 @@ export class ShaderLibrary
         const found = this.effect(req.file, req.effect);
 
         if (!found)
-            throw new Error(`Effect ${req.effect} not found in ${req.file}`);
+            throw new Error(tr('Effect {effect} not found in {file}', { effect: req.effect, file: req.file }));
 
         const { effect, files } = found;
         const defines = [...new Set([...effect.defines.filter((d) => !(req.remove ?? []).includes(d)), ...(req.defines ?? [])])];
@@ -259,7 +266,7 @@ export class ShaderLibrary
         const psMain = this.main(files, effect.ps, 'ps');
 
         if (!vsMain || !psMain)
-            throw new Error(`Effect ${effect.name}: shader ${!vsMain ? effect.vs : effect.ps} not found`);
+            throw new Error(tr('Effect {name}: shader {value} not found', { name: effect.name, value: !vsMain ? effect.vs : effect.ps }));
 
         const structs = new Map<string, FxStruct>();
 
@@ -286,38 +293,21 @@ export class ShaderLibrary
         const xs = await loadCrossShader();
         const toEs = (source: string, stage: Stage): string =>
         {
-            let src = source;
-
             try
             {
-                // HLSL-only implicit conversions glslang points at get patched line by line, then it compiles again
-                for (let attempt = 0;; attempt++)
-                {
-                    const out = xs.compile(src, { format: xs.ShaderFormat.GLSL, stage: stage === 'vs' ? xs.ShaderStage.Vertex : xs.ShaderStage.Fragment, es: false, glslVersion: 450 }, { format: xs.ShaderFormat.GLSL, es: true, glslVersion: 300 });
-
-                    // glslang errors come back as the output text
-                    if (!/^ERROR:/m.test(out))
-                        return out;
-
-                    const fixed = attempt < 40 ? fixHlslisms(src, out) : null;
-
-                    if (!fixed)
-                        throw new Error(out.trim());
-
-                    src = fixed;
-                }
+                return glslToEs(xs, source, stage);
             }
             catch (err)
             {
                 let msg = String((err as Error)?.message ?? err);
 
-                // a vertex shader reading bone data itself (AGOT's particle cards) is compiled skinned — unless the request
+                // a vertex shader reading bone data itself (AGOT's particle cards) is compiled skinned, unless the request
                 // removes PDX_MESH_SKINNED
                 if (/'Bone(Index|Weight)' : no such field/.test(msg))
                     msg += '\n(needs GPU skinning: the request removes PDX_MESH_SKINNED)';
 
-                const e = new Error(`${effect.name} ${stage === 'vs' ? 'vertex' : 'pixel'} shader: ${msg}`);
-                (e as Error & { source?: string; }).source = src;
+                const e = new Error(stage === 'vs' ? tr('{name} vertex shader: {msg}', { name: effect.name, msg }) : tr('{name} pixel shader: {msg}', { name: effect.name, msg }));
+                (e as Error & { source?: string; }).source = (err as Error & { source?: string; }).source ?? source;
                 throw e;
             }
         };
@@ -327,7 +317,7 @@ export class ShaderLibrary
         const unsupported = /\b[iu]?samplerBuffer\b|\btextureQueryLod\b|\b[iu]?sampler2DMS\b|\btextureSamples\b/.exec(vertex + fragment);
 
         if (unsupported)
-            throw new Error(`${effect.name}: uses ${unsupported[0]}, which WebGL2 lacks`);
+            throw new Error(tr('{name}: uses {unsupported}, which WebGL2 lacks', { name: effect.name, unsupported: unsupported[0] }));
 
         const states: ShaderProgram['states'] = {};
         const state = (kind: string): Record<string, string> | undefined =>
@@ -367,7 +357,7 @@ export class ShaderLibrary
         };
     }
 
-    private main(files: FxFile[], name: string | undefined, stage: Stage): FxMain | undefined
+    main(files: FxFile[], name: string | undefined, stage: Stage): FxMain | undefined
     {
         if (!name)
             return undefined;
@@ -419,7 +409,7 @@ export class ShaderLibrary
             .join('\n');
         out.push(glslLayer, BUFFER_EMULATION, cw('defines_common.fxh'));
 
-        // array sizes the engine defines at compile time (PDX_MAX_DETAIL_TEXTURES …): small defaults — also inside size
+        // array sizes the engine defines at compile time (PDX_MAX_DETAIL_TEXTURES …): small defaults, also inside size
         // expressions (`[PDX_MAX_DETAIL_TEXTURES/2]` in AGOT's cw/pdxterrain.fxh); `4*6` needs nothing
         const sizeMacros = new Set<string>();
 
@@ -435,7 +425,7 @@ export class ShaderLibrary
         // constant buffers → loose uniforms (sizes of the engine's placeholder arrays raised to what we fill). The engine
         // fills a buffer by its layout, not by member names: a buffer declared again under the same name with renamed
         // members (AGOT's cw/agot_camera.fxh copies PdxCamera as Camera_Position, Shadow_Map_Texture_Matrix …) gets the
-        // same data — its members become aliases of the first declaration's members at the same place
+        // same data: its members become aliases of the first declaration's members at the same place
         const declared = new Set<string>();
         const buffers = new Map<string, FxField[]>();
         const aliases: Record<string, string> = {};
@@ -472,16 +462,27 @@ export class ShaderLibrary
         // samplers of this stage that the code uses
         const samplers: ShaderProgram['samplers'] = [];
         const seenSampler = new Set<string>();
+        // a name built by token pasting (`AGOT_TerrainVariantIndexTexture##INDEX` in a macro) can't be traced: a sampler a
+        // pasted fragment could build counts as used (prune.ts does the same for constants), if the code that pastes
+        // survives the pruning below
+        const pastes = pasteBuilds(body);
+        const pastedOnly = new Set<string>();
 
         for (const f of files)
         {
             for (const s of f.samplers)
             {
-                if ((s.stage !== 'both' && s.stage !== stage) || seenSampler.has(s.name))
+                if ((s.stage !== 'both' && s.stage !== stage) || (s.main && s.main !== main.name) || seenSampler.has(s.name))
                     continue;
 
-                if (!new RegExp(`\\b${s.name}\\b`).test(body))
+                // (a define can name it: `Defines = { "DIFFUSE_TEXTURE DiffuseTexture" }`, the code says DIFFUSE_TEXTURE)
+                const named = new RegExp(`\\b${s.name}\\b`).test(body) || defines.some((d) => new RegExp(`^\\S+\\s+.*\\b${s.name}\\b`).test(d));
+
+                if (!named && !pastes(s.name))
                     continue;
+
+                if (!named)
+                    pastedOnly.add(s.name);
 
                 seenSampler.add(s.name);
 
@@ -559,7 +560,7 @@ export class ShaderLibrary
                 }
             }
 
-            out.push(withMain(`${main.output} PdxMain( ${main.input} Input )`));
+            out.push(withMain(main.output + ' PdxMain( ' + main.input + ' Input )'));
             out.push(`void main() {\n  ${main.input} Input;\n${pre.join('\n')}\n  ${main.output} Out = PdxMain( Input );\n${post.join('\n')}\n}`);
         }
         else
@@ -580,7 +581,7 @@ export class ShaderLibrary
             }
 
             let call = `  PdxMain( Input );`;
-            let signature = `void PdxMain( ${main.input} Input )`;
+            let signature = 'void' + ' PdxMain( ' + main.input + ' Input )';
 
             if (req.post)
                 out.push(VIEWER_POST);
@@ -612,8 +613,46 @@ export class ShaderLibrary
         }
 
         // like an HLSL compiler, only what main() reaches is compiled
-        return { source: hlslAttributes(hlslCasts(hlslImplicitInts(pruneUnreachable(out.join('\n'))))), attributes, samplers, aliases };
+        let source = hlslPasses(pruneUnreachable(out.join('\n')));
+
+        // samplers only a pasted name could have used stay when the pasting code is still there
+        if (pastedOnly.size)
+        {
+            const live = pasteBuilds(source.replace(/^[ \t]*uniform\b.*$/gm, ''));
+
+            for (const name of pastedOnly)
+            {
+                if (live(name))
+                    continue;
+
+                source = source.replace(new RegExp(`^[ \\t]*uniform\\b[^\\n;]*\\b${name}\\s*;[^\\n]*\\n?`, 'm'), '');
+                const at = samplers.findIndex((x) => x.name === name);
+
+                if (at >= 0)
+                    samplers.splice(at, 1);
+            }
+        }
+
+        return { source, attributes, samplers, aliases };
     }
+}
+
+/** Whether a name could be built by a token pasting (`Prefix##N`, `##Suffix`) in a text: the pasted fragments' heads and tails. */
+function pasteBuilds(text: string): (name: string) => boolean
+{
+    const heads = new Set<string>();
+    const tails = new Set<string>();
+
+    for (const m of text.matchAll(/(\w*)\s*##\s*(\w*)/g))
+    {
+        if (m[1].length >= 3)
+            heads.add(m[1]);
+
+        if (m[2].length >= 3)
+            tails.add(m[2]);
+    }
+
+    return (name) => [...heads].some((h) => name.startsWith(h)) || [...tails].some((t) => name.endsWith(t));
 }
 
 /**
@@ -658,6 +697,11 @@ ${
         .join('\n')
 }
 
+// the engine's PdxTex2DSize declares a variable of its own (\`ivec2 _size\`): used twice in a scope it is a redefinition
+// (Elder Kings 2's glass shaders ask two textures); the size is assigned directly instead (ivec2 → the target's type)
+#undef PdxTex2DSize
+#define PdxTex2DSize(samp,size) (size) = textureSize((samp), 0)
+
 // HLSL intrinsics the engine's GLSL layer doesn't cover
 #define rsqrt inversesqrt
 #define countbits bitCount
@@ -698,15 +742,61 @@ vec4 PdxViewerPost( vec4 Color )
 `;
 
 /**
+ * One stage's desktop GLSL 4.50 source → GLSL ES 3.00 (glslang, then SPIRV-Cross). HLSL-only implicit conversions
+ * glslang points at get patched line by line (`fixHlslisms`), then it compiles again. A failure throws glslang's
+ * output as the message, with the last patched source on `source`; `patched` sees each patched version.
+ */
+export function glslToEs(xs: CrossShader, source: string, stage: Stage, patched?: (src: string) => void): string
+{
+    // the last result is kept: a patch found by compiling candidates (`fixByCompiling`) is the last one compiled
+    let lastSource = '';
+    let lastOut = '';
+    const run = (src: string): string =>
+    {
+        if (src !== lastSource || !lastOut)
+        {
+            lastOut = xs.compile(src, { format: xs.ShaderFormat.GLSL, stage: stage === 'vs' ? xs.ShaderStage.Vertex : xs.ShaderStage.Fragment, es: false, glslVersion: 450 }, { format: xs.ShaderFormat.GLSL, es: true, glslVersion: 300 });
+            lastSource = src;
+        }
+
+        return lastOut;
+    };
+    let src = source;
+
+    for (let attempt = 0;; attempt++)
+    {
+        const out = run(src);
+
+        // glslang errors come back as the output text
+        if (!/^ERROR:/m.test(out))
+            return out;
+
+        const fixed = attempt < 40 ? fixHlslisms(src, out, run) : null;
+
+        if (!fixed)
+        {
+            const e = new Error(out.trim());
+            (e as Error & { source?: string; }).source = src;
+            throw e;
+        }
+
+        src = fixed;
+        patched?.(src);
+    }
+}
+
+/**
  * Patches the line of the first glslang error when it is an implicit conversion HLSL allows:
  * - float array index (`Colors[Offset * 4 + i]`) → `[int(…)]`
  * - bool in arithmetic (`( a == b ) * Impact`) → `float( a == b )`
  * - float assigned to an int/uint variable → constructor around the right-hand side
  * - vector comparisons (`abs( a - b ) <= Tolerance` is a bool vector in HLSL) → `lessThanEqual( …, vec3( … ) )`
  * - arguments of the shader's own functions (`int` literal for a `bool` parameter …) → the parameter's constructor
+ * - vectors of different sizes (assignments, operands, intrinsic arguments: `fixByCompiling`)
+ * `compileAgain` (the compile step itself) lets the last kind try candidate lines.
  * Returns null when the error is of another kind.
  */
-function fixHlslisms(src: string, errors: string): string | null
+export function fixHlslisms(src: string, errors: string, compileAgain?: (src: string) => string): string | null
 {
     const m = /^ERROR: \d+:(\d+): (.*)$/m.exec(errors);
 
@@ -729,7 +819,12 @@ function fixHlslisms(src: string, errors: string): string | null
         return v ? { n: v[1], base: v[2] } : undefined;
     };
 
-    if (cmp && (vector(cmp[2]) || vector(cmp[3])))
+    // an int or float where a condition wants a bool (`!Axis.x`, `Count && Flag`, `if ( Mask )`): the places are found by compiling
+    const logic = compileAgain && /^'(?:&&|\|\||!)' :|^'' : boolean expression expected/.test(msg) ? fixByCompiling(lines, lineNo, msg, compileAgain) : undefined;
+
+    if (logic !== undefined)
+        fixed = logic;
+    else if (cmp && (vector(cmp[2]) || vector(cmp[3])))
     {
         // HLSL compares vectors per component (a bool vector); GLSL has functions for that, the scalar side broadcast
         const v = (vector(cmp[2]) ?? vector(cmp[3]))!;
@@ -746,8 +841,8 @@ function fixHlslisms(src: string, errors: string): string | null
                 if (args.length !== 1)
                     return undefined;
 
-                const inner = rewriteComparison(args[0], '==', (a, b) => `equal( ${a}, ${b} )`);
-                const out = inner !== args[0] ? inner : rewriteComparison(args[0], '!=', (a, b) => `notEqual( ${a}, ${b} )`);
+                const inner = rewriteComparison(args[0], '==', (a, b) => 'equal( ' + a + ', ' + b + ' )');
+                const out = inner !== args[0] ? inner : rewriteComparison(args[0], '!=', (a, b) => 'notEqual( ' + a + ', ' + b + ' )');
                 return out !== args[0] ? `${f}( ${out} )` : undefined;
             });
     }
@@ -759,33 +854,83 @@ function fixHlslisms(src: string, errors: string): string | null
     {
         fixed = line.replace(/\(\s*([^()]*?(?:==|!=|<=|>=|<|>)[^()]*?)\s*\)/g, (s, inner, off, whole: string) =>
         {
-            // keep `if ( … )` conditions and existing bool() casts
+            // keep `if ( … )` conditions, existing bool() casts and what is a bool on purpose (`!( … )`, the condition of a
+            // ?:, an operand of && / ||); a group with a ?: inside is no comparison (a vector may be its value, which
+            // float() would cut to the first component)
             const before = whole.slice(0, off);
-            return /\b(if|while|bool)\s*$/.test(before) ? s : `float( ${inner} )`;
+            const after = whole.slice(off + s.length);
+            return /\b(?:if|while|bool)\s*$|!\s*$/.test(before) || /^\s*(?:\?|&&|\|\|)/.test(after) || /(?:&&|\|\|)$/.test(before.trimEnd()) || inner.includes('?') ? s : `float( ${inner} )`;
         });
     }
     else
     {
-        // assignments HLSL converts implicitly: float/uint → int, float/int → uint, scalar → vector broadcast
+        // assignments HLSL converts implicitly: float/uint → int, float/int → uint, scalar → vector broadcast, a vector
+        // cut to a smaller one. Which assignment of the line is meant is found by compiling the candidates; without
+        // that, the first one is taken
+        const verified = compileAgain && /cannot convert from/.test(msg) ? fixByCompiling(lines, lineNo, msg, compileAgain) : undefined;
         const conv = /cannot convert from ' (?:temp|global|const|uniform) (?:highp |mediump |lowp )?(?:float|u?int|bool)' to ' temp (?:highp |mediump |lowp )?(u?int|float|([234])-component vector of (float|int|uint))'/.exec(msg);
         const ctor = !conv ? undefined : conv[2] ? `${conv[3] === 'float' ? '' : conv[3] === 'int' ? 'i' : 'u'}vec${conv[2]}` : conv[1];
 
-        if (ctor)
+        if (verified)
+            fixed = verified;
+        else if (ctor)
             fixed = line.replace(/([^=!<>+\-*/]=)(?!=)\s*([^;]+);/, (_s, eq, rhs) => `${eq} ${ctor}( ${rhs} );`);
     }
 
     if (fixed === line && /'pow' : no matching overloaded function/.test(msg))
     {
-        // pow( vector, scalar ): HLSL broadcasts the exponent — make it the base's type
-        fixed = rewriteCalls(line, 'pow', (args) => (args.length === 2 ? `pow( ${args[0]}, ${args[1]} + 0.0 * ( ${args[0]} ) )` : undefined));
+        // pow( vector, scalar ): HLSL broadcasts the exponent: make it the base's type
+        fixed = rewriteCalls(line, 'pow', (args) => (args.length === 2 ? 'pow( ' + args[0] + ', ' + args[1] + ' + 0.0 * ( ' + args[0] + ' ) )' : undefined));
     }
     else if (fixed === line && /'%' :\s+wrong operand types/.test(msg))
     {
-        // float modulo: HLSL's fmod x - y · trunc( x / y ), written out — the fmod overloads were pruned before this runs
+        // float modulo: HLSL's fmod x - y · trunc( x / y ), written out (the fmod overloads were pruned before this runs)
         // (nothing called them yet); scalar and vector operands mix like in HLSL
-        fixed = line.replace(/([\w.[\]]+|\([^()]*\))\s*%\s*([\w.[\]]+|\([^()]*\))/, (_s, a, b) => `( ${a} - ( ${b} ) * trunc( ${a} / ( ${b} ) ) )`);
+        for (let k = line.indexOf('%'); k >= 0; k = line.indexOf('%', k + 1))
+        {
+            let a = line[k + 1] === '=' ? -1 : primaryBefore(line, k);
+
+            // `x * y % z` is `( x * y ) % z`: the same precedence, left to right
+            for (let m = a - 1; a > 0; m = a - 1)
+            {
+                while (m >= 0 && line[m] === ' ')
+                    m--;
+
+                // a unary sign on the factor belongs to it: `a * -b % c` is `( a * -b ) % c`
+                if (m > 0 && (line[m] === '-' || line[m] === '+'))
+                {
+                    let p = m - 1;
+
+                    while (p >= 0 && line[p] === ' ')
+                        p--;
+
+                    if (p > 0 && (line[p] === '*' || line[p] === '/') && !/[*/=]/.test(line[p - 1]))
+                    {
+                        a = m;
+                        m = p;
+                    }
+                }
+
+                const s = m > 0 && (line[m] === '*' || line[m] === '/') && !/[*/=]/.test(line[m - 1]) ? primaryBefore(line, m) : -1;
+
+                if (s < 0)
+                    break;
+
+                a = s;
+            }
+
+            const b = a < 0 ? undefined : primaryAfter(line, k + 1);
+
+            if (b)
+            {
+                const l = line.slice(a, k).trim();
+                const r = line.slice(k + 1, b.end).trim();
+                fixed = `${line.slice(0, a)}( ${l} - ( ${r} ) * trunc( ${l} / ( ${r} ) ) )${line.slice(b.end)}`;
+                break;
+            }
+        }
     }
-    else if (fixed === line && /'return' : cannot convert return value/.test(msg))
+    else if (fixed === line && /'return' : (?:cannot convert return value|type does not match, or is not convertible to, the function's return type)/.test(msg))
     {
         // implicit conversion of the return value: the enclosing function's return type as constructor
         for (let k = lineNo; k >= 0 && k > lineNo - 200; k--)
@@ -822,6 +967,9 @@ function fixHlslisms(src: string, errors: string): string | null
         });
     }
 
+    if (fixed === line && compileAgain)
+        fixed = fixByCompiling(lines, lineNo, msg, compileAgain) ?? line;
+
     if (fixed === line)
         return null;
 
@@ -829,7 +977,599 @@ function fixHlslisms(src: string, errors: string): string | null
     return lines.join('\n');
 }
 
-/** Scalar, vector and matrix types (HLSL and GLSL spellings) — the ones a constructor converts. */
+/** The first error of glslang's output: its line (1-based) and message. */
+function firstError(out: string): { line: number; msg: string; } | undefined
+{
+    const m = /^ERROR: \d+:(\d+): (.*)$/m.exec(out);
+    return m ? { line: Number(m[1]), msg: m[2] } : undefined;
+}
+
+/** A type as glslang words it (` uniform 4-component vector of float`, ` temp int`) → size and base type. */
+export function glslangType(t: string): { n: number; base: string; } | undefined
+{
+    // (a matrix, `4X4 matrix of float`, is no scalar: no size conversion applies)
+    if (/\bmatrix of\b/.test(t))
+        return undefined;
+
+    const m = /(?:(\d)-component vector of )?\b(float|int|uint|bool)\s*$/.exec(t);
+    return m ? { n: m[1] ? Number(m[1]) : 1, base: m[2] } : undefined;
+}
+
+/** `vec3` / `ivec2` / `float` for a size and base type. */
+function ctorOf(n: number, base: string): string
+{
+    return n === 1 ? base : `${{ float: 'vec', int: 'ivec', uint: 'uvec', bool: 'bvec' }[base]}${n}`;
+}
+
+/** Intrinsics that work component by component: HLSL brings all their vector arguments to the smallest size. */
+const COMPONENTWISE: Record<string, string[]> = {
+    min: ['min'],
+    max: ['max'],
+    clamp: ['clamp'],
+    mix: ['mix', 'lerp'],
+    step: ['step'],
+    smoothstep: ['smoothstep'],
+    pow: ['pow'],
+    atan: ['atan', 'atan2'],
+    distance: ['distance'],
+    dot: ['dot'],
+    cross: ['cross'],
+    reflect: ['reflect'],
+    fmod: ['fmod'],
+    mad: ['mad']
+};
+
+/** Sampling calls (and the engine's macros for them) whose coordinate is the second argument. */
+const TEXTURE_CALLS: Record<string, string[]> = {
+    texture: ['texture', 'PdxTex2D', 'PdxTex2DBias', 'PdxTexCube', 'PdxTexCubeBias'],
+    textureLod: ['textureLod', 'PdxTex2DLod', 'PdxTexCubeLod'],
+    textureGrad: ['textureGrad', 'PdxTex2DGrad']
+};
+
+/**
+ * HLSL brings vectors of different sizes to the smaller one (a vector assigned to a smaller type is cut off after the
+ * components that fit, operands and intrinsic arguments of different sizes are cut to the smallest, a scalar is
+ * broadcast) where GLSL refuses. glslang's message says which of the cases it is, but not which of several
+ * occurrences on the line, and the types of the expressions are not known here: the candidate lines are compiled
+ * again (`compileAgain`) and the first for which the line has no error any more wins. A line with two such places is
+ * patched in two steps: a candidate also wins when the line's error has become another of these kinds.
+ * - `vec3 c = Color4;`, `Color.rgb *= Tint4;`, `a.rg = b3;` → the right-hand side gets the target's constructor
+ * - `Color4 * Tint3`, `a3 + b4`, `c ? a4 : b3` → the operand of the larger vector gets the smaller one's constructor
+ * - `lerp( Color4, Tint3, T )`, `max( a4, b3 )`, `distance( s, v3 )` → every argument gets the constructor of the
+ *   largest size all vectors reach (4, 3, 2 tried in turn)
+ * - `PdxTex2D( Sampler, Uv3 )` → the coordinate gets the constructor of the sampler's size (2, 3, 4 tried in turn)
+ * Returns the patched line, or undefined when the message is of another kind or no candidate helps.
+ */
+function fixByCompiling(lines: string[], lineNo: number, msg: string, compileAgain: (src: string) => string): string | undefined
+{
+    const candidates = conversionCandidates(msg);
+
+    if (!candidates)
+        return undefined;
+
+    // a statement written over several lines: glslang reports a declaration at its first line and a call at its last.
+    // The candidates are made from the whole statement, joined onto the reported line (the others are emptied, so line
+    // numbers stay); an error anywhere inside the statement is still its error
+    const open = (k: number): boolean => !!lines[k].trim() && !/[;{}]\s*$/.test(lines[k]) && !/^\s*#/.test(lines[k]);
+    let first = lineNo;
+    let last = lineNo;
+
+    while (first > 0 && lineNo - first < 20 && open(first - 1))
+        first--;
+
+    while (last < lines.length - 1 && last - lineNo < 20 && open(last))
+        last++;
+
+    const line = first < last ? lines.slice(first, last + 1).join(' ') : lines[lineNo];
+    let changed: string | undefined;
+    const settle = (cand: string): string =>
+    {
+        lines.fill('', first, last + 1);
+        return cand;
+    };
+
+    for (const cand of candidates(line))
+    {
+        if (cand === line)
+            continue;
+
+        const trial = lines.slice();
+        trial.fill('', first, last + 1);
+        trial[lineNo] = cand;
+        const e = firstError(compileAgain(trial.join('\n')));
+
+        // cleared the statement's error
+        if (!e || e.line < first + 1 || e.line > last + 1)
+            return settle(cand);
+
+        // or turned it into another of these kinds (two places on one line are patched in two rounds) - the second best:
+        // a candidate that wraps the wrong place also makes such an error, so a clearing candidate is looked for first
+        if (!changed && e.msg !== msg && conversionCandidates(e.msg))
+            changed = cand;
+    }
+
+    return changed === undefined ? undefined : settle(changed);
+}
+
+/** For a glslang message about vectors of different sizes, the function making the candidate lines; else undefined. */
+function conversionCandidates(msg: string): ((line: string) => Iterable<string>) | undefined
+{
+    const conv = /^'(?:=|assign)' :\s+cannot convert from '([^']*)' to '([^']*)'/.exec(msg);
+    const bin = /^'([-+*/:])' :\s+wrong operand types: no operation '[^']*' exists that takes a left-hand operand of type '([^']*)' and a right operand of type '([^']*)'/.exec(msg);
+    const call = /^'(\w+)' : no matching overloaded function found/.exec(msg);
+
+    if (conv)
+    {
+        const from = glslangType(conv[1]);
+        const to = glslangType(conv[2]);
+
+        // a vector cut to the target's size, or a scalar broadcast / converted (a larger target takes only a scalar)
+        if (!from || !to || (from.n > 1 && from.n < to.n))
+            return undefined;
+
+        const ctor = ctorOf(to.n, to.base);
+        return function* (line)
+        {
+            for (const m of line.matchAll(/(?<![=!<>+\-*/%&|^])[+\-*/%&|^]?=(?!=)/g))
+            {
+                const at = m.index + m[0].length;
+                const end = expressionEnd(line, at);
+
+                if (line.slice(at, end).trim())
+                    yield `${line.slice(0, at)} ${ctor}( ${line.slice(at, end).trim()} )${line.slice(end)}`;
+            }
+        };
+    }
+
+    if (bin)
+    {
+        const l = glslangType(bin[2]);
+        const r = glslangType(bin[3]);
+
+        if (!l || !r || l.n === r.n)
+            return undefined;
+
+        const op = bin[1];
+        // (a scalar branch of ?: is broadcast to the other branch's size; the other operators take a scalar themselves)
+        const scalar = Math.min(l.n, r.n) === 1;
+
+        if (scalar && op !== ':')
+            return undefined;
+
+        const left = scalar ? l.n === 1 : l.n > r.n;
+        const ctor = scalar ? ctorOf(Math.max(l.n, r.n), (l.n > r.n ? l : r).base) : ctorOf(Math.min(l.n, r.n), (left ? l : r).base);
+        return function* (line)
+        {
+            for (let i = line.indexOf(op); i >= 0; i = line.indexOf(op, i + 1))
+            {
+                if (op === ':')
+                {
+                    // the branches of a conditional expression: the larger one is cut to the smaller one's size
+                    const q = conditionStart(line, i);
+
+                    if (q >= 0)
+                    {
+                        const end = expressionEnd(line, i + 1);
+                        yield left ?
+                            `${line.slice(0, q + 1)} ${ctor}( ${line.slice(q + 1, i).trim()} ) ${line.slice(i)}` :
+                            `${line.slice(0, i + 1)} ${ctor}( ${line.slice(i + 1, end).trim()} )${line.slice(end)}`;
+                    }
+
+                    continue;
+                }
+
+                // compound assignments, ++ / --, exponents (1e-3)
+                if (line[i + 1] === '='|| line[i + 1] === op || line[i - 1] === op || /\d[eE]$/.test(line.slice(0, i)))
+                    continue;
+
+                if (left)
+                {
+                    const s = primaryBefore(line, i);
+
+                    if (s >= 0)
+                        yield `${line.slice(0, s)}${ctor}( ${line.slice(s, i).trim()} ) ${line.slice(i)}`;
+                }
+                else
+                {
+                    const p = primaryAfter(line, i + 1);
+
+                    if (p)
+                        yield `${line.slice(0, p.start)}${ctor}( ${line.slice(p.start, p.end)} )${line.slice(p.end)}`;
+                }
+            }
+        };
+    }
+
+    if (call && COMPONENTWISE[call[1]])
+    {
+        return function* (line)
+        {
+            for (const name of COMPONENTWISE[call[1]])
+            {
+                let total = 0;
+                rewriteCalls(line, name, () => (total++, undefined));
+
+                for (let k = 0; k < total; k++)
+                    for (const n of [4, 3, 2])
+                    {
+                        let seen = 0;
+                        yield rewriteCalls(line, name, (args) => (seen++ === k ? `${name}( ${args.map((a) => `${ctorOf(n, 'float')}( ${a} )`).join(', ')} )` : undefined));
+                    }
+            }
+        };
+    }
+
+    if (call && call[1] === 'mul')
+    {
+        // the engine has mul() for matching sizes only; HLSL cuts a 4x4 matrix to the size of the vector it multiplies
+        // (Elder Kings 2: `mul( InvViewMatrix, WorldSpacePos )` with a float3) or the vector to the matrix's
+        return function* (line)
+        {
+            let total = 0;
+            rewriteCalls(line, 'mul', () => (total++, undefined));
+
+            for (let k = 0; k < total; k++)
+                for (const n of [3, 2])
+                    for (const kind of ['mat', 'vec'])
+                        for (const which of [0, 1])
+                        {
+                            let seen = 0;
+                            yield rewriteCalls(line, 'mul', (args) => (seen++ === k && args.length === 2 ? `mul( ${args.map((a, i) => (i === which ? `${kind}${n}( ${a} )` : a)).join(', ')} )` : undefined));
+                        }
+        };
+    }
+
+    if (call && TEXTURE_CALLS[call[1]])
+    {
+        // a sampling call with more coordinates than the sampler has: HLSL cuts the coordinate to the sampler's size
+        return function* (line)
+        {
+            for (const name of TEXTURE_CALLS[call[1]])
+            {
+                let total = 0;
+                rewriteCalls(line, name, () => (total++, undefined));
+
+                for (let k = 0; k < total; k++)
+                    for (const n of [2, 3, 4])
+                    {
+                        let seen = 0;
+                        yield rewriteCalls(line, name, (args) => (seen++ === k && args.length > 1 ? `${name}( ${args.map((a, i) => (i === 1 ? `${ctorOf(n, 'float')}( ${a} )` : a)).join(', ')} )` : undefined));
+                    }
+            }
+        };
+    }
+
+    // HLSL takes an int or float where a condition wants a bool: non-zero is true
+    const logical = /^'(&&|\|\|)' :\s+wrong operand types: no operation '[^']*' exists that takes a left-hand operand of type '([^']*)' and a right operand of type '([^']*)'/.exec(msg);
+
+    if (/^'!' :\s+wrong operand type no operation '!'/.test(msg))
+    {
+        return function* (line)
+        {
+            for (let i = line.indexOf('!'); i >= 0; i = line.indexOf('!', i + 1))
+            {
+                const p = line[i + 1] === '=' ? undefined : primaryAfter(line, i + 1);
+
+                if (p)
+                    yield `${line.slice(0, p.start)}bool( ${line.slice(p.start, p.end)} )${line.slice(p.end)}`;
+            }
+        };
+    }
+
+    if (logical)
+    {
+        const wrapLeft = glslangType(logical[2])?.base !== 'bool';
+        const wrapRight = glslangType(logical[3])?.base !== 'bool';
+        const op = logical[1];
+        return function* (line)
+        {
+            for (let i = line.indexOf(op); i >= 0; i = line.indexOf(op, i + 2))
+            {
+                const a = operandStart(line, i);
+                const e = operandEnd(line, i + 2);
+                const left = wrapLeft ? `${line.slice(0, a)}bool( ${line.slice(a, i).trim()} ) ` : line.slice(0, i);
+                const right = wrapRight ? ` bool( ${line.slice(i + 2, e).trim()} )${line.slice(e)}` : line.slice(i + 2);
+                yield left + op + right;
+            }
+        };
+    }
+
+    if (/^'' : boolean expression expected/.test(msg))
+    {
+        return function* (line)
+        {
+            for (const m of line.matchAll(/\b(?:if|while)\s*\(/g))
+            {
+                const open = m.index + m[0].length - 1;
+                const close = closingBracket(line, open);
+
+                if (close > 0)
+                    yield `${line.slice(0, open + 1)} bool( ${line.slice(open + 1, close).trim()} ) ${line.slice(close)}`;
+            }
+
+            for (let q = line.indexOf('?'); q >= 0; q = line.indexOf('?', q + 1))
+            {
+                const s = operandStart(line, q);
+                yield `${line.slice(0, s)}bool( ${line.slice(s, q).trim()} ) ${line.slice(q)}`;
+            }
+        };
+    }
+
+    return undefined;
+}
+
+/**
+ * Start of the operand that ends before the operator at `at`: back to the delimiter around it (an opening
+ * parenthesis, comma, `?`, `:`, assignment, `&&`, `||`). The operand of a logical operator or a condition can hold
+ * arithmetic, which is why this is no `primaryBefore`.
+ */
+function operandStart(s: string, at: number): number
+{
+    let depth = 0;
+    let start = at;
+
+    for (let k = at - 1; k >= 0; k--)
+    {
+        const c = s[k];
+
+        if (c === ')' || c === ']')
+            depth++;
+        else if (c === '(' || c === '[')
+        {
+            if (depth === 0)
+                break;
+
+            depth--;
+        }
+        else if (depth === 0 && (',;{?:'.includes(c) || (c === '&' && s[k - 1] === '&') || (c === '|' && s[k - 1] === '|') || (c === '=' && !'=!<>'.includes(s[k - 1] ?? ' ') && s[k + 1] !== '=')))
+            break;
+
+        start = k;
+    }
+
+    return start;
+}
+
+/** End of the operand that starts at `from`: on to the delimiter after it (see `operandStart`). */
+function operandEnd(s: string, from: number): number
+{
+    let depth = 0;
+    let end = from;
+
+    for (let k = from; k < s.length; k++)
+    {
+        const c = s[k];
+
+        if (c === '(' || c === '[')
+            depth++;
+        else if (c === ')' || c === ']')
+        {
+            if (depth === 0)
+                break;
+
+            depth--;
+        }
+        else if (depth === 0 && (',;}?:'.includes(c) || (c === '&' && s[k + 1] === '&') || (c === '|' && s[k + 1] === '|')))
+            break;
+
+        end = k + 1;
+    }
+
+    return end;
+}
+
+/** The `?` belonging to the `:` at `colon` (same nesting level), or -1. */
+function conditionStart(s: string, colon: number): number
+{
+    let depth = 0;
+
+    for (let i = colon - 1; i >= 0; i--)
+    {
+        const c = s[i];
+
+        if (c === ')' || c === ']')
+            depth++;
+        else if (c === '(' || c === '[')
+        {
+            if (depth === 0)
+                return -1;
+
+            depth--;
+        }
+        else if (c === ';' || c === '{')
+            return -1;
+        else if (depth === 0 && c === ':')
+            return -1;
+        else if (depth === 0 && c === '?')
+            return i;
+    }
+
+    return -1;
+}
+
+/** End of the expression starting at `from`: the `;` or `,` after it, or the bracket closing around it. */
+function expressionEnd(s: string, from: number): number
+{
+    let depth = 0;
+
+    for (let i = from; i < s.length; i++)
+    {
+        const c = s[i];
+
+        if (c === '(' || c === '[' || c === '{')
+            depth++;
+        else if (c === ')' || c === ']' || c === '}')
+        {
+            if (depth === 0)
+                return i;
+
+            depth--;
+        }
+        else if ((c === ';' || c === ',') && depth === 0)
+            return i;
+    }
+
+    return s.length;
+}
+
+/** The bracket opening the one that closes at `close` (or -1). */
+function openingBracket(s: string, close: number): number
+{
+    let depth = 0;
+
+    for (let i = close; i >= 0; i--)
+    {
+        if (s[i] === ')' || s[i] === ']')
+            depth++;
+        else if ((s[i] === '(' || s[i] === '[') && --depth === 0)
+            return i;
+    }
+
+    return -1;
+}
+
+/** The bracket closing the one that opens at `open` (or -1). */
+function closingBracket(s: string, open: number): number
+{
+    let depth = 0;
+
+    for (let i = open; i < s.length; i++)
+    {
+        if (s[i] === '(' || s[i] === '[')
+            depth++;
+        else if ((s[i] === ')' || s[i] === ']') && --depth === 0)
+            return i;
+    }
+
+    return -1;
+}
+
+/**
+ * Start of the operand (a name or number with its calls, indexing and member accesses, or a parenthesized
+ * expression) that ends before `at`; -1 when there is none (a unary sign, a keyword).
+ */
+function primaryBefore(s: string, at: number): number
+{
+    let k = at - 1;
+    let start = -1;
+
+    for (;;)
+    {
+        while (k >= 0 && s[k] === ' ')
+            k--;
+
+        if (k < 0)
+            return -1;
+
+        if (s[k] === ')' || s[k] === ']')
+        {
+            const open = openingBracket(s, k);
+
+            if (open < 0)
+                return -1;
+
+            start = open;
+            k = open - 1;
+
+            // a call or index continues to the left in a name (or another call / index)
+            let j = k;
+
+            while (j >= 0 && s[j] === ' ')
+                j--;
+
+            if (j >= 0 && (/\w/.test(s[j]) || s[j] === ')' || s[j] === ']'))
+                continue;
+
+            return start;
+        }
+
+        if (!/\w/.test(s[k]))
+            return -1;
+
+        let j = k;
+
+        while (j >= 0 && /\w/.test(s[j]))
+            j--;
+
+        const word = s.slice(j + 1, k + 1);
+
+        if (/^(return|else|case|in|out|inout|const|uniform)$/.test(word))
+            return -1;
+
+        start = j + 1;
+        let m = j;
+
+        while (m >= 0 && s[m] === ' ')
+            m--;
+
+        // `a.b`, `f( x ).y`, `2.0`, and `.5`, whose dot belongs to the number
+        if (m >= 0 && s[m] === '.')
+        {
+            k = m - 1;
+
+            while (k >= 0 && s[k] === ' ')
+                k--;
+
+            if (k >= 0 && (/\w/.test(s[k]) || s[k] === ')' || s[k] === ']'))
+                continue;
+
+            return m;
+        }
+
+        return start;
+    }
+}
+
+/** The operand starting at or after `at` (unary signs skipped): its span, or undefined. */
+function primaryAfter(s: string, at: number): { start: number; end: number; } | undefined
+{
+    let i = at;
+
+    while (i < s.length && /[\s\-+!~]/.test(s[i]))
+        i++;
+
+    const start = i;
+
+    if (s[i] === '(')
+    {
+        const close = closingBracket(s, i);
+
+        if (close < 0)
+            return undefined;
+
+        i = close + 1;
+    }
+    else
+    {
+        const w = /^(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?[fFuU]?|^\w+/.exec(s.slice(i));
+
+        if (!w)
+            return undefined;
+
+        i += w[0].length;
+    }
+
+    for (;;)
+    {
+        if (s[i] === '(' || s[i] === '[')
+        {
+            const close = closingBracket(s, i);
+
+            if (close < 0)
+                return undefined;
+
+            i = close + 1;
+        }
+        else if (s[i] === '.' && /[A-Za-z_]/.test(s[i + 1] ?? ''))
+            i += 1 + /^\w+/.exec(s.slice(i + 1))![0].length;
+        else
+            break;
+    }
+
+    return { start, end: i };
+}
+
+/** Scalar, vector and matrix types (HLSL and GLSL spellings), the ones a constructor converts. */
 const BUILTIN_TYPE = /^(bool|int|uint|float|half|(bool|int|uint|float|half)[1-4](x[1-4])?|[biu]?vec[2-4]|mat[2-4](x[2-4])?)$/;
 
 /** Parameters of every definition of `name` in the source (`type name( params ) {`). */
@@ -907,7 +1647,7 @@ function splitParams(s: string): string[]
  * Rewrites the first comparison `a op b` on a line whose operands can be delimited there: the operands extend over
  * everything that binds tighter than a comparison (names, calls, brackets, member access, arithmetic).
  */
-function rewriteComparison(line: string, op: string, fn: (a: string, b: string) => string): string
+export function rewriteComparison(line: string, op: string, fn: (a: string, b: string) => string): string
 {
     const esc = op.replace(/[<>=!]/g, (c) => '\\' + c);
     const re = new RegExp(`(?<![<>=!])${esc}(?![<>=])`, 'g');
@@ -977,7 +1717,7 @@ function rewriteComparison(line: string, op: string, fn: (a: string, b: string) 
 }
 
 /** Rewrites calls `name( a, b )` on one line (arguments split at top-level commas); undefined keeps a call as is. */
-function rewriteCalls(line: string, name: string, fn: (args: string[]) => string | undefined): string
+export function rewriteCalls(line: string, name: string, fn: (args: string[]) => string | undefined): string
 {
     let out = '';
     let i = 0;
@@ -1030,16 +1770,18 @@ function rewriteCalls(line: string, name: string, fn: (args: string[]) => string
  * C-style casts (`(int)Data._Channel`, `(float3)x`) → constructor calls. The operand is a parenthesized expression
  * or a name / number with its member accesses, indexing and call arguments.
  */
-function hlslCasts(src: string): string
+export function hlslCasts(src: string): string
 {
-    const re = /\(\s*(int|uint|float|bool|half|u?int[234]|float[234]|bool[234]|half[234])\s*\)\s*(?=[\w(-])/g;
+    const re = /\(\s*(int|uint|float|bool|half|u?int[234]|float[234]|bool[234]|half[234])\s*\)\s*(?=[\w(!~-])/g;
     let out = '';
     let last = 0;
 
     for (let m = re.exec(src); m; m = re.exec(src))
     {
         // not a cast when the parenthesis follows a name (a call like `foo(int)` never appears; `vec3(int)` neither)
-        if (/[\w\]]\s*$/.test(src.slice(Math.max(0, m.index - 40), m.index)))
+        const prev = /([\w\]]+)\s*$/.exec(src.slice(Math.max(0, m.index - 40), m.index));
+
+        if (prev && !/^(?:return|else|case|do)$/.test(prev[1]))
             continue;
 
         let i = m.index + m[0].length;
@@ -1060,14 +1802,15 @@ function hlslCasts(src: string): string
             }
         };
 
-        if (src[i] === '-')
+        // (unary signs: `(int)-x`, `(float)!b`, `(uint)~m`)
+        while (src[i] === '-' || src[i] === '!' || src[i] === '~')
             i++;
 
         if (src[i] === '(')
             balanced('(', ')');
         else
         {
-            const w = /^[\w.]+/.exec(src.slice(i));
+            const w = /^(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?[fFuU]?(?![\w.])|^[\w.]+/.exec(src.slice(i));
 
             if (!w)
                 continue;
@@ -1099,19 +1842,317 @@ function hlslCasts(src: string): string
 }
 
 /**
+ * A global array made by casting another array (`static const float2 Factors[N] = (float2[N])Packed;`, Packed being a
+ * `float4 Packed[N / 2]` of a constant buffer: AGOT's pdxterrain.fxh). HLSL casts the components in order; GLSL has no
+ * such cast, and the array is no constant. The declaration becomes an accessor (`Factors_ArrayCast( i )`) that picks
+ * the components of the source array, and `Factors[ i ]` calls it. Left alone when the source array is not declared
+ * here, the element types differ, or the array is used in another way than indexed.
+ */
+export function hlslArrayCasts(src: string): string
+{
+    // (types as HLSL or the engine's GLSL names them: float4, vec4)
+    const type = (t: string): { base: string; n: number; } | undefined =>
+    {
+        const v = /^(float|int|uint|half|bool)([1-4])?$/.exec(t) ?? /^([biu]?)vec([2-4])$/.exec(t);
+        return v ? { base: ({ '': 'float', b: 'bool', i: 'int', u: 'uint' } as Record<string, string>)[v[1]] ?? v[1], n: Number(v[2] ?? 1) } : undefined;
+    };
+    const decl = /(?:\b(?:static|const)\s+)*\b(\w+)\s+(\w+)\s*\[[^\]]*\]\s*=\s*\(\s*(\w+)\s*\[[^\]]*\]\s*\)\s*(\w+)\s*;/g;
+    let out = src;
+
+    for (const m of src.matchAll(decl))
+    {
+        const [whole, destType, name, castType, from] = m;
+        const dest = type(destType);
+        const source = new RegExp(String.raw`\b(\w+)\s+${from}\s*\[`).exec(src);
+        const have = source ? type(source[1]) : undefined;
+
+        if (destType !== castType || !dest || !have || have.base !== dest.base)
+            continue;
+
+        const base = destType;
+        const wd = dest.n;
+        const ws = have.n;
+        const fn = `${name}_ArrayCast`;
+        let body: string;
+
+        if (wd < ws && ws % wd === 0)
+        {
+            // a part of a source element: its components from (i % r) * wd on
+            const r = ws / wd;
+            const at = (k: number): string => `${from}[ i / ${r} ][ ( i % ${r} ) * ${wd}${k ? ` + ${k}` : ''} ]`;
+            body = wd === 1 ? at(0) : `${base}( ${Array.from({ length: wd }, (_v, k) => at(k)).join(', ')} )`;
+        }
+        else if (wd > ws && wd % ws === 0)
+        {
+            // several source elements make one
+            const r = wd / ws;
+            body = `${base}( ${Array.from({ length: r }, (_v, k) => `${from}[ i * ${r}${k ? ` + ${k}` : ''} ]`).join(', ')} )`;
+        }
+        else
+            continue;
+
+        // every use must be an index
+        const rest = out.replace(whole, '');
+        const uses = new RegExp(String.raw`\b${name}\b`, 'g');
+        let indexed = true;
+        let text = '';
+        let last = 0;
+
+        for (let u = uses.exec(rest); u && indexed; u = uses.exec(rest))
+        {
+            const open = /^\s*\[/.exec(rest.slice(u.index + u[0].length));
+            const at = open ? u.index + u[0].length + open[0].length - 1 : -1;
+            const close = at >= 0 ? closingBracket(rest, at) : -1;
+
+            if (close < 0)
+            {
+                indexed = false;
+                break;
+            }
+
+            text += `${rest.slice(last, u.index)}${fn}( int( ${rest.slice(at + 1, close).trim()} ) )`;
+            last = close + 1;
+            uses.lastIndex = last;
+        }
+
+        if (!indexed)
+            continue;
+
+        // (the accessor takes the place of the declaration: the source array is declared before it)
+        const accessor = `${base} ${fn}( int i ) { return ${body}; }`;
+        const declAt = out.indexOf(whole);
+        out = text + rest.slice(last);
+        out = out.slice(0, declAt) + accessor + out.slice(declAt);
+    }
+
+    return out;
+}
+
+/**
  * HLSL flow control attributes (`[unroll]`, `[loop]`, `[branch]` …) are compiler hints GLSL has no syntax for. Mods
  * normally hide them behind macros that are empty on PDX_OPENGL; AGOT's dragon decals write one literally.
  */
-function hlslAttributes(src: string): string
+export function hlslAttributes(src: string): string
 {
     return src.replace(/(^|[\s;{})])\[\s*(?:unroll|loop|branch|flatten|fastopt|allow_uav_condition|call|forcecase)\s*(?:\(\s*\w*\s*\))?\s*\](?=\s*(?:for|while|do|if|switch)\b)/g, '$1');
+}
+
+/**
+ * The source passes that stand in for what HLSL compilers do, in order (each is tested on its own by
+ * scripts/shader-check.ts): integer declarations, casts of arrays, C-style casts, flow control attributes, matrix
+ * initializers, matrix constructors. What glslang still rejects is patched afterwards, error by error (`fixHlslisms`).
+ */
+export function hlslPasses(src: string): string
+{
+    return hlslMatrixRows(hlslMatrixInitializers(hlslAttributes(hlslCasts(hlslArrayCasts(hlslImplicitInts(src))))));
+}
+
+/** Splits at the top-level commas (parentheses, brackets and braces nest); a trailing comma adds nothing. */
+function splitTopLevel(s: string): string[]
+{
+    const out: string[] = [];
+    let depth = 0;
+    let cur = '';
+
+    for (const c of s)
+    {
+        if (c === '(' || c === '[' || c === '{')
+            depth++;
+        else if (c === ')' || c === ']' || c === '}')
+            depth--;
+
+        if (c === ',' && depth === 0)
+        {
+            out.push(cur.trim());
+            cur = '';
+        }
+        else
+            cur += c;
+    }
+
+    if (cur.trim())
+        out.push(cur.trim());
+
+    return out;
+}
+
+/**
+ * Brace initializers of square matrices → the constructor form, which hlslMatrixRows then reorders rows → columns.
+ * GLSL has no such initializer for a matrix (it wants one list per column). Forms: N*N flat values (`const float4x4
+ * ThresholdMatrix = { 1, 9, … };`, the dithered opacity tables), N rows in braces (`{ { 1, 2, 3 }, { 4, 5, 6 }, … }`),
+ * N row vectors (`{ float3( … ), … }`, taken apart into the N*N flat values: `( float3( … ) ).x` is a constant
+ * expression where a transpose() of the rows would not be) and an array of matrices
+ * (`float4x4 M[2] = { { … }, { … } };` → `float4x4 M[2] = float4x4[2]( float4x4( … ), float4x4( … ) );`).
+ */
+export function hlslMatrixInitializers(src: string): string
+{
+    const re = /\b(float([234])x\2)(\s+[A-Za-z_]\w*)(\s*\[[^\]]*\])?(\s*=\s*)\{/g;
+    let out = '';
+    let last = 0;
+
+    for (let m = re.exec(src); m; m = re.exec(src))
+    {
+        const open = m.index + m[0].length - 1;
+        let depth = 0;
+        let close = open;
+
+        for (; close < src.length; close++)
+        {
+            if (src[close] === '{')
+                depth++;
+            else if (src[close] === '}' && --depth === 0)
+                break;
+        }
+
+        if (close >= src.length)
+            break;
+
+        // (a second declarator after a comma is not handled: the declaration is left as it is)
+        if (/^\s*,/.test(src.slice(close + 1)))
+            continue;
+
+        const type = m[1];
+        const n = Number(m[2]);
+        const elements = splitTopLevel(src.slice(open + 1, close));
+        const braced = (e: string): string[] => splitTopLevel(e.slice(1, -1));
+        // the constructor arguments of one matrix: flat values, rows in braces, or row vectors
+        const matrix = (items: string[]): string | undefined =>
+        {
+            if (items.length === n * n && !items.some((e) => e.startsWith('{')))
+                return `${type}( ${items.join(', ')} )`;
+
+            if (items.length === n && items.every((e) => e.startsWith('{') && braced(e).length === n))
+                return `${type}( ${items.flatMap(braced).join(', ')} )`;
+
+            // row vectors (not number literals): taken apart into the flat form (a transpose() call would be no constant expression)
+            if (items.length === n && !items.some((e) => e.startsWith('{') || /^[-+]?[\d.]+(?:[eE][-+]?\d+)?[fFhH]?$/.test(e)))
+                return `${type}( ${items.flatMap((e) => 'xyzw'.slice(0, n).split('').map((c) => `( ${e} ).${c}`)).join(', ')} )`;
+
+            return undefined;
+        };
+        let init: string | undefined;
+
+        if (m[4])
+        {
+            // an array: one matrix per element, in braces or a constructor call of its own
+            let list = elements;
+
+            // one flat list of values for all the matrices: regrouped N*N at a time
+            if (list.length > n * n && list.length % (n * n) === 0 && !list.some((e) => e.startsWith('{')))
+            {
+                const groups: string[] = [];
+
+                for (let i = 0; i < list.length; i += n * n)
+                    groups.push(`{ ${list.slice(i, i + n * n).join(', ')} }`);
+
+                list = groups;
+            }
+
+            const each = list.map((e) => (e.startsWith('{') ? matrix(braced(e)) : e));
+            init = each.every((e) => e !== undefined) ? `${type}${m[4].trim()}( ${each.join(', ')} )` : undefined;
+        }
+        else
+            init = matrix(elements);
+
+        if (init === undefined)
+            continue;
+
+        out += `${src.slice(last, m.index)}${type}${m[3]}${m[4] ?? ''}${m[5]}${init}`;
+        last = close + 1;
+        re.lastIndex = close + 1;
+    }
+
+    return out + src.slice(last);
+}
+
+/**
+ * HLSL's `float3x3( a, b, c )` takes rows, GLSL's `mat3( a, b, c )` (the engine's float3x3 on PDX_OPENGL) columns:
+ * the engine's portable code builds matrices with Create2x2/3x3/4x4 (cw/defines_glsl4.fxh), but some writes the
+ * constructor (jomini/shader_utility.fxh `BuildTangentFrame`: the pattern normals of clothes variations came out
+ * rotated, dark patches on the cloth). Constructors of several values outside the Create* helpers get a transpose.
+ */
+export function hlslMatrixRows(src: string): string
+{
+    // the Create* helpers' bodies (they know the GLSL order)
+    const skip: [number, number][] = [];
+    const def = /\bfloat[234]x[234]\s+Create[234]x[234]\s*\([^)]*\)\s*\{/g;
+    let d: RegExpExecArray | null;
+
+    while ((d = def.exec(src)))
+    {
+        let depth = 1;
+        let i = d.index + d[0].length;
+
+        while (i < src.length && depth > 0)
+        {
+            if (src[i] === '{')
+                depth++;
+            else if (src[i] === '}')
+                depth--;
+
+            i++;
+        }
+
+        skip.push([d.index, i]);
+    }
+
+    const re = /\b(float[234]x[234])\s*\(/g;
+    let out = '';
+    let last = 0;
+    let m: RegExpExecArray | null;
+
+    while ((m = re.exec(src)))
+    {
+        if (skip.some(([a, b]) => m!.index >= a && m!.index < b))
+            continue;
+
+        // the arguments up to the matching parenthesis, split at the top-level commas
+        const start = m.index + m[0].length;
+        const args: string[] = [];
+        let depth = 1;
+        let from = start;
+        let i = start;
+
+        while (i < src.length && depth > 0)
+        {
+            const c = src[i];
+
+            if (c === '(')
+                depth++;
+            else if (c === ')')
+                depth--;
+
+            if ((c === ',' && depth === 1) || depth === 0)
+            {
+                args.push(src.slice(from, i));
+                from = i + 1;
+            }
+
+            i++;
+        }
+
+        if (args.length < 2)
+            continue;
+
+        // one value per element (a constant table, `static const float4x4 Dither = float4x4( 0, 8, 2, 10, … )`):
+        // the values reordered rows → columns, still a constant expression (a transpose() call is none: global const
+        // initializers must be constant); vectors (rows): transpose()
+        const n = Number(m[1].slice(-1));
+        out += src.slice(last, m.index) + (args.length === n * n ?
+            `${m[1]}(${Array.from({ length: n * n }, (_, k) => args[(k % n) * n + Math.floor(k / n)]).join(',')} )` :
+            `transpose( ${src.slice(m.index, i)} )`);
+        last = i;
+        re.lastIndex = i;
+    }
+
+    return out + src.slice(last);
 }
 
 /**
  * HLSL converts float to int implicitly (`int Index = UV.x * 255.0;`), GLSL doesn't: integer declarations get an
  * explicit constructor around their initializer (a no-op when it already is an integer).
  */
-function hlslImplicitInts(src: string): string
+export function hlslImplicitInts(src: string): string
 {
     return src.replace(/\b(u?int[234]?)(\s+)([A-Za-z_]\w*)(\s*)=(\s*)([^;,{}]+?)(\s*);/g, (_m, type, s1, name, s2, s3, expr, s4) => `${type}${s1}${name}${s2}=${s3}${type}( ${expr} )${s4};`);
 }
@@ -1119,7 +2160,7 @@ function hlslImplicitInts(src: string): string
 /**
  * Whether prepared vertex code reads bone streams (`Input.BoneIndex[0]`) that no struct declares: the engine
  * declares them only for skinned meshes (`@ifdef PDX_MESH_SKINNED`), and its own skinning code sits under that
- * condition too — whatever still reads them without it needs a skinned mesh.
+ * condition too: whatever still reads them without it needs a skinned mesh.
  */
 function readsBones(src: string): boolean
 {

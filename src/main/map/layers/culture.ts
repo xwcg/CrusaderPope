@@ -3,11 +3,12 @@ import type { MapThing } from '../../../shared/api.ts';
 import { bodyOf, fieldOf, once, Things, type LayerCtx, type LayerDef } from '../layers.ts';
 import { countyKeys, thingsOf } from './basic.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 type Pillar = 'heritage' | 'language';
 
 /**
- * The pillars of a type (common/culture/pillars: `type = heritage`, `language`) with their colour — languages have
- * one (`color`, often a named colour); a heritage without one takes the colour of its first culture — and per culture
+ * The pillars of a type (common/culture/pillars: `type = heritage`, `language`) with their colour (languages have
+ * one (`color`, often a named colour); a heritage without one takes the colour of its first culture) and per culture
  * its pillar (common/culture/cultures: `heritage = heritage_x`, `language = language_x`).
  */
 export function pillars(ctx: LayerCtx, what: Pillar): { list: MapThing[]; ofCulture: Map<string, number>; }
@@ -48,9 +49,9 @@ function pillarLayer(what: Pillar, label: string, row: string): LayerDef
         {
             const { list, ofCulture } = pillars(ctx, what);
             const values = countyKeys(ctx, 'culture').map((k) => (k ? (ofCulture.get(k) ?? -1) : -1));
-            return { id: what, label, title: `The ${what}s of the counties’ cultures at the date`, row, historical: true, things: list, values };
+            return { id: what, label, title: tr('The {what}s of the counties’ cultures at the date', { what }), row, historical: true, things: list, values };
         }
     };
 }
 
-export const CULTURE_LAYERS: LayerDef[] = [pillarLayer('heritage', 'Heritages', 'Heritage'), pillarLayer('language', 'Languages', 'Language')];
+export const CULTURE_LAYERS: LayerDef[] = [pillarLayer('heritage', tr('Heritages'), tr('Heritage')), pillarLayer('language', tr('Languages'), tr('Language'))];

@@ -1,7 +1,7 @@
 /**
  * Title names at a date (docs/map.md, "History and realms"): the name history gives a title (`name = WEST_FRANCIA`,
  * `set_title_name`), else its cultural name for the holder's culture (landed_titles `cultural_names`); and a ruler's
- * primary title named as the game names realms on its map — after the holder's house ("Abbasid Empire") when their
+ * primary title named as the game names realms on its map: after the holder's house ("Abbasid Empire") when their
  * government names realms after dynasties (governments: `dynasty_named_realms`) and their culture's name list allows it
  * (name_lists: `house_based_map_names`), with the tier name the game's flavorization gives the title
  * (common/flavorization); after their culture ("Pechenegs") or house and culture ("Ildeyid Pechenegs") when their
@@ -10,6 +10,7 @@
 import type { GameIndex } from '../indexer/gameIndex.ts';
 import { parse, type PNode } from '../indexer/parser.ts';
 import { T_FAITH } from '../indexer/schema.ts';
+import { faithTable } from '../indexer/layouts.ts';
 import { scalarOf } from './history.ts';
 import type { TitleTree } from './titles.ts';
 
@@ -122,7 +123,7 @@ export class TitleNamer
             }
         }
 
-        // (an entry without a tier is for every tier: _flavourization.info — d_khorezm's "Khwarezmshahdom", k_saxony's "Principality")
+        // (an entry without a tier is for every tier: _flavourization.info, d_khorezm's "Khwarezmshahdom", k_saxony's "Principality")
         for (const tier of Object.values(TIER_WORDS))
         {
             this.flavours.set(
@@ -152,19 +153,14 @@ export class TitleNamer
             });
         }
 
-        for (const religion of idx.names('religion/religion_types'))
+        // (a faith nested in its religion up to 1.19, naming it in its faith_details from 1.20; the faiths of a religion a mod hid are not in the game)
+        for (const [faith, info] of faithTable(idx).faiths)
         {
-            const e = idx.get('religion/religion_types', religion);
+            const religion = idx.get('religion/religion_types', info.religion);
 
-            for (const f of kids(field(kids(e && idx.defNode(e)?.node), 'faiths')))
-                if (f.k)
-                    this.religions.set(f.k, religion);
+            if (idx.get(T_FAITH, faith) && religion && idx.winningDef(religion))
+                this.religions.set(faith, info.religion);
         }
-
-        // (faiths of religions a mod hid are not in the game)
-        for (const f of [...this.religions.keys()])
-            if (!idx.get(T_FAITH, f))
-                this.religions.delete(f);
     }
 
     /** Localization of a key (a loc key or a title key), plain text. */
@@ -365,9 +361,9 @@ export class TitleNamer
 
     /**
      * The realm name of a nomad (governments: `uses_culture_and_house_head_named_realms`; titles opt out with
-     * `can_use_nomadic_naming = no`): the head of the culture's realm after the culture — TITLE_NOMAD_NAME_CULTURE_HEAD
-     * "$CULTURE_COLLECTIVE$" (loc `<culture>_collective_noun`: "Pechenegs") —, the head of a house's after house and
-     * culture — TITLE_NOMAD_NAME_HOUSE_HEAD "$DYNASTY_NAME$ $CULTURE_COLLECTIVE$" ("Ildeyid Pechenegs"); other rulers'
+     * `can_use_nomadic_naming = no`): the head of the culture's realm after the culture (TITLE_NOMAD_NAME_CULTURE_HEAD
+     * "$CULTURE_COLLECTIVE$" (loc `<culture>_collective_noun`: "Pechenegs")), the head of a house's after house and
+     * culture (TITLE_NOMAD_NAME_HOUSE_HEAD "$DYNASTY_NAME$ $CULTURE_COLLECTIVE$" ("Ildeyid Pechenegs")); other rulers'
      * keep their title's name (common/governments/_governments.info).
      */
     nomadRealmName(t: number, holder: NameCtx & { house?: string; dynasty?: string; }, cultureHead: boolean, houseHead: boolean): string | undefined

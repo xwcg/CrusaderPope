@@ -1,13 +1,14 @@
 /**
  * Mod display state shared by the entity list, sidebar, search and galleries (docs/mods.md, "How entries show mod
- * changes"): the mods loaded into the index — read from the index status here, so no component has to pass them
- * down — their colours and wording, and the "mod content only" filter. Also the mods state (the active mod, for the
+ * changes"): the mods loaded into the index (read from the index status here, so no component has to pass them
+ * down), their colours and wording, and the "mod content only" filter. Also the mods state (the active mod, for the
  * editing actions) and pending changes of the active mod's files (the top bar's re-index notice).
  */
 import { useSyncExternalStore } from 'react';
 import type { IndexStatus, ModChange, ModInfo, ModsState, ModTouch } from '../../shared/api';
 import { api } from './api';
 
+import { tr } from '../../shared/i18n';
 export interface LoadedMod
 {
     id: string;
@@ -28,7 +29,7 @@ export interface ModFilter
 }
 
 /**
- * Two or more mods touch the entry (ModTouch.mods, load order) — they change it one over the other, or merge. Not when
+ * Two or more mods touch the entry (ModTouch.mods, load order): they change it one over the other, or merge. Not when
  * they all leave it as the game has it (same), nor for flags and variables (mods using one name).
  */
 export function isConflict(t: ModTouch | undefined): boolean
@@ -114,7 +115,7 @@ export function setModFilter(patch: Partial<ModFilter>): void
     filter.set({ ...filter.get(), ...patch });
 }
 
-// entries a mod removed out of the lists, searches and counts (total conversions remove most of the game's) —
+// entries a mod removed out of the lists, searches and counts (total conversions remove most of the game's),
 // remembered in this viewer's storage
 const HIDE_KEY = 'crusaderpope.hideRemoved';
 const readHide = (): boolean =>
@@ -150,7 +151,7 @@ export function setHideRemoved(on: boolean): void
     }
 }
 
-/** Whether an entry stays in view: removed ones only while they are not hidden — or when the removed are asked for. */
+/** Whether an entry stays in view: removed ones only while they are not hidden, or when the removed are asked for. */
 export function shownWith(t: ModTouch | undefined, hide: boolean, filter?: ModFilter): boolean
 {
     return !hide || t?.state !== 'removed' || (!!filter?.on && filter.state === 'removed');
@@ -247,24 +248,24 @@ export function modShort(name: string): string
     return initials.length >= 2 ? initials.slice(0, 7) : name.slice(0, 11) + '…';
 }
 
-export const STATE_LABEL: Record<ModState, string> = { added: 'Added', overridden: 'Overridden', same: 'Same as the game', removed: 'Removed', merged: 'Merged' };
+export const STATE_LABEL: Record<ModState, string> = { added: tr('Added'), overridden: tr('Overridden'), same: tr('Same as the game'), removed: tr('Removed'), merged: tr('Merged') };
 export const STATE_GLYPH: Record<ModState, string> = { added: '+', overridden: '✎', same: '=', removed: '−', merged: '⊕' };
 export const CONFLICT_GLYPH = '⚔';
 export const DUPLICATE_GLYPH = '⚠';
 /** What a duplicate means (ModTouch.duplicate): the tooltip's and the banner's words. */
-export const DUPLICATE_TEXT = 'Defined twice in the loaded files, and the game takes neither over the other: it reports the duplicate in error.log and which definition it uses is not defined.';
+export const DUPLICATE_TEXT = tr('Defined twice in the loaded files, and the game takes neither over the other: it reports the duplicate in error.log and which definition it uses is not defined.');
 
 /** How to override an entry of a type the game keeps no winner for (after DUPLICATE_TEXT). */
 export function duplicateAdvice(type: string): string
 {
-    return type === 'localization' ? 'Put the text into a localization replace/ folder for a real override.' : 'Replace the whole file (the same path) for a real override.';
+    return type === 'localization' ? tr('Put the text into a localization replace/ folder for a real override.') : tr('Replace the whole file (the same path) for a real override.');
 }
 const STATE_MEANING: Record<ModState, string> = {
-    added: 'not in the game',
-    overridden: "replaces the game's definition",
-    same: "defined again by a mod, but the same as the game's (spacing and comments aside) — nothing changes",
-    removed: 'only in files a mod hid — the game with these mods no longer has it',
-    merged: 'the game and the mods all contribute'
+    added: tr('not in the game'),
+    overridden: tr('replaces the game\'s definition'),
+    same: tr('defined again by a mod, but the same as the game\'s (spacing and comments aside) — nothing changes'),
+    removed: tr('only in files a mod hid — the game with these mods no longer has it'),
+    merged: tr('the game and the mods all contribute')
 };
 
 /** The mod shown for a touch: the winning (or removing) one, last in `mods`. */
@@ -279,24 +280,24 @@ export function touchHeadline(t: ModTouch, mods: LoadedMod[]): string
     const names = t.mods.map((id) => modName(mods, id));
 
     if (t.uses)
-        return `Used by ${t.state === 'merged' ? 'the game and ' : ''}${names.join(', ')}`;
+        return tr('Used by {theGame}{names}', { theGame: t.state === 'merged' ? tr('the game and ') : '', names: names.join(', ') });
 
     if (t.state === 'merged')
-        return `Merged: the game and ${names.join(', ')}`;
+        return tr('Merged: the game and {names}', { names: names.join(', ') });
 
     if (t.state === 'same')
-        return `Same as the game in ${names.join(', ')}`;
+        return tr('Same as the game in {names}', { names: names.join(', ') });
 
-    return `${STATE_LABEL[t.state]} by ${names[names.length - 1] ?? 'a mod'}`;
+    return tr('{STATE_LABEL} by {mod}', { STATE_LABEL: STATE_LABEL[t.state], mod: names[names.length - 1] ?? tr('a mod') });
 }
 
 /**
- * Tooltip of a touch: headline, what the state means, and — when two or more mods touch the entry — the conflict:
+ * Tooltip of a touch: headline, what the state means and, when two or more mods touch the entry, the conflict:
  * every mod in load order and which one decides (the last).
  */
 export function touchText(t: ModTouch, mods: LoadedMod[]): string
 {
-    const lines = [touchHeadline(t, mods), t.uses ? 'a flag or variable their script uses (it has no definition)' : STATE_MEANING[t.state]];
+    const lines = [touchHeadline(t, mods), t.uses ? tr('a flag or variable their script uses (it has no definition)') : STATE_MEANING[t.state]];
 
     if (t.duplicate)
         lines.push('', `${DUPLICATE_GLYPH} ${DUPLICATE_TEXT}`);
@@ -304,10 +305,10 @@ export function touchText(t: ModTouch, mods: LoadedMod[]): string
     if (isConflict(t))
     {
         const last = t.mods.length - 1;
-        const decides = t.state === 'removed' ? 'removes it' : 'wins';
+        const decides = t.state === 'removed' ? tr('removes it') : tr('wins');
         lines.push(
             '',
-            t.state === 'merged' ? `${t.mods.length} mods add to it (on_actions merge — nothing is lost), in load order:` : `Conflict: ${t.mods.length} mods change it — the last in load order ${decides}:`,
+            t.state === 'merged' ? tr('{modsCount} mods add to it (on_actions merge — nothing is lost), in load order:', { modsCount: t.mods.length }) : tr('Conflict: {modsCount} mods change it — the last in load order {decides}:', { modsCount: t.mods.length, decides }),
             ...t.mods.map((id, i) => `${i + 1}. ${modName(mods, id)}${i === last && t.state !== 'merged' ? ` ← ${decides}` : ''}`)
         );
     }

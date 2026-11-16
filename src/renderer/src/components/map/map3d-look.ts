@@ -8,6 +8,7 @@ import type { MapTerrainInfo } from '../../../../shared/api';
 import { imgUrl } from '../../img';
 import { track } from '../../pending';
 
+import { tr } from '../../../../shared/i18n';
 type Look = MapTerrainInfo['look'];
 
 /**
@@ -28,7 +29,7 @@ export function mapFile(name: string): Promise<ArrayBuffer>
         fetch(`ck3://map/${name}`).then((res) =>
         {
             if (!res.ok)
-                throw new Error(`The map file ${name} could not be loaded (${res.status})`);
+                throw new Error(tr('The map file {name} could not be loaded ({status})', { name, status: res.status }));
 
             return res.arrayBuffer();
         })

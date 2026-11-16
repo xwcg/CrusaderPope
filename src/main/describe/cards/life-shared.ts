@@ -3,11 +3,12 @@ import type { PNode } from '../../indexer/parser.ts';
 import type { Entity } from '../../indexer/gameIndex.ts';
 import type { EntityCard, Line, Rich, RichSeg, SectionSource } from '../../../shared/api.ts';
 import { fieldOf, fieldText, type FieldDef } from '../../../shared/fieldCatalog.ts';
-import type { Ctx } from '../describer.ts';
+import { lowerFirst, type Ctx } from '../describer.ts';
 import type { StoryBuilder } from '../stories.ts';
 import { capitalize, formatNumber, humanize, rich } from '../text.ts';
 import type { CardInput } from './types.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 /** A plain value written in a block. */
 export function str(list: PNode[], k: string): string | undefined
 {
@@ -88,7 +89,7 @@ export type SettingValue = (v: string, f: FieldDef) => RichSeg | undefined;
 
 /**
  * One of a definition's settings (its field set in shared/fields/life.ts) as a line anchored for editing: how the field
- * reads, with the entry it names as a link — or what `value` makes of the value (dates, names …).
+ * reads, with the entry it names as a link, or what `value` makes of the value (dates, names …).
  */
 function settingLine(b: StoryBuilder, type: string, c: PNode, ctx: Ctx, value?: SettingValue): Line | undefined
 {
@@ -123,7 +124,7 @@ function settingLine(b: StoryBuilder, type: string, c: PNode, ctx: Ctx, value?: 
 export function settingsSection(b: StoryBuilder, x: CardInput, value?: SettingValue): void
 {
     const lines = x.body.map((c) => settingLine(b, x.e.type, c, x.ctx, value)).filter((l): l is Line => !!l);
-    addSection(x.card, 'Settings', lines, x.own('field', x.e.type));
+    addSection(x.card, tr('Settings'), lines, x.own('field', x.e.type));
 }
 
 /** A trigger block read with a character as root (a scope hint for adding statements). */
@@ -132,7 +133,7 @@ export function charTriggers(b: StoryBuilder, n: PNode, ctx: Ctx): Line[]
     return b.d.triggers(kids(n), { ...ctx, scopeType: 'character' });
 }
 
-/** A trigger block as a section (character root), also when empty — an empty block always passes. */
+/** A trigger block as a section (character root), also when empty: an empty block always passes. */
 export function triggerSection(b: StoryBuilder, card: EntityCard, n: PNode | undefined, title: string, ctx: Ctx, empty?: string): void
 {
     if (!n || !Array.isArray(n.v))
@@ -149,21 +150,25 @@ export function triggerSection(b: StoryBuilder, card: EntityCard, n: PNode | und
 /**
  * A dynamic description as lines: `desc = key`, or blocks of `first_valid` (the first variant whose trigger passes;
  * an unconditional one after conditional ones is the fallback), `random_valid` (one at random of those whose trigger
- * passes) and `triggered_desc = { trigger = { … } desc = key }` — each variant's text in quotes with its conditions.
+ * passes) and `triggered_desc = { trigger = { … } desc = key }`: each variant's text in quotes with its conditions.
  */
 export function descLines(b: StoryBuilder, n: PNode, ctx: Ctx, fill: (r: Rich) => Rich = (r) => r): Line[]
 {
+    // (a variant under conditions reads condition first, its text under it ("If …:" / "If all of these are true:"), as
+    // the effects' ifs do; the fallback "Otherwise:")
     const text = (key: string, node: PNode, conditions?: Line[], otherwise = false): Line =>
     {
-        const l: Line = { text: rich(otherwise ? 'Otherwise: ' : '', '“', fill(trimmed(b.d.loc(key) ?? [humanize(key)])), '”'), icon: 'note', tip: key, locKey: key };
-
-        if (conditions?.length)
-            l.conditions = conditions;
+        // (the text's row is the statement's: edited, removed, its text changed in place)
+        const quote: Line = { text: rich('“', fill(trimmed(b.d.loc(key) ?? [humanize(key)])), '”'), icon: 'note', tip: key, locKey: key };
 
         if (ctx.file)
-            l.src = b.d.anchor(node, ctx, 'other', false);
+            quote.src = b.d.anchor(node, ctx, 'other', false);
 
-        return l;
+        if (!conditions?.length && !otherwise)
+            return quote;
+
+        // (worded as the effects' ifs: a scope's check reads "If [Attacker] is a local player:", not "If [Attacker]::")
+        return b.d.ifLine(conditions?.length ? 'if' : 'else', conditions ?? [], [quote], undefined, ctx);
     };
     const walk = (list: PNode[], firstValid: boolean): Line[] =>
     {
@@ -197,7 +202,7 @@ export function descLines(b: StoryBuilder, n: PNode, ctx: Ctx, fill: (r: Rich) =
 
                 if (c.k === 'random_valid' && inner.length > 1)
                 {
-                    const g: Line = { text: ['One of these, at random:'], icon: 'chance', children: inner };
+                    const g: Line = { text: [tr('One of these, at random:')], icon: 'chance', children: inner };
 
                     if (ctx.file)
                         g.src = b.d.anchor(c, ctx, 'other', true);
@@ -224,7 +229,7 @@ export function durationText(b: StoryBuilder, list: PNode[], ctx: Ctx): Rich | u
         if (v === undefined)
             continue;
 
-        const n = b.d.evalValue(v);
+        const n = b.d.evalValue(b.d.constOf(v, ctx));
         return n !== undefined ? [`${formatNumber(n)} ${n === 1 ? unit.slice(0, -1) : unit}`] : rich(b.d.valueSeg(v, ctx), ` ${unit}`);
     }
 
@@ -272,7 +277,7 @@ export function costLines(b: StoryBuilder, list: PNode[], ctx: Ctx): Line[]
 
 /**
  * The comments about a definition that holds nothing else (`key = {} # what it is`): above it, inside its block, after
- * it on its last line — as note lines.
+ * it on its last line, as note lines.
  */
 export function commentLines(b: StoryBuilder, e: Entity): Line[]
 {
@@ -298,7 +303,7 @@ export function familySeg(b: StoryBuilder, type: 'dynasties' | 'dynasty_houses',
     const d = e && b.idx.defNode(e);
     const key = d && str(kids(d.node), 'name');
     const name = key && b.idx.plainLoc(key);
-    return name && typeof seg !== 'string' ? { ...seg, text: type === 'dynasties' ? `${name} dynasty` : `House ${name}` } : seg;
+    return name && typeof seg !== 'string' ? { ...seg, text: type === 'dynasties' ? tr('{name} dynasty', { name }) : tr('House {name}', { name }) } : seg;
 }
 
 /** A script date in words: `1066.9.15` → "15 September 1066". */

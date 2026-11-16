@@ -293,7 +293,7 @@
 .if-cond.selected > .row-actions {
   display: inline-flex;
 }
-/* a line of a scripted effect the entry calls, not the active mod's: ✎ overrides it first */
+/* a line of a scripted effect the entry calls, not the active mod's: ✎ ✕ ＋ ⤷＋ override it first */
 .line-row:hover > .owner-offer {
   display: inline-flex;
 }
@@ -426,6 +426,15 @@
 .ie-wait {
   color: var(--text-faint);
   font-style: italic;
+}
+/* the value editor: a typed saved scope not in reach (a warning; saving stays allowed) */
+.ie-warn {
+  display: block;
+  max-width: 360px;
+  margin-top: 3px;
+  color: #e0b070;
+  font-size: 11.5px;
+  white-space: normal;
 }
 .ie-script {
   display: block;
@@ -701,6 +710,18 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.cb-item {
+  align-items: center;
+}
+.cb-item button.cb-item-text {
+  padding: 0;
+  text-align: left;
+  color: var(--text);
+}
+.cb-item.undone .cb-item-text {
+  color: var(--text-dim);
+  font-style: italic;
+}
 .cb-item-where {
   flex: none;
   max-width: 45%;
@@ -900,6 +921,17 @@
 }
 .line-row:hover .loc-edit-btn.labelled {
   opacity: 0.8;
+}
+/* the text of a game's (another mod's) scripted effect's line: the hint shows while its editor is open */
+.loc-foreign-hint {
+  display: none;
+  color: var(--accent-dim);
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-style: normal;
+}
+.loc-foreign:has(.loc-editor) > .loc-foreign-hint {
+  display: block;
 }
 .loc-empty {
   color: var(--text-faint);
@@ -1193,6 +1225,29 @@
 .pool-item:hover .pool-x {
   opacity: 1;
 }
+/* "Delay from here…" on a later entry (shown on hover), and the chip of a delay written right before it (✎ ✕) */
+.pool-delay {
+  padding: 0 5px;
+  color: var(--accent);
+  opacity: 0;
+}
+.pool-item:hover .pool-delay {
+  opacity: 0.85;
+}
+.branch-chip.delay-own {
+  display: inline-flex;
+  gap: 2px;
+  padding: 0 4px;
+}
+.branch-chip.delay-own .chip-act {
+  padding: 0 3px;
+  font-size: 11.5px;
+  line-height: 16px;
+  color: var(--text-dim);
+}
+.branch-chip.delay-own .chip-act:hover {
+  color: var(--accent);
+}
 .when-chooser {
   display: flex;
   flex-direction: column;
@@ -1459,10 +1514,10 @@
   margin-left: 8px;
   color: var(--text-dim);
 }
-.crop-fine input {
+.crop-fine .slider {
   width: 180px;
 }
-.crop-fine span {
+.crop-fine .crop-deg {
   width: 42px;
   color: var(--text-faint);
   font-variant-numeric: tabular-nums;

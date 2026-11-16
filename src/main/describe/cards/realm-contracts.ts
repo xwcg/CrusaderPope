@@ -5,6 +5,7 @@ import { capitalize, formatNumber, humanize, rich } from '../text.ts';
 import type { CardFn } from './types.ts';
 import { RealmCard, isBlock, items, join, val, type Block } from './realm-kit.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 /** Shares of an obligation level (0..1 of the subject's income, script math allowed), shown as percents. */
 const SHARES = new Set(['tax', 'levies', 'herd', 'barter_goods', 'prestige', 'piety', 'min_tax', 'min_levies', 'min_herd', 'min_barter_goods']);
 
@@ -37,11 +38,11 @@ function obligationLevel(c: RealmCard, lv: Block): Line
         {
             // a positive score favours the subject: compared when obligations change (defaults to the order of the levels)
             const v = Number(n.v);
-            kids.push({ text: [v > 0 ? `Favours the subject (score ${n.v})` : v < 0 ? `Favours the liege (score ${n.v})` : 'Favours neither side (score 0)'], tip: `score = ${n.v}`, src: c.b.fieldAnchor(n, c.ctx, 'obligation_level') });
+            kids.push({ text: [v > 0 ? tr('Favours the subject (score {v})', { v: n.v }) : v < 0 ? tr('Favours the liege (score {v})', { v: n.v }) : tr('Favours neither side (score 0)')], tip: `score = ${n.v}`, src: c.b.fieldAnchor(n, c.ctx, 'obligation_level') });
         }
         else if (SHARES.has(n.k))
         {
-            const label = capitalize(`${n.k.startsWith('min_') ? 'at least ' : ''}${humanize(n.k.replace(/^min_/, ''))}`);
+            const label = capitalize(`${n.k.startsWith('min_') ? tr('at least ') : ''}${humanize(n.k.replace(/^min_/, ''))}`);
             const src = c.b.fieldAnchor(n, c.ctx, 'obligation_level', isBlock(n));
 
             if (isBlock(n))
@@ -54,15 +55,15 @@ function obligationLevel(c: RealmCard, lv: Block): Line
         }
         else if (n.k === 'parent' && typeof n.v === 'string')
         {
-            kids.push({ text: rich('Follows ', levelName(c, n.v)), tip: `parent = ${n.v}`, src: c.b.fieldAnchor(n, c.ctx, 'obligation_level') });
+            kids.push({ text: rich(tr('Follows '), levelName(c, n.v)), tip: `parent = ${n.v}`, src: c.b.fieldAnchor(n, c.ctx, 'obligation_level') });
         }
         else if ((n.k === 'liege_modifier' || n.k === 'subject_modifier') && isBlock(n))
         {
-            kids.push({ text: [n.k === 'liege_modifier' ? 'The liege gets:' : 'The subject gets:'], children: c.d.statsOf(n.v, c.ctx), icon: 'modifier', src: c.anchor(n, 'modifier', true) });
+            kids.push({ text: [n.k === 'liege_modifier' ? tr('The liege gets:') : tr('The subject gets:')], children: c.d.statsOf(n.v, c.ctx), icon: 'modifier', src: c.anchor(n, 'modifier', true) });
         }
         else if ((n.k === 'is_shown' || n.k === 'is_valid') && isBlock(n))
         {
-            kids.push({ text: [n.k === 'is_shown' ? 'Shown when:' : 'Valid when:'], conditions: c.conditions(n), src: c.anchor(n, 'trigger', true) });
+            kids.push({ text: [n.k === 'is_shown' ? tr('Shown when:') : tr('Valid when:')], conditions: c.conditions(n), src: c.anchor(n, 'trigger', true) });
         }
         else if (typeof n.v === 'string')
             fields.push(n);
@@ -71,7 +72,7 @@ function obligationLevel(c: RealmCard, lv: Block): Line
     }
 
     kids.push(...c.fields('obligation_level', fields));
-    return { text: rich(levelName(c, lv.k!), val(lv.v, 'default') === 'yes' ? ' — the default' : ''), children: kids, tip: lv.k!, src: c.b.fieldAnchor(lv, c.ctx, 'obligation_level', true) };
+    return { text: rich(levelName(c, lv.k!), val(lv.v, 'default') === 'yes' ? tr(' — the default') : ''), children: kids, tip: lv.k!, src: c.b.fieldAnchor(lv, c.ctx, 'obligation_level', true) };
 }
 
 /** A subject contract (an obligation of vassals or tributaries): its levels, when it is shown or can change, the AI's wishes. */
@@ -82,17 +83,17 @@ const contract: CardFn = (b, x) =>
     const levels = (c.block('obligation_levels')?.v ?? []).filter(isBlock);
 
     if (levels.length > 1)
-        c.fact(`${levels.length} levels`);
+        c.fact(tr('{length} levels', { length: levels.length }));
 
-    c.section('Levels', levels.map((lv) => obligationLevel(c, lv)));
-    c.settings('Settings', 'subject_contracts/contracts');
-    c.triggers('is_shown', 'Shown when');
-    c.triggers('can_be_changed', 'Can be changed when');
+    c.section(tr('Levels'), levels.map((lv) => obligationLevel(c, lv)));
+    c.settings(tr('Settings'), 'subject_contracts/contracts');
+    c.triggers('is_shown', tr('Shown when'));
+    c.triggers('can_be_changed', tr('Can be changed when'));
 
     // the AI's wishes per level
     for (const lv of levels)
     {
-        const wishes = lv.v.filter((n) => n.k === 'ai_liege_desire' || n.k === 'ai_subject_desire').map((n) => c.weight(n, n.k === 'ai_liege_desire' ? 'The liege wants it' : 'The subject wants it'));
+        const wishes = lv.v.filter((n) => n.k === 'ai_liege_desire' || n.k === 'ai_subject_desire').map((n) => c.weight(n, n.k === 'ai_liege_desire' ? tr('The liege wants it') : tr('The subject wants it')));
 
         if (wishes.length)
             c.aiMore([{ text: levelName(c, lv.k!), children: wishes, tip: lv.k! }]);
@@ -106,10 +107,10 @@ const contractGroup: CardFn = (b, x) =>
 {
     const c = new RealmCard(b, x);
     const list = c.block('contracts');
-    c.section('Contracts', items(list).map((n): Line => ({ text: [b.d.ref(n.v as string, ['subject_contracts/contracts'])], tip: n.v as string, src: c.anchor(n, 'other') })));
-    c.settings('Settings', 'subject_contracts/groups');
-    c.triggers('is_valid_tributary_contract', 'Valid for a tributary when', 'character');
-    c.triggers('tributary_can_break_free', 'The tributary can break free when', 'character');
+    c.section(tr('Contracts'), items(list).map((n): Line => ({ text: [b.d.ref(n.v as string, ['subject_contracts/contracts'])], tip: n.v as string, src: c.anchor(n, 'other') })));
+    c.settings(tr('Settings'), 'subject_contracts/groups');
+    c.triggers('is_valid_tributary_contract', tr('Valid for a tributary when'), 'character');
+    c.triggers('tributary_can_break_free', tr('The tributary can break free when'), 'character');
     return c.done();
 };
 
@@ -121,9 +122,9 @@ function leaseSplit(c: RealmCard, n: Block): Line[]
     for (const s of n.v)
     {
         if (s.k === 'lease_liege' && typeof s.v === 'string')
-            out.push({ text: [`${s.v}% to the lease liege`], icon: 'gold', tip: `lease_liege = ${s.v}`, src: c.anchor(s, 'other') });
+            out.push({ text: [tr('{v}% to the lease liege', { v: s.v })], icon: 'gold', tip: `lease_liege = ${s.v}`, src: c.anchor(s, 'other') });
         else if (s.k === 'rest' && typeof s.v === 'string')
-            out.push({ text: [`The rest to the ${s.v}`], icon: 'gold', tip: `rest = ${s.v}`, src: c.anchor(s, 'other') });
+            out.push({ text: [tr('The rest to the {v}', { v: s.v })], icon: 'gold', tip: `rest = ${s.v}`, src: c.anchor(s, 'other') });
         else if (s.k === 'rest' && isBlock(s))
         {
             const who = val(s.v, 'beneficiary') ?? 'lessee';
@@ -131,13 +132,48 @@ function leaseSplit(c: RealmCard, n: Block): Line[]
             const max = val(s.v, 'max');
             const weight = s.v.find((w) => w.k === 'weight');
             out.push({
-                text: [`Of the rest, the ${who} gets a share${max ? ` of up to ${max}%` : ''}, the ${other} the remainder`],
+                text: [tr('Of the rest, the {who} gets a share{value}, the {other} the remainder', { who, value: max ? ` of up to ${max}%` : '', other })],
                 icon: 'gold',
-                children: weight ? [c.weight(weight, `The ${who}’s share`)] : undefined,
+                children: weight ? [c.weight(weight, tr('The {who}’s share', { who }))] : undefined,
                 src: c.anchor(s, 'other')
             });
         }
     }
+
+    return out;
+}
+
+/** 1.20's split (`tax_split` / `levy_split`): flat shares of the whole: the lease liege's, the head of faith's, the ruler's (each a value or a formula); the lessee keeps the rest. */
+const SHARE_LABELS: Record<string, string> = {
+    lease_liege: tr('The lease liege’s share'),
+    top_lease_liege_direct: tr('Straight to the top lease liege (head of faith)'),
+    ruler: tr('The ruler’s share')
+};
+
+function shareSplit(c: RealmCard, n: Block): Line[]
+{
+    const out: Line[] = [];
+
+    for (const s of n.v)
+    {
+        const label = s.k && SHARE_LABELS[s.k];
+
+        if (label && typeof s.v === 'string')
+        {
+            const v = c.num(s.v);
+            out.push({ text: rich(label, ': ', v !== undefined ? { text: `${formatNumber(v * 100)}%`, kind: 'value', tip: s.v } : c.d.valueSeg(s.v, c.ctx)), icon: 'gold', tip: `${s.k} = ${s.v}`, src: c.anchor(s, 'other') });
+        }
+        else if (label)
+            out.push({ ...c.weight(s, label), icon: 'gold' });
+        else if (s.k === 'ruler_max' && typeof s.v === 'string')
+        {
+            const v = c.num(s.v);
+            out.push({ text: [tr('The ruler’s share is at most {value}', { value: v !== undefined ? formatNumber(v * 100) + '%' : s.v })], icon: 'gold', tip: `ruler_max = ${s.v}`, src: c.anchor(s, 'other') });
+        }
+    }
+
+    if (out.length)
+        out.push({ text: [tr('The lessee keeps the rest')], icon: 'gold' });
 
     return out;
 }
@@ -150,9 +186,9 @@ const lease: CardFn = (b, x) =>
     const lines: Line[] = [];
 
     if (holdings)
-        lines.push({ text: rich('No penalty for the wrong holding type: ', join(items(holdings).map((n) => b.d.ref(n.v as string, ['holdings'])))), tip: 'valid_holdings', src: c.anchor(holdings, 'other') });
+        lines.push({ text: rich(tr('No penalty for the wrong holding type: '), join(items(holdings).map((n) => b.d.ref(n.v as string, ['holdings'])))), tip: 'valid_holdings', src: c.anchor(holdings, 'other') });
 
-    c.settings('Settings', 'lease_contracts', lines);
+    c.settings(tr('Settings'), 'lease_contracts', lines);
     const h = c.block('hierarchy');
 
     if (h)
@@ -162,24 +198,33 @@ const lease: CardFn = (b, x) =>
         for (const n of h.v)
         {
             if (n.k === 'lessee' && typeof n.v === 'string')
-                rows.push({ text: rich('The lessee: ', b.d.valueSeg(n.v, c.ctx)), icon: 'scope', tip: `lessee = ${n.v}`, src: c.anchor(n, 'other') });
+                rows.push({ text: rich(tr('The lessee: '), b.d.valueSeg(n.v, c.ctx)), icon: 'scope', tip: `lessee = ${n.v}`, src: c.anchor(n, 'other') });
             else if (n.k === 'ruler_valid')
-                rows.push({ text: ['Rulers who use it:'], conditions: c.conditions(n, 'character'), src: c.anchor(n, 'trigger', true) });
+                rows.push({ text: [tr('Rulers who use it:')], conditions: c.conditions(n, 'character'), src: c.anchor(n, 'trigger', true) });
             else if (n.k === 'liege_or_vassal_valid')
-                rows.push({ text: ['Rulers stay in one hierarchy (with the target) when:'], conditions: c.conditions(n, 'character'), src: c.anchor(n, 'trigger', true) });
+                rows.push({ text: [tr('Rulers stay in one hierarchy (with the target) when:')], conditions: c.conditions(n, 'character'), src: c.anchor(n, 'trigger', true) });
             else if (n.k === 'barony_valid')
-                rows.push({ text: ['Baronies leased out automatically:'], conditions: c.conditions(n, 'landed_title'), src: c.anchor(n, 'trigger', true) });
+                rows.push({ text: [tr('Baronies leased out automatically:')], conditions: c.conditions(n, 'landed_title'), src: c.anchor(n, 'trigger', true) });
         }
 
-        c.section('Hierarchy', rows);
+        c.section(tr('Hierarchy'), rows);
     }
 
-    for (const [k, title] of [['tax', 'Taxes'], ['levy', 'Levies']])
+    for (const [k, title] of [['tax', tr('Taxes')], ['levy', tr('Levies')]])
     {
         const n = c.block(k);
 
         if (n)
             c.section(title, leaseSplit(c, n));
+    }
+
+    // (1.20)
+    for (const [k, title] of [['tax_split', tr('Taxes')], ['levy_split', tr('Levies')]])
+    {
+        const n = c.block(k);
+
+        if (n)
+            c.section(title, shareSplit(c, n));
     }
 
     return c.done();
@@ -189,12 +234,12 @@ const lease: CardFn = (b, x) =>
 const hook: CardFn = (b, x) =>
 {
     const c = new RealmCard(b, x);
-    c.fact(val(x.body, 'strong') === 'yes' ? 'Strong hook' : 'Weak hook');
+    c.fact(val(x.body, 'strong') === 'yes' ? tr('Strong hook') : tr('Weak hook'));
     const exp = c.node('expiration_days');
     const days = typeof exp?.v === 'string' ? Number(exp.v) : -1;
 
     if (days < 0)
-        c.fact('Never expires');
+        c.fact(tr('Never expires'));
 
     const lines: Line[] = [];
 
@@ -204,15 +249,15 @@ const hook: CardFn = (b, x) =>
         const l = c.field('hook_types', exp);
 
         if (days < 0)
-            l.text = ['Never expires'];
+            l.text = [tr('Never expires')];
         else if (days > 0 && days % 365 === 0)
-            l.text = rich(l.text, ` (${days / 365} year${days === 365 ? '' : 's'})`);
+            l.text = rich(l.text, tr(' ({value} year{value2})', { value: days / 365, value2: days === 365 ? '' : 's' }));
 
         lines.push(l);
     }
 
-    c.settings('Settings', 'hook_types', lines);
-    c.effects('on_used', 'When used', 'character');
+    c.settings(tr('Settings'), 'hook_types', lines);
+    c.effects('on_used', tr('When used'), 'character');
     return c.done();
 };
 

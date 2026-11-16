@@ -12,6 +12,7 @@ import type { MapOverlaysInfo } from '../../shared/api.ts';
 import { parse } from '../indexer/parser.ts';
 import { OVERLAYS_VERSION, readOverlays, type OverlaysInput, type OverlaysMeta } from './overlays-build.ts';
 
+import { tr } from '../../shared/i18n.ts';
 /** the overlays of the loaded map files (built once per version of them) */
 let job: { key: string; job: Promise<OverlaysMeta>; } | null = null;
 
@@ -22,11 +23,41 @@ function own(b: Uint8Array): Uint8Array
 }
 
 /**
- * The rivers' width classes and the widths of the narrowest and widest (map pixels): common/defines NRivers — every
+ * The rivers' width classes and the widths of the narrowest and widest (map pixels): common/defines NRivers, every
  * file that has it, later ones win (vanilla jomini/rivers.txt: `NUM_WIDTH_PIXEL_VALUES = 13`, `WIDTH_MIN = 1.0`,
  * `WIDTH_MAX = 4.0`).
  */
 function riverWidths(vfs: GameFiles): { classes: number; widths: [number, number]; }
+{
+    const d = riverDefines(vfs);
+    return { classes: Math.max(2, Math.round(d.get('NUM_WIDTH_PIXEL_VALUES') ?? 13)), widths: [d.get('WIDTH_MIN') ?? 1, d.get('WIDTH_MAX') ?? 4] };
+}
+
+/** How far a river fades in from its source and out at its end (map pixels: `FADE_IN_DISTANCE` 10, `FADE_OUT_DISTANCE` 5). */
+function riverFades(vfs: GameFiles): [number, number]
+{
+    const d = riverDefines(vfs);
+    return [Math.max(0, d.get('FADE_IN_DISTANCE') ?? 10), Math.max(0, d.get('FADE_OUT_DISTANCE') ?? 5)];
+}
+
+/**
+ * How the game's rivers move (gfx/map/rivers/rivers.settings: `"FlowNormalUvScale" = 0.4`, `"FlowNormalSpeed" = 0.075`,
+ * `"NoiseScale" = 0.25`, `"NoiseSpeed" = 2`): the 3D map's flow.
+ */
+function riverFlow(vfs: GameFiles): [number, number, number, number]
+{
+    const text = vfs.readText('gfx/map/rivers/rivers.settings', { engine: true }) ?? '';
+    const v = (k: string, d: number): number =>
+    {
+        const m = new RegExp('"' + k + '"\\s*=\\s*([-\\d.]+)').exec(text);
+        const n = m ? parseFloat(m[1]) : NaN;
+        return Number.isFinite(n) ? n : d;
+    };
+    return [v('FlowNormalUvScale', 0.4), v('FlowNormalSpeed', 0.075), v('NoiseScale', 0.25), v('NoiseSpeed', 2)];
+}
+
+/** common/defines NRivers: every file that has it, later ones win. */
+function riverDefines(vfs: GameFiles): Map<string, number>
 {
     const d = new Map<string, number>();
 
@@ -50,7 +81,7 @@ function riverWidths(vfs: GameFiles): { classes: number; widths: [number, number
             }
     }
 
-    return { classes: Math.max(2, Math.round(d.get('NUM_WIDTH_PIXEL_VALUES') ?? 13)), widths: [d.get('WIDTH_MIN') ?? 1, d.get('WIDTH_MAX') ?? 4] };
+    return d;
 }
 
 /** Builds the overlays on mapOverlaysWorker.js from the files' contents. */
@@ -67,7 +98,7 @@ function build(input: OverlaysInput): Promise<OverlaysMeta>
             if (m.meta)
                 resolve(m.meta);
             else
-                reject(new Error(m.error ?? 'No map overlays'));
+                reject(new Error(m.error ?? tr('No map overlays')));
         });
         worker.once('error', reject);
     });
@@ -86,8 +117,10 @@ export async function mapOverlays(vfs: GameFiles, files: { provinces: string; de
     if (!pf || !df || (!rf && !af))
         return null;
 
+    // (the fades are baked into the lines' widths: a define changed is another build)
+    const fades = riverFades(vfs);
     const key = createHash('sha1')
-        .update(JSON.stringify([OVERLAYS_VERSION, ...[rf, af, pf, df, mf].map((f) => f && [vfs.where(f), vfs.stat(f).size, vfs.stat(f).mtime])]))
+        .update(JSON.stringify([OVERLAYS_VERSION, fades, ...[rf, af, pf, df, mf].map((f) => f && [vfs.where(f), vfs.stat(f).size, vfs.stat(f).mtime])]))
         .digest('hex')
         .slice(0, 16);
     let current = job?.key === key ? job : null;
@@ -104,8 +137,8 @@ export async function mapOverlays(vfs: GameFiles, files: { provinces: string; de
             const provinces = vfs.read(pf);
             const rivers = rf && vfs.read(rf);
             run = provinces
-                ? build({ provinces: own(provinces), ...(rivers ? { rivers: own(rivers) } : {}), definitions: vfs.readText(df) ?? '', defaultMap, ...(af ? { adjacencies: vfs.readText(af) ?? '' } : {}), dir, key })
-                : Promise.reject(new Error('Cannot read the province map'));
+                ? build({ provinces: own(provinces), ...(rivers ? { rivers: own(rivers) } : {}), fades, definitions: vfs.readText(df) ?? '', defaultMap, ...(af ? { adjacencies: vfs.readText(af) ?? '' } : {}), dir, key })
+                : Promise.reject(new Error(tr('Cannot read the province map')));
         }
 
         const started = { key, job: run };
@@ -119,5 +152,5 @@ export async function mapOverlays(vfs: GameFiles, files: { provinces: string; de
     }
 
     const { rivers, ...meta } = await current.job;
-    return { ...meta, ...(rivers ? { rivers: { ...rivers, ...riverWidths(vfs) } } : {}) };
+    return { ...meta, ...(rivers ? { rivers: { ...rivers, ...riverWidths(vfs), flow: riverFlow(vfs) } } : {}) };
 }

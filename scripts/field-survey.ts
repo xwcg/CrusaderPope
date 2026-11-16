@@ -1,16 +1,18 @@
-// Which settings a type's definitions write — the guide for the statement picker's field catalog (shared/fieldCatalog.ts,
+// Which settings a type's definitions write: the guide for the statement picker's field catalog (shared/fieldCatalog.ts,
 // docs/picker.md "Modifiers and settings"): per type, its top-level keys with a scalar value, how many definitions write
 // each, the value kinds seen (yes/no, number, an entry of a type, text), the most common values and the type's .info
 // comment on the key; keys the catalog has a field for are marked ✓. Types without a card builder of their own (their
 // statements show as "Settings") first; blocks and condition / effect blocks are left out.
 // Usage: node --experimental-strip-types --no-warnings --max-old-space-size=6000 scripts/field-survey.ts [type …] [--min=0.05]
-import { GameIndex, resolveGameDir } from '../src/main/indexer/gameIndex.ts';
+// The index: scripts/fast-index.ts (parse threads, cached in %TEMP%/ckp-index-cache; FRESH=1 builds it anew).
+import { resolveGameDir } from '../src/main/indexer/gameIndex.ts';
 import { GameFiles } from '../src/main/mods/gamefiles.ts';
 import { StoryBuilder } from '../src/main/describe/stories.ts';
 import { TYPE_CARDS } from '../src/main/describe/cards/index.ts';
 import { CONTEXT_RULES } from '../src/main/indexer/schema.ts';
 import { FIELDS } from '../src/shared/fieldCatalog.ts';
 import { defaultInstall } from './ck3-install.ts';
+import { fastIndex } from './fast-index.ts';
 
 const args = process.argv.slice(2);
 const min = Number(args.find((a) => a.startsWith('--min='))?.slice(6) ?? 0.05);
@@ -20,8 +22,7 @@ const gameDir = resolveGameDir(defaultInstall());
 if (!gameDir)
     throw new Error('No CK3 game folder');
 
-const idx = new GameIndex(new GameFiles(gameDir), 'english');
-idx.build();
+const idx = await fastIndex(new GameFiles(gameDir), { cache: true });
 const sb = new StoryBuilder(idx);
 const SKIP = new Set(['events', 'on_action', 'scripted_effects', 'scripted_triggers', 'script_values', 'localization', 'flag', 'variable', 'images', 'models', 'modifiers', 'opinion_modifiers']);
 const types = (only.length ? only : idx.types().map((t) => t.id)).filter((t) => !SKIP.has(t));

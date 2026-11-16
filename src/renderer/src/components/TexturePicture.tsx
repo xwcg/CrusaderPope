@@ -4,13 +4,14 @@ import type { Navigate } from '../App';
 import { imgUrl } from '../img';
 import { useGfxRevision } from '../revision';
 
+import { tr } from '../../../shared/i18n';
 const CHANNELS = [
-    ['', 'RGBA', 'As the game stores it, transparency shown as a checkerboard'],
-    ['rgb', 'RGB', 'Colour without the alpha channel'],
-    ['r', 'R', 'Red channel as grey'],
-    ['g', 'G', 'Green channel as grey'],
-    ['b', 'B', 'Blue channel as grey'],
-    ['a', 'A', 'Alpha channel as grey (packed maps keep data here: normal Y, roughness, palette masks)']
+    ['', tr('RGBA'), tr('As the game stores it, transparency shown as a checkerboard')],
+    ['rgb', tr('RGB'), tr('Colour without the alpha channel')],
+    ['r', tr('R'), tr('Red channel as grey')],
+    ['g', tr('G'), tr('Green channel as grey')],
+    ['b', tr('B'), tr('Blue channel as grey')],
+    ['a', tr('A'), tr('Alpha channel as grey (packed maps keep data here: normal Y, roughness, palette masks)')]
 ] as const;
 
 /** A game image at card size with channel inspection (textures pack separate data into R, G, B and A). */
@@ -73,7 +74,7 @@ export function TextureUsers(props: { path: string; navigate: Navigate; }): Reac
     return (
         <div className="texture-users">
             <div>
-                <div className="rpg-section-title">Used by 3D models ({rows.length})</div>
+                <div className="rpg-section-title">{tr('Used by 3D models ({rowsCount})', { rowsCount: rows.length })}</div>
                 <div className="tex-users">
                     {rows.slice(0, 200).map(([asset, e]) => (
                         <div key={asset} className="tex-user">
@@ -87,7 +88,7 @@ export function TextureUsers(props: { path: string; navigate: Navigate; }): Reac
                             </span>
                         </div>
                     ))}
-                    {rows.length > 200 && <div className="pr-dim">… and {rows.length - 200} more</div>}
+                    {rows.length > 200 && <div className="pr-dim">{tr('… and {more} more', { more: rows.length - 200 })}</div>}
                 </div>
             </div>
         </div>

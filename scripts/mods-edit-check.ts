@@ -2,6 +2,8 @@
 // temp mod: builds the vanilla index in Node, copies definitions into the mod and checks the files written. The real
 // user folder is never used.
 // Usage: node --experimental-strip-types --experimental-sqlite --no-warnings --max-old-space-size=6000 scripts/mods-edit-check.ts [keep]
+// The vanilla index: scripts/fast-index.ts (parse threads, cached in %TEMP%/ckp-index-cache; FRESH=1 builds it anew); the index
+// with the mod is a fresh build on parse threads.
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -14,6 +16,7 @@ import type { ModsHost } from '../src/main/mods/manager.ts';
 import { formatScript } from '../src/shared/scriptFormat.ts';
 import type { OverrideSource } from '../src/main/indexer/override.ts';
 import { defaultInstall } from './ck3-install.ts';
+import { buildIndex, fastIndex } from './fast-index.ts';
 
 const install = defaultInstall();
 const gameDir = resolveGameDir(install);
@@ -37,8 +40,7 @@ const check = (ok: unknown, what: string): void =>
 };
 
 console.log('building the vanilla index …');
-const idx = new GameIndex(new GameFiles(gameDir), 'english');
-idx.build();
+const idx = await fastIndex(new GameFiles(gameDir), { cache: true });
 const settings: Settings = { gameDir: install, language: 'english', userDir: tmp, activeMod: 'mod/edit_test.mod' };
 let reindexed = 0;
 const wrote: string[] = [];
@@ -50,7 +52,7 @@ const host: ModsHost = {
     reindex: () => reindexed++,
     query: async <T>(method: string, ...params: unknown[]): Promise<T> => (idx as unknown as Record<string, (...a: unknown[]) => T>)[method](...params),
     wrote: (files) => wrote.push(...files),
-    // (undo steps: kept there — mods/undo.ts)
+    // (undo steps: kept there, mods/undo.ts)
     dataDir: () => join(tmp, 'data')
 };
 const src = (type: string, name: string): OverrideSource => idx.overrideSource(type, name, settings.activeMod)!;
@@ -154,7 +156,7 @@ try
     check(r.rel === titlesFile && lineOf(t, r.line!).trim() === 'c_ile_de_france = {' && r.notes.some((n) => /without its de jure vassals/.test(n)), `copied into ${r.rel}:${r.line} (${r.notes[0]})`);
     r = await applyOverride(host, { type: 'landed_titles', name: 'c_ile_de_france', mode: 'copy' });
     check(r.action === 'opened' && lineOf(modText(titlesFile), r.line!).trim() === 'c_ile_de_france = {', 'copy again: opens it (found inside the empty blocks)');
-    // its liege afterwards: a block of its own — the county the mod changed is not written again
+    // its liege afterwards: a block of its own; the county the mod changed is not written again
     r = await applyOverride(host, { type: 'landed_titles', name: 'k_france', mode: 'copy' });
     t = modText(titlesFile);
     const heads = (x: string, k: string): number => x.split(/\r?\n/).filter((l) => l.trim().startsWith(k + ' = {')).length;
@@ -187,10 +189,9 @@ try
     const { modsState } = await import('../src/main/mods/manager.ts');
     const info = (await modsState(host)).mods.find((m) => m.id === settings.activeMod)!;
     console.log('building the index with the mod …');
-    const withMod = new GameIndex(new GameFiles(gameDir, [info]), 'english');
-    withMod.build();
+    const withMod = await buildIndex(new GameIndex(new GameFiles(gameDir, [info]), 'english'));
     const bd = withMod.detail('traits', 'brave')!;
-    // (brave's text is the game's, but its file's @neg_compat_high is -31, not -30: not the same as the game — docs/mods.md)
+    // (brave's text is the game's, but its file's @neg_compat_high is -31, not -30: not the same as the game, docs/mods.md)
     check(bd.mod?.state === 'overridden' && bd.mod.mods.join() === info.id && bd.defs[bd.defs.length - 1].file === traitsFile, `brave: the mod's copy wins, overridden through its file's changed constant (${bd.mod?.state}), in ${bd.defs[bd.defs.length - 1].file}`);
     const od = withMod.detail('traits', other)!;
     check(od.mod?.state === 'same', `${other}: its copy in a file with the game's constants is the same as the game (${od.mod?.state})`);
@@ -206,7 +207,7 @@ try
     check(cd.mod?.state === 'overridden' && cd.defs[cd.defs.length - 1].file === titlesFile, 'c_ile_de_france: the mod’s copy wins');
     const fd = withMod.detail('landed_titles', 'e_france')!;
     const vd = withMod.detail('landed_titles', 'd_valois')!;
-    check(!fd.mod && fd.defs.some((d) => d.path && d.file === titlesFile) && !withMod.overrideSource('landed_titles', 'e_france', info.id)!.inMod, 'e_france: only the way in — no mod touch, the game’s definition wins, no definition of the mod’s own');
+    check(!fd.mod && fd.defs.some((d) => d.path && d.file === titlesFile) && !withMod.overrideSource('landed_titles', 'e_france', info.id)!.inMod, 'e_france: only the way in; no mod touch, the game’s definition wins, no definition of the mod’s own');
     check(!vd.mod && !withMod.overrideSource('landed_titles', 'd_valois', info.id)!.inMod && withMod.detail('landed_titles', 'k_france')?.mod?.state === 'overridden', 'd_valois: only the way in (untouched); k_france: its own copy wins');
     check(withMod.detail('landed_titles', 'c_edit_test_copy')?.mod?.state === 'added', 'c_edit_test_copy: added by the mod');
 
@@ -219,20 +220,20 @@ try
     settings.customModLists = [{ id: 'order', name: 'Order', mods: [{ id: 'mod/edit_test.mod', enabled: true }, { id: 'mod/later_mod.mod', enabled: true }] }];
     settings.modList = 'custom:order';
     plan = await planOverride(host, 'scripted_effects', 'add_achievement_flag_effect');
-    check(plan.mod?.loaded && /Later Mod loads after Edit Test and replaces common\/scripted_effects \(replace_path\)/.test(plan.copy.disabled ?? ''), 'replace_path of a later mod: copy refused — ' + plan.copy.disabled);
-    check(/replaces common\/scripted_effects/.test(plan.file.disabled ?? ''), 'and the whole file too — ' + plan.file.disabled);
-    // (the mod has diligent already — its copy of 00_traits.txt: opened, with the reason it doesn't load)
+    check(plan.mod?.loaded && /Later Mod loads after Edit Test and replaces common\/scripted_effects \(replace_path\)/.test(plan.copy.disabled ?? ''), 'replace_path of a later mod: copy refused: ' + plan.copy.disabled);
+    check(/replaces common\/scripted_effects/.test(plan.file.disabled ?? ''), 'and the whole file too: ' + plan.file.disabled);
+    // (the mod has diligent already; its copy of 00_traits.txt: opened, with the reason it doesn't load)
     plan = await planOverride(host, 'traits', 'diligent');
-    check(plan.copy.open?.rel === 'common/traits/00_traits.txt' && plan.copy.notes.some((n) => /replaces common\/traits/.test(n)), `the mod's own definition in a replaced folder: opened, noted — ${plan.copy.notes.join(' ')}`);
+    check(plan.copy.open?.rel === 'common/traits/00_traits.txt' && plan.copy.notes.some((n) => /replaces common\/traits/.test(n)), `the mod's own definition in a replaced folder: opened, noted: ${plan.copy.notes.join(' ')}`);
     plan = await planOverride(host, 'localization', 'trait_calm');
-    check(plan.copy.target === 'localization/replace/english/edit_test_l_english.yml' && plan.copy.notes.some((n) => /Not in localization\/english\/replace/.test(n)), `loc: the other replace folder — ${plan.copy.target} (${plan.copy.notes[0]})`);
+    check(plan.copy.target === 'localization/replace/english/edit_test_l_english.yml' && plan.copy.notes.some((n) => /Not in localization\/english\/replace/.test(n)), `loc: the other replace folder, ${plan.copy.target} (${plan.copy.notes[0]})`);
     r = await applyOverride(host, { type: 'localization', name: 'trait_calm', mode: 'copy' });
     check(r.action === 'copied' && r.rel === 'localization/replace/english/edit_test_l_english.yml', 'loc copy written to ' + r.rel);
     plan = await planOverride(host, 'localization', 'trait_calm');
     check(plan.copy.open?.rel === r.rel, 'the key is found there next time: ' + plan.copy.open?.rel);
     const { newEntryPlan } = await import('../src/main/mods/create.ts');
     const np = await newEntryPlan(host, 'traits');
-    check(/replaces common\/traits/.test(np.problem ?? ''), 'a new trait: refused — ' + np.problem);
+    check(/replaces common\/traits/.test(np.problem ?? ''), 'a new trait: refused: ' + np.problem);
     // the active mod after it: fine again
     settings.customModLists = [{ id: 'order', name: 'Order', mods: [{ id: 'mod/later_mod.mod', enabled: true }, { id: 'mod/edit_test.mod', enabled: true }] }];
     plan = await planOverride(host, 'scripted_effects', 'add_achievement_flag_effect');
@@ -244,11 +245,11 @@ try
     const create = await import('../src/main/mods/create.ts');
     const modId = settings.activeMod!;
     const kinds = journalOf(host).list(modId).map((s) => s.kind);
-    // (the overrides and the duplicate above — the files written by hand in between are no steps)
+    // (the overrides and the duplicate above; the files written by hand in between are no steps)
     check(kinds.length > 8 && kinds.every((k) => k === 'override' || k === 'create'), `${kinds.length} steps: ${journalOf(host).list(modId).map((s) => s.label).join('; ')}`);
     // a new trait: its file and its texts' file, one step; a duplicate: another
     const locRel = 'localization/english/edit_test_l_english.yml';
-    // (the texts' file may be there already — then undo gives it back as it was, else removes it)
+    // (the texts' file may be there already: then undo gives it back as it was, else removes it)
     const locBefore = existsSync(join(root, locRel)) ? readFileSync(join(root, locRel), 'utf8') : null;
     const made = await create.createEntry(host, { type: 'traits', key: 'edit_test_new', name: 'Newly' });
     check(made.step !== undefined && existsSync(join(root, made.rel)) && existsSync(join(root, locRel)), `new trait: ${made.rel} and ${locRel} (step ${made.step})`);
@@ -280,7 +281,7 @@ try
 }
 finally
 {
-    console.log(failures ? `\n${failures} FAILED` : '\nall ok', '— temp user folder', tmp);
+    console.log(failures ? `\n${failures} FAILED` : '\nall ok', `(temp user folder ${tmp})`);
 
     if (process.argv[2] !== 'keep')
         rmSync(tmp, { recursive: true, force: true });

@@ -28,6 +28,10 @@ them as something you can browse, read and change - without opening a text edito
 - Image and 3D model galleries by folder, coats of arms drawn as in the game.
 
 **Work with mods**
+- **Fix for 1.20…**: brings a mod made for an older version of the game to 1.20 on its own. It reads the mod against
+  the game, works out what 1.20 changed underneath it and writes a patch mod that loads right after it - the mod
+  itself stays as it is. It won't settle every edge case (it tells you which ones are left), but for nearly everything
+  else it gets you most of the way there.
 - Reads your launcher's mods and playsets, shows exactly what each loaded mod adds, changes or removes, and where mods
   conflict.
 - Create mods, manage playsets, pack and unpack mods.
@@ -63,10 +67,12 @@ them as something you can browse, read and change - without opening a text edito
 
 | | |
 |---|---|
+| ![Fix for 1.20: the plan for an older mod](media/fix.png) | ![Your mod's event, edited where you read it](media/edit.png) |
+| "Fix for 1.20…": what it will do for a mod made for an older game version, before it starts | Your own mod's event, edited right where you read it |
 | ![An event in plain language](media/event.png) | ![The statement picker, four menus deep](media/picker.png) |
-| An event read as a story: its text, who is who, its conditions and options | Adding an effect with the keyboard-driven picker - the script is written for you |
+| An event read as a story: its text, who is who, its conditions and options | Adding an effect with the keyboard-driven picker - every pick explained, the script written for you |
 | ![A 3D portrait built from the game's DNA](media/portrait.png) | ![The 3D map at the 1066 bookmark](media/map.png) |
-| A historical character with a 3D portrait built from their DNA | The 3D map at a bookmark date, with the game's own terrain |
+| A historical character with a 3D portrait built from their DNA | The 3D map at a bookmark date, with the game's own terrain and buildings |
 
 ## Getting started
 
@@ -87,7 +93,7 @@ This repository holds releases only: each commit on it is a milestone with a sum
 
 ## Made with AI, yes I know, shame on me
 
-Openly and plainly: this tool was built with AI (Anthropic's Claude).
+Openly and plainly: this tool was built with AI (Anthropic's Claude); checked and supervised by an old-school human developer.
 
 I don't have the spare time to build something like this myself, and parts of it - reading the game's 3D portraits,
 its shaders, its map - are so convoluted that I could never have figured them out on my own. I would never have paid

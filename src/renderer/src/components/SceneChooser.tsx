@@ -1,17 +1,19 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import type { EventBackgroundInfo, EventStory, ImageSource, LineSource, PickedImage } from '../../../shared/api';
+import type { EntryCreate, EventBackgroundInfo, EventStory, ImageSource, LineSource, PickedImage } from '../../../shared/api';
 import { parseSnippet, printScript, type SNode } from '../../../shared/scriptCatalog';
 import { pickStatement } from '../picker/pickStatement';
 import { EditCtx } from './editCtx';
-import { RichText } from './rich';
+import { keywordText, RichText } from './rich';
 import { ImageCropDialog } from './ImageCrop';
 import { api } from '../api';
 import { reportChange } from '../changes';
 import { GameImg } from '../img';
-import { reportEditError, runScriptEdit } from '../scriptEdits';
+import { createsOf, reportEditError, rewrittenText, runScriptEdit } from '../scriptEdits';
 import { errorText } from './ModDialogs';
 import '../styles/edit.css';
 
+import { tr } from '../../../shared/i18n';
+import { fold, foldHas } from '../../../shared/fold';
 /** The script that shows background `ref` (`condition`: only when it holds). */
 const statement = (ref: string, condition?: string): string => printScript([{ k: 'override_background', op: '=', kids: [...(condition ? [{ k: 'trigger', op: '=', kids: parseSnippet(condition) }] : []), { k: 'reference', op: '=', v: ref }] }]);
 
@@ -30,7 +32,7 @@ function withReference(text: string, ref: string): string
 /**
  * Sets one of the event's scenes (docs/mods.md, "Event scenes"): `target` (default its first `override_background`)
  * shows `ref` instead, its condition kept; without one it is written after the event's `theme` (before its `title`,
- * else at the end); null removes the target — the next scene, or the theme's, shows.
+ * else at the end); null removes the target: the next scene, or the theme's, shows.
  */
 export async function setEventBackground(story: EventStory, ref: string | null, target = story.backgroundSrc): Promise<void>
 {
@@ -39,50 +41,47 @@ export async function setEventBackground(story: EventStory, ref: string | null, 
         if (ref === null)
         {
             if (target)
-                await runScriptEdit({ op: 'remove', at: target }, story.scenes.length > 1 ? 'Removed a scene' : `Scene: the theme’s own${story.themeKey ? ` (${story.themeKey})` : ''}`);
+                await runScriptEdit({ op: 'remove', at: target }, story.scenes.length > 1 ? tr('Removed a scene') : tr('Scene: the theme’s own{theme}', { theme: story.themeKey ? ` (${story.themeKey})` : '' }));
 
             return;
         }
 
-        const what = `Scene: ${ref}`;
+        const what = tr('Scene: {ref}', { ref });
 
+        // (the scene's comments kept: rewrittenText)
         if (target)
-        {
-            const cur = await api.scriptText(target);
-
-            if (cur.problem)
-                throw new Error(cur.problem);
-
-            await runScriptEdit({ op: 'replace', at: target, text: withReference(cur.text, ref) }, what);
-        }
+            await runScriptEdit({ op: 'replace', at: target, text: await rewrittenText(target, (t) => withReference(t, ref)) }, what);
         else
             await insertScene(story, statement(ref), what);
     }
     catch (e)
     {
-        reportEditError('Scene not changed')(e);
+        reportEditError(tr('Scene not changed'))(e);
     }
 }
 
 /** Writes a new scene statement: after the event's `theme`, before its `title`, else at the end of the event. */
-async function insertScene(story: EventStory, text: string, what: string): Promise<void>
+async function insertScene(story: EventStory, text: string, what: string, creates?: EntryCreate[]): Promise<void>
 {
     if (story.themeSrc)
-        await runScriptEdit({ op: 'insert', at: story.themeSrc, text }, what);
+        await runScriptEdit({ op: 'insert', at: story.themeSrc, text, ...(creates?.length ? { creates } : {}) }, what);
     else if (story.titleSrc)
-        await runScriptEdit({ op: 'insert', at: story.titleSrc, where: 'before', text }, what);
+        await runScriptEdit({ op: 'insert', at: story.titleSrc, where: 'before', text, ...(creates?.length ? { creates } : {}) }, what);
     else if (story.src)
-        await runScriptEdit({ op: 'insert', at: story.src, where: 'inside', text }, what);
+        await runScriptEdit({ op: 'insert', at: story.src, where: 'inside', text, ...(creates?.length ? { creates } : {}) }, what);
 }
 
 /**
  * Adds a scene shown when `condition` holds: before the event's first scene without a condition (which would catch
- * every case), else after its last scene, else where a first scene goes.
+ * every case), else after its last scene, else where a first scene goes. `creates`: the entries the condition made,
+ * written with the scene (one undo step).
  */
-async function addScene(story: EventStory, ref: string, condition: string, summary?: string): Promise<void>
+async function addScene(story: EventStory, ref: string, condition: string, summary?: string, creates?: EntryCreate[]): Promise<void>
 {
     const text = statement(ref, condition);
-    const what = `Scene ${ref}${summary ? ` when ${summary.charAt(0).toLowerCase()}${summary.slice(1)}` : ''}`;
+    const made = createsOf(creates);
+    const what = tr('Scene {ref}{condition}', { ref, condition: summary ? tr(' when {condition}', { condition: summary.charAt(0).toLowerCase() + summary.slice(1) }) : '' }) + made.note;
+    const extra = made.creates ? { creates: made.creates } : {};
 
     try
     {
@@ -90,39 +89,38 @@ async function addScene(story: EventStory, ref: string, condition: string, summa
         const last = story.scenes[story.scenes.length - 1]?.src;
 
         if (plain)
-            await runScriptEdit({ op: 'insert', at: plain.src!, where: 'before', text }, what);
+            await runScriptEdit({ op: 'insert', at: plain.src!, where: 'before', text, ...extra }, what);
         else if (last)
-            await runScriptEdit({ op: 'insert', at: last, text }, what);
+            await runScriptEdit({ op: 'insert', at: last, text, ...extra }, what);
         else
-            await insertScene(story, text, what);
+            await insertScene(story, text, what, made.creates);
     }
     catch (e)
     {
-        reportEditError('No scene added')(e);
+        reportEditError(tr('No scene added'))(e);
     }
 }
 
 /** "＋ scene when…": the condition from the picker, then the scene from the chooser. */
 export function AddSceneButton({ story }: { story: EventStory; }): React.JSX.Element
 {
-    const [cond, setCond] = useState<{ text: string; summary?: string; } | null>(null);
+    const [cond, setCond] = useState<{ text: string; summary?: string; creates?: EntryCreate[]; } | null>(null);
     return (
         <>
             <button
                 className="ghost small"
-                title="Another scene, shown when a condition holds (override_background with a trigger: the first whose condition holds shows)"
+                title={tr('Another scene, shown when a condition holds (override_background with a trigger: the first whose condition holds shows)')}
                 onClick={(e) =>
                 {
                     const r = e.currentTarget.getBoundingClientRect();
-                    void pickStatement({ kind: 'trigger', scope: 'character', title: 'a scene: shown when…', at: { x: r.left, y: r.bottom + 4 } }).then((c) =>
+                    void pickStatement({ kind: 'trigger', scope: 'character', title: tr('a scene: shown when…'), at: { x: r.left, y: r.bottom + 4 }, newEntries: true }).then((c) =>
                     {
                         if (c?.text.trim())
-                            setCond({ text: c.text, summary: c.summary });
+                            setCond({ text: c.text, summary: c.summary, creates: c.creates });
                     });
                 }}
             >
-                ＋ scene when…
-            </button>
+                {tr('＋ scene when…')}</button>
             {cond && <SceneChooser story={story} add={cond} onClose={() => setCond(null)} />}
         </>
     );
@@ -130,7 +128,7 @@ export function AddSceneButton({ story }: { story: EventStory; }): React.JSX.Ele
 
 /**
  * The event's scenes when it has several or conditional ones (`EventStory.scenes`): picture, "If …:" / "Always", the
- * background — written in the active mod with "change…", ↑ ↓ (their order: the first whose condition holds shows) and
+ * background; written in the active mod with "change…", ↑ ↓ (their order: the first whose condition holds shows) and
  * ✕; "Otherwise: the theme's" when every one has a condition.
  */
 export function SceneList({ story, editable }: { story: EventStory; editable: boolean; }): React.JSX.Element | null
@@ -145,7 +143,7 @@ export function SceneList({ story, editable }: { story: EventStory; editable: bo
     const swap = (a?: LineSource, b?: LineSource): void =>
     {
         if (a && b)
-            void runScriptEdit({ op: 'swap', at: a, with: b }, 'Moved a scene').catch(reportEditError('Not moved'));
+            void runScriptEdit({ op: 'swap', at: a, with: b }, tr('Moved a scene')).catch(reportEditError(tr('Not moved')));
     };
     return (
         <div className="ev2-scenes">
@@ -154,27 +152,26 @@ export function SceneList({ story, editable }: { story: EventStory; editable: bo
                     <GameImg path={x.image} size={120} />
                     <div className="ev2-scene-what">
                         <div className="ev2-when">
-                            <RichText rich={x.when ?? [i ? 'Otherwise:' : 'Always:']} />
-                            {editable && ed?.sectionAdd(x.triggerSrc, 'Scene: shown when', 'condition')}
+                            <RichText rich={keywordText({ text: x.when ?? [i ? tr('Otherwise:') : tr('Always:')], icon: 'if' }).text} />
+                            {editable && ed?.sectionAdd(x.triggerSrc, tr('Scene: shown when'), 'condition')}
                         </div>
-                        <span className="ev2-scene-ref">{x.ref ?? '(no reference)'}</span>
+                        <span className="ev2-scene-ref">{x.ref ?? tr('(no reference)')}</span>
                     </div>
                     {editable && x.src && (
                         <span className="ev2-tools">
-                            <button className="ghost small" title="Show another background here" onClick={() => setChanging(x.src!)}>
-                                change…
-                            </button>
+                            <button className="ghost small" title={tr('Show another background here')} onClick={() => setChanging(x.src!)}>
+                                {tr('change…')}</button>
                             {i > 0 && (
-                                <button className="ghost small" title="Up: checked before the scene above" onClick={() => swap(x.src, scenes[i - 1].src)}>
+                                <button className="ghost small" title={tr('Up: checked before the scene above')} onClick={() => swap(x.src, scenes[i - 1].src)}>
                                     ↑
                                 </button>
                             )}
                             {i < scenes.length - 1 && (
-                                <button className="ghost small" title="Down: checked after the scene below" onClick={() => swap(x.src, scenes[i + 1].src)}>
+                                <button className="ghost small" title={tr('Down: checked after the scene below')} onClick={() => swap(x.src, scenes[i + 1].src)}>
                                     ↓
                                 </button>
                             )}
-                            <button className="ghost small" title="Remove this scene" onClick={() => void setEventBackground(story, null, x.src)}>
+                            <button className="ghost small" title={tr('Remove this scene')} onClick={() => void setEventBackground(story, null, x.src)}>
                                 ✕
                             </button>
                         </span>
@@ -183,7 +180,7 @@ export function SceneList({ story, editable }: { story: EventStory; editable: bo
             ))}
             {scenes.every((x) => x.when) && (
                 <div className="ev2-when ev2-scene-else">
-                    Otherwise: the theme’s scene{story.themeKey ? ` (${story.themeKey})` : ''}
+                    <RichText rich={keywordText({ text: [tr('Otherwise: the theme’s scene')], icon: 'else' }).text} />{story.themeKey ? ` (${story.themeKey})` : ''}
                 </div>
             )}
             {changing && <SceneChooser story={story} target={changing} onClose={() => setChanging(null)} />}
@@ -197,9 +194,8 @@ export function SceneButton({ story }: { story: EventStory; }): React.JSX.Elemen
     const [open, setOpen] = useState(false);
     return (
         <>
-            <button className="scene-change" title="Choose the picture behind the event (its background), or use an image of your own" onClick={() => setOpen(true)}>
-                🖼 Change scene…
-            </button>
+            <button className="scene-change" title={tr('Choose the picture behind the event (its background), or use an image of your own')} onClick={() => setOpen(true)}>
+                {tr('🖼 Change scene…')}</button>
             {open && <SceneChooser story={story} onClose={() => setOpen(false)} />}
         </>
     );
@@ -209,7 +205,7 @@ export function SceneButton({ story }: { story: EventStory; }): React.JSX.Elemen
  * The scene chooser: every event background (the mods' first, then the most used) with a filter; "From an image
  * file…" makes a new one from a PNG / DDS (main asset:eventScene) and shows it; "Theme's own" removes the event's.
  */
-function SceneChooser({ story, onClose, target, add }: { story: EventStory; onClose: () => void; target?: LineSource; add?: { text: string; summary?: string; }; }): React.JSX.Element
+function SceneChooser({ story, onClose, target, add }: { story: EventStory; onClose: () => void; target?: LineSource; add?: { text: string; summary?: string; creates?: EntryCreate[]; }; }): React.JSX.Element
 {
     const [all, setAll] = useState<EventBackgroundInfo[] | null>(null);
     const [q, setQ] = useState('');
@@ -232,11 +228,11 @@ function SceneChooser({ story, onClose, target, add }: { story: EventStory; onCl
 
     const shown = useMemo(() =>
     {
-        const words = q.toLowerCase()
+        const words = fold(q)
             .split(/\s+/)
             .filter(Boolean);
         return (all ?? [])
-            .filter((b) => b.image && words.every((w) => b.name.toLowerCase().includes(w) || b.environment?.toLowerCase().includes(w)))
+            .filter((b) => b.image && words.every((w) => foldHas(b.name, w) || foldHas(b.environment, w)))
             .sort((a, b) => Number(!!b.mod) - Number(!!a.mod) || b.refs - a.refs || a.name.localeCompare(b.name));
     }, [all, q]);
 
@@ -251,7 +247,7 @@ function SceneChooser({ story, onClose, target, add }: { story: EventStory; onCl
         if (add)
         {
             if (ref)
-                await addScene(story, ref, add.text, add.summary);
+                await addScene(story, ref, add.text, add.summary, add.creates);
         }
         else
             await setEventBackground(story, ref, target);
@@ -269,7 +265,7 @@ function SceneChooser({ story, onClose, target, add }: { story: EventStory; onCl
 
         try
         {
-            const pic = await api.pickImage(`A scene image for ${story.key.name} (the game's are 1592×848)`);
+            const pic = await api.pickImage(tr('A scene image for {name} (the game’s are 1592×848)', { name: story.key.name }));
 
             if (pic)
                 setCropping(pic);
@@ -297,11 +293,11 @@ function SceneChooser({ story, onClose, target, add }: { story: EventStory; onCl
             if (!r)
                 return;
 
-            reportChange({ kind: 'ok', text: `New scene ${r.reference}`, details: r.notes, file: r.files[0], undo: r.step });
+            reportChange({ kind: 'ok', text: tr('New scene {reference}', { reference: r.reference }), details: r.notes, file: r.files[0], undo: r.step });
             onClose();
 
             if (add)
-                await addScene(story, r.reference, add.text, add.summary);
+                await addScene(story, r.reference, add.text, add.summary, add.creates);
             else
                 await setEventBackground(story, r.reference, target);
         }
@@ -320,8 +316,8 @@ function SceneChooser({ story, onClose, target, add }: { story: EventStory; onCl
             <ImageCropDialog
                 image={cropping}
                 out={{ w: 1592, h: 848 }}
-                title={`Scene of ${story.key.name}: crop & rotate`}
-                note="Event scenes are 1592×848 — the frame keeps that shape. Saved in the mod as DDS (BC1) and registered as the event's background."
+                title={tr('Scene of {name}: crop & rotate', { name: story.key.name })}
+                note={tr('Event scenes are 1592×848 — the frame keeps that shape. Saved in the mod as DDS (BC1) and registered as the event\'s background.')}
                 onDone={(png) => void importScene({ png, name: cropping.name })}
                 onAsIs={() => void importScene({ file: cropping.file })}
                 onCancel={() => setCropping(null)}
@@ -343,25 +339,24 @@ function SceneChooser({ story, onClose, target, add }: { story: EventStory; onCl
             >
                 <div className="sc-head">
                     <h3>
-                        Scene of {story.key.name}
-                        {add && <em>— shown when {add.summary ?? 'the condition holds'}</em>}
+                        {tr('Scene of {name}', { name: story.key.name })}
+                        {add && <em>{tr('— shown when {condition}', { condition: add.summary ?? tr('the condition holds') })}</em>}
                     </h3>
-                    <input ref={input} autoFocus value={q} placeholder="Filter: throne, feast, battle…" onChange={(e) => setQ(e.target.value)} />
-                    <button className="primary" disabled={busy} onClick={() => void fromFile()} title="A PNG (made into DDS BC1 like the game's scenes, 1592×848) or a DDS — saved in the mod as a new background">
-                        From an image file…
-                    </button>
+                    <input ref={input} autoFocus value={q} placeholder={tr('Filter: throne, feast, battle…')} onChange={(e) => setQ(e.target.value)} />
+                    <button className="primary" disabled={busy} onClick={() => void fromFile()} title={tr('A PNG (made into DDS BC1 like the game\'s scenes, 1592×848) or a DDS — saved in the mod as a new background')}>
+                        {tr('From an image file…')}</button>
                     {!add && (target ?? story.backgroundSrc) && (
-                        <button disabled={busy} onClick={() => void choose(null)} title={story.scenes.length > 1 ? 'Remove this scene: the next one, or the theme’s, shows' : 'Remove the event’s own background: its theme’s scene shows'}>
-                            {story.scenes.length > 1 ? 'Remove this scene' : `Theme’s own${story.themeKey ? ` (${story.themeKey})` : ''}`}
+                        <button disabled={busy} onClick={() => void choose(null)} title={story.scenes.length > 1 ? tr('Remove this scene: the next one, or the theme’s, shows') : tr('Remove the event’s own background: its theme’s scene shows')}>
+                            {story.scenes.length > 1 ? tr('Remove this scene') : tr('Theme’s own{theme}', { theme: story.themeKey ? ` (${story.themeKey})` : '' })}
                         </button>
                     )}
-                    <button onClick={onClose}>Cancel</button>
+                    <button onClick={onClose}>{tr('Cancel')}</button>
                 </div>
                 {problem && <div className="ne-problem">{problem}</div>}
                 <div className="sc-grid">
                     {!all && !problem && <div className="ne-note">…</div>}
                     {shown.map((b) => (
-                        <button key={b.name} className={'sc-tile' + (b.name === story.background ? ' current' : '')} title={`${b.name}${b.environment ? ` — lighting: ${b.environment}` : ''} · used ${b.refs}×`} onClick={() => void choose(b.name)}>
+                        <button key={b.name} className={'sc-tile' + (b.name === story.background ? ' current' : '')} title={tr('{name}{lighting} · used {refs}×', { name: b.name, lighting: b.environment ? tr(' — lighting: {environment}', { environment: b.environment }) : '', refs: b.refs })} onClick={() => void choose(b.name)}>
                             <GameImg path={b.image} size={240} />
                             <span>
                                 {b.name}

@@ -10,7 +10,7 @@ const hex = (rgb: number[]): string =>
 
 /**
  * A colour as #rrggbb: `{ r g b }` (0–1, or 0–255 when a part is above 1), `rgb { }`, `hsv { h s v }` (0–1; hues above
- * 1 are degrees — terrain_types writes `hsv { 29 0.867 0.353 }`), `hsv360 { }` (0–360, 0–100), `hex { rrggbb }`.
+ * 1 are degrees: terrain_types writes `hsv { 29 0.867 0.353 }`), `hsv360 { }` (0–360, 0–100), `hex { rrggbb }`.
  */
 export function colorOf(n: PNode | undefined): string | undefined
 {

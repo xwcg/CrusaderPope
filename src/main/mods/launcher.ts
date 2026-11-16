@@ -6,6 +6,7 @@
 import { randomUUID } from 'node:crypto';
 import { existsSync } from 'node:fs';
 
+import { tr } from '../../shared/i18n.ts';
 export interface LauncherMod
 {
     /** launcher uuid */
@@ -34,6 +35,12 @@ export interface LauncherPlayset
     active: boolean;
     /** in load order */
     mods: { modId: string; enabled: boolean; position: number; }[];
+    /**
+     * kept in sync with a Paradox account: the cloud id (`pdxId`), `syncState` and when it was last synced, read only
+     * where the launcher's schema has the columns; never written (what the launcher does with a local change to a synced
+     * playset is not known: the app warns before writing)
+     */
+    sync?: { pdxId?: string; state?: string; syncedOn?: string; };
 }
 
 // node:sqlite is loaded on demand: a runtime without it just has no launcher data
@@ -101,13 +108,20 @@ export async function readLauncher(dbFile: string): Promise<{ mods: LauncherMod[
                     thumbnailPath: s(r.thumbnailPath)
                 };
             });
+        // (the sync columns where this launcher version has them)
+        const cols = new Set(db.prepare('pragma table_info(playsets)').all().map((c) => String(c.name)));
+        const extra = ['pdxId', 'syncState', 'syncedOn'].filter((c) => cols.has(c));
         const playsets: LauncherPlayset[] = db
-            .prepare('select id, name, isActive from playsets where isRemoved = 0 or isRemoved is null')
+            .prepare(`select id, name, isActive${extra.map((c) => ', ' + c).join('')} from playsets where isRemoved = 0 or isRemoved is null`)
             .all()
             .map((p) => ({
                 id: String(p.id),
                 name: String(p.name ?? ''),
                 active: Number(p.isActive) === 1,
+                // (synced: a cloud id, or a sync state other than none / local)
+                ...(p.pdxId || (p.syncState && !/^(none|local|not_synced|unsynced)$/i.test(String(p.syncState))) ?
+                    { sync: { pdxId: p.pdxId === null || p.pdxId === undefined ? undefined : String(p.pdxId), state: s(p.syncState), syncedOn: s(p.syncedOn) } } :
+                    {}),
                 mods: db
                     .prepare('select modId, enabled, position from playsets_mods where playsetId = ? order by position, rowid')
                     .all(p.id)
@@ -123,7 +137,7 @@ export async function readLauncher(dbFile: string): Promise<{ mods: LauncherMod[
 
 /**
  * A local mod the launcher has not registered yet (it registers mods of the user's mod folder when it starts): the
- * row the app writes for it, as the launcher fills one — see docs/mods.md, "Registering a new mod".
+ * row the app writes for it, as the launcher fills one; see docs/mods.md, "Registering a new mod".
  */
 export interface NewLauncherMod
 {
@@ -134,7 +148,7 @@ export interface NewLauncherMod
     tags: string[];
     /** the descriptor's supported_version */
     requiredVersion?: string;
-    /** folder (OS path, as the launcher writes it) — or `archivePath` for a zip */
+    /** folder (OS path, as the launcher writes it), or `archivePath` for a zip */
     dirPath?: string;
     archivePath?: string;
     /** the descriptor's remote_file_id */
@@ -146,7 +160,7 @@ export interface NewLauncherMod
 /** The `mods` row for a new local mod: only the columns this launcher version's table has. */
 function registerMod(db: Db, m: NewLauncherMod): string
 {
-    // (registered meanwhile — by another write: keep that row)
+    // (registered meanwhile by another write: keep that row)
     const had = db.prepare('select id from mods where lower(gameRegistryId) = lower(?)').get(m.gameRegistryId);
 
     if (had)
@@ -179,7 +193,7 @@ function registerMod(db: Db, m: NewLauncherMod): string
 
     for (const need of ['id', 'gameRegistryId', 'displayName', 'status', 'source'])
         if (!columns.has(need))
-            throw new Error(`The launcher database has no mods.${need} column — a launcher version this app does not know. Start the launcher once so it registers the mod itself.`);
+            throw new Error(tr('The launcher database has no mods.{need} column — a launcher version this app does not know. Start the launcher once so it registers the mod itself.', { need }));
 
     const keys = Object.keys(row).filter((k) => columns.has(k));
     db.prepare(`insert into mods (${keys.map((k) => '"' + k + '"').join(', ')}) values (${keys.map(() => '?').join(', ')})`).run(...keys.map((k) => row[k]));
@@ -197,7 +211,7 @@ export async function writeLauncherPlayset(dbFile: string, playsetId: string, mo
     const registered = new Map<string, string>();
 
     if (!db)
-        throw new Error('Cannot open the launcher database ' + dbFile);
+        throw new Error(tr('Cannot open the launcher database ') + dbFile);
 
     try
     {
@@ -206,7 +220,7 @@ export async function writeLauncherPlayset(dbFile: string, playsetId: string, mo
         try
         {
             if (!db.prepare('select id from playsets where id = ?').get(playsetId))
-                throw new Error('The launcher no longer has this playset.');
+                throw new Error(tr('The launcher no longer has this playset.'));
 
             const rows = mods.map((m) =>
             {

@@ -3,16 +3,19 @@
 //
 // Steps are defined in STEPS below: { open: 'query' } searches via Ctrl+K and opens the first hit,
 // { tab: 'Source' } switches detail tabs, { shot: 'name' } saves a PNG, { wait: ms } sleeps.
-// { node: 'js' } runs code in this (Node) process — `fs`, `path` and `env` are in scope, `return` a value to print
+// { node: 'js' } runs code in this (Node) process: `fs`, `path` and `env` are in scope, `return` a value to print
 // (e.g. change a file of a test mod); { waitIndex: true } waits for a re-index started by the step before;
+// { focus: true } sends main the window's focus event (a hidden window gets none);
 // { until: 'js expression', timeout? } waits until it is truthy in the page (default up to 60 s).
+// { cdp: { method, params }, pause? } sends one Chrome DevTools Protocol command to the page (what Playwright's keyboard
+// cannot do: Input.insertText, Input.imeSetComposition, Input.dispatchKeyEvent with a text) and prints the answer.
 // { goto: 'target', settle?, timeout? } goes straight to a page and view and waits until it has loaded (the test API,
 // src/renderer/src/testApi.ts: 'events:court.8190#source', '@map?dim=3d&mode=culture&camera=1495,1385,12,0,38',
 // '@mods?list=@all', '@settings' …); CRUSADERPOPE_START=<target> opens one at start.
 // The launched app runs with its window hidden (CRUSADERPOPE_HIDDEN=1): screenshots still work; SHOW=1 shows it.
 // ATTACH=<port> (e.g. ATTACH=9333) drives the app `npm run dev` already runs (its remote-debugging port) instead of
 // launching the built one: no start, no index wait, the app stays open afterwards (CRUSADERPOPE_* env vars are the
-// running app's — start `npm run dev` with them).
+// running app's; start `npm run dev` with them).
 // Test hooks of the app: CRUSADERPOPE_USER_DATA (own settings and caches), CRUSADERPOPE_OPEN_LOG=<file> (opening /
 // revealing files is logged there instead of starting VS Code or Explorer), CRUSADERPOPE_DIALOG_PATHS=<json file>
 // ({ "save": path, "open": path } answer the Blender export/import dialogs instead of opening them).
@@ -45,6 +48,11 @@ const STEPS = JSON.parse(process.env.STEPS ?? 'null') ?? [
 const env = { ...process.env };
 delete env.ELECTRON_RUN_AS_NODE;
 
+// no update check (its banner would differ from run to run): CRUSADERPOPE_UPDATE_FEED=<file.json> tests it
+env.CRUSADERPOPE_UPDATE_FEED ??= 'off';
+// no script database download either (docs/script-database.md): CRUSADERPOPE_SCRIPT_DB_FEED=<manifest.json> tests it
+env.CRUSADERPOPE_SCRIPT_DB_FEED ??= 'off';
+
 // the window stays hidden (nothing pops up, no stray clicks into a run); SHOW=1 shows it
 if (!process.env.SHOW)
     env.CRUSADERPOPE_HIDDEN = '1';
@@ -60,7 +68,7 @@ if (app && process.env.LOG_MAIN)
     p.stderr?.on('data', (d) => process.stdout.write('[main stderr] ' + d));
 }
 
-// (attached: the app's main window — DevTools pages and the like left out)
+// (attached: the app's main window, DevTools pages and the like left out)
 const page = attached ?
     attached
         .contexts()
@@ -69,7 +77,7 @@ const page = attached ?
     await app.firstWindow();
 
 if (!page)
-    throw new Error('No app window at port ' + process.env.ATTACH + ' — is `npm run dev` running?');
+    throw new Error('No app window at port ' + process.env.ATTACH + ': is `npm run dev` running?');
 
 await page.setViewportSize({ width: 1600, height: 960 }).catch(() =>
 {});
@@ -94,7 +102,7 @@ for (
     console.log('screenshot', f, await page.evaluate(() => document.querySelector('.indexing-screen')?.textContent ?? document.querySelector('.status')?.textContent));
 }
 
-// wait for the index to be ready (search box only renders then) — or, NOWAIT=1, not (the first-run wizard holds the
+// wait for the index to be ready (search box only renders then), or, NOWAIT=1, not (the first-run wizard holds the
 // index back until its Start)
 if (!process.env.NOWAIT)
 {
@@ -145,7 +153,8 @@ for (const step of STEPS)
     }
     else if (step.click)
     {
-        await page.click(step.click);
+        // ({ click: sel, button: 'middle' }, e.g. pin a hover card)
+        await page.click(step.click, { button: step.button ?? 'left' });
         await page.waitForTimeout(400);
     }
     else if (step.clickText)
@@ -167,15 +176,24 @@ for (const step of STEPS)
     {
         console.log('eval:', JSON.stringify(await page.evaluate(step.eval)));
     }
+    else if (step.cdp)
+    {
+        // { cdp: { method, params }, pause? } sends one Chrome DevTools Protocol command to the page (Input.insertText,
+        // Input.imeSetComposition, Input.dispatchKeyEvent …) and prints the answer
+        globalThis.__cdp ??= await page.context().newCDPSession(page);
+        const r = await globalThis.__cdp.send(step.cdp.method, step.cdp.params ?? {});
+        console.log('cdp:', step.cdp.method, JSON.stringify(step.cdp.params ?? {}).slice(0, 120), '->', JSON.stringify(r));
+        await page.waitForTimeout(step.pause ?? 300);
+    }
     else if (step.goto !== undefined)
     {
-        // (a target that fails — unknown mode, timeout — is reported and the run goes on)
+        // (a target that fails (unknown mode, timeout) is reported and the run goes on)
         const r = await page.evaluate(([t, o]) => window.__app.goto(t, o).then((s) => s.target, (e) => 'FAILED ' + e.message), [step.goto, { settle: step.settle, timeout: step.timeout }]);
         console.log('goto:', r);
     }
     else if (step.until)
     {
-        // { until: 'js expression', timeout? } waits until it is truthy in the page (default up to 60 s) — polled with
+        // { until: 'js expression', timeout? } waits until it is truthy in the page (default up to 60 s), polled with
         // evaluate: the page's CSP refuses waitForFunction's string predicates (no 'unsafe-eval')
         const t0 = Date.now();
 
@@ -195,6 +213,15 @@ for (const step of STEPS)
         const AsyncFunction = Object.getPrototypeOf(async () =>
         {}).constructor;
         console.log('node:', JSON.stringify(await new AsyncFunction('fs', 'path', 'env', step.node)(fs, path, process.env)));
+    }
+    else if (step.focus)
+    {
+        // (a hidden window gets no focus: main's 'browser-window-focus' sent as a real focus would, e.g. the check of
+        // the game's files behind the "Re-index" notice)
+        if (!app)
+            console.log('focus: only for a launched app');
+        else
+            await app.evaluate(({ app: a, BrowserWindow }) => void a.emit('browser-window-focus', {}, BrowserWindow.getAllWindows()[0]));
     }
     else if (step.waitIndex)
     {
@@ -222,7 +249,7 @@ for (const step of STEPS)
     else if (step.drag)
     {
         // { drag: { sel, from: [fx, fy], to: [fx, fy], button: 'right' } } drags with the real mouse (fractions of the
-        // element's box) — e.g. pan a 3D view with the right button
+        // element's box), e.g. to pan a 3D view with the right button
         const box = await page.locator(step.drag.sel)
             .first()
             .boundingBox();
@@ -243,7 +270,7 @@ for (const step of STEPS)
 
         await page.waitForTimeout(600);
     }
-    // { viewport: [w, h] } resizes the page (CSS pixels — 200 % display scaling on 1366×768 is ~683×384)
+    // { viewport: [w, h] } resizes the page (CSS pixels; 200 % display scaling on 1366×768 is ~683×384)
     else if (step.viewport)
     {
         await page.setViewportSize({ width: step.viewport[0], height: step.viewport[1] });
@@ -251,7 +278,7 @@ for (const step of STEPS)
     }
     else if (step.move)
     {
-        // { move: { sel, at: [fx, fy] } } moves the mouse to a point of an element (fractions of its box) — hover a map
+        // { move: { sel, at: [fx, fy] } } moves the mouse to a point of an element (fractions of its box), to hover a map
         const box = await page.locator(step.move.sel)
             .first()
             .boundingBox();
@@ -332,7 +359,7 @@ for (const step of STEPS)
                 .screenshot({ path: f });
         else if (app && env.CRUSADERPOPE_HIDDEN)
         {
-            // (a hidden window paints only when something changes — Playwright would wait for a frame: Electron captures it)
+            // (a hidden window paints only when something changes; Playwright would wait for a frame: Electron captures it)
             const png = await app.evaluate(async ({ BrowserWindow }) => (await BrowserWindow.getAllWindows()[0].webContents.capturePage()).toPNG().toString('base64'));
             fs.writeFileSync(f, Buffer.from(png, 'base64'));
         }

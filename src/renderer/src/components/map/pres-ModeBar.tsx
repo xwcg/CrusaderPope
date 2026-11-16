@@ -1,17 +1,18 @@
 /**
- * The map's mode bar (docs/map.md, "Presentation"): the modes in sections — Political, De jure, Society, Land (and
- * Other for modes it does not know) — each a compact button with the section's current (or last used) mode that
+ * The map's mode bar (docs/map.md, "Presentation"): the modes in sections (Political, De jure, Society, Land and
+ * Other for modes it does not know), each a compact button with the section's current (or last used) mode that
  * opens a menu of its modes. A click on a section's button shows its mode; the ▾ (or a click on the active section)
  * opens its menu. Every mode's button is in the page (`.map-mode`, hidden in closed menus).
  */
 import { useEffect, useRef, useState } from 'react';
 import type { Mode, ModeDef } from './model';
 
+import { tr } from '../../../../shared/i18n';
 const SECTIONS: [string, string[]][] = [
-    ['Political', ['realm', 'vassal', 'government', 'dynasty', 'house', 'liege', 'council']],
-    ['De jure', ['h', 'e', 'k', 'd', 'c', 'b']],
-    ['Society', ['culture', 'heritage', 'language', 'ethnicity', 'faith', 'religion', 'religionfamily', 'holysite', 'doctrine']],
-    ['Land', ['terrain', 'holding', 'development', 'building', 'specialbuilding', 'region', 'province', 'climate', 'winter']]
+    [tr('Political'), ['realm', 'vassal', 'government', 'dynasty', 'house', 'liege', 'council']],
+    [tr('De jure'), ['h', 'e', 'k', 'd', 'c', 'b']],
+    [tr('Society'), ['culture', 'heritage', 'language', 'ethnicity', 'faith', 'religion', 'religionfamily', 'holysite', 'doctrine']],
+    [tr('Land'), ['terrain', 'holding', 'development', 'building', 'specialbuilding', 'region', 'province', 'climate', 'winter']]
 ];
 
 /** a mode id's section (singular or plural: 'holy_sites' → Society, 'dynasties' → Political) */
@@ -84,7 +85,7 @@ export function ModeBar(props: { modes: ModeDef[]; mode: Mode; onMode: (m: Mode)
                             {shown.label}
                         </button>
                         {modes.length > 1 && (
-                            <button className="map-section-more" onClick={() => setOpen(open === s ? null : s)} title={`${s} modes`}>
+                            <button className="map-section-more" onClick={() => setOpen(open === s ? null : s)} title={tr('{s} modes', { s })}>
                                 ▾
                             </button>
                         )}

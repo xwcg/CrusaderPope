@@ -1,0 +1,1307 @@
+[
+ {
+  "kind": "custom_loc",
+  "key": "get_hold_court_8100_parent",
+  "label": "Hold court parent word",
+  "summary": "Gives the word for a parent in a hold court text: mama, papa or the plain word parents.",
+  "details": "Runs on a character. The game uses the first entry that fits: mama when the character's rite is not male dominated, papa when it is not female dominated, otherwise parents (that last one always fits). The comments in the file say the opposite of what the conditions test; this describes the conditions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_hold_court_custom_joe.txt:185"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_hold_court_8100_situation",
+  "label": "Hold court parent fate",
+  "summary": "Gives a word for what became of the character's mother or father: death, arrest or disappearance.",
+  "details": "Runs on a character. It looks at the mother when the rite is not male dominated and at the father when it is not female dominated. Death fits when that parent is dead, arrest when they are imprisoned, and disappearance always fits. When several fit, the game picks one at random, so a dead parent can still be called a disappearance.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_hold_court_custom_joe.txt:212"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_hold_court_8190_ethos",
+  "label": "Hold court ethos remark",
+  "summary": "Gives a short, scornful remark about the character's culture, matching its ethos (warlike, stoic, bureaucratic, spiritual and so on).",
+  "details": "Runs on a character. There is one entry per ethos (7 in all) and the entry that fits is the one for the ethos of the character's culture. The spiritual remark inserts the faith's high god and its alternative priest term.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_hold_court_custom_joe.txt:262"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_queen_king",
+  "label": "Queen or king",
+  "summary": "Gives the word queen for a woman and king for a man.",
+  "details": "Runs on a character. It never picks at random; the character's gender decides. The words are lower case.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_suitable_title_custom_loc.txt:99"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_region_dog_type",
+  "label": "Regional dog breed",
+  "summary": "Gives the name of a dog breed that fits the region of the character's capital, such as talbot, corgi or rache.",
+  "details": "Runs on a character. Each breed is tied to a map region of the capital province (Britain, Germany, France, the Middle East, Japan and so on), and a few need a start date (talbot from 1300, chien-gris from 1100). When several fit, the game picks one at random. The generic hound always fits, so it can appear anywhere. There are 29 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_regional_custom_localization.txt:2350"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_region_flower_type",
+  "label": "Regional flower",
+  "summary": "Gives the name of a flower that fits the province's part of the map, such as hibiscus, gardenia or lotus.",
+  "details": "Runs on a province. Most of the 38 flowers are tied to one or more map regions. Rose, orchid and aster always fit. When several fit, the game picks one at random. The plural has its own entry.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_regional_custom_localization.txt:2573"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_region_flower_type_plural",
+  "label": "Regional flower (plural)",
+  "summary": "Gives the plural name of a flower that fits the province's part of the map, such as hibiscuses, gardenias or lotuses.",
+  "details": "Runs on a province. Region rules match the singular list. Jasmine, lavender and the Japanese iridaceae use keys without a plural ending. Rose, orchid and aster appear twice, once as a singular key and once as a plural key, and both always fit, so the singular word can come out here.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_regional_custom_localization.txt:2908"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_region_fruit",
+  "label": "Regional fruit",
+  "summary": "Gives the name of a fruit that fits the province's part of the map, such as grape, apple or pear.",
+  "details": "Runs on a province. Each fruit is tied to map regions, and the game picks at random among those that fit. The final apple entry never fits by its own rule; it is marked as the fallback for when nothing else fits.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_regional_custom_localization.txt:3823"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_region_fruit_plural",
+  "label": "Regional fruit (plural)",
+  "summary": "Gives the plural name of a fruit that fits the province's part of the map, such as grapes, apples or pears.",
+  "details": "Runs on a province. Same region rules as the singular list, with a plural apple entry as the fallback when nothing else fits.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_regional_custom_localization.txt:4101"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_region_fruit_tree_type",
+  "label": "Regional fruit tree",
+  "summary": "Gives the name of a fruit tree that fits the province's part of the map, such as apple tree, pear tree or plum tree.",
+  "details": "Runs on a province. Each tree is tied to map regions, and the game picks at random among those that fit. The last apple tree entry is the fallback for when nothing else fits.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_regional_custom_localization.txt:3241"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_region_fruit_tree_type_plural",
+  "label": "Regional fruit tree (plural)",
+  "summary": "Gives the plural name of a fruit tree that fits the province's part of the map, such as apple trees, pear trees or plum trees.",
+  "details": "Runs on a province. Same region rules as the singular list, with apple trees as the fallback when nothing else fits.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_regional_custom_localization.txt:3532"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_region_root_vegetable",
+  "label": "Regional root vegetable",
+  "summary": "Gives the name of the root vegetable stored for the character's location, such as onion, carrot or parsnip.",
+  "details": "Runs on a character. It reads the variable root_vegetable on the character's location and shows the vegetable whose flag is stored there. Nothing is shown if the variable is not set. There are 12 vegetables.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_food_custom_loc.txt:677"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "get_region_root_vegetable_plural",
+  "label": "Regional root vegetable (plural)",
+  "summary": "Gives the plural name of the root vegetable stored for the character's location, such as onions, carrots or parsnips.",
+  "details": "Runs on a character. Reads the same root_vegetable variable on the character's location as the singular list. There are 12 vegetables.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_food_custom_loc.txt:731"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "ghw_from_which_tenet",
+  "label": "Rite tenet name",
+  "summary": "Gives the name of one of three tenets (armed pilgrimages, struggle submission or warmonger) that the character's rite has.",
+  "details": "Runs on a character. It uses the first of the three tenets that the character's rite has and shows the tenet's own name. Vanilla uses it in the text of a court chaplain council task modifier.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_divinity_custom_loc.txt:3727",
+   "vanilla: localization/english/council_tasks_l_english.yml:447"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "herhis_subject_of_interest",
+  "label": "His or her interest",
+  "summary": "Gives a topic the character likes to talk about, worded from the outside (the character is he or she), such as court politics, court alliances or troop compositions.",
+  "details": "Runs on a character. If the character has the variable subject_of_interest, that topic is used. Otherwise the topics that fit the character's education, focus, skills or traits are candidates, and the game picks one at random. Some topics are worded with her, his or himself. There are 25 entries, the last is a fallback conversation topic.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_conversation_subjects.txt:174"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "highest_skill_noun",
+  "label": "Subject of best skill",
+  "summary": "Gives a topic that fits the character's best skill, such as court alliances, court politics or troop compositions.",
+  "details": "Runs on a character. Each of the 14 topics belongs to one skill: two for diplomacy, three for martial, three for intrigue, four for stewardship and two for learning. Only the topics of the character's highest skill fit, and the game picks one of them at random.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_skills_custom_loc.txt:1"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "intrigue_skill_level",
+  "label": "Intrigue skill level",
+  "summary": "Gives a word for how good the character's intrigue is: terrible, poor, average, good or excellent.",
+  "details": "Runs on a character. It compares the intrigue skill with four game thresholds (terrible, average, good and excellent skill level) and never picks at random. The learning and martial lists work the same way.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_skills_custom_loc.txt:190"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "intrigue_skill_level_genitive",
+  "label": "Intrigue level (genitive)",
+  "summary": "Gives the genitive form of the word for the character's intrigue level, for languages that decline words.",
+  "details": "Runs on a character. It is defined in the game's Polish custom text file and uses the same thresholds as the plain intrigue level list. The input finds no English text for its entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_pl_custom_loc.txt:285"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "journey_events_30_custom_loc",
+  "label": "Journey landmark",
+  "summary": "Gives a description of a landmark on a journey, such as a verdant oasis, a megalith, mountain vistas or the great forest.",
+  "details": "Runs on a province. The terrain decides: oasis, desert, mountains (also desert mountains) or forest, with a fallback entry for any other terrain. The desert entry reads as an ancient towering megalith. It never picks at random.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_journey_focus_custom_loc.txt:1"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "journey_events_30_short_custom_loc",
+  "label": "Journey landmark (short)",
+  "summary": "Gives the short name of a journey landmark, such as oasis, megalith, vistas or great forest.",
+  "details": "Runs on a province. It is the short companion of the longer landmark description and uses the same terrain checks, with a fallback for other terrain.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_journey_focus_custom_loc.txt:40"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "learning_skill_level",
+  "label": "Learning skill level",
+  "summary": "Gives a word for how good the character's learning is: terrible, poor, average, good or excellent.",
+  "details": "Runs on a character. It compares the learning skill with four game thresholds and never picks at random.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_skills_custom_loc.txt:228"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "learning_skill_level_genitive",
+  "label": "Learning level (genitive)",
+  "summary": "Gives the genitive form of the word for the character's learning level, for languages that decline words.",
+  "details": "Runs on a character. Vanilla defines it in its Polish custom text file, with one threshold test per level. The input finds no English text for its entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_pl_custom_loc.txt:325"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "love_letter",
+  "label": "Love letter",
+  "summary": "Builds the full text of a love letter from smaller custom texts.",
+  "details": "Runs on a character, the letter's writer. Its single entry strings together three sections on separate lines (praise, a wish with a thing the writer may know, and a closing line). Each piece comes from another custom text, and the receiver is the saved scope second.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_love_letter_custom_loc.txt:3"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "love_letter_compliment_single_adjective",
+  "label": "Love letter adjective",
+  "summary": "Gives a single adjective for a compliment in a love letter, such as lovely, charming, radiant or shrill.",
+  "details": "Runs on a character. Entries are filtered by the variable love_letter_quality: lovely, charming, heavenly and delicate need at least 1, radiant and glorious at least 2, and shrill, biting, round and balanced need a low value. Tolerable fits a low value or a callous character. The game picks at random among those that fit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_love_letter_custom_loc.txt:804"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "love_letter_compliment_system",
+  "label": "Love letter, compliment system",
+  "summary": "Builds the text of a love letter that praises one personality quality of the receiver.",
+  "details": "Runs on a character. Its single entry works like the plain love letter, but its first part and the wish in its second line come from the compliment-system lists, which depend on the variable love_letter_compliment_type. The other pieces are shared with the plain letter. The receiver is the saved scope second.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_love_letter_custom_loc.txt:962"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "love_letter_compliment_system_section_1_part_1",
+  "label": "Compliment letter opening",
+  "summary": "Gives the opening of the praise line for one quality of the receiver, such as Your gentle heart is.",
+  "details": "Runs on a character. There are 12 entries (extroverted, dominant, compassionate, bold, honorable, greed, zealous, energetic, forgiving, beautiful, strong, rational). The one that fits is the one named in the variable love_letter_compliment_type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_love_letter_custom_loc.txt:971"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "love_letter_compliment_system_section_2_part_2",
+  "label": "Compliment letter wish",
+  "summary": "Gives the wish that goes with the praised quality, such as hear your laugh or follow your command.",
+  "details": "Runs on a character. There are 12 entries, one per quality, mirroring the praise openings. The one that fits is the one named in the variable love_letter_compliment_type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_love_letter_custom_loc.txt:1038"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "love_letter_knowledge_object",
+  "label": "Letter knowledge object",
+  "summary": "Gives something the writer wants the receiver to know about, such as the depths of your love, true joy or how you smell.",
+  "details": "Runs on a character. There are 9 entries, filtered by the variable love_letter_quality (some need a high value, some a low one), and the game picks at random among those that fit. It completes the line that begins with that I may know.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_love_letter_custom_loc.txt:890"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "love_letter_section_1_part_1",
+  "label": "Letter praise subject",
+  "summary": "Gives the first half of the letter's praise line, naming what is praised, such as Your buttocks are or The very mention of your name is.",
+  "details": "Runs on a character. There are 58 entries, filtered by the variable love_letter_quality (about a dozen need a low value, nine at least 1), and some depend on the receiver's gender, traits or faith. The game picks at random among those that fit. Some entries insert a random adjective from the love letter adjective list. The second half comes from section 1 part 2.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_love_letter_custom_loc.txt:12"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "love_letter_section_1_part_2",
+  "label": "Letter praise comparison",
+  "summary": "Gives the second half of the praise line, a comparison such as like stars in the sky or the life-giving sun of my world.",
+  "details": "Runs on a character. There are 15 entries, filtered by the variable love_letter_quality: the grand ones need a higher value, the comic ones (pebbles, wet mud, a bowl of porridge, better than ham) need a low value. The game picks at random among those that fit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_love_letter_custom_loc.txt:431"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "love_letter_section_2_part_1",
+  "label": "Letter wish opening",
+  "summary": "Gives the opening of the wish line, such as My heart yearns to or I really want to.",
+  "details": "Runs on a character. There are 5 entries filtered by the variable love_letter_quality (two need at least 2, one needs 2 or less, two need at least 1). The game picks at random among those that fit. The wish itself comes from section 2 part 2.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_love_letter_custom_loc.txt:526"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "love_letter_section_2_part_2",
+  "label": "Letter wish",
+  "summary": "Gives what the writer wishes to do, such as feel the embrace of your love, be by your side or see you.",
+  "details": "Runs on a character. There are 10 entries. Most are filtered by the variable love_letter_quality, two cheeky ones depend on the receiver's gender, and two always fit. The game picks at random among those that fit. It completes the opening from section 2 part 1.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_love_letter_custom_loc.txt:566"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "love_letter_section_2_part_3",
+  "label": "Letter knowledge line",
+  "summary": "Gives the line that I may know followed by a thing to know about the receiver.",
+  "details": "Runs on a character. It has one entry that always fits. The thing to know comes from the letter knowledge object list.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_love_letter_custom_loc.txt:632"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "love_letter_section_3_part_1",
+  "label": "Letter closing line",
+  "summary": "Gives the closing line of the letter, such as You and I belong together or You put Aphrodite to shame.",
+  "details": "Runs on a character. There are 20 entries. Some always fit, some depend on the variable love_letter_quality, and the comparisons with figures from myth also need the writer to have a learning skill above a limit and depend on the receiver's gender. The game picks at random among those that fit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_love_letter_custom_loc.txt:643"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "lover_activity",
+  "label": "Lover activity",
+  "summary": "Gives an activity a lover enjoys, written as an -ing phrase, such as walking in the garden, having romantic dinners or picking out gifts.",
+  "details": "Runs on a character. If the character has the variable lover_activity, that activity is used. Otherwise the activities that fit the character's traits are candidates, weighted so that matching traits make an activity more likely, and the game picks one. There are 15 entries. Vanilla uses it on the lovers in a lover event.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_lover_custom_localization.txt:552",
+   "vanilla: localization/english/event_localization/relation_events/lover_events_l_english.yml:37"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "lover_reason",
+  "label": "Lover reason",
+  "summary": "Gives a word chosen by the character's traits: passion, romance, attention, devotion or love.",
+  "details": "Runs on a character. It never picks at random; the first entry that fits wins, and love is the entry that always fits. The trait lists of the romance, attention and devotion entries are written without an OR, so as written each needs all its traits, while passion fits any one of its traits. Vanilla uses it in a lover event.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_lover_custom_localization.txt:862",
+   "vanilla: localization/english/event_localization/relation_events/lover_events_l_english.yml:36"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "lowly_servant_type",
+  "label": "Lowly servant",
+  "summary": "Gives the name of a lowly servant, such as stable boy, page, scullery maid or chandler.",
+  "details": "Runs on a character. There are 8 entries, and the game picks at random among those that fit. Stable boy needs a male character, scullery maid a female one, and page depends on gender, the rite and a western European capital. Several need the character to be a landed, administrative or theocratic ruler. Launderer, scalder and saucerer always fit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_servants.txt:1"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "martial_skill_level",
+  "label": "Martial skill level",
+  "summary": "Gives a word for how good the character's martial skill is: terrible, poor, average, good or excellent.",
+  "details": "Runs on a character. It compares the martial skill with four game thresholds and never picks at random.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_skills_custom_loc.txt:114"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "martial_skill_level_genitive",
+  "label": "Martial level (genitive)",
+  "summary": "Gives the genitive form of the word for the character's martial level, for languages that decline words.",
+  "details": "Runs on a character. It is defined in the game's Polish custom text file and uses the same thresholds as the plain martial level list. The input finds no English text for its entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_pl_custom_loc.txt:205"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "mother_or_other",
+  "label": "Mother or other",
+  "summary": "Gives the word mother when the character's mother is the saved scope second, and nothing otherwise.",
+  "details": "Runs on a character. The second entry (used when the mother is someone else) has no English text in the input, so the result is empty then.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_test.txt:54"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "mpo_ariana_0050_description",
+  "label": "Ariana description",
+  "summary": "Describes a character as scheming or rapacious, depending on their traits.",
+  "details": "Runs on a character. Scheming fits a deceitful or schemer character, rapacious a greedy or avaricious one. If neither trait group fits, nothing is shown.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/09_mpo_custom_loc.txt:1"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "mpo_yearly_ethos",
+  "label": "Yearly ethos remark",
+  "summary": "Gives an unflattering remark about how people of the character's culture act, matching the culture's ethos (bellicose, stoic, bureaucratic, spiritual and so on).",
+  "details": "Runs on a character. There are 7 entries, one per ethos, and the one that fits is the ethos of the character's culture. Some remarks insert the councillor's culture or faith terms (the bureaucratic one the culture's collective noun, the spiritual one the faith's high god).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/09_mpo_custom_loc.txt:25"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "my_subject_of_interest",
+  "label": "My interest",
+  "summary": "Gives a topic the character likes to talk about, worded as the character speaking (my own), such as court politics, court alliances or troop compositions.",
+  "details": "Runs on a character. It follows the same rules as the third person list: the variable subject_of_interest if set, otherwise topics that fit the character's education, focus, skills or traits, picked at random. There are 25 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_conversation_subjects.txt:570"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "my_title",
+  "label": "Ruler title word",
+  "summary": "Gives the lower case word for the character's own rank, such as empress, emperor, queen, king, duchess or duke.",
+  "details": "Runs on a character. It goes by the tier of the highest title the character holds (empire, kingdom, duchy, county, barony) and by gender, and never picks at random. A character without a barony or higher gets lady or sir. There are 12 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_suitable_title_custom_loc.txt:1"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "mythical_map_creatures",
+  "label": "Mythical creature",
+  "summary": "Gives the name of a mythical creature from old maps, such as unicorns, dragons, dog-headed men or basilisks.",
+  "details": "Runs on a character. The vanilla file notes that it needs the saved scope mythical_lie, a flag that picks the creature (unicorn, dragon, dog_people, basilisk and so on). It never picks at random. There are 12 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_map_related_custom_loc.txt:1"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "noun_abstract_plural_one",
+  "label": "Abstract plural noun, set one",
+  "summary": "Gives a plural abstract noun from the first set, such as crowns, rule or songs, for filling a word slot in poetry.",
+  "details": "Runs on a character. The variable poetry_theme decides which words fit: nobility (crowns, rule) or romance (songs, lust, love). The game picks at random among those that fit. There are 5 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_poetry_theme_words.txt:340"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "noun_abstract_plural_two",
+  "label": "Abstract plural noun, set two",
+  "summary": "Gives a plural abstract noun from the second set, such as nobles, domains, virtues or elites, for filling a word slot in poetry.",
+  "details": "Runs on a character. The variable poetry_theme decides which words fit: nobility (four entries) or romance (three entries, such as passion). The game picks at random among those that fit. There are 7 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_poetry_theme_words.txt:446"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "noun_abstract_singular_one",
+  "label": "Abstract singular noun, set one",
+  "summary": "Gives a singular abstract noun from the first set, such as rule, crown, love or song, for filling a word slot in poetry.",
+  "details": "Runs on a character. The variable poetry_theme decides which words fit (nobility or romance), and the game picks at random among those that fit. It has the same words as the plural set one, in singular form. There are 5 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_poetry_theme_words.txt:295"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "noun_abstract_singular_two",
+  "label": "Abstract singular noun, set two",
+  "summary": "Gives a singular abstract noun from the second set, such as noble, domain, virtue or elite, for filling a word slot in poetry.",
+  "details": "Runs on a character. The variable poetry_theme decides which words fit (nobility or romance), and the game picks at random among those that fit. It has the same words as the plural set two, in singular form. There are 7 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_poetry_theme_words.txt:387"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "noun_specific_plural_one",
+  "label": "Specific plural noun, set one",
+  "summary": "Gives a plural concrete noun from the first set, such as crowns, lands, queens or kings, for filling a word slot in poetry.",
+  "details": "Runs on a character. The variable poetry_theme decides which words fit: nobility (crowns, lands, queens, kings, lords) or romance (love, hearts, songs). The game picks at random among those that fit. There are 9 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_poetry_theme_words.txt:106"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "noun_specific_plural_two",
+  "label": "Specific plural noun, set two",
+  "summary": "Gives a plural concrete noun from the second set, such as scepters, castles, ladies or nobles, for filling a word slot in poetry.",
+  "details": "Runs on a character. The variable poetry_theme decides which words fit (nobility or romance, such as dances and darlings), and the game picks at random among those that fit. There are 7 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_poetry_theme_words.txt:237"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "noun_specific_singular_one",
+  "label": "Specific singular noun, set one",
+  "summary": "Gives a singular concrete noun from the first set, such as crown, land, prince or queen, for filling a word slot in poetry.",
+  "details": "Runs on a character. The variable poetry_theme decides which words fit (nobility or romance), and the game picks at random among those that fit. There are 10 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_poetry_theme_words.txt:27"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "noun_specific_singular_two",
+  "label": "Specific singular noun, set two",
+  "summary": "Gives a singular concrete noun from the second set, such as scepter, castle, princess or lady, for filling a word slot in poetry.",
+  "details": "Runs on a character. The variable poetry_theme decides which words fit (nobility or romance, such as singing and darling), and the game picks at random among those that fit. There are 7 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_poetry_theme_words.txt:179"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "one_syllable_number",
+  "label": "One syllable number",
+  "summary": "Gives the word for a number that is spoken in one syllable: two, three, four, five, six, eight, nine or ten.",
+  "details": "It has 8 entries, and the game picks one at random. A comment in the vanilla file says one is left out on purpose, because texts break when both singular and plural are possible.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_poetry_theme_words.txt:505"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "pam_anointment_authority_name_loc",
+  "label": "Anointing authority name",
+  "summary": "Gives the name, with title, of the religious authority that stands behind the character's faith, or the fixed text Religious Authority.",
+  "details": "Runs on a character. The first entry that fits wins: the challenger of the faith's head if the character follows that challenger, then the faith's religious head (or challenger), then the head of the character's rite if it is a clergy ruler. The fixed text Religious Authority is the marked fallback.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_activity_loc.txt:670"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "pam_anointment_authority_title_loc",
+  "label": "Anointing authority title",
+  "summary": "Gives the title of that religious authority: the challenger concept, the faith's head title, Head of Rite or Religious Authority.",
+  "details": "Runs on a character. It uses the same conditions, in the same order, as the name list: following the challenger, a faith head or challenger exists, a clergy-ruler head of rite exists, and otherwise the fallback.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_activity_loc.txt:699"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "pam_sf_carnal_art",
+  "label": "Carnal art name",
+  "summary": "Gives the name of a carnal art, such as the Coiling Serpent, the Ascending River or the Twining Vines.",
+  "details": "Runs on a character. There are 13 entries. The first four always fit, five are only for an Indian setting and four only outside one (decided by a game trigger). The game picks at random among those that fit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/pam_custom_loc.txt:4"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "pam_tenet_popularity_status",
+  "label": "Tenet popularity status",
+  "summary": "Gives how popular a tenet is, as a tier name followed by its icon: very popular, popular, neutral or unpopular.",
+  "details": "Runs on a character. It never picks at random; it compares faith.tenet_popularity(scope:second) with three thresholds and takes the matching tier. The entries reuse the game's tier and icon texts. What exactly that function measures is not shown in the input.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/pam_tenet_popularity.txt:3"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "custom_loc",
+  "key": "powerful_vassals_loc",
+  "label": "Powerful vassals word",
+  "summary": "Gives a word for the highest rank held by at least two of the character's vassals: kings, dukes, counts or barons, or else courtiers or followers.",
+  "details": "Runs on a character. It never picks at random; the first entry that fits wins, checking from kings downwards. Kings fits when at least two vassals hold a title of kingdom tier or above, dukes the same for duchy, and so on. If there are no such vassals, a landed character gets the courtier entry and a landless one the followers entry.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_vassal_custom_loc.txt:1"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "prison_pet",
+  "label": "Prison pet",
+  "summary": "Gives a thing a prisoner might befriend in a cell: a rat, a stone, a spoon or a cockroach.",
+  "details": "Runs on a character. If the character has the variable prison_pet_variable, the matching entry is used. If it is not set, every entry fits and, as it never picks at random, the first (the rat) is used.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personal_details_custom_loc.txt:110"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_neg_adjective",
+  "label": "Negative quirk adjective",
+  "summary": "Gives an adjective for the unflattering side of the character's personality quirk, such as apprehensive, nonchalant or aloof.",
+  "details": "Runs on a character. It reads the variable my_quirk (shy, arrogant, impatient, greedy, lustful and so on) and only the entries for that quirk fit. Arrogant has two entries, and the game picks at random among those that fit. There are 51 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personality_quirks_custom_loc.txt:3816"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_neg_adverb",
+  "label": "Negative quirk adverb",
+  "summary": "Gives an adverb for how the character acts on the unflattering side of their quirk, such as awkwardly, arrogantly or impatiently.",
+  "details": "Runs on a character. Only the entries for the quirk stored in the variable my_quirk fit. There are 40 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personality_quirks_custom_loc.txt:3605"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_neg_noun",
+  "label": "Negative quirk noun",
+  "summary": "Gives a noun for the unflattering side of the character's quirk, such as evasiveness, arrogance or stressfulness.",
+  "details": "Runs on a character. Only the entries for the quirk stored in the variable my_quirk fit. Some quirks, such as lustful, have two entries, and the game picks one at random. There are 41 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personality_quirks_custom_loc.txt:3388"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_neg_personal_pp",
+  "label": "Negative quirk, my action (-ing)",
+  "summary": "Gives an -ing phrase, in first person, for what the speaker does when their quirk shows badly, such as averting my eyes or tapping my foot.",
+  "details": "Runs on a character. Only the entries for the quirk stored in the variable my_quirk fit. Lustful has two entries, so the game picks one at random there. There are 46 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personality_quirks_custom_loc.txt:3140"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_neg_personal_present",
+  "label": "Negative quirk, my action",
+  "summary": "Gives a first person phrase for what the speaker does when their quirk shows badly, such as avert my eyes or tap my foot.",
+  "details": "Runs on a character. The verb is in its base form, so it follows I or we. Only the entries for the quirk stored in the variable my_quirk fit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personality_quirks_custom_loc.txt:2440"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_neg_pp",
+  "label": "Negative quirk action (-ing)",
+  "summary": "Gives an -ing phrase for what the character does when their quirk shows badly, such as averting her eyes or tapping his foot.",
+  "details": "Runs on a character. It inserts her or his to match the character. Only the entries for the quirk stored in the variable my_quirk fit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personality_quirks_custom_loc.txt:2903"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_neg_pp_type1_KR",
+  "label": "Negative quirk -ing, Korean 1",
+  "summary": "Gives the Korean wording of the negative quirk -ing action, in its first form.",
+  "details": "Runs on a character. It reads the variable my_quirk like the English list. The input finds no English text for its entries; the Korean texts sit in the game's Korean language files.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_kr_personality_quirks_custom_loc.txt:1457"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_neg_pp_type2_KR",
+  "label": "Negative quirk -ing, Korean 2",
+  "summary": "Gives the Korean wording of the negative quirk -ing action, in its second form.",
+  "details": "Runs on a character. It reads the variable my_quirk like the English list and has its own keys, ending in KR2. The input finds no English text for its entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_kr_personality_quirks_custom_loc.txt:1694"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_neg_present",
+  "label": "Negative quirk action (present)",
+  "summary": "Gives a present tense phrase for what the character does when their quirk shows badly, such as averts her eyes or taps his foot.",
+  "details": "Runs on a character. It inserts her or his to match the character. Only the entries for the quirk stored in the variable my_quirk fit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personality_quirks_custom_loc.txt:2204"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_neg_present_type1_KR",
+  "label": "Negative quirk, Korean present 1",
+  "summary": "Gives the Korean wording of the negative quirk present action, in its first form.",
+  "details": "Runs on a character. It reads the variable my_quirk like the English list. The input finds no English text for its entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_kr_personality_quirks_custom_loc.txt:293"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_neg_present_type2_KR",
+  "label": "Negative quirk, Korean present 2",
+  "summary": "Gives the Korean wording of the negative quirk present action, in its second form.",
+  "details": "Runs on a character. Ten of its 12 listed keys are the same as in type 1; only temperate and gluttonous have their own keys ending in KR2. The input finds no English text for its entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_kr_personality_quirks_custom_loc.txt:530"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_neg_present_type3_KR",
+  "label": "Negative quirk, Korean present 3",
+  "summary": "Gives the Korean wording of the negative quirk present action, in its third form.",
+  "details": "Runs on a character. Its entries have their own keys ending in KR3. The input finds no English text for them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_kr_personality_quirks_custom_loc.txt:767"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_neg_present_type4_KR",
+  "label": "Negative quirk, Korean present 4",
+  "summary": "Gives the Korean wording of the negative quirk present action, in its fourth form.",
+  "details": "Runs on a character. Its entries use the same keys as type 1, so as written it gives the same texts as type 1. The input finds no English text for them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_kr_personality_quirks_custom_loc.txt:1004"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_neg_standalone",
+  "label": "Negative quirk sentence",
+  "summary": "Gives a full short sentence about what the character does when their quirk shows badly, such as She averts her eyes.",
+  "details": "Runs on a character. It starts with she or he, capitalised, so it stands on its own. Only the entries for the quirk stored in the variable my_quirk fit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personality_quirks_custom_loc.txt:2676"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_adjective",
+  "label": "Positive quirk adjective",
+  "summary": "Gives an adjective for the flattering side of the character's personality quirk, such as shy, confident or restless.",
+  "details": "Runs on a character. Only the entries for the quirk stored in the variable my_quirk fit. Some quirks have more than one entry, and the game picks at random among those. There are 57 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personality_quirks_custom_loc.txt:1900"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_adverb",
+  "label": "Positive quirk adverb",
+  "summary": "Gives an adverb for how the character acts on the flattering side of their quirk, such as shyly, politely, confidently or eagerly.",
+  "details": "Runs on a character. Only the entries for the quirk stored in the variable my_quirk fit. Some quirks have two or three entries, and the game picks at random among those. There are 60 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personality_quirks_custom_loc.txt:1589"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_noun",
+  "label": "Positive quirk noun",
+  "summary": "Gives a noun for the flattering side of the character's quirk, such as shyness, confidence or restlessness.",
+  "details": "Runs on a character. Only the entries for the quirk stored in the variable my_quirk fit. Lustful has two entries, so the game picks one at random there. There are 44 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personality_quirks_custom_loc.txt:1358"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_noun_to_adj_KR",
+  "label": "Korean quirk noun to adjective",
+  "summary": "Gives the Korean ending that turns the positive quirk noun into an adjective.",
+  "details": "Runs on a character. It reads the variable my_quirk like the English lists. The input finds no English text for its entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_kr_personality_quirks_custom_loc.txt:2360"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_noun_to_adv_KR",
+  "label": "Korean quirk noun to adverb",
+  "summary": "Gives the Korean ending that turns the positive quirk noun into an adverb.",
+  "details": "Runs on a character. It reads the variable my_quirk like the English lists. The input finds no English text for its entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_kr_personality_quirks_custom_loc.txt:2592"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_personal_pp",
+  "label": "Positive quirk, my action (-ing)",
+  "summary": "Gives an -ing phrase, in first person, for what the speaker does when their quirk shows well, such as blushing or tossing a coin.",
+  "details": "Runs on a character. Only the entries for the quirk stored in the variable my_quirk fit. Lustful has two entries, so the game picks one at random there. There are 40 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personality_quirks_custom_loc.txt:1134"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_personal_pp_type1_KR",
+  "label": "Positive quirk, my action, Korean",
+  "summary": "Gives the Korean wording of the first person positive quirk -ing action.",
+  "details": "Runs on a character. It reads the variable my_quirk like the English list. The input finds no English text for its entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_kr_personality_quirks_custom_loc.txt:1931"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_personal_present",
+  "label": "Positive quirk, my action",
+  "summary": "Gives a first person phrase for what the speaker does when their quirk shows well, such as blush or toss a coin.",
+  "details": "Runs on a character. The verb is in its base form, so it follows I or we. Only the entries for the quirk stored in the variable my_quirk fit. One entry inserts the character's clothing article (brush my ...).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personality_quirks_custom_loc.txt:451"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_pp",
+  "label": "Positive quirk action (-ing)",
+  "summary": "Gives an -ing phrase for what the character does when their quirk shows well, such as blushing or running a hand through her hair.",
+  "details": "Runs on a character. It inserts her or his to match the character. Only the entries for the quirk stored in the variable my_quirk fit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personality_quirks_custom_loc.txt:906"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_pp_type1_KR",
+  "label": "Positive quirk action, Korean",
+  "summary": "Gives the Korean wording of the positive quirk -ing action.",
+  "details": "Runs on a character. It reads the variable my_quirk like the English list. The input finds no English text for its entries; vanilla keeps the Korean texts in its Korean language files, such as the entry for the shy quirk.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_kr_personality_quirks_custom_loc.txt:1240",
+   "vanilla: localization/korean/custom_localization/personality_quirks_cont_kr_l_korean.yml:128"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_present",
+  "label": "Positive quirk action (present)",
+  "summary": "Gives a present tense phrase for what the character does when their quirk shows well, such as blushes or tosses a coin.",
+  "details": "Runs on a character. It inserts her or his to match the character. Only the entries for the quirk stored in the variable my_quirk fit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personality_quirks_custom_loc.txt:219"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_present_type1_KR",
+  "label": "Positive quirk, Korean present 1",
+  "summary": "Gives the Korean wording of the positive quirk present action, in its first form.",
+  "details": "Runs on a character. It reads the variable my_quirk like the English list. The input finds no English text for its entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_kr_personality_quirks_custom_loc.txt:2824"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_present_type2_KR",
+  "label": "Positive quirk, Korean present 2",
+  "summary": "Gives the Korean wording of the positive quirk present action, in its second form.",
+  "details": "Runs on a character. It reads the variable my_quirk like the English list, with its own keys ending in KR2. The input finds no English text for its entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_kr_personality_quirks_custom_loc.txt:3046"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_present_type3_KR",
+  "label": "Positive quirk, Korean present 3",
+  "summary": "Gives the Korean wording of the positive quirk present action, in its third form.",
+  "details": "Runs on a character. It reads the variable my_quirk like the English list, with its own keys ending in KR3. The input finds no English text for its entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_kr_personality_quirks_custom_loc.txt:3268"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_present_type4_KR",
+  "label": "Positive quirk, Korean present 4",
+  "summary": "Gives the Korean wording of the positive quirk present action, in its fourth form.",
+  "details": "Runs on a character. It reads the variable my_quirk like the English list, with its own keys ending in KR4. The input finds no English text for its entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_kr_personality_quirks_custom_loc.txt:3490"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_standalone",
+  "label": "Positive quirk sentence",
+  "summary": "Gives a full short sentence about what the character does when their quirk shows well, such as She blushes.",
+  "details": "Runs on a character. It starts with she or he, capitalised, so it stands on its own. Only the entries for the quirk stored in the variable my_quirk fit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_personality_quirks_custom_loc.txt:678"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "quirk_pos_standalone_type1_KR",
+  "label": "Positive quirk sentence, Korean",
+  "summary": "Gives the Korean wording of the full positive quirk sentence.",
+  "details": "Runs on a character. It reads the variable my_quirk like the English list. The input finds no English text for its entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_kr_personality_quirks_custom_loc.txt:2143"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "random_learning_topic",
+  "label": "Learning topic",
+  "summary": "Gives a topic of study, such as theological treatises, tome collections, ecclesiastical legislation or canon law.",
+  "details": "Runs on a character. There are 8 entries and the game picks at random among those that fit. Six always fit. The blessings of family fits when a child of the character has a reverse opinion of the character above 40, and the blessings of marriage when a spouse does above 50.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_conversation_subjects.txt:1543"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "religion_name_adj_feminine_accusative",
+  "label": "Religion adjective (feminine accusative)",
+  "summary": "Gives the feminine accusative form of a religion's adjective, for languages that decline words.",
+  "details": "Runs on a faith. It has 34 entries, one per religion, chosen by the faith's religion tag. It is defined in the game's Polish custom text file, and the input finds no English text for its entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_pl_custom_loc_extra.txt:2"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "religion_name_adj_masculine_ins",
+  "label": "Religion adjective (masculine ins)",
+  "summary": "Gives the masculine form of a religion's adjective in the case that its key abbreviates as ins, for languages that decline words.",
+  "details": "Runs on a faith. Each of its 34 entries tests the religion tag and gives that religion's form. It is defined in the game's Polish custom text file, and the input finds no English text for it. Going by the abbreviation, ins is probably the instrumental case, but the game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_pl_custom_loc_extra.txt:210"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "custom_loc",
+  "key": "rhyme_group_a_one",
+  "label": "Insult rhyme A, first word",
+  "summary": "Gives a word of the first rhyme set A for an insult, such as cow, sow, plow or prow.",
+  "details": "Runs on a character. There are 8 entries: four for a male character and four female-specific versions with matching words. Vanilla uses it in insult poem lines such as You are more stupid than a (word). Going by its name, group A two is the rhyming partner.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_insult_poetry_custom_loc.txt:1",
+   "vanilla: localization/english/event_localization/experimental/insult_poetry_text_l_english.yml:4"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "rhyme_group_a_two",
+  "label": "Insult rhyme A, second part",
+  "summary": "Gives the second part of an insult in set A, such as should allow, understands how or could use as a plow.",
+  "details": "Runs on a character. There are 8 entries: four for a male character and four female versions. The game picks at random among those that fit the gender. Going by its name, it rhymes with rhyme group A one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_insult_poetry_custom_loc.txt:42"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "rhyme_group_b_one",
+  "label": "Insult rhyme B, first word",
+  "summary": "Gives a word of the first rhyme set B for an insult, such as dog, bog, hog or sprog.",
+  "details": "Runs on a character. There are 8 entries: four for a male character and four female versions. The game picks at random among those that fit the gender.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_insult_poetry_custom_loc.txt:85"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "rhyme_group_b_two",
+  "label": "Insult rhyme B, second word",
+  "summary": "Gives the second word of an insult rhyme in set B, such as slog, clog or grog.",
+  "details": "Runs on a character. There are 6 entries: three for a male character and three female versions that give the same words. The game picks at random among those that fit the gender.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_insult_poetry_custom_loc.txt:126"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "rhyme_group_c_one",
+  "label": "Insult rhyme C, first word",
+  "summary": "Gives a word of the first rhyme set C for an insult, such as hunt, grunt, stunt or punt.",
+  "details": "Runs on a character. There are 8 entries: four for a male character and four female versions. The game picks at random among those that fit the gender.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_insult_poetry_custom_loc.txt:161"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "rhyme_group_c_two",
+  "label": "Insult rhyme C, second part",
+  "summary": "Gives the second part of an insult in set C, such as called a runt, an errant or shunned.",
+  "details": "Runs on a character. There are 8 entries: four for a male character and four female versions. The game picks at random among those that fit the gender. Going by its name, it rhymes with rhyme group C one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_insult_poetry_custom_loc.txt:202"
+  ],
+  "uncertain": false
+ }
+]

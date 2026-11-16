@@ -1,0 +1,542 @@
+[
+ {
+  "kind": "trigger",
+  "key": "scriptedtests_piety_income",
+  "label": "Piety income",
+  "summary": "Whether the character's piety income compares as given with the number written.",
+  "details": "Vanilla uses it once, as a `<= 2` check.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "secret_type",
+  "label": "Secret type",
+  "summary": "Whether the secret is of the given secret type.",
+  "details": "Write the key of a secret type. Vanilla uses it most with types like `secret_disputed_heritage`, `secret_lover` and `secret_murder`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "sex_opposite_of",
+  "label": "Opposite sex of",
+  "summary": "Whether the character and the given character are of opposite sex.",
+  "details": "Write the other character, for example `scope:child` or `root`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "sex_same_as",
+  "label": "Same sex as",
+  "summary": "Whether the character and the given character are of the same sex.",
+  "details": "Write the other character, for example `root` or a saved scope like `scope:secondary_actor`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "short_term_gold",
+  "label": "Short-term gold",
+  "summary": "Whether the character has the given amount of gold, counted as the AI's 'short term' category.",
+  "details": "It compares the character's gold with a number or script value. Vanilla mostly writes it as a comparison such as `>= major_gold_value`, and twice as a block with `value`, `multiply` and `round`, whose exact effect the game's documentation does not explain.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The amount to compare against.",
+    "values": "a number or a script value"
+   },
+   {
+    "name": "multiply",
+    "text": "A factor; vanilla writes `multiply = 1.5` next to the value. The game's documentation does not describe it.",
+    "values": "a number"
+   },
+   {
+    "name": "round",
+    "text": "Vanilla writes `round = yes` next to the value. The game's documentation does not describe it.",
+    "values": "yes or no"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "short_term_gold_maximum",
+  "label": "Short-term gold budget",
+  "summary": "Whether the size the AI's 'short term' gold budget is meant to reach compares as given.",
+  "details": "The game notes the budget may be exceeded when all other budgets are full. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "short_term_treasury",
+  "label": "Short-term treasury",
+  "summary": "Whether the character has the given treasury amount, counted as the AI's 'short term' category.",
+  "details": "Vanilla compares it with cost values such as `>= feast_activity_cost` or `>= major_gold_value`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "short_term_treasury_maximum",
+  "label": "Short-term treasury budget",
+  "summary": "Whether the size the AI's 'short term' treasury budget is meant to reach compares as given.",
+  "details": "The game notes the budget may be exceeded when all other budgets are full. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "short_term_treasury_or_gold",
+  "label": "Short-term treasury or gold",
+  "summary": "Whether the character has the given amount in their treasury, or in gold if they have no treasury.",
+  "details": "Counted as the AI's 'short term' category. Vanilla uses it once, as `>= $GOLD$`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "should_decay",
+  "label": "Should decay",
+  "summary": "Whether the artifact decays over time.",
+  "details": "Write `yes` or `no`. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "should_decision_create_alert",
+  "label": "Decision alert",
+  "summary": "Whether a decision counts as an important one that the game flags with an alert.",
+  "details": "The input is contradictory about direction: the game's documentation says the scoped decision is checked for the target character, but the trigger is listed as running on a character with a decision as its value. Vanilla uses it once with `scope:decision`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "should_limit_age_for_dead_portraits",
+  "label": "Beautify dead portraits on",
+  "summary": "Whether the 'beautify deceased characters' setting is enabled.",
+  "details": "This is an interface trigger, so it only works in specific places, not in normal event or decision script.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "should_notify_can_host_activity",
+  "label": "Alert: can host activity",
+  "summary": "Whether the character should be alerted that they can host the given activity type.",
+  "details": "Write an activity type, for example a saved scope holding one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "should_notify_can_join_activity",
+  "label": "Alert: can join activity",
+  "summary": "Whether the character should be alerted that they can join the given activity type.",
+  "details": "Write an activity type. Vanilla passes the type of an activity, as in `scope:activity.activity_type`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "should_show_disturbing_portrait_modifiers",
+  "label": "Disturbing portraits allowed",
+  "summary": "Whether disturbing portrait modifiers may be shown.",
+  "details": "This is an interface trigger, so it only works in specific places. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "should_show_nudity",
+  "label": "Nudity allowed",
+  "summary": "Whether nudity may be shown.",
+  "details": "This is an interface trigger, so it only works in specific places.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "side_army_size",
+  "label": "Side army size",
+  "summary": "Whether the current size of all armies on this side of a battle, added together, compares as given.",
+  "details": "It runs on a combat side. Vanilla compares it with the enemy side's size scaled down, for example 0.66 times the enemy's.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The amount to compare against.",
+    "values": "a number, or a value from another side such as `enemy_side.side_army_size`"
+   },
+   {
+    "name": "multiply",
+    "text": "Multiplies the value before comparing.",
+    "values": "a number"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "side_max_army_size",
+  "label": "Side maximum army size",
+  "summary": "Whether the largest possible size of all armies on this side of a battle, added together, compares as given.",
+  "details": "It runs on a combat side. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "side_soldiers",
+  "label": "Side soldiers",
+  "summary": "Whether the number of soldiers on this side of a battle who are still fighting compares as given.",
+  "details": "It runs on a combat side. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "side_strength",
+  "label": "Side strength",
+  "summary": "Whether the strength of this side of a battle, based on soldiers still fighting, compares as given.",
+  "details": "The number is scaled down by a factor of 1000 so it stays small enough for calculations. It runs on a combat side.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_current_phase",
+  "label": "Current phase",
+  "summary": "Whether the situation is currently in the given phase.",
+  "details": "Write a phase type key. If the situation has several sub-regions, the game looks at the first one. Vanilla uses it with phases such as `situation_dynastic_cycle_phase_chaos` and `crusade_phase`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_days_since_end_date",
+  "label": "Days since situation ended",
+  "summary": "Whether the number of days since the situation was completed compares as given.",
+  "details": "Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_days_since_start_date",
+  "label": "Days since situation started",
+  "summary": "Whether the number of days since the situation started compares as given.",
+  "details": "Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_end_date",
+  "label": "Situation end date",
+  "summary": "Whether the date the situation was completed compares as given with a date.",
+  "details": "Write a valid date. Only the comparisons that make sense for dates are allowed (no `!=`). Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_has_catalyst",
+  "label": "Has catalyst",
+  "summary": "Whether any sub-region of the situation has one of its future phases affected by the given catalyst.",
+  "details": "Write a catalyst key. The documented usage line names `has_situation_top_catalyst`, which is not this key. Vanilla uses it with Silk Road catalysts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_start_date",
+  "label": "Situation start date",
+  "summary": "Whether the date the situation started compares as given with a date.",
+  "details": "Write a valid date. Only the comparisons that make sense for dates are allowed (no `!=`). Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_sub_region_has_county",
+  "label": "Has a county",
+  "summary": "Whether the situation's sub-region contains the given county.",
+  "details": "It runs on a sub-region of a situation. Write a county title, such as `root.capital_county` or a saved scope.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_sub_region_has_geographical_region",
+  "label": "Covers a region",
+  "summary": "Whether the given geographical region is part of the situation's sub-region.",
+  "details": "It runs on a sub-region of a situation. Write a region key, or a saved scope holding one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_sub_region_has_province",
+  "label": "Has a province",
+  "summary": "Whether the situation's sub-region contains the given province.",
+  "details": "It runs on a sub-region of a situation. Write a province, such as a saved scope. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_top_has_catalyst",
+  "label": "Top phase catalyst",
+  "summary": "Whether the situation's top sub-region has any of its future phases affected by the given catalyst.",
+  "details": "Write a catalyst key. The documented usage line names `has_situation_top_catalyst`, which is not this key. Vanilla uses it with catalysts such as `catalyst_hegemon_lost_mandate_of_heaven`, and often.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_top_has_county",
+  "label": "Top region has county",
+  "summary": "Whether the situation's top sub-region contains the given county.",
+  "details": "The documented usage line passes a county, but the argument type listed is a province. The game's description does not settle which it accepts, and vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_top_has_province",
+  "label": "Top region has province",
+  "summary": "Whether the situation's top sub-region contains the given province.",
+  "details": "Vanilla uses it once with a character's capital province.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_top_phase_days_since_start_date",
+  "label": "Days in top phase",
+  "summary": "Whether the number of days since the situation's top phase started compares as given.",
+  "details": "Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_top_phase_days_until_end_date",
+  "label": "Days until top phase ends",
+  "summary": "Whether the number of days until the situation's top phase completes compares as given.",
+  "details": "Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_top_phase_end_date",
+  "label": "Top phase end date",
+  "summary": "Whether the date the situation's top phase ended compares as given with a date.",
+  "details": "Write a valid date. Only the comparisons that make sense for dates are allowed (no `!=`). Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_top_phase_start_date",
+  "label": "Top phase start date",
+  "summary": "Whether the date the situation's top phase started compares as given with a date.",
+  "details": "Write a valid date. Only the comparisons that make sense for dates are allowed (no `!=`). Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "situation_type",
+  "label": "Situation type",
+  "summary": "Whether the situation is of the given situation type.",
+  "details": "Write a situation key. Vanilla uses it with keys like `the_christian_church`, `dynastic_cycle` and `natural_disaster_flood`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "skip_pursuit",
+  "label": "Skips pursuit",
+  "summary": "Whether this side of a battle skips the pursuit phase when it is losing.",
+  "details": "The flag is set with the effect `set_skip_pursuit = yes`. Write `yes` or `no`. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "spiritual_fulfillment",
+  "label": "Spiritual fulfillment",
+  "summary": "Whether the character's current spiritual fulfillment compares as given with the number written.",
+  "details": "If the character is not playable, the value is their starting spiritual fulfillment. The value can be negative; vanilla checks for example `< 0`, `>= 50` and `<= -50`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "split_clerical_region_size",
+  "label": "Split clerical region size",
+  "summary": "Whether the size a new clerical region would get if split from this province compares as given.",
+  "details": "The documented example runs it on a province, but the input lists the character as its scope, so where it works is unclear. Vanilla compares it with `> 0` or `>= 3`, or with half the size of the capital county's clerical region.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The amount to compare against.",
+    "values": "a number or a script value, such as a clerical region size"
+   },
+   {
+    "name": "divide",
+    "text": "Divides the value before comparing.",
+    "values": "a number"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ }
+]

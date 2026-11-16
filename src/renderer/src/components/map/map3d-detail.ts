@@ -1,7 +1,7 @@
 /**
  * The terrain's materials on the GPU (docs/map.md, "3D map"; map/terrain-detail.ts): the detail maps as one RGBA16UI
  * texture (per pixel 4 × layer | intensity << 8, bottom row first) and the materials' diffuse (sRGB), normal and
- * properties as BC3 array textures with their mips — straight from ck3://map/<key>-detail.bin and -materials.bin.
+ * properties as BC3 array textures with their mips, straight from ck3://map/<key>-detail.bin and -materials.bin.
  */
 import * as THREE from 'three';
 import type { MapTerrainInfo } from '../../../../shared/api';

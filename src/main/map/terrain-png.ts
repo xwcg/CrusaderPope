@@ -1,10 +1,11 @@
 /**
- * PNG rows of any bit depth for the 3D map's terrain (docs/map.md, "3D map"). The sources are big —
- * map_data/heightmap.png is 16-bit grey 18432 × 9216, 340 MB unpacked — so the pixels are inflated as a stream and
+ * PNG rows of any bit depth for the 3D map's terrain (docs/map.md, "3D map"). The sources are big:
+ * map_data/heightmap.png is 16-bit grey 18432 × 9216, 340 MB unpacked, so the pixels are inflated as a stream and
  * unfiltered row by row; only two rows are kept.
  */
 import { createInflate } from 'node:zlib';
 
+import { tr } from '../../shared/i18n.ts';
 export interface PngHeader
 {
     width: number;
@@ -24,7 +25,7 @@ function chunks(png: Uint8Array): { header: PngHeader; idat: Buffer[]; interlace
     const buf = Buffer.from(png.buffer, png.byteOffset, png.byteLength);
 
     if (buf.readUInt32BE(0) !== 0x89504e47)
-        throw new Error('Not a PNG file');
+        throw new Error(tr('Not a PNG file'));
 
     let pos = 8;
     let header: PngHeader | null = null;
@@ -51,7 +52,7 @@ function chunks(png: Uint8Array): { header: PngHeader; idat: Buffer[]; interlace
     }
 
     if (!header)
-        throw new Error('PNG without a header');
+        throw new Error(tr('PNG without a header'));
 
     return { header, idat, interlace };
 }
@@ -71,7 +72,7 @@ export function pngRows(png: Uint8Array, row: (bytes: Uint8Array, y: number) => 
     const { header, idat, interlace } = chunks(png);
 
     if (interlace)
-        return Promise.reject(new Error('Interlaced PNGs are not supported'));
+        return Promise.reject(new Error(tr('Interlaced PNGs are not supported')));
 
     const { width, height, depth, channels } = header;
     const bpp = Math.max(1, (channels * depth) >> 3);
@@ -151,7 +152,7 @@ export function pngRows(png: Uint8Array, row: (bytes: Uint8Array, y: number) => 
             }
         });
         inflate.on('error', reject);
-        inflate.on('end', () => (y === height ? resolve(header) : reject(new Error(`The PNG ends after ${y} of ${height} rows`))));
+        inflate.on('end', () => (y === height ? resolve(header) : reject(new Error(tr('The PNG ends after {y} of {height} rows', { y, height })))));
 
         for (const d of idat)
             inflate.write(d);

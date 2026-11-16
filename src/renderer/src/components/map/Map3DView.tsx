@@ -2,6 +2,7 @@
  * The 3D map (docs/map.md, "3D map"): the terrain from the heightmap with the mode's colours on it (map3d.ts), the
  * game's camera (map3dCamera.ts), names (map3dLabels.ts). Loads the terrain's rasters (built on first use: api.mapTerrain).
  */
+import { mapMemory, rememberMap } from '../../viewState';
 import { useEffect, useRef, useState } from 'react';
 import type { MapInfo } from '../../../../shared/api';
 import { api } from '../../api';
@@ -11,10 +12,13 @@ import { drawLabels3d } from './map3dLabels';
 import { attachOverlays } from './map3dOverlays';
 import type { Groups, Mode, Style } from './model';
 import { fetchRaster } from './raster';
+import type { FogDraw } from './fog';
 import { track } from '../../pending';
 import { hook } from '../../testApi';
 import '../../styles/map3d.css';
 
+import { errorText } from '../../errors';
+import { tr } from '../../../../shared/i18n';
 export interface Map3DProps
 {
     info: MapInfo;
@@ -29,8 +33,12 @@ export interface Map3DProps
     onHover: (p: number, x: number, y: number) => void;
     /** a click on a province (−1: none) */
     onSelect: (p: number) => void;
+    /** a right click (not a turn): the province and where (window coordinates), for the map's edit menu */
+    onMenu?: (p: number, x: number, y: number) => void;
     /** map pixels to bring into view (x0 y0 x1 y1), changed to move there */
     focus?: [number, number, number, number];
+    /** the fog of war (fog.ts): drawn when given */
+    fog?: FogDraw | null;
 }
 
 /** A picture from ck3://img, or null when it cannot be loaded. */
@@ -76,7 +84,7 @@ export function Map3DView(props: Map3DProps): React.JSX.Element
             .then(async (t) =>
             {
                 if (!t)
-                    throw new Error('The loaded game files have no heightmap');
+                    throw new Error(tr('The loaded game files have no heightmap'));
 
                 const [h, r] = await Promise.all([
                     fetchRaster(`${t.key}-height.bin`), // (the rivers raster only when the shader draws them: the smooth lines are an overlay, map3dOverlays.ts)
@@ -88,7 +96,7 @@ export function Map3DView(props: Map3DProps): React.JSX.Element
                 if (on)
                     setTerrain({ info: t, heights: new Uint16Array(h), rivers: r && new Uint8Array(r) });
             })
-            .catch((e: Error) => on && setError(e.message));
+            .catch((e: Error) => on && setError(errorText(e)));
         return () =>
         {
             on = false;
@@ -123,15 +131,20 @@ export function Map3DView(props: Map3DProps): React.JSX.Element
         }
         catch (e)
         {
-            setError((e as Error).message);
+            setError(errorText(e));
             return;
         }
 
         attachOverlays(m, live.current.info, terrain);
         focused.current = live.current.focus;
 
+        // (where the camera was (the same map), else the whole map; a focus asked for wins)
+        const was = mapMemory().pose;
+
         if (focused.current)
             m.cam.focus(focused.current, true);
+        else if (was && was.key === live.current.info.key)
+            m.cam.setPose(was);
         else
             m.cam.overview();
 
@@ -140,6 +153,8 @@ export function Map3DView(props: Map3DProps): React.JSX.Element
         {
             const l = live.current;
             scene.zoom = m.cam.zoom;
+            // (the camera remembered for the next time the map is made: viewState.ts)
+            rememberMap({ pose: { key: l.info.key, ...m.cam.pose } });
 
             if (needle.current)
                 needle.current.style.transform = `rotate(${m.cam.heading}rad)`;
@@ -188,6 +203,22 @@ export function Map3DView(props: Map3DProps): React.JSX.Element
         map?.setIds(ids);
     }, [map, ids]);
 
+    // the holdings at the date (castles, cities, temples; docs/map.md "3D map")
+    useEffect(() =>
+    {
+        if (!map)
+            return;
+
+        // (when the date stays: dragging the timeline asks for many)
+        let on = true;
+        const t = setTimeout(() => void api.mapHoldings(info.date).then((h) => on && h && map.setHoldings(h)), 300);
+        return () =>
+        {
+            on = false;
+            clearTimeout(t);
+        };
+    }, [map, info.date]);
+
     // the water's colour map
     useEffect(() =>
     {
@@ -228,9 +259,15 @@ export function Map3DView(props: Map3DProps): React.JSX.Element
         map?.setGroups(live.current.info, groups);
     }, [map, groups]);
 
+    // the fog of war (the mask is made again only for another table)
     useEffect(() =>
     {
-        map?.setHighlight(props.hover >= 0 ? groups.of[props.hover] + 1 : 0, props.sel >= 0 ? groups.of[props.sel] + 1 : 0);
+        map?.setFog(props.fog ?? null);
+    }, [map, props.fog]);
+
+    useEffect(() =>
+    {
+        map?.setHighlight(props.hover >= 0 ? groups.of[props.hover] + 1 : 0, props.sel >= 0 ? groups.of[props.sel] + 1 : 0, props.sel > 0 && groups.of[props.sel] < 0 ? props.sel : 0);
     }, [map, groups, props.hover, props.sel]);
 
     useEffect(() =>
@@ -255,7 +292,7 @@ export function Map3DView(props: Map3DProps): React.JSX.Element
 
         (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
         const [x, y] = local(e);
-        // (the right or middle button turns and tilts; the left one with Shift or Alt too — touchpads)
+        // (the right or middle button turns and tilts; the left one with Shift or Alt too, for touchpads)
         pointer.current = { x, y, hovered: -1, drag: { button: e.button, turn: e.button !== 0 || e.shiftKey || e.altKey, x0: x, y0: y, moved: false } };
         live.current.onHover(-1, x, y);
     };
@@ -304,10 +341,18 @@ export function Map3DView(props: Map3DProps): React.JSX.Element
         if (pointer.current)
             pointer.current.drag = undefined;
 
-        if (!map || !d || d.moved || e.button !== 0 || d.button !== 0 || d.turn)
+        if (!map || !d || d.moved)
             return;
 
         const [x, y] = local(e);
+
+        // (a right click that did not turn: the menu)
+        if (e.button === 2 && d.button === 2)
+            live.current.onMenu?.(provinceAt(map, x, y), e.clientX, e.clientY);
+
+        if (e.button !== 0 || d.button !== 0 || d.turn)
+            return;
+
         live.current.onSelect(provinceAt(map, x, y));
     };
     const onWheel = (e: React.WheelEvent): void =>
@@ -337,12 +382,12 @@ export function Map3DView(props: Map3DProps): React.JSX.Element
         >
             <canvas ref={canvas} />
             <canvas ref={labels} className="map-labels" />
-            {!map && <div className="map-status">{error ?? (terrain ? 'Preparing the terrain…' : 'Reading the terrain (the first time builds it from the heightmap)…')}</div>}
-            {map && <div className="map3d-hint">Drag: move · wheel: zoom · right drag or Shift + drag: turn and tilt, all the way round</div>}
+            {!map && <div className="map-status">{error ?? (terrain ? tr('Preparing the terrain…') : tr('Reading the terrain (the first time builds it from the heightmap)…'))}</div>}
+            {map && <div className="map3d-hint">{tr('Drag: move · wheel: zoom · right drag or Shift + drag: turn and tilt, all the way round')}</div>}
             {map && (
                 <button
                     className="map3d-compass"
-                    title="North up (and the tilt from above)"
+                    title={tr('North up (and the tilt from above)')}
                     onPointerDown={(e) => e.stopPropagation()}
                     onPointerUp={(e) => e.stopPropagation()}
                     onClick={() =>

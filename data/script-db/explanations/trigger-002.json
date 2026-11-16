@@ -1,0 +1,415 @@
+[
+ {
+  "kind": "trigger",
+  "key": "army_number_maa_regiments_of_base_type",
+  "label": "Men-at-arms of base type",
+  "summary": "Whether the army has the given number of men-at-arms regiments of one base type.",
+  "details": "The base type is written after a colon, as in `army.army_number_maa_regiments_of_base_type:archers`. Compare the count with <, <=, =, !=, > or >=. Works on an army.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "army_number_maa_regiments_of_type",
+  "label": "Men-at-arms of type",
+  "summary": "Whether the army has the given number of men-at-arms regiments of one specific type.",
+  "details": "The type is written after a colon, as in `army.army_number_maa_regiments_of_type:crossbowmen`. Compare the count with <, <=, =, !=, > or >=. Works on an army.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "army_size",
+  "label": "Army size",
+  "summary": "Whether the army's size compares in the given way to a number.",
+  "details": "Vanilla compares it with plain numbers such as `>= 3000` and `>= 4000`, and once with a script value. Works on an army.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "army_supply",
+  "label": "Army supply",
+  "summary": "Compares a number tied to the army's supply with another number; the game does not say more.",
+  "details": "The game's documentation text asks \"Can we disband this army?\", which does not fit a number comparison, so the text does not describe the key. The meaning given here rests on the name only. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "artifact_durability",
+  "label": "Artifact durability",
+  "summary": "Whether the artifact's durability compares in the given way to a number.",
+  "details": "Vanilla mostly checks for low durability, for example `<= define:NInventory|ARTIFACT_LOW_DURABILITY` (a value set in the game's defines) or plain numbers such as `< 50`. Works on an artifact.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "artifact_max_durability",
+  "label": "Artifact max durability",
+  "summary": "Whether the artifact's maximum durability compares in the given way to a number.",
+  "details": "Vanilla compares it with the game's default maximum durability (`define:NInventory|ARTIFACT_DEFAULT_MAX_DURABILITY`), using `>=` and `<`. Works on an artifact.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "artifact_slot_type",
+  "label": "Artifact slot type",
+  "summary": "Whether the artifact is of the given inventory slot type.",
+  "details": "Vanilla uses slot types such as `primary_armament`, `helmet`, `regalia`, `armor`, `book` and `throne`. Works on an artifact.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "artifact_type",
+  "label": "Artifact type",
+  "summary": "Whether the artifact is of the given type.",
+  "details": "Vanilla uses types such as `book`, `tapestry`, `chest`, `cabinet`, `animal_hide` and `throne`. Works on an artifact.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "assert_if",
+  "label": "Assert if",
+  "summary": "A debugging check that causes an assert while the game runs when its condition is true.",
+  "details": "Vanilla uses it inside a script helper, with a message saying that a required scope is empty or missing. The message text is optional.",
+  "fields": [
+    { "name": "limit", "text": "The conditions that, when true, cause the assert.", "values": "a block of triggers", "required": true },
+    { "name": "text", "text": "The message shown with the assert.", "values": "a string", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "assert_read",
+  "label": "Assert at read time",
+  "summary": "A debugging check that causes an assert when the game reads the script.",
+  "details": "It is written `assert_read = yes`, or with the message to print as a string. The game gives no more detail, and vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "attacker_war_score",
+  "label": "Attacker war score",
+  "summary": "Whether the attacker's war score compares in the given way to a number.",
+  "details": "Vanilla uses values like `>= 90`, `<= -50` or a named value, so it can be negative. Works on a war.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "attraction",
+  "label": "Attraction",
+  "summary": "Whether the character's attraction value compares in the given way to a number.",
+  "details": "Vanilla compares it with plain numbers (`>= 50`, `> 0`, `< 0`) and with named values such as `medium_positive_attraction`. It can be negative. Works on a character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "auto_add_rulers",
+  "label": "Auto-add rulers",
+  "summary": "Whether the group automatically checks region rulers as possible participants.",
+  "details": "If it is off, only characters added by hand can join the group. Written `yes` or `no`. Works on a situation participant group, and vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "available_loot",
+  "label": "Available loot",
+  "summary": "Whether the gold in the province that raiding or bartering armies can loot compares in the given way to a number.",
+  "details": "Vanilla uses `>= 5`. Works on a province.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "available_taxpayer_slots",
+  "label": "Free taxpayer slots",
+  "summary": "Whether the number of available taxpayer slots in the tax slot compares in the given way to a number.",
+  "details": "Works on a tax slot. The documented example spells the key differently (`available_tax_player_slots`), so write it as listed here. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "average_amenity_level",
+  "label": "Average amenity level",
+  "summary": "Whether the average amenity level of the character compares in the given way to a number.",
+  "details": "The average is usually a decimal number, so checking for exact equality is rarely useful. Use a comparison such as `>= 3`. Works on a character.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "average_faction_opinion",
+  "label": "Average faction opinion",
+  "summary": "Whether the average opinion of the characters of the faction compares in the given way to a number.",
+  "details": "The game's documentation does not say whom the opinion is held of. Works on a faction. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "average_faction_opinion_not_powerful_vassal",
+  "label": "Faction opinion, not powerful vassals",
+  "summary": "Whether the average opinion of the faction's characters who are not powerful vassals compares in the given way to a number.",
+  "details": "Like the plain average faction opinion, but it leaves out powerful vassals. Works on a faction.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "average_faction_opinion_powerful_vassal",
+  "label": "Faction opinion, powerful vassals",
+  "summary": "Whether the average opinion of the faction's powerful vassals compares in the given way to a number.",
+  "details": "Like the plain average faction opinion, but it counts only powerful vassals. Works on a faction.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "barter_goods",
+  "label": "Barter goods",
+  "summary": "Whether the character has barter goods that compare in the given way to a number.",
+  "details": "Vanilla uses it both as a plain comparison (`> 0`) and once as a block with the fields `value` and `multiply`. The game does not document how the two combine. Works on a character.",
+  "fields": [
+    { "name": "value", "text": "The amount of barter goods to compare with; vanilla writes `50`.", "values": "a number", "required": false },
+    { "name": "multiply", "text": "A second value that vanilla gives next to `value`; the game does not document it.", "values": "a script value", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "barter_loot",
+  "label": "Barter loot carried",
+  "summary": "Whether the barter loot the army is carrying compares in the given way to a number.",
+  "details": "Works on an army. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "base_inspiration_gold_cost",
+  "label": "Inspiration base gold cost",
+  "summary": "Whether the inspiration's base gold cost compares in the given way to a number.",
+  "details": "Works on an inspiration. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "base_weight",
+  "label": "Base weight",
+  "summary": "Whether the character's base weight compares in the given way to a number.",
+  "details": "Works on a character. Vanilla does not use it, and the game does not say what unit the weight is in.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "birth_date",
+  "label": "Birth date",
+  "summary": "Whether the character's birth date, one number counting days since the first of January in year 0, compares in the given way to another number.",
+  "details": "Because the date is one number, two characters can be compared directly, for example `scope:a.birth_date > scope:b.birth_date` (a was born later than b). Vanilla uses it once, comparing with another character's birth date. Works on a character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "blood_legacy_track_perks",
+  "label": "Blood legacy perks",
+  "summary": "Whether the number of perks the dynasty has in the lifestyle compares in the given way to a number.",
+  "details": "Works on a dynasty. The game's documentation does not say which lifestyle it means, and vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "building_levies",
+  "label": "Levies from buildings",
+  "summary": "Whether the levies a county or province gets from its buildings compare in the given way to a number.",
+  "details": "Works on a title (a county) or a province. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "building_max_garrison",
+  "label": "Garrison from buildings",
+  "summary": "Whether the maximum garrison a county or province gets from its buildings compares in the given way to a number.",
+  "details": "Works on a title (a county) or a province. The documented example reads `levies > 100`, which does not match the key; the key itself is about the garrison.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "building_slots",
+  "label": "Building slots",
+  "summary": "Whether the number of building slots in the province, occupied ones included, compares in the given way to a number.",
+  "details": "Vanilla uses values such as `<= 5`, `>= 1` and `<= 0`. Works on a province.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "calc_true_if",
+  "label": "At least N true",
+  "summary": "Whether the given number of the triggers inside it are true.",
+  "details": "List the triggers in the block and set `amount`. Vanilla usually writes `amount >= 2`, which means at least two of them; it also writes a plain number (`amount = 2`), and the game does not say whether that means exactly or at least. Vanilla puts traits, perks, `OR` blocks and other triggers inside.",
+  "fields": [
+    { "name": "amount", "text": "How many of the triggers must be true.", "values": "a number, or a comparison such as `>= 2`", "required": true },
+    { "name": "triggers", "text": "The triggers that are counted.", "values": "any triggers, written one after the other", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_accept_task_contract",
+  "label": "Can accept task contract",
+  "summary": "Whether the character meets the requirements to accept the given task contract.",
+  "details": "Write the contract after the equals sign, for example `can_accept_task_contract = scope:task_contract`. Works on a character. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_add_hook",
+  "label": "Can add hook",
+  "summary": "Whether trying to hook the target character would override the hook the character currently has on them.",
+  "details": "If there is no current hook, it is always true. The duration is optional; without it the hook type's own duration is used. Vanilla mostly checks `favor_hook`.",
+  "fields": [
+    { "name": "target", "text": "The character who would be hooked.", "values": "a character", "required": true },
+    { "name": "type", "text": "The kind of hook.", "values": "a hook type, such as `favor_hook`", "required": true },
+    { "name": "days / months / years", "text": "How long the hook would last.", "values": "a number", "required": false, "default": "the hook type's own duration" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_afford_enact_treasury_budget_costs",
+  "label": "Can afford treasury budget",
+  "summary": "Whether the character can pay the costs of the current treasury enact budget.",
+  "details": "Written `yes` or `no`. Works on a character. Vanilla uses it once, with `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_appoint_for_title",
+  "label": "Can appoint for title",
+  "summary": "Whether the character can be appointed for the given title.",
+  "details": "The game's documentation says appointment is only allowed for the main administrative tier of the holder's government and above, and only when it is the holder's top-tier title. Vanilla gives it a title such as `root.primary_title`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_arrive_in_time_to_activity_minimum",
+  "label": "Can arrive in time",
+  "summary": "Whether the character can arrive at the given activity in time.",
+  "details": "The game says it is only a rough check, kept simple to be cheap to run. Write the activity after the equals sign, as vanilla does with `scope:activity`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_assign_to_tax_slot",
+  "label": "Can assign to tax slot",
+  "summary": "Whether the character is valid to be assigned to the given tax slot.",
+  "details": "Write the tax slot after the equals sign, for example `can_assign_to_tax_slot = scope:tax_slot`. Works on a character. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_attack_in_hierarchy",
+  "label": "Can attack in hierarchy",
+  "summary": "Whether the given character can be the attacker against the defender, judging by their liege and vassal relations.",
+  "details": "Write the character after the equals sign. Vanilla uses it once, with a saved scope called `defender_check`. The game's documentation does not say who the defender is or which relations count.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "can_be_acclaimed",
+  "label": "Can be acclaimed",
+  "summary": "Whether the character could become the Acclaimed Knight of an accolade.",
+  "details": "Written `yes` or `no`. Works on a character. Vanilla always checks it with `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_be_child_of",
+  "label": "Can be child of",
+  "summary": "Whether the given character was old enough to have children when the scoped character was born.",
+  "details": "Only age is taken into account. Write the possible parent after the equals sign. Works on a character.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_be_claimed_by",
+  "label": "Can be claimed by",
+  "summary": "Whether the given character can claim the artifact.",
+  "details": "Write the character after the equals sign. Vanilla gives it saved scopes such as `scope:actor` or `scope:recipient`. Works on an artifact.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "can_be_employed_as",
+  "label": "Can be employed as",
+  "summary": "Whether the character can be employed in the given court position.",
+  "details": "Vanilla names court positions such as `travel_leader_court_position`, `court_astrologer_court_position` and `wet_nurse_court_position`. Works on a character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

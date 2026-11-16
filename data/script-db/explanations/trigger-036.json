@@ -1,0 +1,424 @@
+[
+ {
+  "kind": "trigger",
+  "key": "squared_distance",
+  "label": "Distance to target",
+  "summary": "Whether the distance between this place and a target place, measured in map pixels and squared, passes a comparison.",
+  "details": "The game compares the squared distance because it is cheaper to compute than the real one. So the number you compare with must be a squared value too. Vanilla compares against named values such as squared_distance_medium and squared_distance_large. It works on a title (county, barony) or a province.",
+  "fields": [
+    { "name": "target", "text": "The place to measure the distance to.", "values": "a province, barony or county, e.g. root.capital_province", "required": true },
+    { "name": "value", "text": "The comparison on the squared distance.", "values": "a comparison with a number or a named value, e.g. <= squared_distance_medium", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "starting_gold_by_income",
+  "label": "Starting gold by income",
+  "summary": "Whether the starting gold the game calculates for the character from their income passes a comparison.",
+  "details": "The game documents nothing more, and vanilla does not use it. It is probably meant for setting up a character's starting gold, but that is a guess from the name.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "static_group_filter",
+  "label": "Matches group",
+  "summary": "Whether the character falls into a fixed, repeatable share of all characters picked for a named group.",
+  "details": "The match is a number from 0.0 to 1.0. With 0.1, about 10% of all characters pass, and it is always the same characters for the same group name. Nothing is random beyond the group's name, so it is a stable way to split characters into subsets. Instead of a group name you can give a scope, and its value is used as the group name.",
+  "fields": [
+    { "name": "group", "text": "A name that identifies the group. Different names give different subsets.", "values": "any name you choose, e.g. dog_ear_type", "required": true },
+    { "name": "scope", "text": "Used instead of group: a scope whose value serves as the group name.", "values": "any scope" },
+    { "name": "match", "text": "The share of characters that pass, 0.0 (none) to 1.0 (all).", "values": "a number from 0.0 to 1.0, e.g. 0.5", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "stewardship",
+  "label": "Stewardship skill",
+  "summary": "Whether the character's stewardship skill passes a comparison.",
+  "details": "Vanilla mostly compares it with named skill ratings such as high_skill_rating or decent_skill_rating.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "stewardship_diff",
+  "label": "Stewardship difference",
+  "summary": "Whether the difference between the character's stewardship skill and another character's passes a comparison.",
+  "details": "The game's documentation does not say which skill is subtracted from which. Vanilla's one use (target = scope:vizier, value >= -5) suggests it is the character's skill minus the target's, so a negative result would mean the target is better; that is an inference. With abs = yes the sign is ignored, so only the size of the difference counts. Left out, abs is no.",
+  "fields": [
+    { "name": "target", "text": "The character to compare with.", "values": "a character", "required": true },
+    { "name": "value", "text": "The comparison on the difference.", "values": "a comparison with a number or script value, e.g. >= -5", "required": true },
+    { "name": "abs", "text": "Whether the sign of the difference is ignored.", "values": "yes or no", "default": "no" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "stewardship_for_portrait",
+  "label": "Stewardship for portrait",
+  "summary": "Whether the character's stewardship skill, scaled to a range from 0.0 to 1.0, passes a comparison.",
+  "details": "The game's documentation says the scaling is meant for portraits. Vanilla's scripts do not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "stewardship_lifestyle_perk_points",
+  "label": "Stewardship perk points",
+  "summary": "Whether the number of perk points the character has available passes a comparison.",
+  "details": "The game's documentation does not name the lifestyle; that it is the stewardship one comes from the key name. Vanilla uses it once, comparing with the named value max_perk_amount_per_lifestyle.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "stewardship_lifestyle_perks",
+  "label": "Stewardship perks owned",
+  "summary": "Whether the number of perks the character has from the stewardship lifestyle passes a comparison.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "stewardship_lifestyle_unlockable_perks",
+  "label": "Unlockable stewardship perks",
+  "summary": "Whether the number of stewardship perks the character could unlock right now passes a comparison.",
+  "details": "A perk counts when the character already has the perks it depends on and its own conditions (can_be_picked) are met. Perk points are not checked, so a character with none can still count perks.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "stewardship_lifestyle_xp",
+  "label": "Stewardship lifestyle XP",
+  "summary": "Whether a count tied to the character's stewardship lifestyle passes a comparison; the game's documentation text is unclear what it counts.",
+  "details": "The game's documentation text repeats the sentence of the perk points trigger (\"how many perk points available\"), which looks like a copy mistake. Reading it as the experience gathered in the lifestyle comes from the name only.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "story_type",
+  "label": "Kind of story",
+  "summary": "Whether the story in scope is of the given story type.",
+  "details": "Vanilla checks for types such as story_cycle_pet_dog, story_cycle_hunt_mystical_animal or story_greatest_of_khans.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "stress",
+  "label": "Stress",
+  "summary": "Whether the character's stress amount passes a comparison.",
+  "details": "Vanilla often checks for any stress (> 0), for plain numbers such as >= 50, or for named values such as high_stress and normal_baseline_stress. For the stress level use stress_level.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "stress_level",
+  "label": "Stress level",
+  "summary": "Whether the character's stress level passes a comparison.",
+  "details": "Vanilla compares it with small whole numbers (1, 2 and 3), for example >= 2. For the stress amount use stress instead.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "strife_opinion",
+  "label": "Strife opinion",
+  "summary": "Whether the strife opinion value the character has accumulated passes a comparison.",
+  "details": "Vanilla uses it three times, always as >= 1. The game does not explain what strife opinion is beyond that.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "sub_realm_size",
+  "label": "Sub-realm size",
+  "summary": "Whether the number of counties in the character's sub-realm passes a comparison.",
+  "details": "Vanilla compares with plain numbers such as >= 10 or named sizes such as medium_realm_size.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "sub_region_current_phase",
+  "label": "Current phase",
+  "summary": "Whether a situation's sub-region is currently in the given phase.",
+  "details": "Vanilla uses it with the seasons of the steppe situation, for example situation_steppe_cold_zud_season, and with phases such as phase_exceptional_bounty. It works on a sub-region of a situation.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "sub_region_current_phase_days_since_start_date",
+  "label": "Days in current phase",
+  "summary": "Whether the number of days since the sub-region's current situation phase began passes a comparison.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "sub_region_current_phase_days_until_end_date",
+  "label": "Days until phase ends",
+  "summary": "Whether the number of days left until the sub-region's current situation phase ends passes a comparison.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "sub_region_current_phase_end_date",
+  "label": "Phase end date",
+  "summary": "Whether the date on which the sub-region's current situation phase ends passes a comparison.",
+  "details": "The right side must be a valid date.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "sub_region_current_phase_start_date",
+  "label": "Phase start date",
+  "summary": "Whether the date on which the sub-region's current situation phase started passes a comparison.",
+  "details": "The right side must be a valid date.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "subject_can_break_tributary",
+  "label": "Can break tributary",
+  "summary": "Whether the character can break out of the tributary relationship they are currently a subject in.",
+  "details": "A tributary is a ruler who pays a more powerful ruler (the suzerain). Write yes or no. Vanilla uses it four times, all with yes.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "subject_contract_has_flag",
+  "label": "Contract has flag",
+  "summary": "Whether any currently active obligation in the character's subject contract carries the given flag.",
+  "details": "The subject contract is the character's contract as a subject (for example a vassal or tributary). Vanilla checks flags such as vassal_contract_liege_forced_war_override and tributary_contract_suzerain_guarantee_override.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "subject_contract_has_modifiable_obligations",
+  "label": "Contract can be modified",
+  "summary": "Whether the character has a subject contract that can be changed at all.",
+  "details": "It needs three things: the character has a contract, the contract uses obligation levels, and the character is a count or higher. Write yes or no.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "subject_contract_is_blocked_from_modification",
+  "label": "Contract blocked from changes",
+  "summary": "Whether script has blocked the character's subject contract from being modified.",
+  "details": "The block is set with the effect set_subject_contract_modification_blocked. Write yes or no.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "subject_contract_obligation_level_can_be_decreased",
+  "label": "Obligation level can go down",
+  "summary": "Whether the obligation level of a named obligation in the character's subject contract can be lowered.",
+  "details": "The game documents nothing more, and vanilla does not use it. How the contract is named is not shown in the input.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "subject_contract_obligation_level_can_be_increased",
+  "label": "Obligation level can go up",
+  "summary": "Whether the obligation level of a named obligation in the character's subject contract can be raised.",
+  "details": "The game documents nothing more, and vanilla does not use it. How the contract is named is not shown in the input.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "subject_standing",
+  "label": "Subject standing",
+  "summary": "Whether the standing the character's subject contract has built up passes a comparison.",
+  "details": "It can be negative; vanilla also checks < 0. Vanilla uses plain numbers (> 20) and named values such as seal_of_investiture_minimum_subject_standing.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "succession_appointment_score_invested",
+  "label": "Appointment investment",
+  "summary": "Whether the amount the scoped character has invested in a title, towards a given candidate, passes a comparison.",
+  "details": "Vanilla always compares it with scope:actor.appointment_investment_cap (value < ...), which looks like a check that there is still room to invest; that is an inference from the name of the cap.",
+  "fields": [
+    { "name": "title", "text": "The title the investment is made in.", "values": "a title, e.g. scope:target", "required": true },
+    { "name": "candidate", "text": "The candidate the investment goes towards.", "values": "a character, e.g. scope:secondary_recipient", "required": true },
+    { "name": "value", "text": "The comparison on the invested amount.", "values": "a comparison, e.g. < 0 or < scope:actor.appointment_investment_cap", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "switch",
+  "label": "Switch",
+  "summary": "Picks one list of triggers to check, depending on what another trigger gives.",
+  "details": "You name one trigger. Each case is a possible value of it with the triggers to test when it matches. An optional fallback runs when no case matches. Vanilla uses it with triggers like has_game_rule and scheme_skill, with rule values or skill names as cases.",
+  "fields": [
+    { "name": "trigger", "text": "The trigger whose value decides which case is used.", "values": "a trigger that takes a single value", "required": true },
+    { "name": "<case>", "text": "A possible value of that trigger, with the triggers to check when it matches.", "values": "a block of triggers" },
+    { "name": "fallback", "text": "The triggers to check when no case matches.", "values": "a block of triggers" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "target_is_de_facto_liege_or_above",
+  "label": "Is de facto liege or above",
+  "summary": "Whether the given title is the scoped title's de facto liege title, or one above it.",
+  "details": "De facto means by who actually holds the titles now, not by the map's borders. Write the title to check against. Vanilla mostly uses the holder's primary title, such as root.primary_title.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "target_is_de_jure_liege_or_above",
+  "label": "Is de jure liege or above",
+  "summary": "Whether the given title is the scoped title's de jure liege title, or one above it.",
+  "details": "De jure means by the map's own borders (which kingdom a duchy belongs to), whoever holds them. Write the title to check against, such as scope:title or title:h_china.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "target_is_liege_or_above",
+  "label": "Is liege or above",
+  "summary": "Whether the given character is the scoped character's liege, or stands above them in the chain of lieges.",
+  "details": "Write the character to check, such as scope:actor. Vanilla uses it a lot.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "target_is_same_character_or_above",
+  "label": "Is same or above",
+  "summary": "Whether the given character is the scoped character themselves, or stands above them in the vassal hierarchy.",
+  "details": "It reads like target_is_liege_or_above, but is also true when the given character is the scoped character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "target_is_vassal_or_below",
+  "label": "Is vassal or below",
+  "summary": "Whether the given character is a vassal of the scoped character, or lower in their vassal hierarchy.",
+  "details": "A character who is not a ruler does not count as a vassal. Write the character to check, such as scope:recipient.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "target_weight",
+  "label": "Target weight",
+  "summary": "Whether the character's target weight passes a comparison.",
+  "details": "The game's documentation gives only the example target_weight > 10. Vanilla does not use it, and the input does not say what the weight is.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "task_contract_tier",
+  "label": "Contract tier",
+  "summary": "Whether the task contract's tier passes a comparison.",
+  "details": "Vanilla compares it with the defined tiers (define:NTaskContract|HIGH_TASK_CONTRACT_TIER and the medium and low ones) or with values like task_contract_t3_value. It runs on a task contract.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "tax_collector_aptitude",
+  "label": "Tax collector aptitude",
+  "summary": "Whether the character's aptitude as a tax collector in a given kind of tax slot passes a comparison.",
+  "details": "The aptitude ranges from 0 to 4. Vanilla only uses the clan tax slot.",
+  "fields": [
+    { "name": "target", "text": "The kind of tax slot.", "values": "a tax slot type, e.g. clan_tax_slot", "required": true },
+    { "name": "value", "text": "The comparison on the aptitude.", "values": "a comparison with 0 to 4, e.g. >= 3", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "tax_to_liege",
+  "label": "Tax to liege",
+  "summary": "Whether the amount of tax the character sends to their liege passes a comparison.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "tenet_has_sin",
+  "label": "Tenet sees trait as sin",
+  "summary": "Whether the given trait counts as a sin under the tenet in scope.",
+  "details": "A tenet is a belief of a faith. Write the trait, for example gluttonous. Vanilla uses it once, with prev.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "tenet_has_virtue",
+  "label": "Tenet sees trait as virtue",
+  "summary": "Whether the given trait counts as a virtue under the tenet in scope.",
+  "details": "A tenet is a belief of a faith. Write the trait, for example chaste. Vanilla mostly checks lustful.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

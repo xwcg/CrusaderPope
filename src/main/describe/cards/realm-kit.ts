@@ -12,6 +12,7 @@ import { capitalize, formatNumber, humanize, rich } from '../text.ts';
 import type { CardInput } from './types.ts';
 import { weightLines } from './weight.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 export type Block = PNode & { v: PNode[]; };
 
 export const isBlock = (n: PNode | undefined): n is Block => !!n && Array.isArray(n.v);
@@ -205,7 +206,7 @@ export class RealmCard
             return lines;
 
         const script = this.ctx.src.slice(n.s, n.e);
-        return [{ text: ['Worked out in script (see the Source tab)'], icon: 'note', tip: script.length > 600 ? script.slice(0, 600) + '\n…' : script }];
+        return [{ text: [tr('Worked out in script (see the Source tab)')], icon: 'note', tip: script.length > 600 ? script.slice(0, 600) + '\n…' : script }];
     }
 
     /** A number from a written value: a number, an `@constant` of the file, a constant script value. */
@@ -222,7 +223,7 @@ export class RealmCard
         return this.d.anchor(n, this.ctx, kind, inner);
     }
 
-    /** The key of the block the definition is written in — a law's group, a title's de jure liege, an option's rule. */
+    /** The key of the block the definition is written in: a law's group, a title's de jure liege, an option's rule. */
     enclosing(): string | undefined
     {
         const d = this.b.idx.winningDef(this.x.e);
@@ -323,6 +324,17 @@ export class RealmCard
         this.section(title, [...lines, ...this.settingLines(set, loc)], this.x.own('field', set));
     }
 
+    /** The scope type a block runs in and its root: a non-character one is also the block's `root` (E5a: the lines' anchors carry both). */
+    private scopeFields(scope: string): Pick<Ctx, 'scopeType' | 'rootType'>
+    {
+        return { scopeType: scope, rootType: scope !== 'character' ? scope : undefined };
+    }
+
+    private scoped(scope?: string): Ctx
+    {
+        return scope ? { ...this.ctx, ...this.scopeFields(scope) } : this.ctx;
+    }
+
     /** A trigger block as a section (`scope`: the scope type of its root, a hint for adding conditions). */
     triggers(k: string, title: string, scope?: string): void
     {
@@ -331,7 +343,7 @@ export class RealmCard
             if (!isBlock(n))
                 continue;
 
-            const ctx = scope ? { ...this.ctx, scopeType: scope } : this.ctx;
+            const ctx = this.scoped(scope);
             this.section(title, this.d.triggers(n.v, ctx), this.b.blockSection(n, 'trigger', ctx));
         }
     }
@@ -344,7 +356,7 @@ export class RealmCard
             if (!isBlock(n))
                 continue;
 
-            const ctx = { ...this.ctx, followUps: [] as FollowUp[], ...(scope ? { scopeType: scope } : {}) };
+            const ctx = { ...this.ctx, followUps: [] as FollowUp[], ...(scope ? this.scopeFields(scope) : {}) };
             const lines = this.d.effects(n.v, ctx);
             const src = this.b.blockSection(n, 'effect', ctx);
 
@@ -356,7 +368,7 @@ export class RealmCard
     /** Condition lines of a block inside the definition (a limit, an obligation level's is_valid). */
     conditions(n: PNode | undefined, scope?: string): Line[]
     {
-        return isBlock(n) ? this.d.triggers(n.v, scope ? { ...this.ctx, scopeType: scope } : this.ctx) : [];
+        return isBlock(n) ? this.d.triggers(n.v, this.scoped(scope)) : [];
     }
 
     /** A weight or score (a block, or a plain value) as one line, its statements below (weight.ts). */
@@ -389,7 +401,7 @@ export class RealmCard
     {
         const { e, body, card, ctx, own } = this.x;
         this.b.genericSections(e, body, card, ctx, own, this.shown);
-        this.section('AI', this.aiLines);
+        this.section(tr('AI'), this.aiLines);
         return true;
     }
 }

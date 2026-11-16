@@ -5,16 +5,18 @@
  * inside a definition is stored as a *candidate* reference. After all files (and localization) are known,
  * candidates are resolved against the symbol table (pass 2). See docs/indexer.md.
  */
-import { statSync, openSync, readSync, closeSync } from 'node:fs';
+import { closeSync, existsSync, openSync, readdirSync, readFileSync, readSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { GameFiles, type GameFile, type HiddenFile } from '../mods/gamefiles.ts';
 import { parse, type PNode } from './parser.ts';
 import { parseLocalization, extractLocRefs, locTextAt, type LocEntry } from './localization.ts';
-import { bloomAdd, bloomHas, makeBloom, nameHash, newBloom } from './bloom.ts';
+import { bloomAdd, bloomAddHash, bloomHas, makeBloom, nameHash, newBloom } from './bloom.ts';
 import { humanizeBrackets, scanBrackets } from '../describe/text.ts';
 import { IMAGE_EXT, MODEL_EXT } from '../images/files.ts';
 import { parseDds, formatLabel } from '../images/dds.ts';
 import { constantsUsed, constantValues, eolOf, namesPattern, overrideText, pathTo, stmtCheck, textHash, titleText, topLevelAt, TITLE_KEY, type OverrideSource } from './override.ts';
+import { fold } from '../../shared/fold.ts';
 import { sameScript } from '../../shared/scriptFormat.ts';
 import {
     CALLABLE_TYPES,
@@ -22,9 +24,12 @@ import {
     CONTEXT_RULES,
     CORE_TYPES,
     NUMERIC_TYPES,
+    paramsIn,
     PREFIX_TYPES,
+    prefixedParam,
     STOP_WORDS,
     T_CHARACTER,
+    T_SAVE_CHARACTER,
     T_EVENT,
     T_FLAG,
     T_IMAGE,
@@ -47,15 +52,20 @@ import {
     typeLabel,
     type DefEmit
 } from './schema.ts';
-import { doctrinesNameTheirGroup } from './layouts.ts';
+import { ResolveMemo } from './resolveMemo.ts';
+import { VALUE_TYPES } from './valueTypes.ts';
+import { doctrinesNameTheirGroup, tenetGroupDoctrines, tenetsOwnType } from './layouts.ts';
 import type { EventBackgroundInfo, PortraitOptions, DefOrigin, DefSiteView, BracketLink, EntityDetail, EntityKey, EntityListItem, EventPreview, GalleryFile, GalleryFolder, GraphData, IndexStats, LineSource, LinkSpan, ModTouch, RefGroup, RefItem, SearchResult, TypeSummary } from '../../shared/api.ts';
 
+import { tr } from '../../shared/i18n.ts';
+import type { ScriptExtract } from './fileExtract.ts';
+import type { ParseJob, ParsePool } from './parsePool.ts';
 export interface FileInfo
 {
     rel: string;
-    /** disk path, or `archive.zip › entry` for a file inside a packed mod (display only — read through vfs) */
+    /** disk path, or `archive.zip › entry` for a file inside a packed mod (display only: read through vfs) */
     abs: string;
-    area: 'common' | 'events' | 'history/characters' | 'localization';
+    area: 'common' | 'events' | 'history/characters' | 'history/cultures' | 'localization' | 'savegame';
     type?: string;
     /** 0 = the game, 1.. = mods in load order (GameFiles.sources) */
     source: number;
@@ -65,7 +75,7 @@ export interface FileInfo
      * its definitions only, so the index knows what the mod replaced or removed (docs/mods.md).
      */
     hidden?: { by: number; how: HiddenFile['how']; };
-    /** size and modification time when it was read (cache fingerprints; unchanged files — ctime too — are skipped by an update) */
+    /** size and modification time when it was read (cache fingerprints; unchanged files, ctime too, are skipped by an update) */
     stamp?: { size: number; mtime: number; ctime?: number; };
     /** removed by an incremental update: the slot stays (file indices are stable), nothing refers to it any more */
     gone?: true;
@@ -109,7 +119,7 @@ export interface DefAnchor
     line: number;
     end: number;
     /**
-     * a mod's file (or asked for — defAnchor `withText`): its whole text — the anchors' statement checks
+     * a mod's file (or asked for: defAnchor `withText`): its whole text, which the anchors' statement checks
      * (LineSource.stmt) read around the statements
      */
     text?: string;
@@ -163,20 +173,24 @@ export interface RefreshResult
 {
     /** the index changed: views reload */
     changed: boolean;
-    /** a full re-index is needed instead — why (nothing was taken in) */
+    /** a full re-index is needed instead: why (nothing was taken in) */
     fallback?: string;
     /** game-relative paths of the mod files taken in */
     files: string[];
-    /** of those, the ones below gfx/ (images, models, portrait data) — shader files aside */
+    /** of those, the ones below gfx/ (images, models, portrait data), shader files aside */
     gfx: string[];
-    /** shader files (gfx/FX) that changed: not the index's — the compiled shaders are */
+    /** shader files (gfx/FX) that changed: not the index's; the compiled shaders are */
     shaders?: string[];
+    /** interface files (gui/, fonts/, data_binding/) that changed: not the index's: the GUI library (src/main/gui) is read again */
+    gui?: string[];
+    /** map files (map_data/) that changed: not the index's: the map's data (MapData) is made again from the listings */
+    map?: string[];
     /** display names computed again (those computed before that read what changed) */
     names?: number;
     /** display names dropped instead (too many to compute again: computed on use) */
     namesDropped?: number;
     /**
-     * More files changed than one update takes (REFRESH_CHUNK): the rest (absolute paths), for the next update — each
+     * More files changed than one update takes (REFRESH_CHUNK): the rest (absolute paths), for the next update; each
      * update leaves the index as a build of the files taken in so far would
      */
     rest?: string[];
@@ -188,27 +202,94 @@ export interface RefreshResult
 
 /** Generated names of keys (resolveToken): lists and relations. */
 const LIST_KEY = /^(?:any|every|random|ordered)_(\w+)$/;
-const RELATION_KEY = /^(?:has|set|remove)_relation_(\w+)$/;
+
+/** Keys typed per owner type in VALUE_TYPES (`@<type>|<key>`, a definition's own field): what they resolve to depends on the owner. */
+const OWNER_TYPED = new Set([...VALUE_TYPES.keys()].filter((k) => k.startsWith('@')).map((k) => k.slice(k.indexOf('|') + 1)));
+
+/**
+ * The types a value under these keys names (valueTypes.ts, from the game's own use; [] none), or undefined where the
+ * table says nothing: a definition's own field by its owner's type, then the key; under a parent the parent and the
+ * key, then a hand-written rule for the two (CONTEXT_RULES, resolveToken's), then the key.
+ */
+function valueTypesOf(key: string | null, k0: string | null, fromType: string): readonly string[] | undefined
+{
+    if (key === null)
+        return undefined;
+
+    // (a number as the key, a weight: one key for all of them, `random_on_action.#`)
+    const k1 = /^\d+(\.\d+)?$/.test(key) ? '#' : key;
+
+    if (k0 === null)
+        return (OWNER_TYPED.has(k1) ? VALUE_TYPES.get(`@${fromType}|${k1}`) : undefined) ?? VALUE_TYPES.get(k1);
+
+    const pk = `${k0}.${k1}`;
+    const own = VALUE_TYPES.get(pk);
+
+    if (own)
+        return own;
+
+    return Object.hasOwn(CONTEXT_RULES, pk) ? undefined : VALUE_TYPES.get(k1);
+}
+
+// (the names the game makes of each scripted relation: has_ / set_ / remove_relation_<x>, num_of_relation_<x>,
+// has_secret_relation_<x>; its script docs list all five for every relation)
+const RELATION_KEY = /^(?:has|set|remove|num_of|has_secret)_relation_(\w+)$/;
 /** Top folders of a mod the app reads: changes anywhere else don't concern the index or what is derived from it. */
-const INDEXED_TOPS = ['common', 'events', 'history', 'localization', 'gfx'];
+const INDEXED_TOPS = ['common', 'events', 'history', 'localization', 'gfx', 'gui', 'fonts', 'data_binding', 'map_data'];
 const INDEXED_PATH = /^(common|events|history|localization|gfx)\//i;
+/**
+ * Files under INDEXED_PATH with no slot of their own (the scan holds no version of them) that something derived from
+ * the index reads through the listings, so that a change of one is a change of the index (refreshFiles, after the
+ * slots are compared). Scanned files need no rule: they have or get a slot and are dirty. The readers:
+ * - gfx/: images, models, portrait data (the image caches, portraits, the map's gfx);
+ * - `.info` under common/, events/, history/: type docs (scanLists `doc`);
+ * - `.txt` under common/ and events/: the picker's key scan lists them all (describe/scriptKeys.ts), also the ones
+ *   directly in common/ the scan skips;
+ * - `.txt` under history/titles, history/provinces, history/province_mapping, history/faiths: coats of arms and title
+ *   facts (coa/facts.ts), the map (map/mapData.ts, map/edit.ts), title portraits (portraits/modifiers.ts), faith
+ *   layouts (indexer/layouts.ts).
+ * A new reader of such a listing belongs here, or its view stays stale after an update until the next change. Readers
+ * that list on demand and keep nothing (the migration's rules: mods/libraries.ts, inertWork.ts, inertWorld.ts) need no
+ * rule: the listings take every found file in either way.
+ */
+function readByListing(rel: string): boolean
+{
+    return /^gfx\//i.test(rel) || /^(?:common|events|history)\/.*\.info$/i.test(rel) || /^(?:common|events)\/.*\.txt$/i.test(rel) || /^history\/(?:titles|provinces|province_mapping|faiths)\/.*\.txt$/i.test(rel);
+}
 /** Files one update takes in at most (the rest follow in further updates: the worker stays responsive in between). */
 const REFRESH_CHUNK = 500;
 /** More changed files than this share of the index's files: a full build is faster than updates. */
 const REFRESH_FULL_SHARE = 0.5;
 const SHADER_PATH = /^gfx\/fx\//i;
+const GUI_PATH = /^gui\/.+\.gui$/i;
+/**
+ * an icon in a game text (`@gold_icon!`, `[gold_i]`, a TextIcon / GetIcon function), or several written together
+ * (`[learning_i][stewardship_i][diplomacy_i] [skill|E]`), with the white space around it (plainLoc)
+ */
+const ICON_IN_TEXT = /(^|\s)(?:@\w+!|\[\w+_i(?:\|\w*)?\]|\[[^\]]*(?:TextIcon|GetIcon)[^\]]*\])+( |$)/g;
+/** Fonts and data bindings: read by the GUI library (text styles, the data context), listed like its `.gui` files. */
+const GUI_DATA_PATH = /^(?:fonts|data_binding)\/./i;
+/** The map's files (map_data/): not the index's, MapData is made again from the listings. */
+const MAP_PATH = /^map_data\/./i;
+/**
+ * What a mod author keeps beside the game files that no part of the game or the app reads: layered or modelling sources
+ * (.psd, .blend …), notes, backups, archives, OS and VCS litter (the folder watcher drops the temp and swap files itself).
+ * Saving one is no change of the index: its listing is patched, nothing is derived again.
+ */
+const LEFTOVER_FILE = /(?:^|\/)(?:[^/]*\.(?:psd|psb|xcf|kra|ai|svg|blend\d*|max|ma|mb|fbx|obj|gltf|glb|md|markdown|bak|orig|rej|log|zip|7z|rar|pdf|docx?|rtf|odt|xlsx?|ods|url|lnk|db)|\.[^/]*)$/i;
 /** Entities that exist without definitions: flags and variables (by their uses), images and models (by their files). */
 const IMPLICIT_TYPES = new Set([T_FLAG, T_VARIABLE, T_IMAGE, T_MODEL]);
 /** Display names an update computes again at most; more are dropped and computed on use (refreshDisplays). */
 const DISPLAY_EAGER = 20000;
 /** Types whose display name comes from their definition (displayName: an event's title, a character's name …). */
-const META_DISPLAY = new Set([T_EVENT, T_CHARACTER, 'dynasties', 'dynasty_houses']);
+const META_DISPLAY = new Set([T_EVENT, T_CHARACTER, T_SAVE_CHARACTER, 'dynasties', 'dynasty_houses']);
 
+const FILE_CACHE_CHARS = 32_000_000;
 const NUMERIC = /^-?\d+(\.\d+)?$/;
 const DATE_KEY = /^\d+\.\d+\.\d+$/;
 /**
  * Types whose definitions in several files all count (on_actions append; flags and variables are only uses).
- * Localization keys are not among them: a later definition replaces the text — a `replace/` file's wins over all.
+ * Localization keys are not among them: a later definition replaces the text, a `replace/` file's wins over all.
  */
 const MERGING_TYPES = new Set([T_ON_ACTION, T_FLAG, T_VARIABLE]);
 
@@ -218,18 +299,26 @@ interface ModCounts
     total: number;
     states: NonNullable<TypeSummary['modStates']>;
 }
-const MOD_STATE_ORDER: (keyof ModCounts['states'])[] = ['added', 'overridden', 'same', 'removed', 'merged', 'conflicts', 'duplicates'];
-/** Two or more mods change the entry, one over the other (or add to it, merging) — not when they all leave it as the
+// (conflictsRemoved / duplicatesRemoved: the conflicts and duplicates that are removals, taken off while removed
+// entries are hidden)
+const MOD_STATE_ORDER: (keyof ModCounts['states'])[] = ['added', 'overridden', 'same', 'removed', 'merged', 'conflicts', 'duplicates', 'conflictsRemoved', 'duplicatesRemoved'];
+/** Two or more mods change the entry, one over the other (or add to it, merging); not when they all leave it as the
  *  game has it, nor for flags and variables (mods using one name). */
 const conflicting = (t: ModTouch): boolean => t.mods.length > 1 && t.state !== 'same' && !t.uses;
-/** Name order of lists (numbers by value). One collator: `localeCompare` with options builds one per call — seconds for 200k characters. */
+/** Name order of lists (numbers by value). One collator: `localeCompare` with options builds one per call: seconds for 200k characters. */
 const nameOrder = new Intl.Collator(undefined, { numeric: true }).compare;
 
 /**
  * Localization data functions taking a database key → the entity types that key names
- * (`[GetTrait('brave').GetName]`). Getters not listed fall back to any entity of that name.
+ * (`[GetTrait('brave').GetName]`). Getters not listed fall back to any entity of that name. Mostly the game's global
+ * functions (data_types 1.20.1.2, "Global function" / "Global promote"); a few are members of a type whose quoted key
+ * names an entry all the same (`GetPlayer.GetPlayerInteractionName('marry_off_interaction')`, `Character.GetCouncillor(
+ * 'councillor_chancellor')`, `Character.GetLocalizedText`), matched wherever they sit in a chain (bracketRef). Two the
+ * 1.20.1.2 game lacks: GetFaithDoctrine (1.19's, for a mod's texts not yet migrated: migrations.ts rewrites it to
+ * GetTenetType or GetDoctrineType) and GetBuildingType with a key (the game's own Spanish tourism_destinations text writes
+ * `GetBuildingType('vatapi_caves_01')`; the game has only GreatBuildingIcon.GetBuildingType, no argument).
  */
-const GETTER_TYPES: Record<string, string[]> = {
+export const GETTER_TYPES: Record<string, string[]> = {
     GetTrait: ['traits'],
     GetCourtPositionType: ['court_positions/types'],
     GetTitleByKey: ['landed_titles'],
@@ -242,8 +331,15 @@ const GETTER_TYPES: Record<string, string[]> = {
     GetSchemeType: ['schemes/scheme_types'],
     GetLaw: ['laws'],
     GetLawGroup: ['law_groups'],
-    GetFaithDoctrine: ['religion/doctrine_types'],
+    GetFaithDoctrine: ['religion/tenet_types', 'religion/doctrine_types'],
     GetDoctrine: ['religion/doctrine_types'],
+    GetDoctrineType: ['religion/doctrine_types'],
+    GetTenetType: ['religion/tenet_types'],
+    GetRiteByKey: ['religion/rite_types'],
+    GetStruggle: ['struggle/struggles'],
+    GetCourtType: ['court_types'],
+    GetSecretType: ['secret_types'],
+    GetHouseAspiration: ['house_aspirations'],
     GetGovernment: ['governments'],
     GetVassalStance: ['vassal_stances'],
     GetDomicileBuilding: ['domiciles/buildings'],
@@ -253,7 +349,9 @@ const GETTER_TYPES: Record<string, string[]> = {
     GetCultureTradition: ['culture/traditions'],
     GetCulturePillar: ['culture/pillars'],
     GetCultureByKey: ['culture/cultures'],
-    GetInnovation: ['culture/innovations'],
+    GetCultureInnovationType: ['culture/innovations'],
+    GetCultureEraType: ['culture/eras'],
+    GetCultureTemplate: ['culture/cultures'],
     GetMaA: ['men_at_arms_types'],
     GetMenAtArmsType: ['men_at_arms_types'],
     GetPerk: ['lifestyle_perks'],
@@ -264,6 +362,17 @@ const GETTER_TYPES: Record<string, string[]> = {
     GetReligionByKey: ['religion/religion_types'],
     GetReligionFamily: ['religion/religion_family_types'],
     GetDecisionWithKey: ['decisions'],
+    GetDecision: ['decisions'],
+    GetPlayerInteractionName: ['character_interactions'],
+    GetPlayerInteractionTooltip: ['character_interactions'],
+    GetPlayerInteractionValidBlockers: ['character_interactions'],
+    GetPlayerInteractionAcceptEffectDescription: ['character_interactions'],
+    GetCouncilTaskType: ['council_tasks'],
+    GetCouncilPositionType: ['council_positions'],
+    GetCouncillor: ['council_positions'],
+    GetTravelOption: ['travel/travel_options'],
+    GetDynastyByID: ['dynasties'],
+    GetDynastyHouseByID: ['dynasty_houses'],
     GetDynastyPerk: ['dynasty_perks'],
     GetDynastyLegacy: ['dynasty_legacies'],
     GetCouncillorPosition: ['council_positions'],
@@ -275,8 +384,25 @@ const GETTER_TYPES: Record<string, string[]> = {
     GetEpidemicType: ['epidemics'],
     GetLegendType: ['legends/legend_types'],
     GetLocalizedText: ['localization'],
-    GetGameConcept: ['game_concepts']
+    GetGameConcept: ['game_concepts'],
+    GetBuildingType: ['buildings'],
+    GetSubjectContractGroup: ['subject_contracts/groups']
 };
+/**
+ * Getters whose quoted argument names no entry of the index (a skill, an obligation level, a tooltip key, a stat, a slot,
+ * a variable …) and that a name lookup across all types would link to something unrelated (`GetSkill('learning')` to the
+ * event theme `learning`): bracketRef gives no link. Mostly the non-English texts' (German custom localization).
+ * Mostly members of a type (data_types 1.20.1.2: Character.GetSkill, SubjectContractType.GetObligationName …), some
+ * globals (GetMeritLevelName, GetHostilityDescription); GetDaughterSon is no function of the game: its Japanese
+ * laamp_events text writes `child.GetDaughterSon('GetDaughterSon')`.
+ */
+export const NO_LINK_GETTERS = new Set([
+    'GetSkill', 'GetRelation', 'GetStat', 'GetStatDesc', 'GetSlot', 'GetVariable', 'GetTraitTrackByKey', 'GetLevelName', 'GetMeritLevelName',
+    'GetHostilityDescription', 'GetHostilityLevelName', 'GetInfluenceLevelDesc', 'GetDynastyPrestigeLevelName', 'GetObligationName',
+    'GetObligationNameShort', 'GetObligationNameShortNoTooltip', 'GetShortObligationLevelNameWithHighlightFor', 'GetImpactModifiers',
+    'GetCurrentPhaseGuestSubset', 'GetNumberOfArtifactsForSlotTypeString', 'GetEquippedArtifactsInSlotTypeString', 'GetNumNewArtifactsOfCategory',
+    'GetActivityStateText', 'GetModifierDescription', 'GetMaxAppointmentRankDescription', 'GetLocalizedTextWithFallback', 'GetText', 'GetDaughterSon'
+]);
 /** Keys whose scalar value is usually a localization key. */
 const LOC_CONTEXT = /(^|_)(title|desc|description|name|text|tooltip|tt|flavor|label|message|key|reason|localization|loc|custom)$/;
 /** Tokens that look like loc keys on their own (event loc `ns.1234.a`, `*_tt`, `*_desc`). */
@@ -290,7 +416,7 @@ function detach(s: string): string
     return s.length > 12 ? (' ' + s).slice(1) : s;
 }
 
-class Interner
+export class Interner
 {
     list: string[] = [];
     map = new Map<string, number>();
@@ -345,7 +471,7 @@ export class GameIndex
     private outgoing = new Map<number, number[]>();
     private incoming = new Map<number, number[]>();
     private refsByFile = new Map<number, number[]>();
-    /** per file: the names its references look up (bloom.ts) — which files an update must resolve again */
+    /** per file: the names its references look up (bloom.ts): which files an update must resolve again */
     private blooms: (Uint32Array | undefined)[] = [];
 
     // incremental updates (refreshFiles)
@@ -356,10 +482,22 @@ export class GameIndex
     private rank: Int32Array = new Int32Array(0);
     /** during an update: entities whose definitions change, with what they were before */
     private touchLog: Map<Entity, { removed: boolean; }> | null = null;
+    /**
+     * per file slot: the ids of the entities with a definition in it (an update looks only at those of its changed
+     * files, not at every entity); made by the first update, kept by every one after, dropped by a build or cache load
+     */
+    private defFiles: Map<number, number[]> | null = null;
     /** an update changed the index since it was built or loaded (the cache needs a snapshot with remapped files) */
     refreshed = false;
 
     private fileCache = new Map<number, string>();
+    /**
+     * Slots whose file on disk is no longer the version the index holds (its stamp), seen when it was read again
+     * (readFile, an update's re-resolve) before an update took it in: a mod folder's file whose event is still to
+     * come, or a file no update takes in (the game's, a packed mod's: changed under the running app). Dropped when an
+     * update takes the slot in; a build starts without any (staleFiles).
+     */
+    private staleSlots = new Set<number>();
 
     // images (gfx/ of game, DLCs and jomini)
     private imgByLc = new Map<string, Entity>();
@@ -376,6 +514,11 @@ export class GameIndex
     /** the files as the game sees them: the game folder and the loaded mods in load order (docs/mods.md) */
     readonly vfs: GameFiles;
     private t0 = 0;
+    /**
+     * Resolving remembers what it computed per distinct token (resolveCandidates). Off: every candidate is looked at on its
+     * own, as before; scripts/parallel-check.ts builds one index that way to prove the memos change nothing.
+     */
+    memoize = true;
     stats: IndexStats = { files: 0, entities: 0, refs: 0, ms: 0, locKeys: 0 };
 
     /** @param files the game folder (no mods), or its layering with mods */
@@ -396,11 +539,11 @@ export class GameIndex
         this.parseAll(onProgress);
     }
 
-    /** Lists what a build reads (script, localization, type docs, gfx) — cheap; a cached index is matched against it. */
+    /** Lists what a build reads (script, localization, type docs, gfx), cheap; a cached index is matched against it. */
     scan(onProgress?: (p: BuildProgress) => void): void
     {
         this.t0 = Date.now();
-        onProgress?.({ phase: 'Scanning files', done: 0, total: 1 });
+        onProgress?.({ phase: tr('Scanning files'), done: 0, total: 1 });
         this.scanFiles();
     }
 
@@ -422,7 +565,7 @@ export class GameIndex
         locFiles.forEach(([f, idx], n) =>
         {
             if (n % 50 === 0)
-                report('Reading localization', n, locFiles.length);
+                report(tr('Reading localization'), n, locFiles.length);
 
             this.indexLocFile(f, idx);
         });
@@ -433,14 +576,144 @@ export class GameIndex
         scriptFiles.forEach(([f, idx], n) =>
         {
             if (n % 25 === 0)
-                report('Parsing scripts', n, scriptFiles.length);
+                report(tr('Parsing scripts'), n, scriptFiles.length);
 
             this.indexScriptFile(f, idx, cands);
         });
 
-        report('Resolving references', 0, cands.size);
-        this.resolveCandidates(cands, (d) => report('Resolving references', d, cands.size));
-        report('Resolving localization references', 0, 1);
+        this.parseRest(cands, report);
+    }
+
+    /**
+     * parseAll with the script files parsed on threads (docs/indexer.md, "Parallel parsing"): each file's definitions
+     * and candidates come back as data and are applied here in file order: the same index as parseAll, number for
+     * number. Files of the save layer (in memory) are parsed here, in their place.
+     */
+    async parseAllParallel(pool: ParsePool, onProgress?: (p: BuildProgress) => void, alive?: () => boolean): Promise<void>
+    {
+        const report = (phase: string, done: number, total: number): void => onProgress?.({ phase, done, total });
+        this.linkGfx(true);
+        const inOrder = (loc: boolean): (readonly [FileInfo, number])[] =>
+        {
+            const all = this.files.map((f, i) => [f, i] as const).filter(([f]) => (f.area === 'localization') === loc);
+            return [...all.filter(([f]) => f.hidden), ...all.filter(([f]) => !f.hidden)];
+        };
+        const scriptFiles = inOrder(false);
+        const jobs: ParseJob[] = [];
+
+        scriptFiles.forEach(([f, idx], i) =>
+        {
+            const gf = f.gf;
+
+            if (!gf.data)
+                jobs.push({ i, file: idx, abs: gf.abs, zip: gf.zip?.file, base: gf.zip?.base, entry: gf.entry?.name, area: f.area, type: f.type ?? '', hidden: !!f.hidden, rel: f.rel });
+        });
+
+        // (the threads parse while this one reads the localization (needed before nothing of the scripts)
+        const cands = new CandidateTable();
+        const results = new Array<ScriptExtract | null | undefined>(scriptFiles.length);
+        let next = 0;
+        let locDone = false;
+        const apply = (): void =>
+        {
+            if (!locDone)
+                return;
+
+            while (next < scriptFiles.length)
+            {
+                const [f, idx] = scriptFiles[next];
+
+                if (f.gf.data)
+                    this.indexScriptFile(f, idx, cands);
+                else
+                {
+                    const r = results[next];
+
+                    if (r === undefined)
+                        break;
+
+                    if (r)
+                        this.applyScriptExtract(f, idx, r, cands);
+
+                    results[next] = null;
+                }
+
+                if (++next % 25 === 0)
+                    report(tr('Parsing scripts'), next, scriptFiles.length);
+            }
+        };
+        const parsed = pool.run(jobs, (i, ex) =>
+        {
+            results[i] = ex;
+            apply();
+        }, alive);
+
+        const locFiles = inOrder(true);
+        locFiles.forEach(([f, idx], n) =>
+        {
+            if (n % 50 === 0)
+                report(tr('Reading localization'), n, locFiles.length);
+
+            this.indexLocFile(f, idx);
+        });
+        locDone = true;
+        apply();
+        await parsed;
+        apply();
+        this.parseRest(cands, report);
+    }
+
+    /** One file's extract (fileExtract.ts) into the index: as indexScriptFile would have done it. */
+    private applyScriptExtract(f: FileInfo, fileIdx: number, ex: ScriptExtract, cands: CandidateTable): void
+    {
+        const d = ex.defs;
+        const ids = new Int32Array(d.type.length);
+
+        for (let i = 0; i < d.type.length; i++)
+        {
+            const e = this.entity(d.type[i], d.name[i], true)!;
+            ids[i] = e.id;
+            const def: Def = { file: fileIdx, line: d.line[i], start: d.start[i], end: d.end[i], doc: d.doc[i] };
+
+            if (d.local[i])
+                def.local = true;
+
+            if (d.meta[i])
+                def.meta = d.meta[i];
+
+            if (this.touchLog)
+                this.noteTouch(e);
+
+            e.defs.push(def);
+        }
+
+        if (f.hidden)
+            return;
+
+        const c = ex.cands;
+        const s = ex.strs;
+        // (each context interned at its first use in the file, as a build on one thread does, then looked up here;
+        // the tokens go to the table's strings the same way: each of the file's strings looked up once)
+        const ctxIds = new Int32Array(s.length).fill(-1);
+        const ctxOf = (i: number): number => (ctxIds[i] >= 0 ? ctxIds[i] : (ctxIds[i] = this.ctx.id(s[i])));
+        const strIds = new Int32Array(s.length).fill(-1);
+        const strOf = (i: number): number => (i < 0 ? -1 : strIds[i] >= 0 ? strIds[i] : (strIds[i] = cands.strs.id(s[i])));
+
+        for (let j = 0; j < c.size; j++)
+        {
+            const flags = c.flags[j];
+            // (a direct reference: its target is a place among the file's definitions, not a string)
+            const direct = (flags & 4) !== 0;
+            cands.addIds(direct ? ids[c.tok[j]] : strOf(c.tok[j]), strOf(c.k1[j]), strOf(c.k0[j]), flags, ids[c.from[j]], fileIdx, c.line[j], c.off[j], c.len[j], ctxOf(c.ctx[j]));
+        }
+    }
+
+    /** After the files: references resolved, indexes built. */
+    private parseRest(cands: CandidateTable, report: (phase: string, done: number, total: number) => void): void
+    {
+        report(tr('Resolving references'), 0, cands.size);
+        this.resolveCandidates(cands, (d) => report(tr('Resolving references'), d, cands.size));
+        report(tr('Resolving localization references'), 0, 1);
         this.resolveLocRefs();
         this.buildRefIndexes();
         this.finish(false);
@@ -457,14 +730,14 @@ export class GameIndex
             locKeys: this.locText.size,
             cached
         };
-        const mods = this.vfs.sources.filter((s) => s.kind === 'mod').map((s) => ({ id: s.modId!, name: s.name }));
+        const mods = this.vfs.sources.filter((s) => s.kind !== 'game').map((s) => ({ id: s.modId!, name: s.name }));
 
         if (mods.length)
             this.stats.mods = mods;
     }
 
     /**
-     * Loaded mods renamed in their descriptors (the layering unchanged — docs/indexer.md, "Not the index's files"):
+     * Loaded mods renamed in their descriptors (the layering unchanged; docs/indexer.md, "Not the index's files"):
      * origins and the stats' mod list name them anew. Returns whether a name changed.
      */
     renameMods(names: { id: string; name: string; }[]): boolean
@@ -484,9 +757,19 @@ export class GameIndex
         }
 
         if (changed && this.stats.mods)
-            this.stats = { ...this.stats, mods: this.vfs.sources.filter((s) => s.kind === 'mod').map((s) => ({ id: s.modId!, name: s.name })) };
+            this.stats = { ...this.stats, mods: this.vfs.sources.filter((s) => s.kind !== 'game').map((s) => ({ id: s.modId!, name: s.name })) };
 
         return changed;
+    }
+
+    /**
+     * The layering's key (16 hex digits): game folder, language and the mods' identity (sources, locations, replace
+     * paths, in load order). The app keeps one index cache per key (indexer/cache.ts cacheFileFor; the check scripts'
+     * cache in scripts/fast-index.ts names its files the same way). Known before scan().
+     */
+    layerKey(): string
+    {
+        return createHash('sha1').update(`${this.gameDir}\n${this.language}\n${this.vfs.identity()}`).digest('hex').slice(0, 16);
     }
 
     /**
@@ -515,7 +798,7 @@ export class GameIndex
         }
 
         for (const [t, list] of this.typeDocs)
-            h.update(`doc ${t}|${list.map((f) => f.source + ':' + f.rel).join('|')}\n`);
+            h.update(tr('doc {t}|{join}\n', { t, join: list.map((f) => f.source + ':' + f.rel).join('|') }));
 
         for (const m of this.gfx.models)
             h.update(`m ${m.source} ${m.rel}\n`);
@@ -781,7 +1064,7 @@ export class GameIndex
     /**
      * The cache after incremental updates: the files a fresh scan lists now (same set as the index holds, in scan order)
      * and a fingerprint over the versions the index read (FileInfo.stamp). Null when they don't match (an update is
-     * pending) or a file's version is unknown — `fillStamps` takes the file's current one then (the cache was off).
+     * pending) or a file's version is unknown; `fillStamps` takes the file's current one then (the cache was off).
      */
     cacheSnapshot(code: string, fillStamps = false): { fingerprint: string; state: IndexState; } | null
     {
@@ -832,9 +1115,10 @@ export class GameIndex
      */
     importState(s: IndexState, onProgress?: (p: BuildProgress) => void): void
     {
-        const report = (pct: number): void => onProgress?.({ phase: 'Loading the cached index', done: Math.round(pct), total: 100 });
+        const report = (pct: number): void => onProgress?.({ phase: tr('Loading the cached index'), done: Math.round(pct), total: 100 });
         const n = s.eName.length;
         this.entities = new Array<Entity>(n);
+        this.defFiles = null;
         let doc = 0;
         let meta = 0;
 
@@ -913,7 +1197,7 @@ export class GameIndex
         report(100);
     }
 
-    /** 3D model files of the scan (.asset / .mesh) — available before any build. */
+    /** 3D model files of the scan (.asset / .mesh), available before any build. */
     modelFiles(): GameFile[]
     {
         return this.gfx.models;
@@ -958,8 +1242,8 @@ export class GameIndex
     // -------------------------------------------------------------------------
 
     /**
-     * Takes in files of loaded mod folders that changed on disk — written, created or deleted (absolute paths; a folder
-     * stands for everything below it) — without a full build, with the result of one: changed files are parsed again
+     * Takes in files of loaded mod folders that changed on disk, written, created or deleted (absolute paths; a folder
+     * stands for everything below it), without a full build, with the result of one: changed files are parsed again
      * (their definitions, references and texts replaced), new files added with the layering (a same-path file hides
      * the lower layer's, which comes back when it goes), and every file whose references may resolve differently
      * because an entry appeared, vanished or was removed by a mod is resolved again (found by its name filter and by
@@ -969,7 +1253,31 @@ export class GameIndex
      * (`rest`: call again with it); a `fallback` reason when a full build is faster (more than half the files).
      * descriptor.mod is not read here: the caller compares the mods (main: the loaded mods' layering).
      */
-    refreshFiles(paths: string[], chunk = REFRESH_CHUNK): RefreshResult
+    /**
+     * Loaded mods whose replace_path changed (their descriptors; the mods, order and locations the same): the layering
+     * takes the new paths, the listings are read again, and every file hidden or uncovered by that is taken in like a
+     * changed one (refreshFiles), no full build. False from the file layer: a full build instead.
+     */
+    relayer(changes: { id: string; replacePaths: string[]; }[]): RefreshResult
+    {
+        // (the folders whose layering changed: the paths a mod had and has: their images and models are looked at again)
+        const folders = new Set<string>();
+
+        for (const c of changes)
+        {
+            const before = this.vfs.setReplacePaths(c.id, c.replacePaths);
+
+            if (!before)
+                return { changed: false, files: [], gfx: [], parsed: 0, resolved: 0, ms: 0, fallback: tr('a mod whose replace_path changed is not loaded') };
+
+            for (const p of [...before, ...c.replacePaths.map((x) => x.replace(/\\/g, '/').replace(/^\/+|\/+$/g, '').toLowerCase())])
+                folders.add(p);
+        }
+
+        return this.refreshFiles([], REFRESH_CHUNK, { relayered: [...folders] });
+    }
+
+    refreshFiles(paths: string[], chunk = REFRESH_CHUNK, opts: { relayered?: string[]; virtual?: string[]; } = {}): RefreshResult
     {
         const t0 = performance.now();
         const res: RefreshResult = { changed: false, files: [], gfx: [], parsed: 0, resolved: 0, ms: 0 };
@@ -989,6 +1297,9 @@ export class GameIndex
         const found: { source: number; rel: string; key: string; }[] = [];
         const foundKeys = new Set<string>();
         const shaders = new Map<number, string[]>();
+        const guis = new Map<number, string[]>();
+        const maps = new Map<number, string[]>();
+        const quiet = new Map<number, string[]>();
 
         for (const p of paths)
         {
@@ -1003,8 +1314,46 @@ export class GameIndex
 
             for (const rel of rels)
             {
-                if (!INDEXED_PATH.test(rel))
+                const gui = GUI_PATH.test(rel) || GUI_DATA_PATH.test(rel);
+
+                if (!gui && !INDEXED_PATH.test(rel) && !MAP_PATH.test(rel))
                     continue;
+
+                // (sources and litter: the listing patched, nothing else changes)
+                if (LEFTOVER_FILE.test(rel))
+                {
+                    const list = quiet.get(at.source) ?? [];
+                    quiet.set(at.source, list);
+                    list.push(rel);
+                    continue;
+                }
+
+                // (interface files, fonts, data bindings: the listing updated, the GUI library read again; every one counts, like shaders)
+                if (gui)
+                {
+                    const list = guis.get(at.source) ?? [];
+                    guis.set(at.source, list);
+
+                    if (!list.includes(rel))
+                        list.push(rel);
+
+                    continue;
+                }
+
+                // (the map's files: the listing updated, MapData made again; a file only a folder event names counts when it came or went)
+                if (MAP_PATH.test(rel))
+                {
+                    if (viaFolder && this.vfs.isListed(at.source, rel) === this.vfs.onDisk(at.source, rel))
+                        continue;
+
+                    const list = maps.get(at.source) ?? [];
+                    maps.set(at.source, list);
+
+                    if (!list.includes(rel))
+                        list.push(rel);
+
+                    continue;
+                }
 
                 const key = at.source + '|' + rel.toLowerCase();
 
@@ -1014,13 +1363,13 @@ export class GameIndex
                 foundKeys.add(key);
                 const s = slotOf.get(key);
 
-                // a file only a folder event names, whose version the index doesn't know (images, models, shader files —
+                // a file only a folder event names, whose version the index doesn't know (images, models, shader files:
                 // no FileInfo): taken in when it came or went; changed in place, it has an event of its own (Windows
-                // reports the folder of every changed file too — every file below it went along)
+                // reports the folder of every changed file too: every file below it went along)
                 if (viaFolder && s === undefined && this.vfs.isListed(at.source, rel) === this.vfs.onDisk(at.source, rel))
                     continue;
 
-                // (no stamps: every one counts — the shader store fingerprints them itself)
+                // (no stamps: every one counts, the shader store fingerprints them itself)
                 if (SHADER_PATH.test(rel))
                 {
                     const list = shaders.get(at.source) ?? [];
@@ -1056,13 +1405,56 @@ export class GameIndex
             res.shaders = [...shaders.values()].flat();
         }
 
-        if (!found.length)
+        if (guis.size)
+        {
+            for (const [source, rels] of guis)
+            {
+                this.vfs.update(source, rels);
+                res.files.push(...rels);
+            }
+
+            res.gui = [...guis.values()].flat();
+        }
+
+        if (maps.size)
+        {
+            for (const [source, rels] of maps)
+            {
+                this.vfs.update(source, rels);
+                res.files.push(...rels);
+            }
+
+            res.map = [...maps.values()].flat();
+        }
+
+        for (const [source, rels] of quiet)
+            this.vfs.update(source, rels);
+
+        // files of a loaded save's layer made anew (an edit of the save: GameFiles.setSaveFile): no disk, no stamps
+        if (opts.virtual?.length && this.vfs.save)
+        {
+            const source = this.vfs.sources.length - 1;
+
+            for (const rel of opts.virtual)
+            {
+                const key = source + '|' + rel.toLowerCase();
+
+                if (!foundKeys.has(key))
+                {
+                    foundKeys.add(key);
+                    found.push({ source, rel, key });
+                }
+            }
+        }
+
+        // (replace paths changed: no file did, but the listings are read again; files hidden or uncovered are dirty below)
+        if (!found.length && !opts.relayered)
             return done();
 
         if (found.length > chunk && found.length > this.files.length * REFRESH_FULL_SHARE)
-            return done(`${found.length} files changed`);
+            return done(tr('{length} files changed', { length: found.length }));
 
-        // (the files beyond one update's share: the next update — their stamps still say they changed)
+        // (the files beyond one update's share: the next update (their stamps still say they changed)
         if (found.length > chunk)
         {
             res.rest = found.slice(chunk).map((x) => this.vfs.diskPath(x.source, x.rel)!);
@@ -1078,10 +1470,6 @@ export class GameIndex
             const list = changes.get(source) ?? [];
             changes.set(source, list);
             list.push(rel);
-            res.files.push(rel);
-
-            if (/^gfx\//i.test(rel))
-                res.gfx.push(rel);
         }
 
         // 2. the listings take them in
@@ -1089,7 +1477,6 @@ export class GameIndex
             this.vfs.update(source, rels);
 
         const next = this.scanLists();
-        res.changed = true;
 
         // 3. which file slots change: same source and path keep their slot, new files get one at the end
         const oldCount = this.files.length;
@@ -1132,6 +1519,41 @@ export class GameIndex
             if (!seen.has(s))
                 dirtyOld.add(s);
 
+        // a file the scan holds no version of and nothing derived reads (a stray .json in events/, a .yml of another
+        // language, notes.txt in localization/ or in a history folder nobody reads) is no change: the listings took it in
+        // (step 2) for what lists them on demand. Others are: such a file that is read through the listings
+        // (readByListing), the layering's change and the save's files, besides the files that came, went or changed (the
+        // views, the image caches and the cache file only follow a change)
+        if (!dirtyOld.size && !dirtyNew.size && !opts.relayered && !opts.virtual?.length && !found.some((x) => readByListing(x.rel)))
+            return done();
+
+        res.changed = true;
+
+        for (const { rel } of found)
+        {
+            res.files.push(rel);
+
+            if (/^gfx\//i.test(rel))
+                res.gfx.push(rel);
+        }
+
+        // (replace paths changed: the files they hid or uncovered are reported like changed ones: the views and the picker's key scan look at them)
+        if (opts.relayered)
+        {
+            const have = new Set(res.files.map((r) => r.toLowerCase()));
+
+            for (const s of [...dirtyOld, ...dirtyNew])
+            {
+                const rel = (replaced.get(s) ?? appended[s - oldCount] ?? this.files[s]).rel;
+
+                if (!have.has(rel.toLowerCase()))
+                {
+                    have.add(rel.toLowerCase());
+                    res.files.push(rel);
+                }
+            }
+        }
+
         // 4. the order a full build of these files processes them in: hidden before loaded, localization first
         const total = oldCount + appended.length;
         const rank = new Int32Array(total).fill(-1);
@@ -1153,6 +1575,11 @@ export class GameIndex
 
         this.rank = rank;
 
+        // (trait files changing: the trait groups as they were (`has_trait = wounded` resolves to the group's traits)
+        // to find the group names whose traits changed; the definitions still are the old ones here)
+        const typeAt = (s: number): string | undefined =>(replaced.get(s) ?? appended[s - oldCount] ?? this.files[s]).type;
+        const groupsBefore = [...dirtyOld].some((s) => this.files[s].type === 'traits') || [...dirtyNew].some((s) => typeAt(s) === 'traits') ? this.traitGroups() : null;
+
         // 5. what the old versions contributed goes: definitions (entries remember how they were), references
         this.touchLog = new Map();
         const entitiesBefore = this.entities.length;
@@ -1162,8 +1589,32 @@ export class GameIndex
         for (const s of dirtyOld)
             oldMask[s] = 1;
 
-        for (const e of this.entities)
+        // (the entities with a definition in a changed file, from the per-file lists, in id order: the order a walk over
+        // every entity met them in; the old versions' lists go, the new versions' are made below. Taken out until then:
+        // an update that throws midway leaves none, the next one walks every entity again)
+        const defFiles = this.defsByFile();
+        this.defFiles = null;
+        const hitIds: number[] = [];
+        const hitSeen = new Uint8Array(entitiesBefore);
+
+        for (const s of dirtyOld)
         {
+            for (const id of defFiles.get(s) ?? [])
+            {
+                if (!hitSeen[id])
+                {
+                    hitSeen[id] = 1;
+                    hitIds.push(id);
+                }
+            }
+
+            defFiles.delete(s);
+        }
+
+        for (const id of Int32Array.from(hitIds).sort())
+        {
+            const e = this.entities[id];
+
             if (e.dead)
                 continue;
 
@@ -1205,6 +1656,7 @@ export class GameIndex
 
             this.blooms[s] = undefined;
             this.fileCache.delete(s);
+            this.staleSlots.delete(s);
             this.constCache.delete(s);
             this.sameConsts.delete(s);
             this.hashes.delete(s);
@@ -1244,6 +1696,25 @@ export class GameIndex
             if (e.defs.length > 1)
                 e.defs.sort((a, b) => rank[a.file] - rank[b.file]);
 
+        // (the per-file lists of the new versions: every entity that got a definition here is in the touch log)
+        for (const e of this.touchLog.keys())
+        {
+            for (const d of e.defs)
+            {
+                if (!dirtyNew.has(d.file))
+                    continue;
+
+                const l = defFiles.get(d.file);
+
+                if (!l)
+                    defFiles.set(d.file, [e.id]);
+                else if (l[l.length - 1] !== e.id)
+                    l.push(e.id);
+            }
+        }
+
+        this.defFiles = defFiles;
+
         // 7. entries that appeared (born), lost their last definition (died), or were removed / restored by a mod while
         // their name has several entries (preferLive picks among them): what refers to their names may resolve differently
         const born = new Set<string>();
@@ -1254,8 +1725,9 @@ export class GameIndex
         const locTouched = new Set<Entity>();
         const changedEntity = (e: Entity, how: 'born' | 'died' | 'removed' | 'restored', name = e.name): void =>
         {
-            // (only a new name can make a token resolve that resolved to nothing: those are found by the name filters)
-            if (how === 'born')
+            // (only a new name, or one whose entry a mod's replace_path no longer hides, can make a token resolve that
+            // resolved to nothing: those are found by the name filters)
+            if (how === 'born' || how === 'restored')
                 born.add(name);
 
             if (e.type === T_IMAGE)
@@ -1277,19 +1749,65 @@ export class GameIndex
                 this.killEntity(e);
                 changedEntity(e, 'died');
             }
-            else if (before.removed !== this.isRemoved(e) && (this.byName.get(e.name)?.length ?? 0) > 1)
+            // (removed or restored: only a name with several entries changes for files the update doesn't read, or any
+            // when the layering changed: a lookup of a removed entry's arguments resolves to nothing)
+            else if (before.removed !== this.isRemoved(e) && (opts.relayered || (this.byName.get(e.name)?.length ?? 0) > 1))
                 changedEntity(e, before.removed ? 'restored' : 'removed');
         }
 
-        if (res.gfx.length)
+        // the trait groups as they are now (the lookups below and in step 9 use them): a group whose traits changed is a
+        // name that may resolve differently, like a new entry's: the files that hold it are resolved again (step 8)
+        if (groupsBefore)
+        {
+            this.traitGroupMap = null;
+            this.astCache.clear();
+            const groupsNow = this.traitGroups();
+            const key = (l: Entity[] | undefined): string => (l ?? []).map((e) => e.id).join(',');
+
+            for (const name of new Set([...groupsBefore.keys(), ...groupsNow.keys()]))
+            {
+                if (key(groupsBefore.get(name)) !== key(groupsNow.get(name)))
+                    born.add(name);
+            }
+        }
+
+        // (replace paths changed: the images and models in those folders, as they were and are now)
+        const regfx = (opts.relayered ?? []).filter((p) => /^gfx(\/|$)/.test(p));
+
+        if (res.gfx.length || regfx.length)
         {
             const paths = new Set(res.gfx.map((r) => r.toLowerCase()));
+            const under = (lc: string): boolean => regfx.some((p) => lc.startsWith(p + '/'));
+
+            for (const lc of [...this.imgByLc.keys(), ...this.modelByLc.keys(), ...next.gfx.images.map((f) => f.rel.toLowerCase()), ...next.gfx.models.map((f) => f.rel.toLowerCase())])
+                if (under(lc))
+                    paths.add(lc);
+
             this.refreshGfx(next.gfx, paths, (e, isNew, name) => changedEntity(e, isNew ? 'born' : 'died', name));
+
+            // (replace paths changed: the images and models whose file is another now, and the folders (the portrait data and
+            // everything else below them is read from the listings: the model browser, the asset library and the image workers start afresh))
+            if (regfx.length)
+            {
+                const have = new Set(res.gfx.map((r) => r.toLowerCase()));
+                // (the listings were read again: every picture counts as touched, those under the changed folders are the ones whose file may differ)
+                const rels = [...this.touchLog.keys(), ...changedEntities.map((c) => c.e)].filter((e) => (e.type === T_IMAGE || e.type === T_MODEL) && under(e.lname)).map((e) => e.name);
+
+                for (const rel of [...rels, ...regfx])
+                {
+                    if (!have.has(rel.toLowerCase()))
+                    {
+                        have.add(rel.toLowerCase());
+                        res.gfx.push(rel);
+                        res.files.push(rel);
+                    }
+                }
+            }
         }
 
         this.typeDocs = next.typeDocs;
         // names listing several entries list them in the order a build creates them (named()[0], the order of ambiguous
-        // links) — a file that came, went or was hidden moves its entries' place in that order
+        // links): a file that came, went or was hidden moves its entries' place in that order
         const reordered: string[] = [];
         const names = new Set(renamed);
 
@@ -1313,7 +1831,7 @@ export class GameIndex
         // 8. files to resolve again: their name filter may hold a new name, or they refer to an entry of a changed name
         const flagged = new Set<number>();
         const flaggedLoc = new Set<Entity>();
-        // (per file: the new names its filter may hold — checked against its text below)
+        // (per file: the new names its filter may hold, checked against its text below)
         const maybe = new Map<number, string[]>();
 
         if (born.size)
@@ -1353,7 +1871,7 @@ export class GameIndex
 
             return offs.has(this.rOff[r]);
         };
-        const argCtx = this.ctx.id("('…') in text");
+        const argCtx = this.ctx.id(tr('(\'…\') in text'));
         const usersOf = (e: Entity, onlyAmbiguous: boolean): void =>
         {
             for (const r of this.incoming.get(e.id) ?? [])
@@ -1375,7 +1893,7 @@ export class GameIndex
         // beside a loaded one); born or restored: every user of the other entries of its name (it may join or displace them)
         for (const { e, how } of changedEntities)
         {
-            usersOf(e, how === 'removed' || how === 'restored');
+            usersOf(e, how === 'restored');
 
             if (how !== 'born' && how !== 'restored')
                 continue;
@@ -1387,13 +1905,32 @@ export class GameIndex
                     usersOf(x, false);
         }
 
+        // a scripted effect or trigger whose definition changed: what its parameters take may have changed too (passedTypes):
+        // its cached reading goes, its callers are resolved again
+        // (the parsed definitions are kept by file and offset, cleared only at step 11: a changed file's old parse would
+        // come back while the callers are resolved, so they go now)
+        let callables = false;
+
+        for (const e of this.touchLog.keys())
+        {
+            if (e.type !== T_SCRIPTED_EFFECT && e.type !== T_SCRIPTED_TRIGGER)
+                continue;
+
+            this.paramTypes.delete(e.id);
+            callables = true;
+            usersOf(e, false);
+        }
+
+        if (callables)
+            this.astCache.clear();
+
         // names listed in another order now: their targets at ambiguous places come in that order
         for (const name of reordered)
             for (const e of this.byName.get(name) ?? [])
                 usersOf(e, true);
 
         // a filter answers "maybe" for ~0.4 % of the names a file doesn't hold: with hundreds of new names (many files
-        // at once, a folder's types changing) nearly every file would be resolved again — a file whose text holds none
+        // at once, a folder's types changing) nearly every file would be resolved again. A file whose text holds none
         // of its hits can't look them up (a name looked up is part of its token; image names in lower case)
         const read = new Map<number, string>();
 
@@ -1409,6 +1946,35 @@ export class GameIndex
             {
                 flagged.add(s);
                 read.set(s, text);
+            }
+        }
+
+        // (a flagged file whose disk version is not the one the index holds (no event for it yet, or one this update
+        // left for later): resolving its new text against definitions taken from the old one would make an index no
+        // build makes. A mod folder's file goes to `rest`, so the next update takes it in as a changed file; its old
+        // references stay until then. One no update can take in (the game's) is noted (staleFiles) and read as it is)
+        const later = new Set(res.rest ?? []);
+        const takeLater = (s: number): boolean =>
+        {
+            if (!this.changedOnDisk(s))
+                return false;
+
+            this.staleSlots.add(s);
+            const abs = this.vfs.diskPath(this.files[s].source, this.files[s].rel);
+
+            if (!abs)
+                return false;
+
+            later.add(abs);
+            return true;
+        };
+
+        for (const s of [...flagged])
+        {
+            if (takeLater(s))
+            {
+                flagged.delete(s);
+                read.delete(s);
             }
         }
 
@@ -1446,8 +2012,52 @@ export class GameIndex
                 killed.push(r);
 
         const lostRefs = this.killRefs(killed);
+        const entitiesBeforeRefs = this.entities.length;
         this.resolveCandidates(cands, () =>
         {});
+
+        // (a flag or variable these references create, its first use come in: the texts that name it, `'new_rite'` in
+        // `[ROOT.Var('new_rite').Rite.GetName]`, are read again too, as a build reads every text after every script
+        // reference; keys read again anyway are left to locRedo)
+        const bornNames = new Set<string>();
+
+        for (let i = entitiesBeforeRefs; i < this.entities.length; i++)
+        {
+            const e = this.entities[i];
+
+            if (e && (e.type === T_FLAG || e.type === T_VARIABLE))
+                bornNames.add(e.name);
+        }
+
+        if (bornNames.size)
+        {
+            const redo = new Set(locRedo);
+            const more: Entity[] = [];
+
+            for (const [key, text] of this.locText)
+            {
+                if (!text.includes("('") || ![...bornNames].some((n) => text.includes(`'${n}'`)))
+                    continue;
+
+                const e = this.get(T_LOC, key);
+
+                if (e && !e.dead && !redo.has(e))
+                    more.push(e);
+            }
+
+            more.sort((a, b) => a.id - b.id);
+            const again: number[] = [];
+
+            for (const e of more)
+                for (const r of this.outgoing.get(e.id) ?? [])
+                    again.push(r);
+
+            for (const id of this.killRefs(again))
+                lostRefs.add(id);
+
+            locRedo.push(...more);
+            locRedo.sort((a, b) => a.id - b.id);
+        }
         // localization: the winning definition's text, then what it refers to
         const texts = new Map<number, Map<number, string>>();
         const textAt = (file: number, start: number): string | undefined =>
@@ -1457,6 +2067,10 @@ export class GameIndex
             if (!m)
             {
                 texts.set(file, m = new Map());
+
+                // (a file changed on disk since: read as it is now, and taken in by the next update)
+                if (!locEntries.has(file))
+                    takeLater(file);
 
                 for (const en of locEntries.get(file) ?? parseLocalization(this.readFile(file)).entries)
                     m.set(en.off, en.text);
@@ -1492,6 +2106,9 @@ export class GameIndex
             if (!e.dead)
                 this.addLocRefs(e);
 
+        if (later.size)
+            res.rest = [...later];
+
         this.indexNewRefs(refsBefore);
 
         // flags and variables nothing refers to any more are gone (a build creates them from their uses)
@@ -1514,9 +2131,10 @@ export class GameIndex
             }
 
         if (dangling.length)
-            this.killRefs(dangling);
+            for (const id of this.killRefs(dangling))
+                lostRefs.add(id);
 
-        // 10. the entries of a type in the order a build creates them (names(): concept aliases, doctrines, assets …) —
+        // 10. the entries of a type in the order a build creates them (names(): concept aliases, doctrines, assets …),
         // not localization keys, flags and variables, which nothing iterates by type
         const touched = [...this.touchLog.keys()];
         const types = new Set([...touched, ...changedEntities.map((c) => c.e)].map((e) => e.type));
@@ -1549,15 +2167,17 @@ export class GameIndex
         // 11. derived data
         this.astCache.clear();
 
-        while (this.fileCache.size > 40)
-            this.fileCache.delete(this.fileCache.keys().next().value!);
+        this.trimFileCache();
 
         if (touched.some((e) => e.type === 'game_concepts'))
             this.conceptAliases = null;
 
-        // (a display name comes from localization, its entry's definition — an event's title —, other entries' names —
-        // named()[0]: those computed so far that read what changed are computed again. A name another one shows changes
-        // with the entry named()[0] finds — born, died, removed, restored, reordered — or, for names from a definition,
+        if (touched.some((e) => e.type === 'traits'))
+            this.traitGroupMap = null;
+
+        // (a display name comes from localization, its entry's definition (an event's title), other entries' names
+        // (named()[0]): those computed so far that read what changed are computed again. A name another one shows changes
+        // with the entry named()[0] finds (born, died, removed, restored, reordered) or, for names from a definition,
         // with a touched entry; names from localization follow their keys, which the outer name read too)
         const lookups = [...changedEntities.map((c) => c.e.name), ...reordered, ...touched.filter((e) => META_DISPLAY.has(e.type)).map((e) => e.name)];
         const displays = this.refreshDisplays(touched, [...locChanged, ...lookups.map((n) => '#' + n)]);
@@ -1570,9 +2190,10 @@ export class GameIndex
         this.iconUsers = null;
         this.gfxHidden = null;
         this.removedImgs = null;
+        this.removedMdls = null;
 
-        // (whether the mods' definitions say what the game's do: again for the entries whose definitions changed — an
-        // entry's constants and file-local triggers/effects are in the files of its definitions, so it is among them)
+        // (whether the mods' definitions say what the game's do: again for the entries whose definitions changed (an
+        // entry's constants and file-local triggers/effects are in the files of its definitions, so it is among them))
         this.localDefs = null;
         this.localCalls.clear();
 
@@ -1602,25 +2223,64 @@ export class GameIndex
             }
         }
 
-        // flags and variables: their touch follows their uses, which any update may change — counted afresh (cheap)
-        for (const type of [T_FLAG, T_VARIABLE])
+        // flags and variables: their touch follows their uses (the files of the references to them): those a reference to
+        // came or went from are counted again, with what they were counted with taken out (the cache holds it: every one
+        // counted has its touch there, each reset below is followed by its count). A layering or a save changed: all of
+        // them afresh. (Those that died are in the touch log: taken out by noteTouch.)
+        if (opts.relayered || opts.virtual?.length)
         {
-            const m = this.byType.get(type);
-
-            for (const e of m?.values() ?? [])
-                this.touchCache[e.id] = undefined;
-
-            if (!this.modCounts)
-                continue;
-
-            this.modCounts.delete(type);
-
-            for (const e of m?.values() ?? [])
+            for (const type of [T_FLAG, T_VARIABLE])
             {
-                const t = this.modTouch(e);
+                const m = this.byType.get(type);
 
-                if (t)
-                    this.countTouch(type, t, 1);
+                for (const e of m?.values() ?? [])
+                    this.touchCache[e.id] = undefined;
+
+                if (!this.modCounts)
+                    continue;
+
+                this.modCounts.delete(type);
+
+                for (const e of m?.values() ?? [])
+                {
+                    const t = this.modTouch(e);
+
+                    if (t)
+                        this.countTouch(type, t, 1);
+                }
+            }
+        }
+        else
+        {
+            const uses = new Set(lostRefs);
+
+            for (let r = refsBefore; r < this.rFrom.length; r++)
+                if (this.rFrom[r] >= 0)
+                    uses.add(this.rTo[r]);
+
+            for (const id of uses)
+            {
+                const e = this.entities[id];
+
+                if ((e.type !== T_FLAG && e.type !== T_VARIABLE) || this.touchLog.has(e))
+                    continue;
+
+                const before = this.touchCache[id];
+                this.touchCache[id] = undefined;
+
+                if (!this.modCounts)
+                    continue;
+
+                if (before)
+                    this.countTouch(e.type, before, -1);
+
+                if (!e.dead)
+                {
+                    const t = this.modTouch(e);
+
+                    if (t)
+                        this.countTouch(e.type, t, 1);
+                }
             }
         }
 
@@ -1635,6 +2295,37 @@ export class GameIndex
             locKeys: this.locText.size
         };
         return done();
+    }
+
+    /**
+     * Per file slot, the entities with a definition in it (defFiles): walked once from every entity's definitions, then
+     * kept by each update (refreshFiles drops a changed file's list and makes the new version's).
+     */
+    private defsByFile(): Map<number, number[]>
+    {
+        if (this.defFiles)
+            return this.defFiles;
+
+        const m = new Map<number, number[]>();
+
+        for (const e of this.entities)
+        {
+            if (e.dead)
+                continue;
+
+            for (const d of e.defs)
+            {
+                const l = m.get(d.file);
+
+                if (!l)
+                    m.set(d.file, [e.id]);
+                else if (l[l.length - 1] !== e.id)
+                    l.push(e.id);
+            }
+        }
+
+        this.defFiles = m;
+        return m;
     }
 
     /** Remembers how an entry was before an update changes its definitions (and takes it out of the mod counts). */
@@ -1688,7 +2379,7 @@ export class GameIndex
 
     /**
      * Images and models of the new gfx listing: new files become entries, gone ones die, others may come from another
-     * file now. `paths` (lower case): the changed ones — how the mods touch those is looked at again.
+     * file now. `paths` (lower case): the changed ones; how the mods touch those is looked at again.
      */
     private refreshGfx(gfx: { images: GameFile[]; models: GameFile[]; }, paths: Set<string>, changed: (e: Entity, isNew: boolean, name?: string) => void): void
     {
@@ -1783,7 +2474,7 @@ export class GameIndex
     /**
      * Removed references (tombstones: rFrom = -1) leave the columns once they are `compactShare` of them: the live ones
      * move down in order, so every list keeps its order with the new ids (the order a build creates them is their id
-     * order within a file — refOrder, refsInBuildOrder). ~60 ms for vanilla's 1.2M references.
+     * order within a file: refOrder, refsInBuildOrder). ~60 ms for vanilla's 1.2M references.
      */
     compactRefs(share = this.compactShare): boolean
     {
@@ -2044,6 +2735,7 @@ export class GameIndex
         this.files = s.files;
         this.typeDocs = s.typeDocs;
         this.gfx = s.gfx;
+        this.defFiles = null;
     }
 
     /** scanFiles' lists, not installed (an incremental update compares them with the index's). */
@@ -2129,6 +2821,22 @@ export class GameIndex
         for (const h of this.vfs.hidden('history/characters', { ext: /\.txt$/i }))
             hiddenFiles.push({ h, area: 'history/characters' });
 
+        // a culture's history (innovations, eras by date): one entry per file, named for the culture
+        for (const f of this.vfs.list('history/cultures', { ext: /\.txt$/i }))
+            add(f, 'history/cultures', 'history/cultures');
+
+        for (const h of this.vfs.hidden('history/cultures', { ext: /\.txt$/i }))
+            hiddenFiles.push({ h, area: 'history/cultures', type: 'history/cultures' });
+
+        const cultureDoc = this.vfs.get('history/cultures/_culture.info');
+
+        if (cultureDoc)
+            doc('history/cultures', cultureDoc);
+
+        // a loaded save's files (docs/saves.md): `savegame/<type>/…`, type `savegame/<type>`
+        for (const f of this.vfs.list('savegame', { ext: /\.txt$/i }))
+            add(f, 'savegame', 'savegame/' + f.rel.split('/')[1].toLowerCase());
+
         const charDoc = this.vfs.get('history/_characters.info');
 
         if (charDoc)
@@ -2141,10 +2849,14 @@ export class GameIndex
             const rb = /\/replace\//i.test(b) ? 1 : 0;
             return ra - rb || (a.toLowerCase() < b.toLowerCase() ? -1 : a.toLowerCase() > b.toLowerCase() ? 1 : 0);
         };
-        // (the game also reads localization/replace/<language>/ — AGOT keeps its title names there)
+        // (the game also reads localization/replace/<language>/; AGOT keeps its title names there)
         const locDirs = ['localization/' + this.language, 'localization/replace/' + this.language];
-        const locFiles = locDirs.flatMap((d) => this.vfs.list(d, { ext: /\.yml$/i }));
-        const locHidden = locDirs.flatMap((d) => this.vfs.hidden(d, { ext: /\.yml$/i }));
+        // (the game takes a file's language from its l_<language> header, not from its folder: the engine's trigger texts sit in localization/jomini/…, a mod may keep
+        // `x_l_english.yml` in localization/ itself: the files named for the language that no language folder of the lists above holds)
+        const outside = new RegExp('_l_' + this.language + '\\.yml$', 'i');
+        const inLangDir = (rel: string): boolean => locDirs.some((d) => rel.toLowerCase().startsWith(d.toLowerCase() + '/'));
+        const locFiles = [...locDirs.flatMap((d) => this.vfs.list(d, { ext: /\.yml$/i })), ...this.vfs.list('localization', { ext: outside }).filter((f) => !inLangDir(f.rel))];
+        const locHidden = [...locDirs.flatMap((d) => this.vfs.hidden(d, { ext: /\.yml$/i })), ...this.vfs.hidden('localization', { ext: outside }).filter((h) => !inLangDir(h.file.rel))];
 
         for (const f of locFiles.sort((a, b) => locOrder(a.rel, b.rel)))
             add(f, 'localization');
@@ -2222,7 +2934,7 @@ export class GameIndex
 
     /**
      * Parses a script file: registers its definitions and collects the candidate references of a loaded file.
-     * `refsOnly` (an update resolving an unchanged file again): the definitions are there already — only candidates.
+     * `refsOnly` (an update resolving an unchanged file again): the definitions are there already, only candidates.
      */
     private indexScriptFile(f: FileInfo, fileIdx: number, cands: CandidateTable, src = this.vfs.readText(f.gf), refsOnly = false): void
     {
@@ -2240,7 +2952,7 @@ export class GameIndex
         const defNodes = new Set<PNode>();
         const nodeToEntity = new Map<PNode, Entity>();
 
-        extractDefs(f.area, f.type ?? '', ast, (d) =>
+        extractDefs(f.area, f.type ?? '', ast, f.rel, (d) =>
         {
             if (d.name.includes('$'))
                 return;
@@ -2340,18 +3052,171 @@ export class GameIndex
     {
         const all = this.byName.get(name);
 
-        if (!all)
-            return [];
-
         if (rule)
         {
-            const pref = all.filter((e) => rule.includes(e.type));
+            const pref = all ? all.filter((e) => rule.includes(e.type)) : [];
 
             if (pref.length)
                 return pref;
+
+            // (`has_trait = wounded`: a trait group names its traits, wounded_1 … wounded_3)
+            if (rule.includes('traits'))
+            {
+                const group = this.traitGroups().get(name);
+
+                if (group)
+                    return group;
+            }
         }
 
+        if (!all)
+            return [];
+
         return all.filter((e) => !CONTEXT_ONLY_TYPES.has(e.type) && e.type !== T_LOC && e.type !== T_FLAG && e.type !== T_VARIABLE);
+    }
+
+    /** what each parameter of a mod's scripted effect or trigger takes, by entity id (paramTypesOf; dropped when an update touches it) */
+    private paramTypes = new Map<number, Map<string, readonly string[]>>();
+
+    /**
+     * What the parameters of a scripted effect or trigger take, from how its winning definition uses `$PARAM$`: one type
+     * list wherever it stands (the value table, else a hand rule), else nothing said (docs/indexer.md "Value types").
+     */
+    private paramTypesOf(e: Entity): Map<string, readonly string[]>
+    {
+        let m = this.paramTypes.get(e.id);
+
+        if (m)
+            return m;
+
+        this.paramTypes.set(e.id, (m = new Map()));
+        const def = this.defNode(e);
+
+        if (!def || !Array.isArray(def.node.v))
+            return m;
+
+        const seen = new Map<string, string | null>();
+        // (`flag:$X$`, `scope:$X$`, `var:$X$`: what they say counts only for a parameter used no other way: `other`)
+        const weak = new Map<string, string | null>();
+        const other = new Set<string>();
+        const note = (into: Map<string, string | null>, param: string, key: string | null): void =>
+        {
+            into.set(param, !into.has(param) || into.get(param) === key ? key : null);
+        };
+        const walk = (nodes: PNode[], path: string[]): void =>
+        {
+            const k0 = path.length ? path[path.length - 1] : null;
+
+            for (const n of nodes)
+            {
+                for (const x of n.k ? paramsIn(n.k) : [])
+                    other.add(x);
+
+                if (Array.isArray(n.v))
+                {
+                    path.push(n.k ?? '');
+                    walk(n.v, path);
+                    path.pop();
+                    continue;
+                }
+
+                // (after a prefix, `trait:$T$`, the prefix says what it takes, wherever it stands)
+                const pre = prefixedParam(n.v);
+
+                if (pre)
+                {
+                    note(pre.strong ? seen : weak, pre.param, pre.types.join(','));
+                    continue;
+                }
+
+                const p = /^\$([^$\s]+)\$$/.exec(n.v);
+                const k1 = n.k ?? k0;
+
+                if (!p)
+                {
+                    for (const x of paramsIn(n.v))
+                        other.add(x);
+
+                    continue;
+                }
+
+                if (!k1)
+                    continue;
+
+                const kk0 = n.k === null ? (path.length > 1 ? path[path.length - 2] : null) : k0;
+                const t = valueTypesOf(k1, kk0, e.type) ?? (kk0 !== null ? CONTEXT_RULES[`${kk0}.${k1}`] : undefined) ?? CONTEXT_RULES[k1];
+                const key = t ? [...t].sort().join(',') : null;
+                seen.set(p[1], !seen.has(p[1]) || seen.get(p[1]) === key ? key : null);
+            }
+        };
+        walk(def.node.v, []);
+
+        for (const [p, key] of weak)
+            if (!seen.has(p) && !other.has(p))
+                seen.set(p, key);
+
+        for (const [p, key] of seen)
+            if (key !== null)
+                m.set(p, key ? key.split(',') : []);
+
+        return m;
+    }
+
+    /**
+     * A value passed to a mod's scripted effect or trigger (`my_effect = { TARGET = x }`): what the effect's own text puts
+     * where `$TARGET$` stands; the game's own effects are in the value table (`<effect>.<PARAM>`).
+     */
+    private passedTypes(k1: string | null, k0: string | null): readonly string[] | undefined
+    {
+        if (k0 === null || k1 === null || !/^[A-Z][A-Z0-9_%]*$/.test(k1))
+            return undefined;
+
+        const callee = this.byName.get(k0)?.find((e) => !e.dead && (e.type === T_SCRIPTED_EFFECT || e.type === T_SCRIPTED_TRIGGER));
+        const win = callee && this.winningDef(callee);
+
+        if (!callee || !win || this.files[win.file].source === 0)
+            return undefined;
+
+        return this.paramTypesOf(callee).get(k1);
+    }
+
+    private traitGroupMap: Map<string, Entity[]> | null = null;
+
+    /** The traits of each trait group name (`group = wounded`, `group_equivalence = eunuch` in common/traits). */
+    private traitGroups(): Map<string, Entity[]>
+    {
+        if (this.traitGroupMap)
+            return this.traitGroupMap;
+
+        const map = new Map<string, Entity[]>();
+        this.traitGroupMap = map;
+
+        for (const e of this.byType.get('traits')?.values() ?? [])
+        {
+            const groups = this.winningDef(e)?.meta?.groups;
+
+            if (!groups)
+                continue;
+
+            for (const g of groups.split(' '))
+                if (g !== e.name)
+                {
+                    const list = map.get(g) ?? map.set(g, []).get(g)!;
+
+                    if (!list.includes(e))
+                        list.push(e);
+                }
+        }
+
+        // (an update has not sorted the entries of a type yet: a group lists its traits in the order a build creates them;
+        // without an update `rank` is empty and the ids are that order)
+        const built = this.rank.length === 0;
+
+        for (const list of map.values())
+            if (list.length > 1)
+                list.sort(built ? (a, b) => a.id - b.id : (a, b) => this.creationOrder(a, b));
+
+        return map;
     }
 
     private resolvePrefixed(tok: string): Entity[]
@@ -2417,7 +3282,7 @@ export class GameIndex
             if (m)
                 return this.lookup(m[1], ['scripted_lists']);
 
-            m = /^(?:has|set|remove)_relation_(\w+)$/.exec(tok);
+            m = RELATION_KEY.exec(tok);
 
             if (m)
                 return this.lookup(m[1], ['scripted_relations']);
@@ -2438,7 +3303,9 @@ export class GameIndex
             if (!rule)
                 return [];
 
-            return this.lookup(tok, rule.filter((t) => NUMERIC_TYPES.has(t)));
+            // (a save's characters refer to the save's characters by id, not to the history files')
+            const types = fromType === T_SAVE_CHARACTER ? rule.map((t) => (t === T_CHARACTER ? T_SAVE_CHARACTER : t)) : rule;
+            return this.lookup(tok, types.filter((t) => NUMERIC_TYPES.has(t)));
         }
 
         if (isFlagKey(k1) || (k1 === 'flag' && isFlagKey(k0)))
@@ -2456,10 +3323,41 @@ export class GameIndex
             return this.resolvePrefixed(tok);
         }
 
-        const found = this.genericLookup(tok, rule);
+        // (what the key's value names, from the game's own use (valueTypes.ts): entries of those types only, or none for
+        // free text; a hand-written rule for the parent and the key comes before the table's for the key alone; a
+        // dotted name (an event id) is not in the table's survey: as before; a localization key as before either way)
+        const table = tok.includes('.') ? undefined : (this.passedTypes(k1, k0) ?? valueTypesOf(k1, k0, fromType));
 
-        if (found.length)
-            return found;
+        // (a value passed where the effect writes `flag:$X$` / `var:$X$` names that flag or variable, as `flag:x` does)
+        if (table?.includes(T_FLAG) && /^[\w.-]+$/.test(tok))
+            return [this.entity(T_FLAG, tok, true)!];
+
+        if (table?.includes(T_VARIABLE) && /^[\w.-]+$/.test(tok))
+            return [this.entity(T_VARIABLE, tok, true)!];
+
+        if (table)
+        {
+            const all = this.byName.get(tok);
+            const found = all ? all.filter((e) => table.includes(e.type)) : [];
+
+            if (found.length)
+                return found;
+
+            if (table.includes('traits'))
+            {
+                const group = this.traitGroups().get(tok);
+
+                if (group)
+                    return group;
+            }
+        }
+        else
+        {
+            const found = this.genericLookup(tok, rule);
+
+            if (found.length)
+                return found;
+        }
 
         // Only link to localization where a loc key is plausible, otherwise plain values like
         // `has_dlc_feature = royal_court` would link to the unrelated loc key "royal_court".
@@ -2472,69 +3370,191 @@ export class GameIndex
 
     /**
      * Resolves the candidates into references, and builds each script file's name filter on the way (candidates are
-     * contiguous per file; the tokens are still in cache — a separate pass cost ~1.2 s of a vanilla build).
+     * contiguous per file; the tokens are still in cache: a separate pass cost ~1.2 s of a vanilla build).
      */
     private resolveCandidates(c: CandidateTable, progress: (done: number) => void): void
     {
         const names: string[] = [];
-        // (each distinct token of a file is looked at once — as a key, as a value)
-        const keys = new Set<string>();
-        const values = new Set<string>();
+        const strs = c.strs.list;
+        // (each distinct token of a file is looked at once, as a key, as a value; by its place in the table's strings)
+        const keys = new Set<number>();
+        const values = new Set<number>();
+        const memo = new ResolveMemo<Entity[]>();
+        // (per token: 0 not looked at, 1 the owner's type does not matter to what it resolves to, 2 it does)
+        const sensitive = new Uint8Array(strs.length);
+        const typeIds = new Map<string, number>();
+        const numberRules = new Map<number, boolean>();
+        const fast = this.memoize;
+        // (the hashes of the names a token looks up, by token and kind: -2 not made yet, -1 no names, else a place in `pool`: the count, then the pairs)
+        const namesAt = new Int32Array(strs.length * 4).fill(-2);
+        let pool = new Uint32Array(1 << 16);
+        let poolN = 0;
         let file = -1;
         let words: Uint32Array = new Uint32Array(0);
         let any = false;
+        let run = -1;
+        let nextRun = 0;
+        let i = 0;
 
-        for (let i = 0; i < c.size; i++)
+        for (const ch of c.chunks)
         {
-            if (c.file[i] !== file)
+            for (let k = 0; k < ch.n; k++, i++)
             {
-                if (file >= 0)
-                    this.blooms[file] = any ? words : undefined;
+                if (i === nextRun)
+                {
+                    if (file >= 0)
+                        this.blooms[file] = any ? words : undefined;
 
-                file = c.file[i];
-                let end = i;
+                    file = c.runFile[++run];
+                    nextRun = run + 1 < c.runStart.length ? c.runStart[run + 1] : c.size;
+                    words = newBloom(nextRun - i);
+                    any = false;
+                    keys.clear();
+                    values.clear();
+                }
 
-                while (end < c.size && c.file[end] === file)
-                    end++;
+                const flags = ch.flags[k];
 
-                words = newBloom(end - i);
-                any = false;
-                keys.clear();
-                values.clear();
+                if (flags & 4)
+                {
+                    this.addRef(ch.from[k], ch.tok[k], file, ch.line[k], ch.off[k], ch.len[k], ch.ctx[k]);
+                    continue;
+                }
+
+                const tid = ch.tok[k];
+                const tok = strs[tid];
+                const k1 = ch.k1[k] < 0 ? null : strs[ch.k1[k]];
+                const k0 = ch.k0[k] < 0 ? null : strs[ch.k0[k]];
+                const isKey = (flags & 1) !== 0;
+                const quoted = (flags & 2) !== 0;
+                const from = ch.from[k];
+                // (the same token under the same keys resolves the same: a key by its token alone, a value by the keys and
+                // the quoting, and the owner's type, only where it counts: images and numbers)
+                let mb = 0;
+                let mc = 0;
+                let md = 1;
+
+                if (!isKey)
+                {
+                    let s = sensitive[tid];
+
+                    if (s === 0)
+                        sensitive[tid] = s = IMAGE_EXT.test(tok) || NUMERIC.test(tok) ? 2 : 1;
+
+                    mb = ch.k1[k];
+                    mc = ch.k0[k];
+                    md = quoted ? 2 : 0;
+
+                    // (a definition's own field the value table types by its owner's type: the owner counts too)
+                    if (s === 2 || (k0 === null && k1 !== null && OWNER_TYPED.has(k1)))
+                    {
+                        const type = this.entities[from].type;
+                        let ti = typeIds.get(type);
+
+                        if (ti === undefined)
+                            typeIds.set(type, (ti = typeIds.size + 1));
+
+                        md |= ti << 2;
+                    }
+                }
+
+                let targets = fast ? memo.get(tid, mb, mc, md) : undefined;
+
+                if (!targets)
+                {
+                    targets = this.preferLive(this.resolveToken(tok, k1, k0, isKey, quoted, this.entities[from].type));
+
+                    if (fast)
+                        memo.set(tid, mb, mc, md, targets);
+                }
+
+                for (const t of targets)
+                    this.addRef(from, t.id, file, ch.line[k], ch.off[k], ch.len[k], ch.ctx[k]);
+
+                const seen = isKey ? keys : values;
+
+                if (!seen.has(tid))
+                {
+                    const c0 = tok.charCodeAt(0);
+
+                    // (numbers depend on their context: looked at each time, and only remembered once they matter)
+                    if (!fast || (!isKey && ((c0 >= 48 && c0 <= 57) || c0 === 45) && NUMERIC.test(tok)))
+                    {
+                        // (by the keys it stands under: whether a context rule lets a number name anything: most do not,
+                        // and then there is nothing to look up; see lookupNames)
+                        const rk = (ch.k1[k] + 1) * 67108864 + ch.k0[k] + 1;
+                        let allows = fast ? numberRules.get(rk) : true;
+
+                        if (allows === undefined)
+                        {
+                            const rule = (k0 !== null && k1 !== null ? CONTEXT_RULES[`${k0}.${k1}`] : undefined) ?? (k1 !== null ? CONTEXT_RULES[k1] : undefined);
+                            numberRules.set(rk, (allows = !!rule?.some((x) => NUMERIC_TYPES.has(x))));
+                        }
+
+                        if (allows)
+                        {
+                            names.length = 0;
+
+                            if (this.lookupNames(tok, k1, k0, isKey, quoted, names))
+                                seen.add(tid);
+
+                            for (const n of names)
+                                bloomAdd(words, n);
+
+                            if (names.length)
+                                any = true;
+                        }
+                    }
+                    else
+                    {
+                        // (any other token names the same wherever it stands: its names' hashes are made once, kept in `pool`)
+                        const slot = tid * 4 + (flags & 3);
+                        let at = namesAt[slot];
+
+                        if (at === -2)
+                        {
+                            names.length = 0;
+                            this.lookupNames(tok, k1, k0, isKey, quoted, names);
+                            at = -1;
+
+                            if (names.length)
+                            {
+                                if (poolN + 1 + 2 * names.length > pool.length)
+                                {
+                                    const bigger = new Uint32Array(pool.length * 2);
+                                    bigger.set(pool);
+                                    pool = bigger;
+                                }
+
+                                at = poolN;
+                                pool[poolN++] = names.length;
+
+                                for (const n of names)
+                                {
+                                    const h = nameHash(n);
+                                    pool[poolN++] = h[0];
+                                    pool[poolN++] = h[1];
+                                }
+                            }
+
+                            namesAt[slot] = at;
+                        }
+
+                        seen.add(tid);
+
+                        if (at >= 0)
+                        {
+                            for (let j = 0, cnt = pool[at]; j < cnt; j++)
+                                bloomAddHash(words, pool[at + 1 + 2 * j], pool[at + 2 + 2 * j]);
+
+                            any = true;
+                        }
+                    }
+                }
+
+                if (i % 200000 === 0)
+                    progress(i);
             }
-
-            if (c.direct[i] >= 0)
-            {
-                this.addRef(c.from[i], c.direct[i], c.file[i], c.line[i], c.off[i], c.len[i], c.ctx[i]);
-                continue;
-            }
-
-            const tok = c.tok[i];
-            const isKey = c.isKey[i] === 1;
-            const targets = this.preferLive(this.resolveToken(tok, c.k1[i], c.k0[i], isKey, c.quoted[i] === 1, this.entities[c.from[i]].type));
-
-            for (const t of targets)
-                this.addRef(c.from[i], t.id, c.file[i], c.line[i], c.off[i], c.len[i], c.ctx[i]);
-
-            const seen = isKey ? keys : values;
-
-            if (!seen.has(tok))
-            {
-                names.length = 0;
-
-                // (numbers depend on their context: looked at each time, and only remembered once they matter)
-                if (this.lookupNames(tok, c.k1[i], c.k0[i], isKey, c.quoted[i] === 1, names))
-                    seen.add(tok);
-
-                for (const n of names)
-                    bloomAdd(words, n);
-
-                if (names.length)
-                    any = true;
-            }
-
-            if (i % 200000 === 0)
-                progress(i);
         }
 
         if (file >= 0)
@@ -2585,7 +3605,7 @@ export class GameIndex
             const t = this.byType.get('game_concepts')?.get(k);
 
             if (t)
-                this.addRef(e.id, t.id, d.file, d.line, -1, 0, this.ctx.id('[concept] in text'));
+                this.addRef(e.id, t.id, d.file, d.line, -1, 0, this.ctx.id(tr('[concept] in text')));
         }
 
         for (const k of refs.args)
@@ -2596,19 +3616,19 @@ export class GameIndex
             {
                 for (const t of this.preferLive(all))
                     if (t.type !== T_LOC)
-                        this.addRef(e.id, t.id, d.file, d.line, -1, 0, this.ctx.id("('…') in text"));
+                        this.addRef(e.id, t.id, d.file, d.line, -1, 0, this.ctx.id(tr('(\'…\') in text')));
             }
         }
     }
 
     /**
      * The names resolveToken looks up in the entity tables for a token (the entries whose existence decides what it
-     * resolves to) — mirrors its rules. Images: the lower case file name without extension.
+     * resolves to). Mirrors its rules. Images: the lower case file name without extension.
      */
     private lookupNames(tok: string, k1: string | null, k0: string | null, isKey: boolean, quoted: boolean, out: string[]): boolean
     {
-        // (cheap character tests before any regex; a value in a flag or variable context — created from its uses, nothing
-        // looked up — is taken like any other: the filter may hold a few names more, never fewer)
+        // (cheap character tests before any regex; a value in a flag or variable context (created from its uses, nothing
+        // looked up) is taken like any other: the filter may hold a few names more, never fewer)
         const n = tok.length;
         const c0 = tok.charCodeAt(0);
 
@@ -2685,6 +3705,37 @@ export class GameIndex
 
         for (const l of this.refsByFile.values())
             l.sort((a, b) => this.rOff[a] - this.rOff[b]);
+
+        this.trimArrays();
+    }
+
+    /**
+     * An array that grew by push keeps room for 16 more (V8): the first push on a new one reserves 17 places, ~75 bytes
+     * for an entity's single definition. The definitions' lists and the reference lists of a finished build are copied
+     * to their length (a tenth of what an AGOT index keeps, ~50 MB); later updates push as before.
+     */
+    private trimArrays(): void
+    {
+        for (const e of this.entities)
+        {
+            if (e && e.defs.length)
+                e.defs = e.defs.slice();
+        }
+
+        for (const m of [this.outgoing, this.incoming, this.refsByFile])
+        {
+            for (const [k, l] of m)
+                m.set(k, l.slice());
+        }
+
+        // (the reference columns grow by half each time: up to a third of a column is room)
+        this.rFrom = this.rFrom.slice();
+        this.rTo = this.rTo.slice();
+        this.rFile = this.rFile.slice();
+        this.rLine = this.rLine.slice();
+        this.rOff = this.rOff.slice();
+        this.rLen = this.rLen.slice();
+        this.rCtx = this.rCtx.slice();
     }
 
     // -------------------------------------------------------------------------
@@ -2704,8 +3755,25 @@ export class GameIndex
 
     /**
      * Index of the definition the game uses: the last one outside hidden files (those are registered first, so this
-     * is the last definition unless a mod removed the entry). -1: only hidden definitions — the entry is removed.
+     * is the last definition unless a mod removed the entry). -1: only hidden definitions, the entry is removed.
      */
+    /**
+     * The definition before the winning one that the game merges a landed title written again into (docs/mods.md
+     * "Landed titles"): the previous loaded one that is not only the way in; -1 when there is none.
+     */
+    mergedBeforeIdx(e: Entity, win = this.winningIdx(e)): number
+    {
+        for (let i = win - 1; i >= 0; i--)
+        {
+            const d = e.defs[i];
+
+            if (!this.files[d.file].hidden && !d.meta?.path)
+                return i;
+        }
+
+        return -1;
+    }
+
     winningIdx(e: Entity): number
     {
         let path = -1;
@@ -2717,7 +3785,7 @@ export class GameIndex
             if (this.files[d.file].hidden)
                 continue;
 
-            // (a landed title written only as the way to one inside it changes nothing: the one before it wins —
+            // (a landed title written only as the way to one inside it changes nothing: the one before it wins,
             // unless it is all there is)
             if (d.meta?.path)
             {
@@ -2751,7 +3819,7 @@ export class GameIndex
         return e.defs.length > 0 && this.winningIdx(e) < 0;
     }
 
-    /** The winning definition, or a removed entry's last one — for names, icons and file labels only. */
+    /** The winning definition, or a removed entry's last one: for names, icons and file labels only. */
     private shownDef(e: Entity): Def | undefined
     {
         return this.winningDef(e) ?? e.defs[e.defs.length - 1];
@@ -2790,7 +3858,7 @@ export class GameIndex
     private astCache = new Map<string, { node: PNode; src: string; }>();
 
     /**
-     * Parses one definition (the winning one by default — none for an entry a mod removed). `args` substitutes $PARAM$
+     * Parses one definition (the winning one by default; none for an entry a mod removed). `args` substitutes $PARAM$
      * placeholders in the source text first, which is exactly how the game expands scripted effects/triggers.
      */
     defNode(e: Entity, args?: Record<string, string>, defIdx = this.winningIdx(e)): { node: PNode; src: string; } | undefined
@@ -2809,7 +3877,7 @@ export class GameIndex
         let src = this.readFile(d.file).slice(d.start, d.end);
 
         if (args)
-            src = src.replace(/\$(\w+)\$/g, (m, k: string) => args[k] ?? m);
+            src = src.replace(/\$([^$\s]+)\$/g, (m, k: string) => args[k] ?? m);
 
         const ast = parse(src);
         let node: PNode | undefined;
@@ -2839,7 +3907,7 @@ export class GameIndex
 
     /**
      * Where a definition is written, for line anchors (Line.src, docs/mods.md "Editing in place"): its file, the mod the
-     * file belongs to, the checksum of the text defNode reads, and the definition's start (offset and line) — node
+     * file belongs to, the checksum of the text defNode reads, and the definition's start (offset and line): node
      * offsets of defNode are relative to it.
      */
     defAnchor(e: Entity, defIdx = this.winningIdx(e), withText = false): DefAnchor | undefined
@@ -2913,8 +3981,8 @@ export class GameIndex
 
     /**
      * What an event portrait can be set to (the "Who's who" portrait settings): the animations of
-     * gfx/portraits/portrait_animations (grouped by their files' section banners — "Emotion Animations" …), the event
-     * cameras of gfx/portraits/cameras, the scripted animations, and the outfit tags events use — each with how often
+     * gfx/portraits/portrait_animations (grouped by their files' section banners: "Emotion Animations" …), the event
+     * cameras of gfx/portraits/cameras, the scripted animations, and the outfit tags events use, each with how often
      * the game's events use it (a scan of the event files, once).
      */
     portraitOptions(): PortraitOptions
@@ -3019,7 +4087,7 @@ export class GameIndex
 
     /**
      * Where a new entry of a type goes (docs/mods.md, "New entries"): the folder its definitions are in (most of the
-     * game's), whether they are top-level definitions there (nested ones — faiths in religions — need their holder); for
+     * game's), whether they are top-level definitions there (nested ones, faiths in religions, need their holder); for
      * events with a namespace, its first free id (`<ns>.0001` …). Null for what is no script definition (images, models,
      * localization, flags, variables).
      */
@@ -3032,9 +4100,9 @@ export class GameIndex
         const folders: string[][] = [];
         let nested = 0;
         let top = 0;
-        // (a nested one: where it sits — the definition holding it, its type, the file and line)
+        // (a nested one: where it sits: the definition holding it, its type, the file and line)
         let example: NestedExample | undefined;
-        // (samples spread over the list: its start is often one sub-folder — events/activities)
+        // (samples spread over the list: its start is often one sub-folder, events/activities)
         const step = Math.max(1, Math.floor(names.length / 40));
 
         for (let i = 0; i < names.length && folders.length < 40; i += step)
@@ -3114,10 +4182,215 @@ export class GameIndex
     }
 
     /** The entries of `type` written inside the holder's winning definition (a law group's laws, a religion's faiths). */
-    /** How the loaded game lays out what changed between versions (layouts.ts) — mods/create.ts writes the same way. */
-    layouts(): { doctrinesNameTheirGroup: boolean; }
+    /**
+     * The loc key of an entry's description: the first of its name's (descriptionCandidates) that exists, else its own
+     * `desc`: a key, or (`desc = { first_valid = { triggered_desc = { … } desc = key } }`, 1.20 tenets) the variant
+     * without a condition, else the first one.
+     */
+    descriptionKey(e: Entity): string | undefined
     {
-        return { doctrinesNameTheirGroup: doctrinesNameTheirGroup(this) };
+        for (const k of descriptionCandidates(e.type, e.name))
+            if (this.plainLoc(k) !== undefined)
+                return k;
+
+        // (memory types: `description = { random_valid = { desc = key } }`)
+        return this.ownTextKey(e, 'desc') ?? this.ownTextKey(e, 'description');
+    }
+
+    /**
+     * The loc key an entry's own `name` / `desc` names: a key, or (`name = { first_valid = { triggered_desc = { … }
+     * desc = key } }`: 1.20 tenets, the Viking trait, some perks) the variant without a condition, else the first.
+     */
+    private ownTextKey(e: Entity, field: 'name' | 'desc' | 'description'): string | undefined
+    {
+        const node = this.defNode(e)?.node;
+        const d = Array.isArray(node?.v) ? node.v.find((c) => c.k === field) : undefined;
+
+        if (!d)
+            return undefined;
+
+        if (typeof d.v === 'string')
+            return this.plainLoc(d.v) !== undefined ? d.v : undefined;
+
+        let plain: string | undefined;
+        let first: string | undefined;
+        const walk = (list: PNode[], conditional: boolean): void =>
+        {
+            for (const c of list)
+            {
+                if ((c.k === 'desc' || c.k === null) && typeof c.v === 'string' && this.plainLoc(c.v) !== undefined)
+                {
+                    first ??= c.v;
+
+                    if (!conditional)
+                        plain = c.v;
+                }
+                else if (Array.isArray(c.v))
+                    walk(c.v, conditional || c.k === 'triggered_desc');
+            }
+        };
+        walk(Array.isArray(d.v) ? d.v : [], false);
+        return plain ?? first;
+    }
+
+    /** per DLC code of file paths (`ep3`, `pam` …): the DLC feature its files check most (dlcGroups) */
+    private dlcCodes: Map<string, string> | null = null;
+
+    /**
+     * Which DLC an entry of the type comes with (the picker's grouping, Tab): its own `requires_dlc_flag = x` /
+     * `has_dlc_feature = x`, else the DLC code in its file's path (`events/dlc/ep3/…`, `…/01_ep3_…`, `00_pam_tenets.txt`)
+     * as the feature that code's files check most; a mod's entry its mod. Base game entries are left out. Labels: the
+     * installed DLC's name where its folder has the code (`dlc004_ep1` → "The Royal Court"; a feature that code checks
+     * most too), else the feature made readable ("Roads To Power", "By God Alone"), "Mod: <name>".
+     */
+    dlcGroups(type: string): Record<string, string>
+    {
+        const codes = this.dlcCodeFeatures();
+        const names = this.dlcNames();
+        // (a feature under its DLC's name where a code of that DLC checks it most: hybridize_culture → The Royal Court)
+        const byFeature = new Map([...codes].filter(([c]) => names.has(c)).map(([c, f]) => [f, names.get(c)!]));
+        // (a feature spelling a DLC's name, tours_and_tournaments: written as the DLC is)
+        const dlcByWords = new Map([...names.values()].map((n) => [n.toLowerCase(), n]));
+        const labelOf = (f: string): string =>
+        {
+            const words = f.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+            return byFeature.get(f) ?? dlcByWords.get(words.toLowerCase()) ?? words;
+        };
+        const out: Record<string, string> = {};
+        const feature = /\b(?:requires_dlc_flag|has_dlc_feature)\s*=\s*([a-z_0-9]+)/;
+
+        for (const name of this.names(type))
+        {
+            const e = this.get(type, name)!;
+            const d = this.winningDef(e);
+            const f = d && this.files[d.file];
+
+            if (!d || !f)
+                continue;
+
+            if (f.source > 0)
+            {
+                out[name] = `Mod: ${this.vfs.sources[f.source]?.name ?? 'mod'}`;
+                continue;
+            }
+
+            const own = feature.exec(this.readFile(d.file).slice(d.start, d.end))?.[1];
+            const code = own ? undefined : pathCodes(f.rel).find((c) => codes.has(c) || names.has(c));
+            const label = own ? labelOf(own) : code ? (names.get(code) ?? labelOf(codes.get(code)!)) : undefined;
+
+            if (label)
+                out[name] = label;
+        }
+
+        return out;
+    }
+
+    /**
+     * Per entry of a type limited to a DLC by its own script (`requires_dlc_flag = by_god_alone`, `has_dlc_feature = …`
+     * in its definition): the flag and the DLC's name; the picker offers "Only with <DLC>" / a fallback for them
+     * (`tenet_selection_pair`, `if = { limit = { has_dlc_feature = … } }`). The flags are the features' names.
+     */
+    dlcFlags(type: string): Record<string, { flag: string; dlc: string; }>
+    {
+        const groups = this.dlcGroups(type);
+        const out: Record<string, { flag: string; dlc: string; }> = {};
+        const feature = /\b(?:requires_dlc_flag|has_dlc_feature)\s*=\s*([a-z_0-9]+)/;
+
+        for (const name of this.names(type))
+        {
+            const d = this.winningDef(this.get(type, name)!);
+            const flag = d && feature.exec(this.readFile(d.file).slice(d.start, d.end))?.[1];
+
+            if (flag)
+                out[name] = { flag, dlc: groups[name] && !groups[name].startsWith('Mod: ') ? groups[name] : flag.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()) };
+        }
+
+        return out;
+    }
+
+    /** The installed DLCs' names by their folder's code (`dlc004_ep1/dlc004.dlc`: `name = "The Royal Court"` → ep1). */
+    private dlcNames(): Map<string, string>
+    {
+        const out = new Map<string, string>();
+        const dir = join(this.gameDir, 'dlc');
+
+        if (!existsSync(dir))
+            return out;
+
+        for (const d of readdirSync(dir, { withFileTypes: true }))
+        {
+            const m = /^dlc\d+_(.+)$/.exec(d.name);
+            const file = m && d.isDirectory() ? readdirSync(join(dir, d.name)).find((f) => f.endsWith('.dlc')) : undefined;
+            const name = file && /^\s*name\s*=\s*"([^"]+)"/m.exec(readFileSync(join(dir, d.name, file), 'utf8').replace(/^﻿/, ''))?.[1];
+
+            if (m && name)
+                out.set(m[1].replace(/_/g, ''), name);
+        }
+
+        return out;
+    }
+
+    /** DLC codes of the game's file paths (the folders below a `dlc` folder) and the feature their files check most. */
+    private dlcCodeFeatures(): Map<string, string>
+    {
+        if (this.dlcCodes)
+            return this.dlcCodes;
+
+        const known = new Set<string>();
+
+        for (const f of this.files)
+        {
+            const parts = f.rel.toLowerCase().split('/');
+            parts.forEach((p, i) => i > 0 && /^dlc(_|$)/.test(parts[i - 1]) && i < parts.length - 1 && known.add(p.replace(/_/g, '')));
+        }
+
+        const votes = new Map<string, Map<string, number>>();
+
+        for (let i = 0; i < this.files.length; i++)
+        {
+            const f = this.files[i];
+
+            if (f.source !== 0 || !f.rel.endsWith('.txt'))
+                continue;
+
+            const codes = pathCodes(f.rel).filter((c) => known.has(c));
+
+            if (!codes.length)
+                continue;
+
+            for (const m of this.readFile(i).matchAll(/\b(?:has_dlc_feature|requires_dlc_flag)\s*=\s*([a-z_0-9]+)/g))
+                for (const c of codes)
+                {
+                    const v = votes.get(c) ?? votes.set(c, new Map()).get(c)!;
+                    v.set(m[1], (v.get(m[1]) ?? 0) + 1);
+                }
+        }
+
+        // (files check other DLCs' features too (roads_to_power everywhere): a code's feature is the one most
+        // concentrated in its files, its share of all that feature's checks, among those it checks at least 3 times)
+        const total = new Map<string, number>();
+
+        for (const v of votes.values())
+            for (const [f, n] of v)
+                total.set(f, (total.get(f) ?? 0) + n);
+
+        this.dlcCodes = new Map();
+
+        for (const [c, v] of votes)
+        {
+            const best = [...v].filter(([, n]) => n >= 3).sort((a, b) => b[1] / total.get(b[0])! - a[1] / total.get(a[0])! || b[1] - a[1])[0];
+
+            if (best)
+                this.dlcCodes.set(c, best[0]);
+        }
+
+        return this.dlcCodes;
+    }
+
+    /** How the loaded game lays out what changed between versions (layouts.ts); mods/create.ts writes the same way. */
+    layouts(): { doctrinesNameTheirGroup: boolean; tenetsOwnType: boolean; tenets: string[]; tenetDoctrines: string[]; }
+    {
+        return { doctrinesNameTheirGroup: doctrinesNameTheirGroup(this), tenetsOwnType: tenetsOwnType(this), tenets: this.names('religion/tenet_types'), tenetDoctrines: tenetGroupDoctrines(this) };
     }
 
     childrenOf(type: string, holderType: string, holder: string): string[]
@@ -3196,11 +4469,12 @@ export class GameIndex
         if (!m)
         {
             m = new Map();
-            const re = /^\s*@(\w+)\s*=\s*"?([^\s"#]+)"?/gm;
+            // (a value is a word, a quoted text or a whole formula: `@[a + b]`)
+            const re = /^\s*@(\w+)\s*=\s*(?:(@\[[^\]\r\n]*\])|"?([^\s"#]+)"?)/gm;
             const src = this.readFile(d.file);
 
             for (let x = re.exec(src); x; x = re.exec(src))
-                m.set(x[1], x[2]);
+                m.set(x[1], x[2] ?? x[3]);
 
             this.constCache.set(d.file, m);
         }
@@ -3339,7 +4613,7 @@ export class GameIndex
             return res;
         }
 
-        if (e.type === T_LOC || e.type === T_FLAG || e.type === T_VARIABLE || e.type === T_CHARACTER || e.type === T_MODEL)
+        if (e.type === T_LOC || e.type === T_FLAG || e.type === T_VARIABLE || e.type === T_CHARACTER || e.type === T_SAVE_CHARACTER || e.type === T_MODEL)
             return res;
 
         // an entry a mod removed keeps its old icon (recognizable in lists); what it refers to must still exist
@@ -3390,7 +4664,7 @@ export class GameIndex
         return res;
     }
 
-    /** Disk path of an image (undefined inside a packed mod — read those through vfs). */
+    /** Disk path of an image (undefined inside a packed mod: read those through vfs). */
     imageAbsPath(e: Entity): string | undefined
     {
         return this.imgFile.get(e.id)?.abs;
@@ -3409,7 +4683,7 @@ export class GameIndex
         return model ? this.modelFile.get(model.id) : undefined;
     }
 
-    /** Disk path of a gfx file by its game path (undefined inside a packed mod — use gfxFile + vfs). */
+    /** Disk path of a gfx file by its game path (undefined inside a packed mod: use gfxFile + vfs). */
     gfxAbsPath(rel: string): string | undefined
     {
         return this.gfxFile(rel)?.abs;
@@ -3422,8 +4696,8 @@ export class GameIndex
     }
 
     /**
-     * Texture referenced by a model: a game path, a path relative to one of `dirs` (the asset's or mesh's folder), or —
-     * like the engine, which also finds shared atlases elsewhere — any image with that file name, the one sharing the
+     * Texture referenced by a model: a game path, a path relative to one of `dirs` (the asset's or mesh's folder), or,
+     * like the engine, which also finds shared atlases elsewhere, any image with that file name, the one sharing the
      * longest folder prefix with `dirs[0]` preferred.
      */
     findTexture(ref: string, dirs: string[]): Entity | undefined
@@ -3483,7 +4757,7 @@ export class GameIndex
             // (in creation order: the users list in the order a build has them)
             for (const e of this.entitiesInBuildOrder((x) => !x.dead))
             {
-                if (e.type === T_IMAGE || e.type === T_MODEL || e.type === T_LOC || e.type === T_FLAG || e.type === T_VARIABLE || e.type === T_CHARACTER)
+                if (e.type === T_IMAGE || e.type === T_MODEL || e.type === T_LOC || e.type === T_FLAG || e.type === T_VARIABLE || e.type === T_CHARACTER || e.type === T_SAVE_CHARACTER)
                     continue;
 
                 if (this.isRemoved(e))
@@ -3576,7 +4850,7 @@ export class GameIndex
 
     /**
      * Folders of a file-based type (images, models) with their file counts (`modCount`: files from mods; `removed`:
-     * pictures a mod's replace_path removed — a folder with only those is listed too).
+     * pictures or models a mod's replace_path removed; a folder with only those is listed too).
      */
     fileFolders(type: string): GalleryFolder[]
     {
@@ -3591,7 +4865,7 @@ export class GameIndex
                 m.set(folder, f = { folder, count: 0 });
 
             f.count++;
-            // (a file from a mod: added, or overridden — it replaced the game's; conflicts: two or more mods had it)
+            // (a file from a mod: added, or overridden (it replaced the game's); conflicts: two or more mods had it)
             const t = this.modTouch(e);
 
             if (!t)
@@ -3605,9 +4879,9 @@ export class GameIndex
                 s.conflicts = (s.conflicts ?? 0) + 1;
         }
 
-        if (type === T_IMAGE)
+        if (type === T_IMAGE || type === T_MODEL)
         {
-            for (const [folder, l] of this.removedImages())
+            for (const [folder, l] of this.removedFiles(type))
             {
                 let f = m.get(folder);
 
@@ -3623,8 +4897,8 @@ export class GameIndex
 
     /**
      * Files of a file-based type directly in a folder; `mod` = ModInfo id of the mod providing the file, `touch` how.
-     * Images: also those a mod's replace_path removed (`removed` = that mod's id; no entry of their own — the game with
-     * the mods has no such file; their picture is the former file's, `ck3://img/…?removed=1`).
+     * Images and models: also those a mod's replace_path removed (`removed` = that mod's id; no entry of their own: the
+     * game with the mods has no such file; a picture's is the former file's, `ck3://img/…?removed=1`).
      */
     filesIn(type: string, folder: string): GalleryFile[]
     {
@@ -3649,22 +4923,29 @@ export class GameIndex
             out.push(item);
         }
 
-        if (type === T_IMAGE)
+        if (type === T_IMAGE || type === T_MODEL)
         {
-            for (const r of this.removedImages().get(prefix.slice(0, -1)) ?? [])
+            for (const r of this.removedFiles(type).get(prefix.slice(0, -1)) ?? [])
                 out.push({ name: r.name, file: r.name.slice(prefix.length), removed: this.vfs.sources[r.by].modId! });
         }
 
         return out.sort((a, b) => nameOrder(a.file, b.file));
     }
 
-    /** Pictures a mod's replace_path removed, by folder: hidden gfx images of paths no loaded file has (lazy; updates reset it). */
+    /**
+     * Pictures / models (.asset, .mesh) a mod's replace_path removed, by folder: hidden gfx files of paths no loaded file
+     * has (lazy; updates reset it).
+     */
     private removedImgs: Map<string, { name: string; by: number; }[]> | null = null;
+    private removedMdls: Map<string, { name: string; by: number; }[]> | null = null;
 
-    private removedImages(): Map<string, { name: string; by: number; }[]>
+    private removedFiles(type: string): Map<string, { name: string; by: number; }[]>
     {
-        if (this.removedImgs)
-            return this.removedImgs;
+        const models = type === T_MODEL;
+        const cached = models ? this.removedMdls : this.removedImgs;
+
+        if (cached)
+            return cached;
 
         const byPath = new Map<string, { name: string; by: number; }>();
 
@@ -3672,10 +4953,10 @@ export class GameIndex
         {
             const k = h.file.rel.toLowerCase();
 
-            if (!IMAGE_EXT.test(k) || this.imgByLc.has(k))
+            if (models ? !MODEL_EXT.test(k) || this.modelByLc.has(k) : !IMAGE_EXT.test(k) || this.imgByLc.has(k))
                 continue;
 
-            // (hidden more than once — by a same-path file, then that one by a replace_path: the last hider removed it)
+            // (hidden more than once, by a same-path file, then that one by a replace_path: the last hider removed it)
             const had = byPath.get(k);
 
             if (!had)
@@ -3697,7 +4978,12 @@ export class GameIndex
                 out.set(folder, [r]);
         }
 
-        return this.removedImgs = out;
+        if (models)
+            this.removedMdls = out;
+        else
+            this.removedImgs = out;
+
+        return out;
     }
 
     // -------------------------------------------------------------------------
@@ -3710,16 +4996,120 @@ export class GameIndex
 
         if (s === undefined)
         {
+            // (not the version the index read: noted, staleFiles; a game file shows as the top bar's "Re-index". One stat
+            // per miss: about 0.03 ms a file, measured over vanilla's events/ and common/ .txt files, so ~18 ms more for
+            // a pass over every events file (portraitOptions) against ~140 ms of reading them)
+            if (this.changedOnDisk(idx))
+                this.staleSlots.add(idx);
+
             s = this.vfs.readText(this.files[idx].gf) ?? '';
             // (a checksum belongs to the text read before)
             this.hashes.delete(idx);
             this.fileCache.set(idx, s);
-
-            if (this.fileCache.size > 40)
-                this.fileCache.delete(this.fileCache.keys().next().value!);
+            this.trimFileCache();
+        }
+        else
+        {
+            // (a read moves the file to the end: the cache drops the least recently used, not the oldest read)
+            this.fileCache.delete(idx);
+            this.fileCache.set(idx, s);
         }
 
         return s;
+    }
+
+    /**
+     * Whether the slot's file on disk differs from the version the index read (its stamp; no stamp: unknown, no). A
+     * game file by size and modification time only, as fingerprint() hashes them: what makes its "Re-index" build
+     * parse again (a ctime alone, an attribute change, would offer a re-index that only loads the same cache).
+     */
+    private changedOnDisk(idx: number): boolean
+    {
+        const f = this.files[idx];
+        const stamp = f?.stamp;
+
+        if (!stamp || f.gone)
+            return false;
+
+        const st = this.vfs.stat(f.gf);
+
+        if (st.size !== stamp.size || st.mtime !== stamp.mtime)
+            return true;
+
+        return this.vfs.sources[f.source]?.kind !== 'game' && st.ctime !== stamp.ctime;
+    }
+
+    /**
+     * Compares every game file the index read (one with a stamp) with its disk version, as readFile does on a miss:
+     * the changed ones become staleFiles / staleGameFiles. Read files kept in fileCache and files nothing reads again
+     * are found this way too (the index worker runs it when the app's window gets the focus, indexWorker.ts
+     * `checkGameFiles`). A file new in the game folder is not one the index read: not found. Returns how many it
+     * compared.
+     */
+    checkGameFiles(): number
+    {
+        let n = 0;
+
+        for (let s = 0; s < this.files.length; s++)
+        {
+            const f = this.files[s];
+
+            if (!f.stamp || f.gone || this.staleSlots.has(s) || this.vfs.sources[f.source]?.kind !== 'game')
+                continue;
+
+            n++;
+
+            if (this.changedOnDisk(s))
+                this.staleSlots.add(s);
+        }
+
+        return n;
+    }
+
+    /**
+     * The files read again whose disk version is no longer the one the index holds and that no update took in since
+     * (staleSlots): with `abs` a mod folder's file (an update takes it in once named), without one a file no update
+     * takes in (the game's, a packed mod's), which only a build reads again.
+     */
+    staleFiles(): { source: number; rel: string; abs?: string; }[]
+    {
+        return [...this.staleSlots].sort((a, b) => a - b).map((s) =>
+        {
+            const f = this.files[s];
+            const abs = this.vfs.diskPath(f.source, f.rel);
+            return abs ? { source: f.source, rel: f.rel, abs } : { source: f.source, rel: f.rel };
+        });
+    }
+
+    /**
+     * The game's own files among staleFiles (paths relative to the game folder): changed under the running app (a Steam
+     * update), only a build takes them in; the top bar offers "Re-index" for them (indexWorker.ts postStale). A mod
+     * folder's file has its own watcher event, a packed mod's its archive's.
+     */
+    staleGameFiles(): string[]
+    {
+        return this.staleFiles()
+            .filter((f) => this.vfs.sources[f.source]?.kind === 'game')
+            .map((f) => f.rel);
+    }
+
+    /**
+     * The read files kept: the 40 last used, and no more than ~32M characters together (a count alone kept 40 of AGOT's
+     * 4–7 MB character files, 280 MB and more, in the heap all threads share); the newest stays whatever its size.
+     */
+    private trimFileCache(): void
+    {
+        let chars = 0;
+
+        for (const text of this.fileCache.values())
+            chars += text.length;
+
+        while (this.fileCache.size > 1 && (this.fileCache.size > 40 || chars > FILE_CACHE_CHARS))
+        {
+            const oldest = this.fileCache.keys().next().value!;
+            chars -= this.fileCache.get(oldest)!.length;
+            this.fileCache.delete(oldest);
+        }
     }
 
     /** Localization text with $refs$ inlined and formatting codes removed. */
@@ -3729,7 +5119,7 @@ export class GameIndex
      */
     plainLoc(key: string, depth = 0, keepConcepts = false): string | undefined
     {
-        // (a display name being computed reads this key — also when it is missing: it may come)
+        // (a display name being computed reads this key, also when it is missing: it may come)
         if (this.sigDepth)
             this.sigAcc |= sigBits(key);
 
@@ -3742,15 +5132,41 @@ export class GameIndex
 
         if (depth < 3 && t.includes('$'))
         {
-            t = t.replace(/\$([A-Za-z0-9_.\-]+)(?:\|[^$]*)?\$/g, (m, k: string) => this.plainLoc(k, depth + 1, keepConcepts) ?? m);
+            // (a text put in that reads as nothing, an icon alone (`$game_concept_success_chance_max_i$`), takes one of the
+            // spaces around it; one that starts or ends with a space of its own (`$BULLET$`, "• ") takes the text's
+            // space on that side)
+            t = t.replace(/( ?)\$([A-Za-z0-9_.\-]+)(?:\|[^$]*)?\$( ?)/g, (m, before: string, k: string, after: string) =>
+            {
+                const inner = this.plainLoc(k, depth + 1, keepConcepts);
+
+                if (inner === undefined)
+                    return m;
+
+                // (spaces only: a line break of its own stays)
+                if (/^ *$/.test(inner))
+                    return before && after ? ' ' : before + after;
+
+                return (before && inner.startsWith(' ') ? '' : before) + inner + (after && inner.endsWith(' ') ? '' : after);
+            });
         }
 
         return t
-            // (a closing #! takes no space with it: "#P +10#! Prestige" reads "+10 Prestige")
+            // (a closing #! takes no space with it: "#P +10#! Prestige" reads "+10 Prestige"; one between two spaces takes
+            // one: "at least #V 1 #! active")
+            .replace(/ #!(?= )/g, '')
             .replace(/#!/g, '')
             // (formats may take a parameter: #indent_newline:3, #font:TitleFont;size:20)
             .replace(/#[A-Za-z_]+(?::[\w.]+)?(?:;[A-Za-z_]+(?::[\w.]+)?)* /g, '')
-            .replace(/\$EFFECT_LIST_BULLET\$/g, '• ') // filled in by the game's code, no loc key
+            // (filled in by the game's code, no loc key; the space the text writes after it is the bullet's own)
+            .replace(/\$EFFECT_LIST_BULLET\$ ?/g, '• ')
+            // (the game's non-breaking space between an icon and its word, `@ambitious_icon![Nbsp][trait name]`)
+            .replace(/\[Nbsp\]/gi, ' ')
+            // (an icon between two spaces takes one with it: "gains [prestige_i] 100" reads "gains 100"; one at the start
+            // the space after it, one at the end the space before it, so a text put into another ($LABEL$,
+            // $boilerplate$ [value]) leaves one)
+            // (twice: two icons in a row, "@a! @b!", the first took the space the second stands after)
+            .replace(ICON_IN_TEXT, (_m, before: string, after: string) => (after ? before : ''))
+            .replace(ICON_IN_TEXT, (_m, before: string, after: string) => (after ? before : ''))
             .replace(/@\w+!/g, '') // inline icons: @gold_icon!
             .replace(/\[\w+_i(?:\|\w*)?\]/g, '') // icon concepts: [gold_i]
             .replace(/\[[^\]]*(?:TextIcon|GetIcon)[^\]]*\]/g, '')
@@ -3772,7 +5188,13 @@ export class GameIndex
      * Entity a localization [data function] refers to: `GetTrait('pure_blooded').GetName( GetNullCharacter )` → the
      * trait, `GetTitleByKey('k_france')…` → the title, `faith|E` or `Concept('faith', …)` → the game concept.
      */
-    bracketRef(inner: string): BracketLink | undefined
+    /** A text's customizable localizations (`[ROOT.Char.Custom('GetCourt')]`) replaced by their short texts where bracketRef has them. */
+    customInText(text: string, depth = 0): string
+    {
+        return depth > 3 ? text : text.replace(/\[([^\]]*\bCustom2?\(\s*'\w+'[^\]]*)\]/g, (m, inner: string) => this.bracketRef(inner, depth)?.text ?? m);
+    }
+
+    bracketRef(inner: string, depth = 0): BracketLink | undefined
     {
         const expr = inner.replace(/\|[A-Za-z0-9=+\-]*$/, '').trim();
         const found = (e: Entity | undefined): BracketLink | undefined => (e ? { type: e.type, name: e.name } : undefined);
@@ -3782,6 +5204,65 @@ export class GameIndex
             const e = this.concept(key);
             return e ? { type: e.type, name: e.name, text: text ?? this.plainLoc(`game_concept_${key}`) ?? this.plainLoc(`game_concept_${e.name}`) } : undefined;
         };
+        // (a customizable localization, `child.Custom('GetLassLad')`: its texts, "lass/lad", the fallback's alone, a few
+        // of many "a caul/a finger/…"; the link opens the entry. Long texts stay its name, read by humanizeCustom)
+        const custom = /\bCustom2?\(\s*'(\w+)'/.exec(expr);
+
+        if (custom)
+        {
+            const e = this.get('customizable_localization', custom[1]);
+            const d = e && this.defNode(e);
+
+            if (!e || !d || !Array.isArray(d.node.v))
+                return undefined;
+
+            const textsOf = (v: PNode[]): PNode[][] => v.filter((c) => c.k === 'text' && Array.isArray(c.v)).map((c) => c.v as PNode[]);
+            let texts = textsOf(d.node.v);
+            // (one made from another, `parent = KnightCulture` `suffix = "_no_tooltip_lowercase"`: the parent's texts, each
+            // key with the suffix; MountedWarriorTerm's "knight" is KnightCultureNoTooltipLowercase's fallback)
+            const str = (k: string): string | undefined =>
+            {
+                const n = (d.node.v as PNode[]).find((c) => c.k === k);
+                return typeof n?.v === 'string' ? n.v.replace(/^"|"$/g, '') : undefined;
+            };
+            const parent = !texts.length ? str('parent') : undefined;
+            const suffix = parent ? (str('suffix') ?? '') : '';
+
+            if (parent)
+            {
+                const pd = this.get('customizable_localization', parent);
+                const pn = pd && this.defNode(pd);
+                texts = pn && Array.isArray(pn.node.v) ? textsOf(pn.node.v) : [];
+            }
+
+            const keyOf = (t: PNode[]): string | undefined => {
+                const k = t.find((x) => x.k === 'localization_key');
+                return typeof k?.v === 'string' ? k.v + suffix : undefined;
+            };
+            const fallback = texts.find((t) => t.some((x) => x.k === 'fallback' && x.v === 'yes'));
+            const words = (fallback ? [fallback] : texts.slice(0, 3))
+                .map((t) => keyOf(t))
+                .map((k) => (k ? humanizeBrackets(this.customInText(this.plainLoc(k, 0, true) ?? '', depth + 1), this.lookupDisplay).replace(/#\w+\s?|#!/g, '').replace(/\s+/g, ' ').trim() : ''));
+            const ok = words.length && words.every((w) => w && w.length <= 30);
+            // (the text's case flag, `|U` the first letter upper case, `|L` lower case: "Foremost Knight")
+            const flags = /\|([A-Za-z0-9=+\-]*)$/.exec(inner)?.[1] ?? '';
+            const cased = (t: string): string => (/U/.test(flags) ? t.charAt(0).toUpperCase() + t.slice(1) : /L/.test(flags) ? t.charAt(0).toLowerCase() + t.slice(1) : t);
+            return { type: e.type, name: e.name, ...(ok ? { text: cased(words.join('/') + (!fallback && texts.length > 3 ? '/…' : '')) } : {}) };
+        }
+
+        // (a number the game works out, `scheme.MakeScope.ScriptValue('x_value')`: the value, its number when it is a
+        // constant one ("5"), else "N" (the link opens how it is worked out))
+        const sv = /\bScriptValue\(\s*'(\w+)'\s*\)/.exec(expr);
+
+        if (sv)
+        {
+            const e = this.get('script_values', sv[1]);
+            const d = e && this.defNode(e);
+            const v = d?.node.v;
+            const one = typeof v === 'string' ? v : Array.isArray(v) && v.length === 1 && v[0].k === 'value' && typeof v[0].v === 'string' ? v[0].v : undefined;
+            return e ? { type: e.type, name: e.name, text: one !== undefined && /^-?\d+(\.\d+)?$/.test(one) ? String(parseFloat(one)) : tr('N') } : undefined;
+        }
+
         const quoted = /\b(Get\w+|Concept)\(\s*'([^']+)'(?:\s*,\s*'([^']*)')?/.exec(expr);
 
         if (quoted)
@@ -3794,7 +5275,7 @@ export class GameIndex
             const types = GETTER_TYPES[getter];
 
             if (!types)
-                return found(this.named(key)[0]);
+                return NO_LINK_GETTERS.has(getter) ? undefined : found(this.named(key)[0]);
 
             for (const t of types)
             {
@@ -3908,7 +5389,7 @@ export class GameIndex
         else if (e.type === T_EVENT && meta?.title)
             d = this.plainLoc(meta.title);
         // history names are loc keys in names/character_names (E_tienne → Étienne)
-        else if (e.type === T_CHARACTER && meta?.name)
+        else if ((e.type === T_CHARACTER || e.type === T_SAVE_CHARACTER) && meta?.name)
             d = this.plainLoc(meta.name) ?? meta.name;
         else if ((e.type === 'dynasties' || e.type === 'dynasty_houses') && meta?.name)
             d = (meta.prefix ? (this.plainLoc(meta.prefix) ?? '') : '') + (this.plainLoc(meta.name) ?? meta.name);
@@ -3922,11 +5403,20 @@ export class GameIndex
                 if (d !== undefined)
                     break;
             }
+
+            // (none by its key: its own `name`, a key, or a variant block's fallback)
+            if (d === undefined && e.type !== T_IMAGE && e.type !== T_MODEL && e.defs.length)
+            {
+                const k = this.ownTextKey(e, 'name');
+                d = k === undefined ? undefined : this.plainLoc(k);
+            }
         }
 
         if (d !== undefined)
         {
             e.display = null; // guard against cycles through data functions
+            // (a customizable localization's own short texts, as the readable view shows them: "Befuddled by court")
+            d = this.customInText(d);
             d = humanizeBrackets(d, this.lookupDisplay).replace(/\s+/g, ' ').trim();
 
             if (d.length > 120)
@@ -3941,8 +5431,8 @@ export class GameIndex
     }
 
     /**
-     * Per entry: what its display name read, as a 32-bit filter (sigBits: two bits per localization key read — also a
-     * missing one — and per name looked up, `#name`; with the reads of the entries' names it shows). An update
+     * Per entry: what its display name read, as a 32-bit filter (sigBits: two bits per localization key read (also a
+     * missing one) and per name looked up, `#name`; with the reads of the entries' names it shows). An update
      * recomputes the names whose filter holds a changed key or name (refreshDisplays).
      */
     private dispSig = new Uint32Array(0);
@@ -3951,10 +5441,10 @@ export class GameIndex
     private sigDepth = 0;
 
     /**
-     * After an update: the display names computed so far that may read differently now — of entries whose definitions
-     * changed, and those whose filter holds a changed loc key or name (`#name`) — are computed again (the top bar search
+     * After an update: the display names computed so far that may read differently now, of entries whose definitions
+     * changed, and those whose filter holds a changed loc key or name (`#name`), are computed again (the top bar search
      * matches the names computed; the others stay as they are). A few false positives (a 32-bit filter) cost a
-     * recomputation each. More than `DISPLAY_EAGER` (a big change: the filters answer "maybe" for most names — ~15 µs
+     * recomputation each. More than `DISPLAY_EAGER` (a big change: the filters answer "maybe" for most names, ~15 µs
      * each): dropped, computed again on use like after a build. Returns how many were computed again and dropped.
      */
     private refreshDisplays(touched: Iterable<Entity>, reads: Iterable<string>): { again: number; dropped: number; }
@@ -4036,9 +5526,9 @@ export class GameIndex
     /**
      * How the loaded mods touch an entry; undefined when they don't (or no mods are loaded). removed: only definitions
      * in hidden files are left; added: none comes from the game; merged: game and mods both define a merging type
-     * (on_actions); same: every mod definition says what the game's does; overridden: otherwise — a mod definition
+     * (on_actions); same: every mod definition says what the game's does; overridden: otherwise (a mod definition
      * wins (also a localization key: the later text, a `replace/` file's first of all), or a mod hid a game
-     * definition. Flags and variables: the mods whose script uses them (usesTouch).
+     * definition). Flags and variables: the mods whose script uses them (usesTouch).
      */
     modTouch(e: Entity): ModTouch | undefined
     {
@@ -4049,11 +5539,19 @@ export class GameIndex
 
         if (t === undefined)
         {
-            this.touchCache[e.id] = t = e.type === T_IMAGE || e.type === T_MODEL
+            t = e.type === T_IMAGE || e.type === T_MODEL
                 ? this.gfxTouch(e)
                 : e.type === T_FLAG || e.type === T_VARIABLE
                 ? this.usesTouch(e)
                 : this.defsTouch(e);
+            // a loaded save carries it as an entry of its own (docs/saves.md): overridden by the save, the last layer
+            const save = this.vfs.save;
+            const by = save?.overrides.get(`${e.type}|${e.name}`);
+
+            if (save && by)
+                t = { state: 'overridden', mods: [...(t?.mods ?? []).filter((m) => m !== save.id), save.id], ...(by.type && by.name ? { save: { type: by.type, name: by.name } } : {}) };
+
+            this.touchCache[e.id] = t;
         }
 
         return t ?? undefined;
@@ -4072,11 +5570,11 @@ export class GameIndex
 
     /**
      * Of these entries, those defined by the game and by mods where each mod definition says what the game's last one
-     * does (docs/mods.md, "Same as the game"): script by its tokens (sameScript — spacing and comments aside; the same
+     * does (docs/mods.md, "Same as the game"): script by its tokens (sameScript: spacing and comments aside; the same
      * text needs no tokens) and what it uses from its file the same on both sides (sameUses: @constants, file-local
      * scripted triggers/effects), localization by its text. Merging types are left out (a copy of an on_action adds to
-     * it). The entries go in the order of the files they need — a mod's copy of a game file pairs its definitions with
-     * that file's — so each file is read about once, a few kept at a time.
+     * it). The entries go in the order of the files they need (a mod's copy of a game file pairs its definitions with
+     * that file's), so each file is read about once, a few kept at a time.
      */
     private findSame(entities: Iterable<Entity>): Set<number>
     {
@@ -4157,8 +5655,8 @@ export class GameIndex
 
     /**
      * Whether two definitions whose own texts say the same (a mod's, `m` in file `mf`, and the game's) use the same
-     * from their files: the @constants they use — in their text, their inline maths, the values of the constants they
-     * reach — with the same values as written, and the file-local scripted triggers/effects they call, directly or
+     * from their files: the @constants they use (in their text, their inline maths, the values of the constants they
+     * reach) with the same values as written, and the file-local scripted triggers/effects they call, directly or
      * through each other, saying the same (sameScript). A name one file has and the other lacks is a difference.
      */
     private sameUses(mf: number, m: string, gf: number, g: string, textOf: (file: number) => string): boolean
@@ -4289,7 +5787,7 @@ export class GameIndex
         let win = -1;
         // the mod that removed the entry: the last to hide one of its definitions
         let remover = 0;
-        // (a landed title written only as the way to one inside it changes nothing: its mod doesn't touch it — unless
+        // (a landed title written only as the way to one inside it changes nothing: its mod doesn't touch it, unless
         // that is all there is of it)
         const real = e.type === T_TITLE && e.defs.some((d) => !d.meta?.path && !this.files[d.file].hidden);
 
@@ -4330,13 +5828,13 @@ export class GameIndex
         const winner = this.files[e.defs[win].file].source;
 
         if (!fromGame)
-            return this.touch('added', involved, winner, { duplicate: this.duplicated(e, win) });
+            return this.touch('added', involved, winner, { duplicate: this.duplicated(e) });
 
         if (MERGING_TYPES.has(e.type) && liveGame && liveMod)
             return this.touch('merged', involved, 0);
 
         // (a key the game keeps no winner for is a duplicate however alike its definitions are: the game reports it)
-        if (this.duplicated(e, win))
+        if (this.duplicated(e))
             return this.touch('overridden', involved, winner, { duplicate: true });
 
         if (this.sameAsGame(e))
@@ -4347,30 +5845,33 @@ export class GameIndex
 
     /**
      * Whether the game keeps no single winner for the entry: events, history characters and localization keys outside
-     * `replace/` folders defined twice among the loaded files (a file replacing another of its path is no duplicate) —
+     * `replace/` folders defined twice among the loaded files (a file replacing another of its path is no duplicate):
      * the game reports them as errors ("Duplicated event ID …", "Duplicate character id in history", "Duplicate
      * localization key …") and which definition it uses is not defined (docs/mods.md, "Which definition wins").
      */
-    private duplicated(e: Entity, win: number): boolean
+    private duplicated(e: Entity): boolean
     {
         if (e.type !== T_EVENT && e.type !== T_CHARACTER && e.type !== T_LOC)
             return false;
 
-        // (a replace/ file's text is the supported override of a key)
-        if (e.type === T_LOC && /(^|\/)replace\//i.test(this.files[e.defs[win].file].rel))
-            return false;
-
+        // (a replace/ file's text is the supported override of a key, no duplicate; two loaded outside replace/ are one,
+        // also when a third in replace/ wins: the game reports those two, docs/mods.md "Which definition wins"; the owner's
+        // choice, 2026-11-14, the in-game confirmation open)
         let loaded = 0;
 
         for (const d of e.defs)
-            if (!this.files[d.file].hidden && ++loaded > 1)
+        {
+            const f = this.files[d.file];
+
+            if (!f.hidden && !(e.type === T_LOC && /(^|\/)replace\//i.test(f.rel)) && ++loaded > 1)
                 return true;
+        }
 
         return false;
     }
 
     /**
-     * Flags and variables: the mods whose files use them — added (only mods) or merged (the game too); no conflicts
+     * Flags and variables: the mods whose files use them, added (only mods) or merged (the game too); no conflicts
      * (`uses`). The entry list, search, details and references show them; counted like other touches.
      */
     private usesTouch(e: Entity): ModTouch | null
@@ -4423,7 +5924,26 @@ export class GameIndex
 
         const replaced = this.gfxHidden.get(e.lname) ?? [];
         const involved = new Set([gf.source, ...replaced.map((h) => h.file.source).filter((s) => s > 0)]);
-        return this.touch(replaced.some((h) => h.file.source === 0) ? 'overridden' : 'added', involved, gf.source);
+        const game = replaced.filter((h) => h.file.source === 0).pop()?.file;
+
+        if (!game)
+            return this.touch('added', involved, gf.source);
+
+        // (a mod shipping the game's file unchanged: the same; sizes first, the bytes only when they match)
+        return this.touch(this.sameBytes(gf, game) ? 'same' : 'overridden', involved, gf.source);
+    }
+
+    /** Whether two files hold the same bytes (size first: most replaced pictures differ there already). */
+    private sameBytes(a: GameFile, b: GameFile): boolean
+    {
+        const sa = this.vfs.stat(a).size;
+
+        if (sa < 0 || sa !== this.vfs.stat(b).size)
+            return false;
+
+        const x = this.vfs.read(a);
+        const y = this.vfs.read(b);
+        return !!x && !!y && x.equals(y);
     }
 
     /**
@@ -4488,10 +6008,15 @@ export class GameIndex
     // Queries
     // -------------------------------------------------------------------------
 
-    types(): TypeSummary[]
+    /**
+     * The types and their entry counts. `counts: false` leaves out what the loaded mods do to each type (modCount,
+     * modStates): working that out looks at every entry (~5 s with AGOT on its first call), so the window asks for the
+     * types without it first and shows them at once, then for the counts (App.tsx).
+     */
+    types(counts = true): TypeSummary[]
     {
         const out: TypeSummary[] = [];
-        const modCounts = this.typeModCounts();
+        const modCounts = counts ? this.typeModCounts() : null;
 
         for (const [type, m] of this.byType)
         {
@@ -4530,7 +6055,7 @@ export class GameIndex
     }
 
     /**
-     * Entries per type that the loaded mods add, change or remove, per kind of change, and the conflicts among them —
+     * Entries per type that the loaded mods add, change or remove, per kind of change, and the conflicts among them:
      * entries two or more mods touch (counted once, on first use).
      */
     private typeModCounts(): Map<string, ModCounts> | null
@@ -4581,6 +6106,12 @@ export class GameIndex
         if (t.duplicate)
             add('duplicates');
 
+        if (t.state === 'removed' && conflicting(t))
+            add('conflictsRemoved');
+
+        if (t.state === 'removed' && t.duplicate)
+            add('duplicatesRemoved');
+
         if (!c.total)
             m.delete(type);
     }
@@ -4621,14 +6152,28 @@ export class GameIndex
             if (mod)
                 item.mod = mod;
 
+            // (a scripted list's base list: the picker offers it beside that list's iterators, round 13 E6r-b)
+            if (type === 'scripted_lists')
+            {
+                const node = this.defNode(e)?.node;
+                const base = Array.isArray(node?.v) ? node.v.find((c) => c.k === 'base' && typeof c.v === 'string')?.v : undefined;
+
+                if (typeof base === 'string')
+                    item.base = base;
+            }
+
             out.push(item);
         }
 
         return out.sort((a, b) => nameOrder(a.name, b.name));
     }
 
-    /** `modOnly`: only entries the loaded mods add, change or remove; `noRemoved`: not those a mod removed. */
-    search(q: string, opts: { limit?: number; types?: string[]; text?: boolean; modOnly?: boolean; noRemoved?: boolean; } = {}): SearchResult[]
+    /**
+     * `modOnly`: only entries the loaded mods add, change or remove; `state`: of one kind (added, overridden, same,
+     * removed, merged, conflicts, duplicates; as the lists' state filter); `noRemoved`: not those a mod removed, unless
+     * `state` asks for them (as the lists show them).
+     */
+    search(q: string, opts: { limit?: number; types?: string[]; text?: boolean; modOnly?: boolean; noRemoved?: boolean; state?: string; } = {}): SearchResult[]
     {
         const limit = opts.limit ?? 200;
         const query = q.trim().toLowerCase();
@@ -4636,6 +6181,8 @@ export class GameIndex
         if (!query)
             return [];
 
+        // (names are compared without accents: `odwazna` finds "odważna")
+        const fq = fold(query);
         const typeFilter = opts.types?.length ? new Set(opts.types) : null;
         const scored: { e: Entity; s: number; match?: string; }[] = [];
 
@@ -4644,10 +6191,15 @@ export class GameIndex
             if (e.dead || (typeFilter && !typeFilter.has(e.type)))
                 continue;
 
-            if (opts.modOnly && !this.modTouch(e))
+            const touch = opts.modOnly || opts.noRemoved ? this.modTouch(e) : undefined;
+
+            if (opts.modOnly && !touch)
                 continue;
 
-            if (opts.noRemoved && this.modTouch(e)?.state === 'removed')
+            if (opts.modOnly && opts.state && opts.state !== 'all' && !(opts.state === 'conflicts' ? conflicting(touch!) : opts.state === 'duplicates' ? !!touch!.duplicate : touch!.state === opts.state))
+                continue;
+
+            if (opts.noRemoved && touch?.state === 'removed' && !(opts.modOnly && opts.state === 'removed'))
                 continue;
 
             const penalty = e.type === T_LOC ? 10 : e.type === T_IMAGE || e.type === T_MODEL ? 8 : e.type === T_FLAG || e.type === T_VARIABLE ? 5 : 0;
@@ -4664,17 +6216,17 @@ export class GameIndex
             {
                 const text = e.type === T_LOC ? this.locText.get(e.name) : this.displayName(e);
 
-                if (text && text.toLowerCase().includes(query))
+                if (text && fold(text).includes(fq))
                     scored.push({ e, s: 20 + penalty, match: text });
             }
             else if (e.type !== T_LOC && e.display)
             {
-                if (e.display.toLowerCase().includes(query))
+                if (fold(e.display).includes(fq))
                     scored.push({ e, s: 3 + penalty });
             }
         }
 
-        // ties: in the order a build creates the entries (ids — after updates new entries have later ones)
+        // ties: in the order a build creates the entries (ids; after updates new entries have later ones)
         scored.sort((a, b) => a.s - b.s || a.e.name.length - b.e.name.length || (this.refreshed ? this.creationOrder(a.e, b.e) : a.e.id - b.e.id));
         return scored.slice(0, limit).map(({ e, match }) => ({
             type: e.type,
@@ -4888,13 +6440,8 @@ export class GameIndex
 
         if (type !== T_LOC)
         {
-            for (const k of descriptionCandidates(type, name))
-            {
-                description = this.plainLoc(k, 0, true);
-
-                if (description !== undefined)
-                    break;
-            }
+            const k = this.descriptionKey(e);
+            description = k === undefined ? undefined : this.plainLoc(k, 0, true);
         }
 
         const out: EntityDetail = {
@@ -4929,7 +6476,7 @@ export class GameIndex
 
     /**
      * The winning definition of an entry as text for the active mod (ModInfo id `activeMod`): exactly as written, with
-     * the namespace, constants and file-local definitions it needs — or why it cannot be copied alone. Also where the
+     * the namespace, constants and file-local definitions it needs, or why it cannot be copied alone. Also where the
      * active mod already defines the entry. The main process picks the file and writes it (src/main/mods/edit.ts,
      * docs/mods.md "Editing the active mod").
      */
@@ -4972,7 +6519,7 @@ export class GameIndex
             abs: f.abs,
             line: win.line,
             source: f.source,
-            from: f.source ? this.vfs.sources[f.source].name : 'the game',
+            from: f.source ? this.vfs.sources[f.source].name : tr('the game'),
             otherFiles: new Set(this.liveDefs(e).map((d) => d.file)).size - 1
         };
         const src = this.readFile(win.file);
@@ -4994,13 +6541,13 @@ export class GameIndex
 
         if (!bytes || !Buffer.from(src, 'utf8').equals(bytes))
         {
-            out.copyProblem = `${f.rel} is not valid UTF-8: a copy of its text would not be byte-exact. Replace the whole file instead.`;
+            out.copyProblem = tr('{rel} is not valid UTF-8: a copy of its text would not be byte-exact. Replace the whole file instead.', { rel: f.rel });
             return out;
         }
 
         if (win.local)
         {
-            out.copyProblem = `File-local: only the events of ${f.rel} can call it. Copy those events (they take it along), or replace the whole file.`;
+            out.copyProblem = tr('File-local: only the events of {rel} can call it. Copy those events (they take it along), or replace the whole file.', { rel: f.rel });
             return out;
         }
 
@@ -5008,7 +6555,7 @@ export class GameIndex
         const top = topLevelAt(ast, win.start);
         let def = { start: win.start, end: win.end, line: win.line, key: name };
 
-        // a landed title inside its de jure lieges: its own block inside empty blocks of theirs — the game merges a title
+        // a landed title inside its de jure lieges: its own block inside empty blocks of theirs: the game merges a title
         // written again into the one it has (override.ts titleText)
         const chain = top && top.s !== win.start && type === T_TITLE ? pathTo(top, win.start) : undefined;
 
@@ -5023,12 +6570,12 @@ export class GameIndex
         if (top && top.s !== win.start)
         {
             // nested (a faith in its religion, a law in its group): the game overrides the top-level key, so the whole
-            // holding definition is copied — when it is a definition of its own
+            // holding definition is copied, when it is a definition of its own
             const holder = top.k ? (this.byName.get(top.k) ?? []).find((c) => c.defs.some((d) => d.file === win.file && d.start === top.s)) : undefined;
 
             if (!holder)
             {
-                out.copyProblem = `It is defined inside the block “${top.k ?? '{ }'}”, which is not a definition of its own — a copy of it alone would not be valid. Replace the whole file instead.`;
+                out.copyProblem = tr('It is defined inside the block “{value}”, which is not a definition of its own — a copy of it alone would not be valid. Replace the whole file instead.', { value: top.k ?? '{ }' });
                 return out;
             }
 
@@ -5228,43 +6775,93 @@ export class GameIndex
 // Candidate collection
 // ---------------------------------------------------------------------------
 
-class CandidateTable
+export class CandidateTable
 {
     size = 0;
-    tok: string[] = [];
-    k1: (string | null)[] = [];
-    k0: (string | null)[] = [];
-    isKey: number[] = [];
-    quoted: number[] = [];
-    from: number[] = [];
-    file: number[] = [];
-    line: number[] = [];
-    off: number[] = [];
-    len: number[] = [];
-    ctx: number[] = [];
-    direct: number[] = [];
+    /**
+     * the strings (tokens and their two parent keys) once each: a full build holds 13M candidates with AGOT, 0.5M
+     * distinct strings, and the columns are typed arrays, outside the heap that all threads of the process share
+     */
+    readonly strs = new Interner();
+    /** the columns in blocks that grow (nothing is copied when one is full); a block knows its first candidate */
+    readonly chunks: CandidateChunk[] = [];
+    /** the runs of one file's candidates (they are added file by file): the file and its first candidate */
+    readonly runFile: number[] = [];
+    readonly runStart: number[] = [];
+    private last: CandidateChunk | null = null;
+
+    /** `tok`, `k1`, `k0` are places in `strs` (-1: none); flags: bit 0 isKey, bit 1 quoted, bit 2 a direct reference (`tok` is its target) */
+    addIds(tok: number, k1: number, k0: number, flags: number, from: number, file: number, line: number, off: number, len: number, ctx: number): void
+    {
+        let c = this.last;
+
+        if (!c || c.n === c.cap)
+        {
+            c = this.last = new CandidateChunk(this.size, Math.min(CHUNK_MAX, c ? c.cap * 2 : 256));
+            this.chunks.push(c);
+        }
+
+        if (this.runFile.length === 0 || this.runFile[this.runFile.length - 1] !== file)
+        {
+            this.runFile.push(file);
+            this.runStart.push(this.size);
+        }
+
+        const n = c.n++;
+        c.tok[n] = tok;
+        c.k1[n] = k1;
+        c.k0[n] = k0;
+        c.flags[n] = flags;
+        c.from[n] = from;
+        c.line[n] = line;
+        c.off[n] = off;
+        c.len[n] = len;
+        c.ctx[n] = ctx;
+        this.size++;
+    }
 
     add(tok: string, k1: string | null, k0: string | null, isKey: boolean, from: number, file: number, line: number, off: number, len: number, ctx: number, quoted = false): void
     {
-        this.tok.push(tok);
-        this.k1.push(k1);
-        this.k0.push(k0);
-        this.isKey.push(isKey ? 1 : 0);
-        this.quoted.push(quoted ? 1 : 0);
-        this.from.push(from);
-        this.file.push(file);
-        this.line.push(line);
-        this.off.push(off);
-        this.len.push(len);
-        this.ctx.push(ctx);
-        this.direct.push(-1);
-        this.size++;
+        this.addIds(this.strs.id(tok), k1 === null ? -1 : this.strs.id(k1), k0 === null ? -1 : this.strs.id(k0), (isKey ? 1 : 0) | (quoted ? 2 : 0), from, file, line, off, len, ctx);
     }
 
     addDirect(from: number, to: number, file: number, line: number, off: number, len: number, ctx: number): void
     {
-        this.add('', null, null, false, from, file, line, off, len, ctx);
-        this.direct[this.size - 1] = to;
+        this.addIds(to, -1, -1, 4, from, file, line, off, len, ctx);
+    }
+}
+
+const CHUNK_MAX = 1 << 18;
+
+/** A block of a CandidateTable's columns: typed arrays, 33 bytes a candidate (the table is the biggest thing a build holds). */
+export class CandidateChunk
+{
+    n = 0;
+    readonly base: number;
+    readonly cap: number;
+    readonly tok: Int32Array;
+    readonly k1: Int32Array;
+    readonly k0: Int32Array;
+    readonly flags: Uint8Array;
+    readonly from: Int32Array;
+    readonly line: Int32Array;
+    readonly off: Int32Array;
+    readonly len: Int32Array;
+    readonly ctx: Int32Array;
+
+    constructor(base: number, cap: number)
+    {
+        this.base = base;
+        this.cap = cap;
+        this.tok = new Int32Array(cap);
+        this.k1 = new Int32Array(cap);
+        this.k0 = new Int32Array(cap);
+        this.flags = new Uint8Array(cap);
+        this.from = new Int32Array(cap);
+        this.line = new Int32Array(cap);
+        this.off = new Int32Array(cap);
+        this.len = new Int32Array(cap);
+        this.ctx = new Int32Array(cap);
     }
 }
 
@@ -5310,7 +6907,7 @@ const SKIP_KEYS = new Set([
     'trigger_else_if'
 ]);
 
-function collectCandidates(
+export function collectCandidates(
     nodes: PNode[],
     from: number,
     file: number,
@@ -5505,7 +7102,9 @@ function imageHints(body: PNode[], consts: Map<string, string>, meta: Record<str
             }
             else if (depth < 4 && k !== 'trigger' && k !== 'limit')
             {
-                visit(c.v, ICON_KEY.test(k) ? 'icon' : ILLU_KEY.test(k) ? 'illu' : cat, depth + 1, cond);
+                // (1.20 faiths: `faith_details = { religion = … icon = baltic }`: its words stand where the entry's own do)
+                const same = depth === 0 && k === 'faith_details';
+                visit(c.v, ICON_KEY.test(k) ? 'icon' : ILLU_KEY.test(k) ? 'illu' : cat, same ? 0 : depth + 1, cond);
             }
         }
     };
@@ -5524,7 +7123,7 @@ function imageHints(body: PNode[], consts: Map<string, string>, meta: Record<str
         meta.illu = detach(illu);
 }
 
-function extractMeta(type: string, node: PNode, consts: Map<string, string> = new Map()): Record<string, string> | undefined
+export function extractMeta(type: string, node: PNode, consts: Map<string, string> = new Map()): Record<string, string> | undefined
 {
     if (!Array.isArray(node.v))
         return undefined;
@@ -5552,7 +7151,7 @@ function extractMeta(type: string, node: PNode, consts: Map<string, string> = ne
         if (s('hidden') === 'yes')
             meta.hidden = 'yes';
     }
-    else if (type === T_CHARACTER)
+    else if (type === T_CHARACTER || type === T_SAVE_CHARACTER)
     {
         const n = s('name');
 
@@ -5561,7 +7160,7 @@ function extractMeta(type: string, node: PNode, consts: Map<string, string> = ne
     }
     else if (type === 'dynasties' || type === 'dynasty_houses')
     {
-        // (keyed by id: the name and prefix are loc keys — dynnp_de + dynn_Hauteville)
+        // (keyed by id: the name and prefix are loc keys: dynnp_de + dynn_Hauteville)
         const n = s('name');
 
         if (n)
@@ -5578,20 +7177,27 @@ function extractMeta(type: string, node: PNode, consts: Map<string, string> = ne
 
         if (c)
             meta.category = c;
+
+        // (the groups it belongs to: `has_trait = wounded` names the traits of a group: traitGroups reads them from here, so
+        // an update can compare the groups of the old and the new definitions without the old text)
+        const groups = body.filter((x) => (x.k === 'group' || x.k === 'group_equivalence') && typeof x.v === 'string' && x.v).map((x) => x.v as string);
+
+        if (groups.length)
+            meta.groups = groups.join(' ');
     }
-    // nothing but its de jure vassals (the way a mod writes to a title inside it — override.ts titleText): no values of
+    // nothing but its de jure vassals (the way a mod writes to a title inside it; override.ts titleText): no values of
     // its own; the game merges a title written again into the one it has, so it changes nothing (winningIdx)
     else if (type === T_TITLE && body.every((x) => x.k !== null && TITLE_KEY.test(x.k) && Array.isArray(x.v)))
         meta.path = 'yes';
 
-    if (type !== T_CHARACTER && !type.startsWith('coat_of_arms') && type !== 'genes')
+    if (type !== T_CHARACTER && type !== T_SAVE_CHARACTER && !type.startsWith('coat_of_arms') && type !== 'genes')
         imageHints(body, consts, meta);
 
     return Object.keys(meta).length ? meta : undefined;
 }
 
 /** Comment block directly above a definition (no blank line in between). */
-function leadingComment(src: string, start: number): string | undefined
+export function leadingComment(src: string, start: number): string | undefined
 {
     let lineStart = start;
 
@@ -5611,6 +7217,11 @@ function leadingComment(src: string, start: number): string | undefined
         const line = src.slice(ls, pos).trim();
 
         if (!line.startsWith('#'))
+            break;
+
+        // (a commented-out assignment (a modder's old value, `# AGOT Modified ZOOM_STEPS = { … }`) is no doc of the line below it, and ends the block)
+        // (only when the value looks like a define's: a number, yes/no, a block, @name, a string: `# ARTIFACT = The artifact to destroy` documents an argument and stays doc)
+        if (/^#+(?:\s*|.*\b)[A-Za-z_][\w.]*\s*=\s*(?:-?[\d.]+\s*$|-?[\d.]+\s*#|(?:yes|no)\b\s*(?:#.*)?$|[{@"\[]|\d+\s*\})/.test(line))
             break;
 
         lines.unshift(line.replace(/^#+\s?/, ''));
@@ -5647,9 +7258,9 @@ export function isDirectory(p: string): boolean
 /** The feelings an event portrait shows most (the game's portrait animations that are moods). */
 const MOODS = new Set(
     (
-        'happiness worry thinking admiration shock anger stress fear disapproval schadenfreude scheme shame dismissal sadness flirtation flirtation_left rage ecstasy ' +
-        'disbelief beg interested interested_left love paranoia boredom pain grief disgust laugh disappointed pondering idle eyeroll stunned crying manic nervous ' +
-        'shiver menacing threatening wailing delirium sick sick_stomach dead severelywounded obsequious_bow prostration stayback acknowledging go_to_your_room ' +
+        tr('happiness worry thinking admiration shock anger stress fear disapproval schadenfreude scheme shame dismissal sadness flirtation flirtation_left rage ecstasy ') +
+        tr('disbelief beg interested interested_left love paranoia boredom pain grief disgust laugh disappointed pondering idle eyeroll stunned crying manic nervous ') +
+        tr('shiver menacing threatening wailing delirium sick sick_stomach dead severelywounded obsequious_bow prostration stayback acknowledging go_to_your_room ') +
         'happy_teacher stressed_teacher eccentric cough newborn'
     ).split(/\s+/)
 );
@@ -5676,4 +7287,21 @@ function animationGroup(name: string): string
         return 'Court & roles';
 
     return 'Other';
+}
+
+/** The DLC codes a path may carry: its folders and the parts of its file name (`ep_3` / `ep3`, `pam`, `tgp` …). */
+function pathCodes(rel: string): string[]
+{
+    const parts = rel.toLowerCase()
+        .replace(/\.txt$/, '')
+        .split(/[\/_.\-]/)
+        .filter(Boolean);
+    const out = new Set(parts);
+
+    // (`ep_3` written apart)
+    for (let i = 0; i + 1 < parts.length; i++)
+        if (/^[a-z]+$/.test(parts[i]) && /^\d+$/.test(parts[i + 1]))
+            out.add(parts[i] + parts[i + 1]);
+
+    return [...out];
 }

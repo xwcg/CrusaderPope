@@ -1,0 +1,322 @@
+[
+ {
+  "kind": "on_action", "key": "pick_unique_murder_intercept_on_action",
+  "label": "Pick murder rescue event",
+  "summary": "Picks one rescue event from a list of one-off saves, used when a murder is intercepted.",
+  "details": "It runs the first event in its list whose own conditions allow it. A vanilla comment says these events are rolled elsewhere, so the order of the list does not matter. Vanilla lists rescues such as a lover, a pet, a warhorse, a dynasty perk, language skills or a timely artifact saving the character. A comment in vanilla says these are rescue methods that get used up during the event and cannot be replaced right away. Script fires it; the game's code does not.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "pilgrimage_arrival_events",
+  "label": "Pilgrimage arrival",
+  "summary": "Handles what happens when a pilgrim arrives: it tries the arrival events of the destination's kind, then does some cleanup.",
+  "details": "It tries these in order and takes the first that applies: burial, hajj, Christian, Jewish, Muslim, Hindu, Buddhist, Jain, Zoroastrian, Norse, Tengri, pagan, and a generic one. Afterwards, if the character has the flag for having joined a pilgrim group, it shows a toast (a pop-up message) and removes the group's modifier from the current travel plan. If an entourage member carries the peasant pilgrim leader flag, that member loses the flag, gains the pilgrim trait, and is then removed from the entourage. Script fires it; it runs on a character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "pilgrimage_destination_events",
+  "label": "Pilgrimage stay events",
+  "summary": "Picks a random event for a pilgrim who is staying at the pilgrimage destination.",
+  "details": "It only runs while the character is at the location of the activity. A weighted random pick is made from 17 events, such as a fishy local guide, buying a relic or recruiting a local expert. The entry with weight 100 and no event means nothing happens in that share of cases. A vanilla comment calls these events that happen while remaining on-site. Script fires it, not the game's code.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "pilgrimage_generic_arrival_events",
+  "label": "Generic pilgrimage arrival",
+  "summary": "Picks one of two general arrival events for a pilgrim.",
+  "details": "The two events, pilgrimage.4001 and pilgrimage.4002, have equal weight. Vanilla lists it as the last option in the pilgrimage arrival events, so it is only reached when none of the more specific ones applies. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "pilgrimage_journey_events",
+  "label": "Pilgrimage journey",
+  "summary": "Lets travel events happen on the way to a pilgrimage destination.",
+  "details": "It only passes when the character is on a pilgrimage and has neither of the variables marking a running pilgrimage event chain or an invalidation being handled. A comment in vanilla says this is so that events happen only on the way to the destination. If it passes, it runs the pilgrimage travel events on action. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "pilgrimage_return_events",
+  "label": "Pilgrimage return",
+  "summary": "Runs once a pilgrim is back home: it clears the visited cultures list and can fire one return event.",
+  "details": "If the character has the variable visited_cultures_list, it is removed. Then event pilgrimage.9001 is picked as a random event. A vanilla comment describes it as events that happen once you have returned home. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "pilgrimage_travel_events",
+  "label": "Pilgrimage travel events",
+  "summary": "Picks a random event for a pilgrim while travelling, from a long weighted list of general, sea, intent and faith-specific events.",
+  "details": "The pick has a no-event weight of 65 plus an entry of weight 100 with no event, so often nothing happens. The list has groups for generic events, sea trips, the pilgrim's intent (altruism, zealot, reflection), temptations, faith-specific events (Christian, Muslim, Hindu, Buddhist, dharmic) and South-East Asia ocean events. The input shows only part of the definition, so later groups are not covered here. The pilgrimage journey events action calls it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "playdate_event_selection",
+  "label": "Playdate event",
+  "summary": "Picks one event for a participant of a playdate (a peer meeting) from a weighted list.",
+  "details": "It needs an activity to exist. Most of the base events have weight 40, going for a swim only 5, and the later events (another kid asks to play, a ball in someone's garden, a bully, an imaginary friend) have weights of 250 to 500, so those are far more likely. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "playdate_start_events",
+  "label": "Playdate start",
+  "summary": "Lists the start events of a playdate.",
+  "details": "It lists playdate.2001 and playdate.2501. A comment in vanilla says it picks out a start event. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "pledge_loyalty_to_liege_invalid_on_action",
+  "label": "Pledge loyalty invalid",
+  "summary": "Lists two events about the pledge of loyalty to the liege; going by its name, they cover the pledge becoming invalid.",
+  "details": "It lists events pledge_loyalty_to_liege.0009 and pledge_loyalty_to_liege.0601. Vanilla's definition does not say when script fires it, so the meaning rests on the name. Script fires it, on a character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "pledge_loyalty_to_liege_start",
+  "label": "Pledge loyalty start",
+  "summary": "Sets up a pledge of loyalty to the liege: it adds stress for some traits, stores the liege in a variable, and sets a contract type variable.",
+  "details": "Shy and arrogant characters gain a minor amount of stress. The variable pledge_loyalty_to_liege_grace is removed if present and then set to the liege. If the variable homage_type is set, it is checked: the submission, gold and favor (hook) types do nothing here, and only the contract type sets pledge_loyalty_to_liege_contract_type. That variable becomes 0 (levies) when the levy obligation level is lower than the taxes one and can be increased, 1 (gold) when taxes are lower and can be increased, and otherwise 1 if the taxes level can be increased, else 0. It has no root scope listed. It lives in the tgp DLC files.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "pledge_loyalty_to_liege_travel_planner_exit",
+  "label": "Pledge loyalty travel exit",
+  "summary": "Runs the pledge of loyalty's refund and cleanup effect.",
+  "details": "It calls a single effect, pledge_loyalty_to_liege_refund_and_cleanup_effect. What that effect does exactly is not in the input. Going by its name, it is meant for leaving the travel planner. No root scope is given.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "prison_maintenance_pulse",
+  "label": "Prison maintenance",
+  "summary": "Once a year, for a character who holds prisoners, sets up four prison checks spread across the year.",
+  "details": "It only continues if the character has at least one prisoner. It then schedules the quarterly prison maintenance pulse after 45, 135, 225 and 315 days. The yearly pulse for everyone calls it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "quarterly_playable_pulse",
+  "label": "Quarterly ruler pulse",
+  "summary": "Fires four times a year from the game's code for every playable character (count and above) and starts a set of other pulses.",
+  "details": "The root is the character, and scope:quarter holds the quarter number from 1 to 4. Vanilla notes that quarter 1 is not necessarily January to March. It runs realm maintenance, the lifestyle progress pulses (stewardship, intrigue, diplomacy, martial, learning, wanderer), the relationship pulses (lover, friend, rival, mentor and student), the inspiration maintenance pulse and a tributary check. It also has a random on action with a 50 percent chance to happen at all, which then runs ep3_yearly_events_laamps; for AI characters 95 is added to the no-event weight, so they get far fewer events.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "quarterly_prison_maintenance_pulse",
+  "label": "Quarterly prison check",
+  "summary": "Every quarter, starts the ongoing event for each prisoner of the character, depending on where they are held.",
+  "details": "It only runs if the character has prisoners. Prisoners under house arrest get the house_arrest_ongoing on action, and prisoners in a dungeon get dungeon_ongoing, each queued one day later (vanilla's comment: so the pulse can be checked in parallel). The prison maintenance pulse schedules it four times a year.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "random_journey_event_pulse",
+  "label": "Journey events",
+  "summary": "Picks a random journey event for the host of a journey.",
+  "details": "It only runs when the character is the activity's host (scope:host). The pick comes from 14 'bp3_journey' events, such as a walking legend or a local specialty. The event bp3_journey.2000 (weight 2000), tied to the Legend intent, is by far the most likely, then bp3_journey.1100 at 300. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "random_roaming_event_pulse",
+  "label": "Roaming events",
+  "summary": "Picks a random event for a character who is roaming.",
+  "details": "The list has 15 events from the bp3_roaming set, such as meeting a stranger, an animal sighting, a forgotten village or a hermit. Most have weight 100, some 50; a legendary beast sighting has only 10. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "random_survey_first_event_pulse",
+  "label": "First survey event",
+  "summary": "Picks a random event for the first event of a survey.",
+  "details": "It uses ten events bp3_survey.1000 to 1090. Weights are mostly 100; bp3_survey.1060 has weight 1, making it very rare. The second pulse uses the same ten events and adds progression events.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "random_survey_mid_event_pulse",
+  "label": "Middle survey event",
+  "summary": "Fires the events in the middle of a survey.",
+  "details": "It lists bp3_survey.0020, 0030 and 0040 as events, not as a weighted random pick. Which of them actually happen depends on their own conditions, which the input does not show.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "random_survey_second_event_pulse",
+  "label": "Second survey event",
+  "summary": "Picks a random event for the second event of a survey, either a regular one or a progression one.",
+  "details": "The regular events are the same ten as in the first survey pulse (bp3_survey.1000 to 1090, with 1060 very rare). Four progression events (bp3_survey.1200 to 1230) are added, each with weight 100.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "random_yearly_everyone_pulse",
+  "label": "Yearly pulse, everyone",
+  "summary": "Fires once a year from the game's code for every character, at a random point of the year for each of them.",
+  "details": "The root is the character. It starts the yearly health pulse, the stress pulse, the prison maintenance pulse and the house feud AI scheme pulse. It also fires a few events: one that adds a year to the time since a holy order loan, the check for betrothed characters who joined a clergy that forbids marriage, and a Silk Road market innovation event. In its random events, a no-event entry has weight 500 against 100 for a military order's payment demand.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "random_yearly_playable_pulse",
+  "label": "Yearly pulse, rulers",
+  "summary": "Fires once a year from the game's code for every playable character, at a random point of the year, and picks one of the yearly event groups.",
+  "details": "The root is the character. It runs at a different time from the pulse for everyone, though they coincide on about one day in 365. It passes only if the basic yearly events trigger allows it. AI characters mostly get no event (30 added to the no-event weight for kingdom tier and above, 70 for duchy tier and above, 95 for other AIs), to save performance. The groups include the general yearly events, DLC groups (fp1, fp2, fp3, ep3, tgp, mpo) and house feud events. The effect part includes a 15 percent chance for theologians and sayyids to get a holy legend seed, and commander trait leveling for AI characters. The input cuts the definition off, so the rest is not covered here.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/on_action/_on_actions.info:17"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "realm_maintenance_quarterly_pulse",
+  "label": "Realm maintenance",
+  "summary": "Every quarter, starts three realm pulses: low control, high control and in-debt county corruption.",
+  "details": "It starts the low_control_pulse, high_control_pulse and in_debt_county_corruption_pulse on actions; what each one does is not in the input. The quarterly ruler pulse calls it. It has no root scope listed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "reincarnation_toy_pulse",
+  "label": "Reincarnation toy test",
+  "summary": "Gives a small chance to fire the toy test event, which can show that a character is a reincarnation.",
+  "details": "It has a chance_to_happen of 14 for event bp2_yearly.8090. A vanilla comment says the event can fire between ages 4 and 15, giving 12 chances, and works out to roughly 1 percent in total (its own figure is 14 in 1,464). The input does not show what fires this on action.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "research_ongoing_events",
+  "label": "Research events",
+  "summary": "Picks a random event that can happen during a research project.",
+  "details": "It needs an inspiration to exist (scope:inspiration). Most of the time nothing happens (weight 1000 for no event against seven events at 100 each). Vanilla notes it is similar to the inspiration ongoing events. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "rival_quarterly_pulse",
+  "label": "Rival pulse",
+  "summary": "Once a year, in the third quarterly pulse, starts the rival relation changes.",
+  "details": "It passes only when scope:quarter is 3, so it does nothing in the other three quarters. It then runs rival_relation_changes. The quarterly ruler pulse calls it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "rival_relation_changes",
+  "label": "Rival changes",
+  "summary": "May fire a rivalry event for an adult character who has a rival or a potential rival.",
+  "details": "The character must have a relation of type rival or potential rival and must be an available adult. There is a 50 percent chance something happens at all; then one of nothing, rivalry.0001 or rivalry.0003 (a nemesis who becomes too pathetic) is picked with equal weight.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "roaming_mid_activity_event_pulse",
+  "label": "Roaming mid events",
+  "summary": "Picks a random event for the middle of a roaming activity.",
+  "details": "It uses five events, bp3_roaming.0050 to 0090, all with the same weight. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "search_for_troops_event_selection",
+  "label": "Search for troops",
+  "summary": "Picks the next event in the chain where a character searches for their troops.",
+  "details": "A vanilla comment says the cycle starts from warfare_progress.1401. The choices are four places where the soldiers might be found (a tavern, by water, being trained, serving a preacher) and a success event, which is rarer (weight 50 against 100). Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "seduce_failure",
+  "label": "Seduction failure",
+  "summary": "Picks the outcome event for a failed seduction.",
+  "details": "Six events are possible: a kind rejection, a discovered failure, a hard rejection, a hard rejection that also reveals the attempt, a taboo reaction (incest or sodomy) and a flirtatious rejection. Vanilla notes that the two hard rejections are disabled by something called Graceful Recovery; the input does not say what that is. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "seduce_generic_success",
+  "label": "Generic seduction success",
+  "summary": "Picks the scene for a successful seduction that has no more specific one.",
+  "details": "There are eleven options, such as both being drunkards, in the privy, at the walls, going to the target's chambers, a love letter or a generated sex scene. Weights are 100 or 150. It is the fallback used by seduce_success.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "seduce_ongoing_milestone_1",
+  "label": "Seduction milestone 1",
+  "summary": "Picks a random event for the first milestone of an ongoing seduction scheme.",
+  "details": "It needs the scheme to exist. Events include sending a gift (four kinds), a compliment, a favour for someone close to the target, a troubadour, seducing a friend or close family, a shy target and the ward event. A vanilla comment says every added event must set and remove scheme_event_active_flag to avoid two events firing at once in multiplayer. It also includes an event applying the exotic wares modifier procured on a pilgrimage (weight 1000).",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "seduce_ongoing_milestone_2",
+  "label": "Seduction milestone 2",
+  "summary": "Picks a random event for the second milestone of an ongoing seduction scheme.",
+  "details": "It needs the scheme to exist. Events are grouped: guessing the target's preference (a dance, a jousting day), a love potion, risk-based chances (a walk in town, below the balcony), relation-based ones (a rival, both wrathful, a vassal) and ones unlocked by skills (foreign courtier, military drill, tactics, both high intrigue, both diplomatic). As in milestone 1, events must set and remove scheme_event_active_flag. All have weight 100.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "seduce_success",
+  "label": "Seduction success",
+  "summary": "Handles a successful seduction: it picks a special scene if one fits, otherwise the generic one, and updates an achievement variable and the charmer accolade progress.",
+  "details": "It takes the first valid of: bedding the Pope, seducing a rival or someone strongly disliked, seducing a close family member, a spouse seduction. If none is valid, seduce_generic_success runs. The effect adds 1 to the achievement_seductive_variable. It then has a small chance (2, scaled by the accolade progress) to make a knight eligible for the charmer accolade attribute, only if such a knight exists. Likelier choices are acclaimed knights and those who are lustful, gregarious or seducers. The progress variable resets to 0, the chosen knight gets the variable charmer_attribute_unlock, and a message is sent.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "sell_titles_side_effect_events",
+  "label": "Sell titles side effects",
+  "summary": "Picks a random side effect event, going by its name for when the character sells titles.",
+  "details": "Seven events are possible, mostly at weight 100: a vassal wants a hook instead, a friend gives gold, a vassal thinks you generous, a powerful vassal feels you have not done enough for them, a powerful vassal reduces their obligations, someone chastises you, and (weight 30) a merchant with an offer. Script fires it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "sibling_quarterly_pulse",
+  "label": "Sibling pulse",
+  "summary": "Every quarter, for a character who has siblings, runs the sibling status and ongoing sibling actions.",
+  "details": "It passes only if the character has at least one sibling. It then runs sibling_statuses and ongoing_sibling.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "sibling_statuses",
+  "label": "Sibling statuses",
+  "summary": "Can fire the event where the realm gets fed up with a troublemaker sibling.",
+  "details": "It picks event sibling.0005 as its only random event. The sibling pulse calls it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "silk_road_market_visit_travel_planner_cancel_on_action",
+  "label": "Cancel Silk Road market visit",
+  "summary": "Gives a short-term gold amount and resets the cooldown of the Silk Road market visit decision.",
+  "details": "It adds short-term gold of the size major_gold_value and removes the cooldown of the visit_silk_road_market_decision decision. Going by its name, it runs when such a visit is cancelled in the travel planner. It lives in the tgp DLC files.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "spawn_admin_governance_contract_on_action",
+  "label": "Spawn admin contract",
+  "summary": "Picks a random governance contract for an administrative government.",
+  "details": "It picks one of 17 contracts with equal weight, such as overdue taxes, a hoarding mayor, bountiful harvest, rampant bandits, a mad prophet or wartime measures. Vanilla lists it among on actions made for specific government types. It has no root scope listed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "spawn_celestial_civic_governance_contract_on_action",
+  "label": "Spawn celestial civic contract",
+  "summary": "Picks a random governance contract for the civil provinces of a celestial government.",
+  "details": "It passes only if the vassal contract has the flag province_civilian. It then picks, with equal weight, one of 19 tgp contracts (such as a jail inspection, salt smugglers or a crumbling bridge) or six contracts reused from the ep3 set that fit the theme. It has no root scope listed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ }
+]

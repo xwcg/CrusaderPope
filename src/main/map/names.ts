@@ -24,7 +24,7 @@ function readableName(name: string): string
 }
 
 /**
- * Per province: its name when it has no barony — the localization of definition.csv's name, else readable. Land
+ * Per province: its name when it has no barony: the localization of definition.csv's name, else readable. Land
  * provinces keep definition.csv's name (their barony names them; the side panel shows the raw one).
  */
 export function provinceNames(idx: GameIndex, definitionNames: string[], kinds: number[]): string[]

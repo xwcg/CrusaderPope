@@ -1,5 +1,6 @@
-/** Cards: Culture, faith and dynasty — cultures, name lists, innovations, ethnicities, faiths, religions, doctrines, dynasties, houses, nicknames. */
+/** Cards: Culture, faith and dynasty (cultures, name lists, innovations, ethnicities, faiths, religions, doctrines, dynasties, houses, nicknames). */
 import type { PNode } from '../../indexer/parser.ts';
+import { T_LOC } from '../../indexer/schema.ts';
 import type { Line, Rich, RichSeg } from '../../../shared/api.ts';
 import type { Ctx } from '../describer.ts';
 import type { StoryBuilder } from '../stories.ts';
@@ -7,8 +8,9 @@ import type { CardFn } from './types.ts';
 import { FAITH_CARDS } from './culture-faith.ts';
 import { DYNASTY_CARDS } from './culture-dynasty.ts';
 import { capitalize, formatNumber, humanize, rich, signed, titleCase } from '../text.ts';
-import { aiSection, block, bodyOf, colorSeg, dateText, dlcName, doctrineModifierLines, dynastyWord, gameText, items, joined, paramLines, sample, scalar, scalars, statementLine, word } from './culture-util.ts';
+import { aiSection, block, bodyOf, colorSeg, dateText, dlcName, DOCTRINE_MODIFIER_KEYS, doctrineModifierLines, dynastyWord, gameText, items, joined, paramLines, sample, scalar, scalars, statementLine, word } from './culture-util.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 const PILLAR = ['culture/pillars'];
 
 /** A graphical culture key (`western_clothing_gfx`) by its name in game ("Continental European"). */
@@ -17,7 +19,7 @@ function gfxSeg(b: StoryBuilder, key: string): RichSeg
     return { text: b.idx.plainLoc(key)?.trim() || titleCase(humanize(key.replace(/_(coa|building|clothing|unit)_gfx$/, ''))), kind: 'value', tip: key };
 }
 
-/** Graphical unit types (levy and knight pictures) by the unit graphics keys they list (`graphical_cultures`) — a handful. */
+/** Graphical unit types (levy and knight pictures) by the unit graphics keys they list (`graphical_cultures`), a handful. */
 function unitTypes(b: StoryBuilder): Map<string, string>
 {
     const by = new Map<string, string>();
@@ -46,10 +48,10 @@ function traditionSeg(b: StoryBuilder, key: string): Rich
 }
 
 /** How the head of culture is found (culture/pillars `head_determination_type`). */
-const HEAD: Record<string, string> = { domain: 'the ruler with the largest domain', herd: 'the ruler with the largest herd' };
+const HEAD: Record<string, string> = { domain: tr('the ruler with the largest domain'), herd: tr('the ruler with the largest herd') };
 
 /** Graphics of a culture (culture/cultures/_cultures.info): several blocks of one key make a hybrid's look. */
-const GFX: Record<string, string> = { clothing_gfx: 'Clothes', building_gfx: 'Buildings', unit_gfx: 'Soldiers', coa_gfx: 'Coats of arms' };
+const GFX: Record<string, string> = { clothing_gfx: 'Clothes', building_gfx: 'Buildings', unit_gfx: 'Soldiers', coa_gfx: tr('Coats of arms') };
 
 const CULTURE_SKIP = new Set([
     'color',
@@ -92,7 +94,7 @@ const culture: CardFn = (b, { e, body, card, ctx, own }) =>
 
     const parentNode = body.find((c) => c.k === 'parents' && Array.isArray(c.v));
     const parents = items(parentNode).map((x) => b.d.ref(x.v as string, ['culture/cultures']));
-    const origin = parents.length > 1 ? rich('Hybrid of ', joined(parents)) : parents.length ? rich('Diverged from ', parents[0]) : undefined;
+    const origin = parents.length > 1 ? rich(tr('Hybrid of '), joined(parents)) : parents.length ? rich(tr('Diverged from '), parents[0]) : undefined;
 
     if (origin)
         card.facts.push(origin);
@@ -100,7 +102,7 @@ const culture: CardFn = (b, { e, body, card, ctx, own }) =>
     const created = scalar(body, 'created');
 
     if (created)
-        card.facts.push([`Since ${created.split('.')[0]}`]);
+        card.facts.push([tr('Since {value}', { value: created.split('.')[0] })]);
 
     const pillars: Line[] = [];
 
@@ -115,7 +117,7 @@ const culture: CardFn = (b, { e, body, card, ctx, own }) =>
         {
             const how = HEAD[scalar(bodyOf(b, b.idx.get('culture/pillars', c.v)), 'head_determination_type') ?? ''];
             const seg = b.d.ref(c.v, PILLAR);
-            pillars.push(statementLine(b, c, ctx, rich('Head of culture: ', how && typeof seg !== 'string' ? { ...seg, text: how } : seg), 'culture/cultures'));
+            pillars.push(statementLine(b, c, ctx, rich(tr('Head of culture: '), how && typeof seg !== 'string' ? { ...seg, text: how } : seg), 'culture/cultures'));
         }
         else if (c.k === 'dlc_fallback_pillar' && Array.isArray(c.v))
         {
@@ -123,11 +125,11 @@ const culture: CardFn = (b, { e, body, card, ctx, own }) =>
             const dlc = scalar(c.v, 'requires_dlc_flag');
 
             if (fb)
-                pillars.push(statementLine(b, c, ctx, rich(dlc ? `Without ${dlcName(dlc)}: ` : 'Fallback: ', b.d.ref(fb, PILLAR))));
+                pillars.push(statementLine(b, c, ctx, rich(dlc ? tr('Without {dlcName}: ', { dlcName: dlcName(dlc) }) : tr('Fallback: '), b.d.ref(fb, PILLAR))));
         }
     }
 
-    card.sections.push({ title: 'Pillars', lines: pillars, src: settings });
+    card.sections.push({ title: tr('Pillars'), lines: pillars, src: settings });
 
     const trad = body.find((c) => c.k === 'traditions' && Array.isArray(c.v));
     const traditions = items(trad).map((c) => statementLine(b, c, ctx, traditionSeg(b, c.v as string), undefined, { icon: 'note' }));
@@ -143,34 +145,34 @@ const culture: CardFn = (b, { e, body, card, ctx, own }) =>
         const fb = scalar(c.v, 'fallback');
 
         if (t)
-            traditions.push(statementLine(b, c, ctx, rich(traditionSeg(b, t), dlc ? ` — with ${dlcName(dlc)}` : '', fb ? rich(', else ', traditionSeg(b, fb)) : ''), undefined, { icon: 'note' }));
+            traditions.push(statementLine(b, c, ctx, rich(traditionSeg(b, t), dlc ? tr(' — with {dlcName}', { dlcName: dlcName(dlc) }) : '', fb ? rich(tr(', else '), traditionSeg(b, fb)) : ''), undefined, { icon: 'note' }));
     }
 
-    card.sections.push({ title: 'Traditions', lines: traditions, src: trad ? b.blockSection(trad, 'other', ctx) : undefined });
+    card.sections.push({ title: tr('Traditions'), lines: traditions, src: trad ? b.blockSection(trad, 'other', ctx) : undefined });
 
     const history: Line[] = [];
 
     for (const c of body)
     {
         if (c.k === 'created' && typeof c.v === 'string')
-            history.push(statementLine(b, c, ctx, [`Created on ${dateText(c.v)}`], 'culture/cultures', { icon: 'note' }));
+            history.push(statementLine(b, c, ctx, [tr('Created on {dateText}', { dateText: dateText(c.v) })], 'culture/cultures', { icon: 'note' }));
         else if (c === parentNode && origin)
             history.push(statementLine(b, c, ctx, origin, undefined, { icon: 'note' }));
         else if (c.k === 'history_loc_override' && typeof c.v === 'string')
-            history.push(statementLine(b, c, ctx, rich('History text: ', { text: c.v, kind: 'code' }), 'culture/cultures'));
+            history.push(statementLine(b, c, ctx, rich(tr('History text: '), { text: c.v, kind: 'code' }), 'culture/cultures'));
     }
 
     if (history.length)
-        card.sections.push({ title: 'Origin', lines: history });
+        card.sections.push({ title: tr('Origin'), lines: history });
 
     const lists = scalars(body, 'name_list');
-    const names = lists.map((c, i) => statementLine(b, c, ctx, rich('Names from ', b.d.ref(c.v as string, ['culture/name_lists']), lists.length > 1 && !i ? { text: ' · the main one', kind: 'ph' } : ''), 'culture/cultures'));
+    const names = lists.map((c, i) => statementLine(b, c, ctx, rich(tr('Names from '), b.d.ref(c.v as string, ['culture/name_lists']), lists.length > 1 && !i ? { text: tr(' · the main one'), kind: 'ph' } : ''), 'culture/cultures'));
     const order = body.find((c) => c.k === 'name_order_convention' && typeof c.v === 'string');
 
     if (order)
-        names.push(statementLine(b, order, ctx, [`Name order: ${word(b, 'culture_aesthetics_naming_' + order.v)}`], 'culture/cultures'));
+        names.push(statementLine(b, order, ctx, [tr('Name order: {word}', { word: word(b, 'culture_aesthetics_naming_' + order.v) })], 'culture/cultures'));
 
-    card.sections.push({ title: 'Names', lines: names, src: settings });
+    card.sections.push({ title: tr('Names'), lines: names, src: settings });
 
     // ethnicities = { 10 = caucasian_blond … }: how common each look is
     const eth = body.find((c) => c.k === 'ethnicities' && Array.isArray(c.v));
@@ -179,8 +181,8 @@ const culture: CardFn = (b, { e, body, card, ctx, own }) =>
     {
         const entries = (eth.v as PNode[]).filter((c) => typeof c.v === 'string').map((c) => ({ c, w: c.k ? parseFloat(c.k) || 0 : 1 }));
         const total = entries.reduce((s, x) => s + x.w, 0);
-        const lines = entries.map(({ c, w }) => statementLine(b, c, ctx, rich({ text: total ? `${formatNumber(Math.round((1000 * w) / total) / 10)}%` : String(w), kind: 'value', tip: `weight ${c.k ?? 1}` }, ' ', b.d.ref(c.v as string, ['ethnicities']))));
-        card.sections.push({ title: 'Ethnicities', lines, src: b.blockSection(eth, 'other', ctx) });
+        const lines = entries.map(({ c, w }) => statementLine(b, c, ctx, rich({ text: total ? `${formatNumber(Math.round((1000 * w) / total) / 10)}%` : String(w), kind: 'value', tip: tr('weight {value}', { value: c.k ?? 1 }) }, ' ', b.d.ref(c.v as string, ['ethnicities']))));
+        card.sections.push({ title: tr('Ethnicities'), lines, src: b.blockSection(eth, 'other', ctx) });
     }
 
     const look: Line[] = [];
@@ -188,45 +190,57 @@ const culture: CardFn = (b, { e, body, card, ctx, own }) =>
     for (const c of body)
     {
         if (c.k === 'color')
-            look.push(statementLine(b, c, ctx, rich('Map colour: ', colorSeg(b, c))));
+            look.push(statementLine(b, c, ctx, rich(tr('Map colour: '), colorSeg(b, c))));
         else if (c.k && GFX[c.k] && Array.isArray(c.v))
         {
             const keys = items(c).map((x) => x.v as string);
             const unit = c.k === 'unit_gfx' ? unitTypeOf(unitTypes(b), keys) : undefined;
-            look.push(statementLine(b, c, ctx, rich(GFX[c.k], ': ', joined(keys.map((k) => gfxSeg(b, k)), ', '), unit ? rich({ text: ' · pictures: ', kind: 'ph' }, b.d.ref(unit, ['graphical_unit_types'])) : '')));
+            // (several blocks of one key mix looks, as a hybrid's: "Clothes (mixed look 1 of 2): …", not two "Clothes:")
+            const same = body.filter((x) => x.k === c.k && Array.isArray(x.v));
+            const label = same.length > 1 ? tr('{what} (mixed look {n} of {count})', { what: GFX[c.k], n: same.indexOf(c) + 1, count: same.length }) : GFX[c.k];
+            look.push(statementLine(b, c, ctx, rich(label, ': ', joined(keys.map((k) => gfxSeg(b, k)), ', '), unit ? rich({ text: tr(' · pictures: '), kind: 'ph' }, b.d.ref(unit, ['graphical_unit_types'])) : '')));
         }
         else if ((c.k === 'house_coa_frame' || c.k === 'dynasty_coa_frame') && typeof c.v === 'string')
         {
-            look.push(statementLine(b, c, ctx, rich(c.k === 'house_coa_frame' ? 'House' : 'Dynasty', ' coat of arms frame: ', { text: humanize(c.v), kind: 'value', tip: c.v }), 'culture/cultures'));
+            look.push(statementLine(b, c, ctx, rich(c.k === 'house_coa_frame' ? tr('House') : tr('Dynasty'), tr(' coat of arms frame: '), { text: humanize(c.v), kind: 'value', tip: c.v }), 'culture/cultures'));
         }
     }
 
-    card.sections.push({ title: 'Look', lines: look, src: settings });
+    card.sections.push({ title: tr('Look'), lines: look, src: settings });
     b.genericSections(e, body, card, ctx, own, CULTURE_SKIP);
     return true;
 };
 
 /** Name list keys whose value is a loc key (a prefix / suffix), read as the name they make. */
 const AFFIX: Record<string, [string, 'before' | 'after', string]> = {
-    dynasty_of_location_prefix: ['Dynasties named after a place', 'before', 'Place'],
-    bastard_dynasty_prefix: ['Bastard dynasties', 'before', 'Name'],
+    dynasty_of_location_prefix: [tr('Dynasties named after a place'), 'before', tr('Place')],
+    bastard_dynasty_prefix: [tr('Bastard dynasties'), 'before', tr('Name')],
     patronym_prefix_male: ['Sons', 'before', 'Parent'],
-    patronym_prefix_male_vowel: ['Sons, before a vowel', 'before', 'Parent'],
+    patronym_prefix_male_vowel: [tr('Sons, before a vowel'), 'before', tr('Parent')],
     patronym_prefix_female: ['Daughters', 'before', 'Parent'],
-    patronym_prefix_female_vowel: ['Daughters, before a vowel', 'before', 'Parent'],
+    patronym_prefix_female_vowel: [tr('Daughters, before a vowel'), 'before', tr('Parent')],
     patronym_suffix_male: ['Sons', 'after', 'Parent'],
     patronym_suffix_female: ['Daughters', 'after', 'Parent']
 };
 
-const NAME_BLOCKS: Record<string, string> = { male_names: 'Men’s names', female_names: 'Women’s names' };
+const NAME_BLOCKS: Record<string, string> = { male_names: tr('Men’s names'), female_names: tr('Women’s names') };
 
-/** The names of a list: character names are loc keys (`BA_rd` → "Bård"). */
-function namesIn(b: StoryBuilder, list: PNode[]): string[]
+/** The names of a list: character names are loc keys (`BA_rd` → "Bård"): each with its key, `loc` when the key has a text. */
+function namesIn(b: StoryBuilder, list: PNode[]): { key: string; name: string; loc: boolean; }[]
 {
-    return items(list).map((x) => word(b, x.v as string));
+    return items(list).map((x) => ({ key: x.v as string, name: word(b, x.v as string), loc: b.idx.plainLoc(x.v as string) !== undefined }));
 }
 
-/** Every name of a name block — plain (`{ a b }`) or in weight groups (`{ 10 = { a b } 1 = { c } }`). */
+/**
+ * Names as links to their localization key's own card (`localization:<key>`: its text, ✎ there), comma separated; a
+ * name whose key has no text (a mod's plain name) is no link.
+ */
+function nameLinks(names: { key: string; name: string; loc: boolean; }[]): Rich
+{
+    return names.flatMap((x, i): RichSeg[] => [...(i ? [', '] : []), { text: x.name, kind: 'value', ...(x.loc ? { ref: { type: T_LOC, name: x.key } } : {}), tip: x.key }]);
+}
+
+/** Every name of a name block, plain (`{ a b }`) or in weight groups (`{ 10 = { a b } 1 = { c } }`). */
 function allNames(n: PNode): PNode[]
 {
     return Array.isArray(n.v) ? [...items(n), ...n.v.filter((c) => c.k && Array.isArray(c.v)).flatMap((c) => items(c))] : [];
@@ -235,13 +249,17 @@ function allNames(n: PNode): PNode[]
 /** A name block as lines: one per weight group (a sample, the full list folded under it). */
 function nameLines(b: StoryBuilder, n: PNode, ctx: Ctx): Line[]
 {
-    const line = (names: string[], label: string, node: PNode): Line =>
+    // (each name links to its key's card, where its text is changed: in the list itself up to 12, else in the full list
+    // folded under the sample)
+    const line = (names: { key: string; name: string; loc: boolean; }[], label: string, node: PNode): Line =>
     {
-        const l = statementLine(b, node, ctx, rich({ text: `${names.length} name${names.length === 1 ? '' : 's'}`, kind: 'value' }, label, ': ', sample(names)));
+        const count = { text: tr('{length} name{value}', { length: names.length, value: names.length === 1 ? '' : 's' }), kind: 'value' as const };
+        const long = names.length > 12;
+        const l = statementLine(b, node, ctx, rich(count, label, ': ', long ? sample(names.map((x) => x.name)) : nameLinks(names)));
 
-        if (names.length > 12)
+        if (long)
         {
-            l.children = [{ text: [names.join(', ')] }];
+            l.children = [{ text: nameLinks(names) }];
             l.collapsed = true;
         }
 
@@ -255,7 +273,7 @@ function nameLines(b: StoryBuilder, n: PNode, ctx: Ctx): Line[]
 
     for (const g of list)
         if (g.k && Array.isArray(g.v))
-            out.push(line(namesIn(b, g.v), ` · weight ${g.k}`, g));
+            out.push(line(namesIn(b, g.v), tr(' · weight {k}', { k: g.k }), g));
 
     return out;
 }
@@ -287,9 +305,9 @@ const nameList: CardFn = (b, { e, body, card, ctx, own }) =>
         return n ? (k.includes('dynasty') ? dynastyNames(b, n).length : allNames(n).length) : 0;
     };
     const facts: [string, string][] = [
-        ['male_names', 'men’s names'],
-        ['female_names', 'women’s names'],
-        ['dynasty_names', 'dynasty names']
+        ['male_names', tr('men’s names')],
+        ['female_names', tr('women’s names')],
+        ['dynasty_names', tr('dynasty names')]
     ];
 
     for (const [k, label] of facts)
@@ -312,7 +330,7 @@ const nameList: CardFn = (b, { e, body, card, ctx, own }) =>
             continue;
 
         const names = dynastyNames(b, c);
-        const l = statementLine(b, c, ctx, rich(c.k === 'dynasty_names' ? 'Dynasties: ' : 'Cadet branches: ', { text: String(names.length), kind: 'value' }, ` — ${sample(names, 10)}`));
+        const l = statementLine(b, c, ctx, rich(c.k === 'dynasty_names' ? tr('Dynasties: ') : tr('Cadet branches: '), { text: String(names.length), kind: 'value' }, ` (${sample(names, 10)})`));
 
         if (names.length > 10)
         {
@@ -324,7 +342,7 @@ const nameList: CardFn = (b, { e, body, card, ctx, own }) =>
     }
 
     if (dyn.length)
-        card.sections.push({ title: 'Dynasty names', lines: dyn });
+        card.sections.push({ title: tr('Dynasty names'), lines: dyn });
 
     const customs: Line[] = [];
 
@@ -346,14 +364,14 @@ const nameList: CardFn = (b, { e, body, card, ctx, own }) =>
     }
 
     if (customs.length || card.src)
-        card.sections.push({ title: 'Naming customs', lines: customs, src: own('field', 'culture/name_lists') });
+        card.sections.push({ title: tr('Naming customs'), lines: customs, src: own('field', 'culture/name_lists') });
 
     const merc = body.find((c) => c.k === 'mercenary_names' && Array.isArray(c.v));
 
     if (merc)
     {
         const names = (merc.v as PNode[]).map((m) => (Array.isArray(m.v) ? scalar(m.v, 'name') : undefined)).filter((x): x is string => !!x);
-        card.sections.push({ title: 'Mercenary companies', lines: [statementLine(b, merc, ctx, [sample(names.map((x) => word(b, x)), 8)], undefined, { icon: 'note' })] });
+        card.sections.push({ title: tr('Mercenary companies'), lines: [statementLine(b, merc, ctx, [sample(names.map((x) => word(b, x)), 8)], undefined, { icon: 'note' })] });
     }
 
     b.genericSections(
@@ -368,30 +386,30 @@ const nameList: CardFn = (b, { e, body, card, ctx, own }) =>
 };
 
 /**
- * A name equivalency (culture/name_equivalency/_info.info): spellings of one name across cultures — a character
+ * A name equivalency (culture/name_equivalency/_info.info): spellings of one name across cultures: a character
  * changing culture takes the new culture's form. The key ends in `_female` for women's names, else men's.
  */
 const nameEquivalency: CardFn = (b, { e, body, card, ctx }) =>
 {
     const female = e.name.endsWith('_female');
     card.title = titleCase(humanize(e.name.replace(/_(male|female)$/, '')));
-    card.facts.push([female ? 'Women’s name' : 'Men’s name']);
+    card.facts.push([female ? tr('Women’s name') : tr('Men’s name')]);
     card.description ??= ['A character who changes culture takes the new culture’s form of the name.'];
-    card.sections.push({ title: 'Forms of the name', lines: items(body).map((c) => statementLine(b, c, ctx, [word(b, c.v as string)], undefined, { icon: 'note' })) });
+    card.sections.push({ title: tr('Forms of the name'), lines: items(body).map((c) => statementLine(b, c, ctx, [word(b, c.v as string)], undefined, { icon: 'note' })) });
     return true;
 };
 
 /** What an era or innovation unlocks (culture/eras/_culture_eras.info, innovations/_culture_innovations.info). */
 const UNLOCK: Record<string, [string, string]> = {
-    unlock_building: ['the building', 'buildings'],
-    unlock_maa: ['the men-at-arms', 'men_at_arms_types'],
-    unlock_law: ['the law', 'laws'],
-    unlock_decision: ['the decision', 'decisions'],
-    unlock_casus_belli: ['the casus belli', 'casus_belli_types']
+    unlock_building: [tr('the building'), 'buildings'],
+    unlock_maa: [tr('the men-at-arms'), 'men_at_arms_types'],
+    unlock_law: [tr('the law'), 'laws'],
+    unlock_decision: [tr('the decision'), 'decisions'],
+    unlock_casus_belli: [tr('the casus belli'), 'casus_belli_types']
 };
 
 /** Men-at-arms stats of a `maa_upgrade`. */
-const MAA_STATS: Record<string, string> = { damage: 'damage', toughness: 'toughness', pursue: 'pursuit', screen: 'screen', siege_value: 'siege value', max_size: 'regiment size' };
+const MAA_STATS: Record<string, string> = { damage: 'damage', toughness: 'toughness', pursue: 'pursuit', screen: 'screen', siege_value: tr('siege value'), max_size: tr('regiment size') };
 
 /** Unlocks, custom effect texts (loc keys) and men-at-arms upgrades as lines. */
 function unlockLines(b: StoryBuilder, body: PNode[], ctx: Ctx, fields: string): Line[]
@@ -406,14 +424,14 @@ function unlockLines(b: StoryBuilder, body: PNode[], ctx: Ctx, fields: string): 
         const u = UNLOCK[c.k];
 
         if (u && typeof c.v === 'string')
-            out.push(statementLine(b, c, ctx, rich('Unlocks ', u[0], ' ', b.d.ref(c.v, [u[1]])), fields, { icon: 'note' }));
+            out.push(statementLine(b, c, ctx, rich(tr('Unlocks '), u[0], ' ', b.d.ref(c.v, [u[1]])), fields, { icon: 'note' }));
         else if (c.k === 'custom' && typeof c.v === 'string')
             out.push(statementLine(b, c, ctx, gameText(b, c.v) ?? [humanize(c.v)], fields, { icon: 'note' }));
         else if (c.k === 'maa_upgrade' && Array.isArray(c.v))
         {
             const t = scalar(c.v, 'type') ?? scalar(c.v, 'men_at_arms');
             const stats = c.v.filter((x) => x.k && MAA_STATS[x.k] && typeof x.v === 'string').map((x) => `${signed(parseFloat(x.v as string))} ${MAA_STATS[x.k!]}`);
-            out.push(statementLine(b, c, ctx, rich(t ? b.d.ref(t, ['men_at_arms_types']) : 'Men-at-arms', ': ', stats.join(', ')), undefined, { icon: 'modifier', tone: 'good' }));
+            out.push(statementLine(b, c, ctx, rich(t ? b.d.ref(t, ['men_at_arms_types']) : tr('Men-at-arms'), ': ', stats.join(', ')), undefined, { icon: 'modifier', tone: 'good' }));
         }
     }
 
@@ -438,22 +456,22 @@ const innovation: CardFn = (b, { e, body, card, ctx, own }) =>
     const era = scalar(body, 'culture_era');
 
     if (era)
-        card.facts.push(rich('Era: ', b.d.ref(era, ['culture/eras'])));
+        card.facts.push(rich(tr('Era: '), b.d.ref(era, ['culture/eras'])));
 
     const group = scalar(body, 'group');
 
     if (group)
-        card.facts.push([`${word(b, group)} innovation`]);
+        card.facts.push([tr('{word} innovation', { word: word(b, group) })]);
 
     const region = scalar(body, 'region');
 
     if (region)
-        card.facts.push(rich('Only in ', regionSeg(b, region)));
+        card.facts.push(rich(tr('Only in '), regionSeg(b, region)));
 
     const settings = own('field', 'culture/innovations');
     const params = body.find((c) => c.k === 'parameters' && Array.isArray(c.v));
     const brings = [...unlockLines(b, body, ctx, 'culture/innovations'), ...(params ? paramLines(b, params.v as PNode[], ctx, 'culture_parameter_') : [])];
-    card.sections.push({ title: 'What it brings', lines: brings, src: settings });
+    card.sections.push({ title: tr('What it brings'), lines: brings, src: settings });
     // asset = { trigger = { … } name = key icon = path }: the first whose trigger the culture meets styles the name and icon
     const assets = body
         .filter((c) => c.k === 'asset' && Array.isArray(c.v))
@@ -462,17 +480,22 @@ const innovation: CardFn = (b, { e, body, card, ctx, own }) =>
             const kids = c.v as PNode[];
             const name = scalar(kids, 'name');
             const trigger = block(kids, 'trigger');
-            const text = rich(name ? rich('Called ', { text: word(b, name), kind: 'value', tip: name }) : 'Its own icon', name && scalar(kids, 'icon') ? ', with its own icon' : '');
+            const text = rich(name ? rich(tr('Called '), { text: word(b, name), kind: 'value', tip: name }) : tr('Its own icon'), name && scalar(kids, 'icon') ? tr(', with its own icon') : '');
             return statementLine(b, c, ctx, text, undefined, { icon: 'note', conditions: trigger ? b.d.triggers(trigger, ctx) : undefined });
         });
 
     if (assets.length)
-        card.sections.push({ title: 'For some cultures', lines: assets });
+        card.sections.push({ title: tr('For some cultures'), lines: assets });
 
     const progress = body.find((c) => c.k === 'can_progress' && Array.isArray(c.v));
 
+    // (the .info: "Scope: culture", whatever the card's root: StoryBuilder.blockCtx)
     if (progress)
-        card.sections.push({ title: 'Can progress when', lines: b.d.triggers(progress.v as PNode[], ctx), src: b.blockSection(progress, 'trigger', ctx) });
+    {
+        const pctx = b.blockCtx(progress, ctx);
+        const src = b.blockSection(progress, 'trigger', pctx);
+        card.sections.push({ title: tr('Can progress when'), lines: b.d.triggers(progress.v as PNode[], pctx), src: src && pctx.scopeType ? { ...src, scope: pctx.scopeType } : src });
+    }
 
     const lines: Line[] = [];
 
@@ -484,23 +507,23 @@ const innovation: CardFn = (b, { e, body, card, ctx, own }) =>
         let text: Rich | undefined;
 
         if (c.k === 'culture_era')
-            text = rich('Era: ', b.d.ref(c.v, ['culture/eras']));
+            text = rich(tr('Era: '), b.d.ref(c.v, ['culture/eras']));
         else if (c.k === 'group')
             text = [`Group: ${word(b, c.v)}`];
         else if (c.k === 'skill')
             text = [`Fascination uses the head of culture’s ${word(b, c.v)}`];
         else if (c.k === 'region')
-            text = rich('Only progresses in ', regionSeg(b, c.v));
+            text = rich(tr('Only progresses in '), regionSeg(b, c.v));
         else if (c.k === 'flag')
-            text = rich('Flag: ', { text: humanize(c.v), kind: 'value', tip: c.v });
+            text = rich(tr('Flag: '), { text: humanize(c.v), kind: 'value', tip: c.v });
 
         if (text)
             lines.push(statementLine(b, c, ctx, text, 'culture/innovations'));
     }
 
-    card.sections.push({ title: 'Settings', lines, src: settings });
+    card.sections.push({ title: tr('Settings'), lines, src: settings });
     b.genericSections(e, body, card, ctx, own, INNOVATION_SKIP);
-    const ai = aiSection(b, body, ctx, { ai_weight_for_fascination: 'Fascination weight (the AI head of culture):', ai_weight_for_spread: 'Weight when spreading it:' });
+    const ai = aiSection(b, body, ctx, { ai_weight_for_fascination: tr('Fascination weight (the AI head of culture):'), ai_weight_for_spread: tr('Weight when spreading it:') });
 
     if (ai)
         card.sections.push(ai);
@@ -517,12 +540,12 @@ const era: CardFn = (b, { e, body, card, ctx, own }) =>
     const year = scalar(body, 'year');
 
     if (year)
-        card.facts.push([year === '0' ? 'From the start' : `From ${year}`]);
+        card.facts.push([year === '0' ? tr('From the start') : tr('From {year}', { year })]);
 
     const innovations = b.idx.incomingSources(e).filter((s) => s.entity.type === 'culture/innovations' && s.contexts.includes('culture_era'));
 
     if (innovations.length)
-        card.facts.push([`${innovations.length} innovations`]);
+        card.facts.push([tr('{length} innovations', { length: innovations.length })]);
 
     const settings = own('field', 'culture/eras');
     const lines: Line[] = [];
@@ -532,11 +555,11 @@ const era: CardFn = (b, { e, body, card, ctx, own }) =>
         if (c.k === 'year' && typeof c.v === 'string')
             lines.push(...b.fieldLines('culture/eras', [c], ctx));
         else if (c.k === 'invalid_for_government' && typeof c.v === 'string')
-            lines.push(statementLine(b, c, ctx, rich('Not for rulers with the government ', b.d.ref(c.v, ['governments'])), 'culture/eras'));
+            lines.push(statementLine(b, c, ctx, rich(tr('Not for rulers with the government '), b.d.ref(c.v, ['governments'])), 'culture/eras'));
     }
 
-    card.sections.push({ title: 'Settings', lines, src: settings });
-    card.sections.push({ title: 'What it brings', lines: unlockLines(b, body, ctx, 'culture/eras'), src: settings });
+    card.sections.push({ title: tr('Settings'), lines, src: settings });
+    card.sections.push({ title: tr('What it brings'), lines: unlockLines(b, body, ctx, 'culture/eras'), src: settings });
 
     if (innovations.length)
     {
@@ -545,7 +568,7 @@ const era: CardFn = (b, { e, body, card, ctx, own }) =>
             const group = scalar(bodyOf(b, s.entity), 'group');
             return { text: rich(b.d.entitySeg(s.entity), group ? { text: ` · ${word(b, group)}`, kind: 'ph' } : ''), icon: 'note' };
         });
-        card.sections.push({ title: 'Innovations', lines: rows });
+        card.sections.push({ title: tr('Innovations'), lines: rows });
     }
 
     b.genericSections(e, body, card, ctx, own, new Set(['year', 'invalid_for_government', 'custom', 'maa_upgrade', ...Object.keys(UNLOCK)]));
@@ -553,7 +576,7 @@ const era: CardFn = (b, { e, body, card, ctx, own }) =>
 };
 
 /** Portrait colours of an ethnicity: weighted areas `{ x0 y0 x1 y1 }` of gfx/portraits/<skin|eye|hair>_palette.dds. */
-const COLOURS: Record<string, string> = { skin_color: 'Skin colour', eye_color: 'Eye colour', hair_color: 'Hair colour' };
+const COLOURS: Record<string, string> = { skin_color: tr('Skin colour'), eye_color: tr('Eye colour'), hair_color: tr('Hair colour') };
 
 /** Options of a gene or colour: `<weight> = { … }` (weight 0: only by trait, e.g. beauty). */
 function options(n: PNode): { w: number; o: PNode[]; }[]
@@ -563,36 +586,36 @@ function options(n: PNode): { w: number; o: PNode[]; }[]
 
 /**
  * An ethnicity (common/ethnicities, portraits: docs/portraits.md): the template it builds on, its colours (weighted
- * palette areas) and the genes it sets — each with its options' gene templates.
+ * palette areas) and the genes it sets, each with its options' gene templates.
  */
 const ethnicity: CardFn = (b, { e, body, card, ctx, own }) =>
 {
     const template = scalar(body, 'template');
 
     if (template)
-        card.facts.push(rich('Based on ', b.d.ref(template, ['ethnicities'])));
+        card.facts.push(rich(tr('Based on '), b.d.ref(template, ['ethnicities'])));
 
     if (scalar(body, 'visible') === 'no')
-        card.facts.push(['Hidden — a template for others']);
+        card.facts.push([tr('Hidden — a template for others')]);
 
     const genes = body.filter((c) => c.k && !COLOURS[c.k] && options(c).length);
 
     if (genes.length)
-        card.facts.push([`Sets ${genes.length} gene${genes.length === 1 ? '' : 's'}`]);
+        card.facts.push([tr('Sets {length} gene{value}', { length: genes.length, value: genes.length === 1 ? '' : 's' })]);
 
     const settings: Line[] = [];
 
     for (const c of body)
     {
         if (c.k === 'template' && typeof c.v === 'string')
-            settings.push(statementLine(b, c, ctx, rich('Based on ', b.d.ref(c.v, ['ethnicities'])), 'ethnicities'));
+            settings.push(statementLine(b, c, ctx, rich(tr('Based on '), b.d.ref(c.v, ['ethnicities'])), 'ethnicities'));
         else if (c.k === 'using' && typeof c.v === 'string')
-            settings.push(statementLine(b, c, ctx, rich('Using: ', { text: word(b, c.v), kind: 'value', tip: c.v })));
+            settings.push(statementLine(b, c, ctx, rich(tr('Using: '), { text: word(b, c.v), kind: 'value', tip: c.v })));
         else if (c.k === 'visible' && typeof c.v === 'string')
             settings.push(...b.fieldLines('ethnicities', [c], ctx));
     }
 
-    card.sections.push({ title: 'Settings', lines: settings, src: own('field', 'ethnicities') });
+    card.sections.push({ title: tr('Settings'), lines: settings, src: own('field', 'ethnicities') });
     const colours = body
         .filter((c) => c.k && COLOURS[c.k] && Array.isArray(c.v))
         .map((c) =>
@@ -602,13 +625,13 @@ const ethnicity: CardFn = (b, { e, body, card, ctx, own }) =>
             const children: Line[] = opts.map(({ w, o }) =>
             {
                 const n = items(o).map((x) => x.v as string);
-                return { text: rich({ text: total ? `${formatNumber(Math.round((1000 * w) / total) / 10)}%` : String(w), kind: 'value' }, n.length >= 4 ? ` — palette x ${n[0]}–${n[2]}, y ${n[1]}–${n[3]}` : '') };
+                return { text: rich({ text: total ? `${formatNumber(Math.round((1000 * w) / total) / 10)}%` : String(w), kind: 'value' }, n.length >= 4 ? tr(' — palette x {n}–{n2}, y {n3}–{n4}', { n: n[0], n2: n[2], n3: n[1], n4: n[3] }) : '') };
             });
-            return statementLine(b, c, ctx, [`${COLOURS[c.k!]}: ${opts.length} area${opts.length === 1 ? '' : 's'} of its palette`], undefined, { icon: 'note', children, collapsed: true });
+            return statementLine(b, c, ctx, [tr('{COLOURS}: {length} area{value} of its palette', { COLOURS: COLOURS[c.k!], length: opts.length, value: opts.length === 1 ? '' : 's' })], undefined, { icon: 'note', children, collapsed: true });
         });
 
     if (colours.length)
-        card.sections.push({ title: 'Colours', lines: colours });
+        card.sections.push({ title: tr('Colours'), lines: colours });
 
     if (genes.length)
     {
@@ -616,9 +639,9 @@ const ethnicity: CardFn = (b, { e, body, card, ctx, own }) =>
         {
             const opts = options(c).filter((x) => x.w > 0);
             const templates = [...new Set(opts.map((x) => scalar(x.o, 'name')).filter((x): x is string => !!x))];
-            return statementLine(b, c, ctx, rich(b.d.ref(c.k!, ['genes']), { text: ` · ${opts.length} option${opts.length === 1 ? '' : 's'}${templates.length ? ': ' + templates.map((t) => humanize(t)).join(', ') : ''}`, kind: 'ph' }));
+            return statementLine(b, c, ctx, rich(b.d.ref(c.k!, ['genes']), { text: tr(' · {length} option{value}{value2}', { length: opts.length, value: opts.length === 1 ? '' : 's', value2: templates.length ? ': ' + templates.map((t) => humanize(t)).join(', ') : '' }), kind: 'ph' }));
         });
-        card.sections.push({ title: 'Genes', lines });
+        card.sections.push({ title: tr('Genes'), lines });
     }
 
     b.genericSections(e, body, card, ctx, own, new Set(['template', 'using', 'visible', ...genes.map((c) => c.k!), ...Object.keys(COLOURS)]));
@@ -627,15 +650,15 @@ const ethnicity: CardFn = (b, { e, body, card, ctx, own }) =>
 
 /**
  * A graphical unit type (graphical_unit_types/_graphical_unit_types.info): the levy and knight pictures (named like
- * the key) for cultures whose unit graphics it lists — a culture takes the first of its keys that one lists.
+ * the key) for cultures whose unit graphics it lists; a culture takes the first of its keys that one lists.
  */
 const unitType: CardFn = (b, { e, body, card, ctx, own }) =>
 {
-    card.facts.push(['Pictures of levies and knights']);
+    card.facts.push([tr('Pictures of levies and knights')]);
     const list = body.find((c) => c.k === 'graphical_cultures' && Array.isArray(c.v));
 
     if (list)
-        card.sections.push({ title: 'For the unit graphics', lines: items(list).map((c) => statementLine(b, c, ctx, [gfxSeg(b, c.v as string)], undefined, { icon: 'note' })), src: b.blockSection(list, 'other', ctx) });
+        card.sections.push({ title: tr('For the unit graphics'), lines: items(list).map((c) => statementLine(b, c, ctx, [gfxSeg(b, c.v as string)], undefined, { icon: 'note' })), src: b.blockSection(list, 'other', ctx) });
 
     const by = unitTypes(b);
     const users: RichSeg[] = [];
@@ -649,7 +672,7 @@ const unitType: CardFn = (b, { e, body, card, ctx, own }) =>
     }
 
     if (users.length)
-        card.sections.push({ title: 'Cultures', lines: [{ text: rich(`${users.length}: `, joined(users.slice(0, 40), ', '), users.length > 40 ? ` … and ${users.length - 40} more` : '') }] });
+        card.sections.push({ title: tr('Cultures'), lines: [{ text: rich(`${users.length}: `, joined(users.slice(0, 40), ', '), users.length > 40 ? tr(' … and {value} more', { value: users.length - 40 }) : '') }] });
 
     b.genericSections(e, body, card, ctx, own, new Set(['graphical_cultures']));
     return true;
@@ -669,28 +692,28 @@ const culturalTrait: CardFn = (b, { e, body, card, ctx, own }) =>
 
     const params = body.find((c) => c.k === 'parameters' && Array.isArray(c.v));
     const head = body.find((c) => c.k === 'head_determination_type' && typeof c.v === 'string');
-    const does = [...(head ? [statementLine(b, head, ctx, [`The head of culture is ${HEAD[head.v as string] ?? humanize(head.v as string)}`], undefined, { icon: 'note' })] : []), ...(params ? paramLines(b, params.v as PNode[], ctx, 'culture_parameter_') : [])];
+    const does = [...(head ? [statementLine(b, head, ctx, [tr('The head of culture is {value}', { value: HEAD[head.v as string] ?? humanize(head.v as string) })], undefined, { icon: 'note' })] : []), ...(params ? paramLines(b, params.v as PNode[], ctx, 'culture_parameter_') : [])];
 
     if (does.length)
-        card.sections.push({ title: 'What it does', lines: does, src: params && b.blockSection(params, 'other', ctx) });
+        card.sections.push({ title: tr('What it does'), lines: does, src: params && b.blockSection(params, 'other', ctx) });
 
     const color = body.find((c) => c.k === 'color');
 
     if (color)
-        card.sections.push({ title: 'Look', lines: [statementLine(b, color, ctx, rich('Map colour: ', colorSeg(b, color)))] });
+        card.sections.push({ title: tr('Look'), lines: [statementLine(b, color, ctx, rich(tr('Map colour: '), colorSeg(b, color)))] });
 
     const doctrines = doctrineModifierLines(b, body, ctx);
 
     if (doctrines.length)
-        card.sections.push({ title: 'With a doctrine', lines: doctrines });
+        card.sections.push({ title: tr('With a doctrine'), lines: doctrines });
 
     const hybrid = body.find((c) => c.k === 'can_pick_for_hybridization' && Array.isArray(c.v));
 
     if (hybrid)
-        card.sections.push({ title: 'Can be picked for a hybrid when', lines: b.d.triggers(hybrid.v as PNode[], ctx), src: b.blockSection(hybrid, 'trigger', ctx) });
+        card.sections.push({ title: tr('Can be picked for a hybrid when'), lines: b.d.triggers(hybrid.v as PNode[], ctx), src: b.blockSection(hybrid, 'trigger', ctx) });
 
-    b.genericSections(e, body, card, ctx, own, new Set(['category', 'type', 'parameters', 'head_determination_type', 'color', 'doctrine_character_modifier', 'can_pick_for_hybridization', 'ai_will_do']));
-    const ai = aiSection(b, body, ctx, { ai_will_do: 'Weight when the AI picks it:' });
+    b.genericSections(e, body, card, ctx, own, new Set(['category', 'type', 'parameters', 'head_determination_type', 'color', ...DOCTRINE_MODIFIER_KEYS, 'can_pick_for_hybridization', 'ai_will_do']));
+    const ai = aiSection(b, body, ctx, { ai_will_do: tr('Weight when the AI picks it:') });
 
     if (ai)
         card.sections.push(ai);

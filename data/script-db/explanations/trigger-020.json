@@ -1,0 +1,434 @@
+[
+ {
+  "kind": "trigger",
+  "key": "is_army_in_raid",
+  "label": "Army is raiding",
+  "summary": "Whether the army is currently out raiding.",
+  "details": "A raid that has been interrupted by a fight still counts as a raid. Write `yes` to require it, `no` to require the opposite.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_army_in_siege",
+  "label": "Army is besieging",
+  "summary": "Whether the army is currently taking part in a siege.",
+  "details": "A siege that has been interrupted by a fight still counts. Write `yes` to require it, `no` to require the opposite.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_army_in_siege_relevant_for",
+  "label": "Siege relevant for",
+  "summary": "Whether the army is in a siege that matters to the given character.",
+  "details": "The character is written as the value, for example `scope:character`. The game does not say what counts as relevant; vanilla only ever passes `root`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "is_at_home",
+  "label": "Is at home",
+  "summary": "Whether the character is at home.",
+  "details": "The game does not say what counts as home here. Write `yes` to require it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "is_at_location",
+  "label": "Is in province",
+  "summary": "Whether the character is currently in the given province.",
+  "details": "The province is written as the value. Vanilla uses it with a barony's province, for example `scope:barony.title_province`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_at_same_location",
+  "label": "Same province as",
+  "summary": "Whether the character is in the same province as the given character.",
+  "details": "The other character is written as the value, for example `root` or `scope:mother`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_at_war",
+  "label": "At war",
+  "summary": "Whether the character is at war.",
+  "details": "Only the character's own wars count. Wars that their lieges (the rulers above them) are fighting are not considered. Write `yes` to require a war, `no` to require peace.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_at_war_as_attacker",
+  "label": "At war as attacker",
+  "summary": "Whether the character is at war on the attacking side.",
+  "details": "Only the character's own wars count, not wars of their lieges (the rulers above them).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_at_war_as_defender",
+  "label": "At war as defender",
+  "summary": "Whether the character is at war on the defending side.",
+  "details": "Only the character's own wars count, not wars of their lieges (the rulers above them).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_at_war_with",
+  "label": "At war with",
+  "summary": "Whether the character is at war with the given character.",
+  "details": "The other character is written as the value, for example `scope:recipient` or `root`. Only the character's own wars count, not wars of their lieges (the rulers above them).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_at_war_with_liege",
+  "label": "At war with liege",
+  "summary": "Whether the character is at war with their own liege (the ruler directly above them).",
+  "details": "Vanilla only uses it with `no`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_attacker",
+  "label": "Is attacker in war",
+  "summary": "Whether the given character is on the attacking side of this war.",
+  "details": "It runs on a war. The character to check is written as the value, for example `scope:actor` or `root`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_attacker_in_war",
+  "label": "Attacker in war",
+  "summary": "Whether the character is on the attacking side of the given war.",
+  "details": "The war is written as the value, for example `scope:war`. It is the reverse of `is_attacker`, which runs on the war and names the character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_attracted_to_gender_of",
+  "label": "Attracted to gender of",
+  "summary": "Whether the character's sexuality makes them attracted to the given character's gender.",
+  "details": "The other character is written as the value, for example `root`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_attracted_to_men",
+  "label": "Attracted to men",
+  "summary": "Whether the character is attracted to men.",
+  "details": "Write `yes` to require it, `no` to require the opposite.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_attracted_to_women",
+  "label": "Attracted to women",
+  "summary": "Whether the character is attracted to women.",
+  "details": "Write `yes` to require it, `no` to require the opposite.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_available_quick",
+  "label": "Is available",
+  "summary": "Checks several availability conditions of a character in one block.",
+  "details": "Every option is optional. A missing option is not checked at all. Vanilla mostly sets `imprisoned = no`, `incapable = no`, `adult = yes` and `alive = yes`.",
+  "fields": [
+   { "name": "ai", "text": "Whether the character is run by the AI (not a player).", "values": "yes / no" },
+   { "name": "alive", "text": "Whether the character is alive.", "values": "yes / no" },
+   { "name": "female", "text": "Whether the character is female.", "values": "yes / no" },
+   { "name": "adult", "text": "Whether the character is an adult.", "values": "yes / no" },
+   { "name": "incapable", "text": "Whether the character has any trait that makes them incapable.", "values": "yes / no" },
+   { "name": "imprisoned", "text": "Whether the character is in prison.", "values": "yes / no" },
+   { "name": "hostage", "text": "Whether the character is a hostage.", "values": "yes / no" },
+   { "name": "travel", "text": "Whether the character is travelling.", "values": "yes / no" },
+   { "name": "activity", "text": "Whether the character is in an activity.", "values": "yes / no" },
+   { "name": "ruler", "text": "Whether the character is a ruler.", "values": "yes / no" },
+   { "name": "advanced_ruler", "text": "Whether the character is a ruler with full access to the game's mechanics. Barons, rebels, mercenary leaders and holy order leaders do not pass this check.", "values": "yes / no" },
+   { "name": "landed", "text": "Whether the character holds land.", "values": "yes / no" },
+   { "name": "in_army", "text": "Whether the character is a commander or knight in an army on the map.", "values": "yes / no" },
+   { "name": "at_war", "text": "Whether the character is at war.", "values": "yes / no" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_away_from_court",
+  "label": "Is away from court",
+  "summary": "Whether the character is away from the court.",
+  "details": "The game documents nothing more, and vanilla does not use it. Write `yes` to require it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "is_bad_nickname",
+  "label": "Is bad nickname",
+  "summary": "Whether the given nickname is a bad one.",
+  "details": "The game does not list which nicknames are bad. Vanilla uses it once, with a nickname passed in as a parameter.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "is_barter_army",
+  "label": "Is barter army",
+  "summary": "Whether the army is a barter army.",
+  "details": "The game documents nothing more, and vanilla does not use it. Write `yes` to require it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "is_betrothed",
+  "label": "Is betrothed",
+  "summary": "Whether the character is betrothed (engaged to be married).",
+  "details": "Write `yes` to require it, `no` to require the opposite.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_bloc_leader_or_bloc_leader_heir_of",
+  "label": "Bloc leader or heir of",
+  "summary": "Whether the character is the leader of the given character's bloc, or the leader's player heir.",
+  "details": "The other character is written as the value. The game does not explain the term bloc further, and vanilla does not use this trigger.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "is_cancelled",
+  "label": "Travel is cancelled",
+  "summary": "Whether the travel plan was cancelled.",
+  "details": "A cancelled plan was stopped by hand and the traveller is sent back home. It runs on a travel plan.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_candidate_from_set",
+  "label": "Candidate from set",
+  "summary": "Whether the character is a candidate for an elected title because of a given candidate set.",
+  "details": "A character can qualify through several sets. The check looks at the first one in order of definition. It fails if the character is not a candidate for the title, or the title does not use election laws.",
+  "fields": [
+   { "name": "title", "text": "The title being elected.", "values": "a title, for example `title:k_papal_state`", "required": true },
+   { "name": "source", "text": "The name of the candidate set the candidacy must come from.", "values": "a set name", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_capital_barony",
+  "label": "Is capital barony",
+  "summary": "Whether the title is a capital barony.",
+  "details": "Runs on a title. Write `yes` to require it, `no` to require the opposite.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_causing_raid_hostility_towards",
+  "label": "Causing raid hostility toward",
+  "summary": "Whether the character has made the given character hostile by raiding their realm.",
+  "details": "The other character is written as the value, for example `prev` or `scope:host`. The game's documentation says the raiding of their top liege's (the highest ruler above them) realm also counts.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_character_interaction_potentially_accepted",
+  "label": "Interaction may be accepted",
+  "summary": "Whether the given interaction is available from the character to the recipient and could be accepted by them.",
+  "details": "Only `recipient` and `interaction` are always given in vanilla; the other fields are optional.",
+  "fields": [
+   { "name": "recipient", "text": "The character the interaction is aimed at.", "values": "a character", "required": true },
+   { "name": "interaction", "text": "The interaction to check.", "values": "an interaction name", "required": true },
+   { "name": "secondary_actor", "text": "An optional extra character on the acting side (vanilla passes a hostage here).", "values": "a character" },
+   { "name": "secondary_recipient", "text": "An optional extra character on the receiving side (vanilla passes a hostage or a title holder here).", "values": "a character" },
+   { "name": "target_title", "text": "An optional title the interaction is about.", "values": "a title" },
+   { "name": "required_response", "text": "The kind of response required, `yes` or `maybe`.", "values": "yes / maybe" },
+   { "name": "ai_accept", "text": "The lowest acceptance value required.", "values": "a number" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_character_interaction_shown",
+  "label": "Interaction is shown",
+  "summary": "Whether the given interaction is shown from the character to the recipient.",
+  "details": "It only checks that the interaction is shown, not that it can be used. `is_character_interaction_valid` checks both.",
+  "fields": [
+   { "name": "recipient", "text": "The character the interaction is aimed at.", "values": "a character", "required": true },
+   { "name": "interaction", "text": "The interaction to check.", "values": "an interaction name", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_character_interaction_valid",
+  "label": "Interaction is valid",
+  "summary": "Whether the given interaction is both shown and usable from the character to the recipient.",
+  "details": "It is stricter than `is_character_interaction_shown`, which only checks that it is shown.",
+  "fields": [
+   { "name": "recipient", "text": "The character the interaction is aimed at.", "values": "a character", "required": true },
+   { "name": "interaction", "text": "The interaction to check.", "values": "an interaction name", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_character_window_main_character",
+  "label": "Main character of window",
+  "summary": "Whether the local player is the main character of the character window.",
+  "details": "It is an interface trigger and can only be used in specific places. Vanilla scripts do not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_child_of",
+  "label": "Child of",
+  "summary": "Whether the character is a child of the given character.",
+  "details": "The parent is written as the value, for example `root` or `scope:liege`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_civil_war",
+  "label": "Is civil war",
+  "summary": "Whether the war is a civil war.",
+  "details": "Runs on a war. Write `yes` to require it, `no` to require the opposite.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_claimant",
+  "label": "Is claimant",
+  "summary": "Whether the character has a claim on any landed title.",
+  "details": "Write `yes` to require it, `no` to require the opposite.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_clergy",
+  "label": "Is clergy",
+  "summary": "Whether the character is a member of the clergy.",
+  "details": "Write `yes` to require it, `no` to require the opposite.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_close_family_of",
+  "label": "Close family of",
+  "summary": "Whether the character is close family of the given character.",
+  "details": "Close family means parents, children, siblings, grandparents and grandchildren. The other character is written as the value, for example `root`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_close_or_extended_family_of",
+  "label": "Close or extended family of",
+  "summary": "Whether the character is close or extended family of the given character.",
+  "details": "This covers parents, children, siblings, grandparents and grandchildren, plus cousins, uncles, aunts, nephews and nieces. The other character is written as the value, for example `root`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_coastal",
+  "label": "Coastal province",
+  "summary": "Whether the province lies next to the sea.",
+  "details": "Lakes do not count. Write `yes` to require it, `no` to require the opposite.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_coastal_county",
+  "label": "Coastal county",
+  "summary": "Whether the county lies next to the sea.",
+  "details": "Lakes do not count. Runs on a title. Write `yes` to require it, `no` to require the opposite.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_combat_side_attacker",
+  "label": "Combat side is attacker",
+  "summary": "Whether this side of the combat was the attacker.",
+  "details": "Runs on a combat side. Write `yes` to require the attacking side, `no` for the defending side.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "is_combat_side_pursuing",
+  "label": "Combat side is pursuing",
+  "summary": "Whether this combat side is pursuing, which the game's documentation describes as being the winner of the combat.",
+  "details": "The name says pursuing, the game's documentation says winner, and vanilla does not use it, so the exact meaning is not confirmed. Runs on a combat side.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ }
+]

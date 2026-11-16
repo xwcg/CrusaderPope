@@ -1,0 +1,362 @@
+[
+  {
+    "kind": "on_action", "key": "feast_default_host_event_selection",
+    "label": "Feast host event pick",
+    "summary": "Picks one random event for the host of a default feast.",
+    "details": "Vanilla lists a long weighted list: general feast events that also fit a host, host-only events (a spouse's praise, a fight among guests, the wine running out), and extra events for the Warfare, Intrigue and Statecraft lifestyles, the Pleasure Dome feast, and Tsagaan Sar. Vanilla's comment says the character it runs for is the host. The list shown here is cut off in the input, so later entries are not covered.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "feast_main_event_selection",
+    "label": "Feast main event pick",
+    "summary": "Picks the main event of a feast, but only if the feast has not had a special chain yet and the host is not running a murder feast.",
+    "details": "Vanilla chooses among four main events (stew flood, live fowl, stable break-in, befriend), the befriend one being by far the most likely. When it fires, it sets the variable `had_special_chain` on the activity, which the condition checks. Vanilla's comment says the condition makes sure a host who chose the murder feast always gets that event.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "feast_murder_feast_event_selection",
+    "label": "Murder feast event pick",
+    "summary": "Picks one of three murder events for a feast, each equally likely.",
+    "details": "Vanilla's comments name them: kill the whole entourage, kill only your target, or kill only your target in a sneaky way.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "feast_new_event_selection_tombola",
+    "label": "Feast event lottery",
+    "summary": "Picks the event for one participant of a default feast by choosing between three other on_actions.",
+    "details": "It only runs for a ruler, and only while an activity is saved as `scope:activity`. Vanilla weights the choice 1 for the main event pick, 3 for the default event pick (feast_default_event_selection) and 3 for the host event pick.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "feast_start_events",
+    "label": "Feast start events",
+    "summary": "Lists the events that can open a feast.",
+    "details": "Vanilla lists two events, feast.2001 and feast.2501. A plain event list is used, not a weighted one.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "festival_random_pulse",
+    "label": "Festival random event",
+    "summary": "Picks a random festival event for a character at a festival.",
+    "details": "It needs a running activity. It runs for human players, or for an AI character only when they are the activity's host. Of the 32 events, 21 have weight 50 and 11 (the 100-series) weight 100; the last one, festival.1000, has 50.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "five_year_everyone_pulse",
+    "label": "Five-year pulse, everyone",
+    "summary": "Runs once every five years for every character.",
+    "details": "The game's code fires it. Vanilla uses it so that herder-government characters aged 30 or more may gain the Seasoned Pastoralist trait (20% chance), and so that barons get a spouse: an unmarried, non-lowborn adult whose primary title is a barony (not in a republic) is married to a fitting unmarried person from the pool in their province, or to a newly created spouse if there is none. The definition in the input is cut off, so there may be more.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "five_year_playable_pulse",
+    "label": "Five-year pulse, rulers",
+    "summary": "Runs once every five years for each playable character (count and above).",
+    "details": "The game's code fires it. Vanilla uses it to call effects named for AI behaviour (becoming a conqueror, a personal tenet pulse, switching to the travel focus), a random nickname effect, a Peace of God event 21 to 37 days after five years of continuous peace, a 10% chance of a holy legend seed for very pious rulers (Legends feature), and a chance roll for AI courtiers over 6 who do not know the host's court language (the outcome is cut off). The definition in the input is cut off, so there may be more.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "five_year_struggle_playable_pulse",
+    "label": "Five-year struggle pulse",
+    "summary": "Runs every five years for characters involved in a struggle, or interlopers in one, while that struggle pulses.",
+    "details": "The game's code fires it, with the struggle saved as `scope:struggle`. Vanilla first checks the character is valid for yearly events and is involved in or an interloper in the struggle. It then runs the Iberian struggle random events on_action.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "fp1_trade_events_cycle",
+    "label": "Trade events cycle",
+    "summary": "Schedules itself again in five years and also schedules one trade event pick in one to four years.",
+    "details": "Script fires it, not the game's code, and it has no root character. Vanilla gives it two delayed calls: itself after 1825 days, and the trade random on_action after a random delay between 365 and 1460 days.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "fp1_trade_events_random",
+    "label": "Trade random event",
+    "summary": "Picks a random trade event, or nothing at all.",
+    "details": "The list has a weight-500 entry of 0, which means no event fires. The other entries are two standard events (250 each) and one special event (500) that vanilla's comment says is weighted up because its conditions are rarely met.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "fp1_yearly_events",
+    "label": "FP1 yearly events",
+    "summary": "Random events for characters eligible for the FP1 group, picked from a list that has a 65% chance of being used.",
+    "details": "It needs the FP1 eligibility trigger. The list also has a weight-200 empty entry, so even when it is used nothing may fire. Vanilla lowers its weight for Germanic-religion characters whose culture is not North Germanic (x0.33) and for characters who also qualify for the FP2 or FP3 groups (x0.5). The list mixes Shieldmaiden, general, flavour and special yearlies and the Jomsviking events. The definition in the input is cut off.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "fp2_iberian_struggle_random_events",
+    "label": "Iberian struggle events",
+    "summary": "Picks a random event for a character involved in the Iberian struggle.",
+    "details": "The character must pass vanilla's check for being involved in the struggle. The list is used with a 95% chance, and it also has a weight-1 empty entry. The events are struggle stories such as war widows, a councilman's death and the Order of the Hatchet.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "fp2_iberian_struggle_starting_events",
+    "label": "Iberian struggle start",
+    "summary": "Lists the events that open the Iberian struggle.",
+    "details": "Its root is the struggle itself. Vanilla lists neutral_struggle.0001 and fp2_struggle.0003.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "fp2_lyonese_monk_events_cycle",
+    "label": "Lyonese monk cycle",
+    "summary": "Drives the Lyonese monk story: checks it is still valid, otherwise fires the event for the story's current step.",
+    "details": "Script fires it and it has no root character. If the story is no longer valid it fires an ending event: the acolyte left the realm, you were imprisoned, the papacy is gone, or the faith changed. If it is valid, the story variable `lm_phase_tally` decides the step: 0 teaching gateway event, 1-3 random teaching events, 4 gateway, 5 controversy gateway, 6-8 random controversy events, 9 gateway, 10 schism gateway, 11-13 random schism events. The definition in the input is cut off after the schism step.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "fp2_lyonese_monk_events_cycle_no_valid_events_fallback",
+    "label": "Lyonese monk fallback",
+    "summary": "Used when no random monk event was valid: moves the story on and runs the cycle again.",
+    "details": "It has no root character. It does the same validity checks as the main cycle. If the story is fine, it raises `lm_phase_tally` by 1 unless the story is at a gateway step (0, 4, 5, 9 or 10), then schedules the cycle again after 2 to 5 months.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "fp2_lyonese_monk_events_phase_controversy_events",
+    "label": "Monk controversy events",
+    "summary": "Picks one of three random events for the controversy phase of the Lyonese monk story.",
+    "details": "Each is equally likely. If none is valid, the fallback on_action runs, which advances the story and schedules the cycle again.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "fp2_lyonese_monk_events_phase_schism_events",
+    "label": "Monk schism events",
+    "summary": "Picks one of three random events for the schism phase of the Lyonese monk story.",
+    "details": "Each is equally likely. If none is valid, the fallback on_action runs, which advances the story and schedules the cycle again.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "fp2_lyonese_monk_events_phase_teachings_events",
+    "label": "Monk teaching events",
+    "summary": "Picks one of three random events for the private teachings phase of the Lyonese monk story.",
+    "details": "Each is equally likely. If none is valid, the fallback on_action runs, which advances the story and schedules the cycle again.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "fp2_struggle_council_toledo_attend",
+    "label": "Toledo council, attend",
+    "summary": "Fires one event for the attend step of the Toledo council, or the fallback if it cannot fire.",
+    "details": "Going by its name, this is the attend step; vanilla gives it one event, fp2_other_decisions.0701. The fallback is the shared Toledo council fallback.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "fp2_struggle_council_toledo_debate",
+    "label": "Toledo council, debate",
+    "summary": "Fires one event for the debate step of the Toledo council, or the fallback if it cannot fire.",
+    "details": "Going by its name, this is the debate step; vanilla gives it one event, fp2_other_decisions.0702. The fallback is the shared Toledo council fallback.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "fp2_struggle_council_toledo_fallback",
+    "label": "Toledo council fallback",
+    "summary": "Fires the event used when a Toledo council event could not fire.",
+    "details": "Vanilla lists one event, fp2_other_decisions.0703. The attend, debate and organize on_actions all fall back to this.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "fp2_struggle_council_toledo_organize",
+    "label": "Toledo council, organize",
+    "summary": "Fires one event for the organize step of the Toledo council, or the fallback if it cannot fire.",
+    "details": "Going by its name, this is the organize step; vanilla gives it one event, fp2_other_decisions.0700. The fallback is the shared Toledo council fallback.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "fp2_yearly_events",
+    "label": "Iberian yearly events",
+    "summary": "Yearly random events for characters in Iberia who own the Fate of Iberia content.",
+    "details": "It needs the FP2 DLC and a capital in the west Iberia region. Vanilla lowers its weight for non-Iberian heritage cultures (x0.33), for characters who have the flag `recently_got_fp2_event` (x0.2) and for characters who also qualify for the FP1 or FP3 groups (x0.5). Its effect sets that flag on the character for 1095 days (3 years). The events cover Iberian flavour, the struggle, and Jewish community events. The definition in the input is cut off.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "fp3_yearly_events",
+    "label": "Persian-region yearly events",
+    "summary": "Yearly random events for characters in the Persian empire region who own the FP3 content.",
+    "details": "It needs the FP3 DLC and a capital in the Persian empire region. Vanilla lowers its weight for characters whose culture has none of the Iranian, Turkic, Mongolic or Arabic heritages (x0.33), for those who recently had one of its events (x0.2) and for those who also qualify for FP1 or FP2 (x0.5). The events are grouped into frontier, heritage, Zoroastrian, guardianship and clan events. The definition in the input is cut off.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "friendship_quarterly_pulse",
+    "label": "Friendship quarterly pulse",
+    "summary": "Passes on to the friendship status changes, but only when the saved quarter value is 2.",
+    "details": "It checks that the saved value `scope:quarter` equals 2, so it passes on only for that quarter value. The work is done in friendship_status_changes.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "friendship_status_changes",
+    "label": "Friendship status changes",
+    "summary": "Randomly changes a friendship: losing a friend, a best friend, turning friends into rivals, or dropping a friend because there are too many.",
+    "details": "The character needs at least one friend and must be an available adult. The list is used with a 50% chance, and it also has an empty entry with the same weight as each of the four events, so nothing happens in about 60% of cases overall. Vanilla's comment warns that this would need reworking if time-sensitive updates were added, since when and what fires is random.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "funeral_wake_pulse",
+    "label": "Funeral wake pulse",
+    "summary": "Picks a random event for a character at a funeral wake.",
+    "details": "It does not run for a character who is busy in a banquet event (`busy_in_banquet_event`). Vanilla lists funeral events, intent events, and feast events moved over to funerals, plus an empty entry (weight 250). The Holy Myron anointing event has weight 10000, far above everything else, so it is overwhelmingly likely whenever it is valid.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "grand_ambitions_invalidation_on_action",
+    "label": "Grand Ambitions fallback",
+    "summary": "Fires the event used as the fallback of the Powerful Family Grand Ambitions on_actions.",
+    "details": "Vanilla lists one event, grand_ambitions.0500. The two Powerful Family on_actions use it as their fallback; going by the key name, it is the event for a story that has become invalid.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "grand_ambitions_powerful_family_coup_on_action",
+    "label": "Powerful Family coup events",
+    "summary": "Picks a random event for the Powerful Family story's claimant faction path.",
+    "details": "It only runs while the story's target character still holds the target title. Vanilla's comments describe the events: a foreign ally, more men-at-arms, more estate buildings, lower popular opinion of the emperor with riots, a hook on a powerful vassal, an alliance, and support from the Patriarch. If none is valid, the Grand Ambitions fallback event fires.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "grand_ambitions_powerful_family_scheme_on_action",
+    "label": "Powerful Family scheme events",
+    "summary": "Picks a random event for the Powerful Family story's depose scheme path.",
+    "details": "It only runs while the story's target character still holds the target title. Vanilla's comments describe the events: a new scheme agent (with a strong weight on the eunuch helping), filling an empty agent slot, a scheme modifier, an alliance, and the Patriarch's support to crown you. If none is valid, the Grand Ambitions fallback event fires.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "hajj_arrival_events",
+    "label": "Hajj arrival events",
+    "summary": "Picks a random event when a pilgrim of the Hajj arrives at Mecca.",
+    "details": "It needs the character's activity to have the Hajj pilgrimage option and the activity location to be in the county of Mecca. The choices are the Hajj arrival event (weight 100) and the Meet the Mystic again event (weight 20).",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "hajj_journey_events",
+    "label": "Hajj journey events",
+    "summary": "Passes to the shared pilgrimage travel events while a character is on the way to the Hajj.",
+    "details": "Vanilla only allows it on the way to the destination, and not while the character is already inside a pilgrimage event chain.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "harm_events_pulse",
+    "label": "Harm events pulse",
+    "summary": "Picks a random accident event that can cripple or kill a character.",
+    "details": "The list has two groups in vanilla: random incapability (weight 10 each, such as falling from a horse or a stroke) and random deaths (weight 20 each, one with weight 5). Most accidents come as pairs, the accident and a foreboding event. It has no trigger of its own in the input, so any limits are set by the events.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "high_control_pulse",
+    "label": "High control pulse",
+    "summary": "Gives a chance to remove corruption from held counties where county control is high.",
+    "details": "Script fires it and it has no root character. It needs the holder to have at least 0 gold and a held, non-landless county with corruption and control above the high control limit. Each such county rolls the chance `high_control_county_corruption_removal_chance`. On success, the holder gets event realm_maintenance.0004 after 10 to 40 days.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "hindu_arrival_events",
+    "label": "Hindu pilgrimage arrival",
+    "summary": "Picks a random event when a Hindu pilgrim arrives at one of the seven holy places.",
+    "details": "The character must follow Hinduism and the activity location must be in Varanasi, Ayodhya, Mathura, Haridwar, Kanchipuram, Ujjayini or Dwarka. Each place has its own event (weight 100 each), plus the Meet the Mystic again event (also 100).",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "hold_court_event_selection",
+    "label": "Hold court events",
+    "summary": "Picks a random event for a character holding court.",
+    "details": "Most entries have weight 100, a few rarer ones 5 to 50, and the legend and EP3 administrative events 300. The definition in the input is cut off, so later entries are not covered.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "horse_riding_accident_outcome",
+    "label": "Horse accident outcome",
+    "summary": "Hands out the event for the result of a horse riding accident.",
+    "details": "Vanilla lists four events with comments: die, become near death, become severely injured, become wounded. It is a plain event list, not a weighted random one, and the input does not say how the game picks among them.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": true
+  },
+  {
+    "kind": "on_action", "key": "house_arrest_ongoing",
+    "label": "House arrest events",
+    "summary": "Picks a random event for a character who is under house arrest.",
+    "details": "It does not run if the character has been released since it was called (it checks the imprisoner still exists). The choices are six events, all equally likely: ambition, arrogance, missing loved ones, a friend at court, a rival at court, and a letter to a relative asking for help.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  },
+  {
+    "kind": "on_action", "key": "house_feud_ai_scheme_pulse",
+    "label": "House feud AI scheming",
+    "summary": "Lets an AI character in a house feud start or join a hostile scheme against a feuding house.",
+    "details": "The character must be an adult AI, not forgiving, with low enough honor and at least mediocre intrigue. Their house needs a feud relation that makes members more likely to scheme hostile, and no recent AI feud scheme. It also needs at most 3 AI house members already running hostile schemes against that feud. Deceitful, vengeful and schemer traits each double the weight, and so does each of two low-honor thresholds (so very low honor doubles it twice). The events are joining an existing murder, starting a murder, or starting a cuckoldry.",
+    "fields": [],
+    "sources": ["doc", "vanilla"],
+    "uncertain": false
+  }
+]

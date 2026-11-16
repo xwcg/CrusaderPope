@@ -7,6 +7,7 @@ import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from '
 import { join } from 'node:path';
 import { pngHeader, pngRows } from './terrain-png.ts';
 
+import { tr } from '../../shared/i18n.ts';
 /** Bumped when the rasters change shape (old cache files are then not read). */
 export const TERRAIN_VERSION = 1;
 
@@ -21,7 +22,7 @@ export interface TerrainRasters
 
 /**
  * Heights: map_data/heightmap.png (16-bit grey; vanilla 18432 × 9216, twice the province map; AGOT 9216 × 6144, the
- * province map's size) averaged over `f` × `f` pixels — the whole factor that brings it closest to the province map's
+ * province map's size) averaged over `f` × `f` pixels, the whole factor that brings it closest to the province map's
  * width. Uint16, row-major, top row first; 8-bit greys are widened (× 257).
  */
 export async function buildHeights(png: Uint8Array, mapWidth: number): Promise<{ width: number; height: number; data: Uint16Array; }>
@@ -29,7 +30,7 @@ export async function buildHeights(png: Uint8Array, mapWidth: number): Promise<{
     const hd = pngHeader(png);
 
     if (hd.type === 3)
-        throw new Error('The heightmap is a palette image');
+        throw new Error(tr('The heightmap is a palette image'));
 
     const wide = hd.depth === 16;
     const step = hd.channels * (wide ? 2 : 1);

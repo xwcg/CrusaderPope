@@ -1,0 +1,649 @@
+/* The GUI tab (components/GuiView.tsx; docs/gui-designer.md) */
+
+.gui-main {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+}
+/* the tab is experimental (the owner, 2026-10-05): a banner across it */
+.gui-experimental {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: var(--text-dim);
+  background: rgba(201, 164, 92, 0.1);
+  border-bottom: 1px solid var(--accent-dim);
+}
+.gui-experimental b {
+  flex: none;
+  padding: 0 7px;
+  border: 1px solid var(--accent-dim);
+  border-radius: 9px;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.gui-kinds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.gui-kind {
+  padding: 3px 9px;
+  font-size: 12px;
+  border-radius: 12px;
+  color: var(--text-dim);
+}
+.gui-kind.on {
+  background: var(--bg-active);
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+.gui-kind .n {
+  color: var(--text-faint);
+  margin-left: 2px;
+  font-size: 11px;
+}
+.gui-section {
+  margin: 4px 0 22px;
+}
+.gui-section h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+.gui-section h4 {
+  margin: 10px 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+.gui-section .n {
+  color: var(--text-faint);
+  font-weight: normal;
+  font-size: 11px;
+  margin-left: 2px;
+}
+.gui-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+}
+.gui-link {
+  display: inline-flex;
+  gap: 4px;
+  align-items: baseline;
+  padding: 1px 7px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: var(--font-code);
+  font-size: 11.5px;
+  color: var(--link);
+  cursor: pointer;
+}
+.gui-link:hover {
+  background: var(--bg-hover);
+}
+.gui-link.plain {
+  color: var(--text-dim);
+  cursor: default;
+}
+.gui-link.plain:hover {
+  background: none;
+}
+.gui-link .k {
+  color: var(--text-faint);
+  font-size: 10px;
+}
+.gui-more {
+  color: var(--text-faint);
+  font-size: 12px;
+  cursor: pointer;
+  align-self: center;
+}
+
+/* the preview (components/GuiPreview.tsx) */
+.gui-modes {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+}
+.gui-preview-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+.gui-preview-bar .dim {
+  color: var(--text-faint);
+}
+.gui-stage {
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: repeating-conic-gradient(rgba(255, 255, 255, 0.025) 0 25%, transparent 0 50%) 0 0 / 20px 20px;
+  margin-bottom: 14px;
+}
+.gui-canvas {
+  position: relative;
+}
+/* (a box's line is drawn by ::before, not a border: a border would shift its children by a pixel per level) */
+.gui-box {
+  position: absolute;
+  box-sizing: border-box;
+  cursor: pointer;
+  --line: rgba(201, 164, 92, 0.28);
+  --line-style: solid;
+}
+.gui-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px var(--line-style) var(--line);
+  pointer-events: none;
+}
+.gui-box.k-window {
+  background: rgba(30, 34, 44, 0.85);
+  --line: rgba(201, 164, 92, 0.6);
+}
+.gui-box.k-hbox,
+.gui-box.k-vbox,
+.gui-box.k-flowcontainer {
+  --line-style: dashed;
+  --line: rgba(120, 160, 220, 0.35);
+}
+.gui-box.k-textbox,
+.gui-box.k-editbox {
+  --line: rgba(150, 200, 150, 0.4);
+}
+.gui-box.k-icon {
+  background: rgba(201, 164, 92, 0.05);
+}
+.gui-box.k-game_button,
+.gui-box.k-checkbutton {
+  background: rgba(201, 164, 92, 0.09);
+}
+.gui-box.sample {
+  --line-style: dotted;
+}
+.gui-box.hover {
+  outline: 1px solid var(--accent);
+  z-index: 1;
+}
+.gui-box.sel {
+  outline: 2px solid var(--accent);
+  background: rgba(201, 164, 92, 0.16);
+  z-index: 2;
+}
+.gui-text {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  line-height: 1.2;
+  color: rgba(200, 220, 200, 0.7);
+  pointer-events: none;
+  padding: 1px 2px;
+}
+.gui-box-info .crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 6px;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.gui-box-info .crumbs a {
+  color: var(--link);
+  cursor: pointer;
+}
+.gui-box-info .crumbs a::after {
+  content: ' ›';
+  color: var(--text-faint);
+}
+.gui-box-info .facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-family: var(--font-code);
+  font-size: 12px;
+}
+.gui-box-info .facts a {
+  color: var(--link);
+  cursor: pointer;
+}
+.gui-box-info .via,
+.gui-box-info .note {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.gui-box-info .vis {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+}
+.gui-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+}
+.gui-toggles label {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+}
+.gui-toggles label.on .name {
+  color: var(--accent);
+}
+.gui-toggles .name {
+  cursor: pointer;
+  min-width: 160px;
+}
+.gui-toggles code {
+  color: var(--text-faint);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gui-preview-bar .gap {
+  flex: 1;
+}
+.gui-paint {
+  position: absolute;
+  pointer-events: none;
+  max-width: none;
+}
+.gui-paint.bound {
+  background: repeating-linear-gradient(45deg, rgba(201, 164, 92, 0.12) 0 6px, transparent 6px 12px);
+}
+.gui-stage.tex .gui-box {
+  background: none;
+}
+.gui-stage.tex .gui-box.sel {
+  background: rgba(201, 164, 92, 0.12);
+}
+.gui-stage.tex .gui-text {
+  color: rgba(225, 215, 190, 0.9);
+}
+.gui-stage.no-lines .gui-box::before {
+  display: none;
+}
+
+.gui-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.gui-text.set {
+  display: flex;
+  padding: 0;
+  line-height: 1.25;
+  font-size: inherit;
+  overflow: visible;
+}
+
+.gui-props {
+  margin-top: 10px;
+}
+.gui-props-head {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+.gui-props-head h4 {
+  margin: 0 0 4px;
+}
+.gui-props .dim {
+  color: var(--text-faint);
+  font-size: 11px;
+}
+.gui-prop {
+  display: grid;
+  grid-template-columns: 190px minmax(120px, 320px) auto auto;
+  gap: 6px;
+  align-items: center;
+  font-family: var(--font-code);
+  font-size: 12px;
+  padding: 1px 0;
+}
+.gui-prop .k {
+  color: var(--text-dim);
+}
+.gui-prop.own .k {
+  color: var(--text);
+}
+.gui-prop input {
+  font-family: var(--font-code);
+  font-size: 12px;
+  padding: 1px 5px;
+}
+.gui-prop .from {
+  color: var(--text-faint);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gui-prop .x {
+  padding: 0 6px;
+  font-size: 11px;
+}
+.gui-add {
+  margin-top: 6px;
+  font-size: 12px;
+}
+.gui-msg {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.gui-msg.error {
+  color: #d9776b;
+}
+
+/* the selected widget's frame: drag to move, handles to resize */
+.gui-handles {
+  position: absolute;
+  box-sizing: border-box;
+  outline: 2px solid var(--accent);
+  z-index: 5;
+  cursor: default;
+}
+.gui-handles.movable {
+  cursor: move;
+}
+.gui-handles.dragging {
+  outline-style: dashed;
+  background: rgba(201, 164, 92, 0.08);
+}
+.gui-handle {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  margin: -5px 0 0 -5px;
+  background: var(--accent);
+  border: 1px solid #1a1a1a;
+  transform-origin: 5px 5px;
+}
+.gui-handle.h-n { left: 50%; top: 0; cursor: ns-resize; }
+.gui-handle.h-s { left: 50%; top: 100%; cursor: ns-resize; }
+.gui-handle.h-e { left: 100%; top: 50%; cursor: ew-resize; }
+.gui-handle.h-w { left: 0; top: 50%; cursor: ew-resize; }
+.gui-handle.h-ne { left: 100%; top: 0; cursor: nesw-resize; }
+.gui-handle.h-sw { left: 0; top: 100%; cursor: nesw-resize; }
+.gui-handle.h-nw { left: 0; top: 0; cursor: nwse-resize; }
+.gui-handle.h-se { left: 100%; top: 100%; cursor: nwse-resize; }
+.gui-drag-size {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: 4px;
+  padding: 1px 5px;
+  font-size: 11px;
+  background: rgba(0, 0, 0, 0.8);
+  color: var(--accent);
+  white-space: nowrap;
+  transform-origin: 0 0;
+}
+
+/* the toolbox (stage 3): widgets to add */
+.gui-toolbox {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+.gui-toolbox .dim {
+  color: var(--text-faint);
+}
+.gui-tool {
+  padding: 2px 9px;
+  font-size: 12px;
+  cursor: grab;
+}
+.gui-type-input {
+  width: 180px;
+  font-size: 12px;
+  padding: 2px 6px;
+}
+
+/* the canvas and the widget tree side by side */
+.gui-work {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.gui-work .gui-stage {
+  flex: 1;
+  min-width: 0;
+}
+.gui-tree {
+  width: 280px;
+  flex: none;
+  max-height: 75vh;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 12px;
+  padding-bottom: 6px;
+}
+.gui-tree-head {
+  position: sticky;
+  top: 0;
+  padding: 4px 8px;
+  background: var(--bg-alt, #16181d);
+  color: var(--text-dim);
+  font-weight: 600;
+  z-index: 1;
+}
+.gui-tree-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 4px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.gui-tree-row:hover {
+  background: var(--bg-hover);
+}
+.gui-tree-row.sel {
+  background: var(--bg-active);
+  color: var(--accent);
+}
+.gui-tree-row.over {
+  outline: 1px dashed var(--accent);
+}
+.gui-tree-row.shared .nm {
+  font-style: italic;
+  color: var(--text-dim);
+}
+.gui-tree-row .tw {
+  width: 10px;
+  color: var(--text-faint);
+}
+.gui-tree-row .kd {
+  color: var(--text-faint);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gui-tree-row .ops {
+  margin-left: auto;
+  display: flex;
+  gap: 2px;
+}
+.gui-tree-row .ops button {
+  padding: 0 5px;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+/* property blocks of the selected widget (stage 3) */
+.gui-block {
+  margin: 3px 0;
+  border-left: 2px solid var(--border);
+  padding-left: 6px;
+}
+.gui-block.own {
+  border-left-color: var(--accent-dim);
+}
+.gui-block-head {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 12px;
+  cursor: pointer;
+}
+.gui-block-head .tw {
+  width: 10px;
+  color: var(--text-faint);
+}
+.gui-block-head .nm {
+  font-family: var(--font-code);
+  color: var(--text-dim);
+}
+.gui-block-head .dim {
+  color: var(--text-faint);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gui-block-head .x {
+  margin-left: auto;
+  padding: 0 6px;
+  font-size: 11px;
+}
+.gui-block-body {
+  padding: 2px 0 4px 12px;
+}
+.gui-block-adds {
+  display: flex;
+  gap: 6px;
+}
+
+/* stage 4: samples for the game's data */
+.gui-rows {
+  width: 44px;
+  margin-left: 4px;
+  font-size: 12px;
+  padding: 1px 4px;
+}
+.gui-sample {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.gui-sample input {
+  width: 420px;
+  font-size: 12px;
+  padding: 1px 5px;
+}
+.gui-sample button {
+  padding: 0 6px;
+  font-size: 11px;
+}
+.gui-box.sample > .gui-text {
+  opacity: 0.8;
+}
+
+/* stand-ins for what the game draws from its data (stage 4) */
+.gui-portrait {
+  background:
+    radial-gradient(circle at 50% 36%, #7d828c 0 17%, transparent 18%),
+    radial-gradient(ellipse 46% 34% at 50% 100%, #7d828c 0 98%, transparent 100%),
+    linear-gradient(#3a3f4a, #23262d);
+  border-radius: 2px;
+}
+.gui-coa {
+  background:
+    linear-gradient(90deg, transparent 44%, #c9a45c 44% 56%, transparent 56%),
+    linear-gradient(transparent 40%, #c9a45c 40% 52%, transparent 52%),
+    #8b2626;
+  clip-path: polygon(0 0, 100% 0, 100% 55%, 50% 100%, 0 55%);
+}
+
+/* runs of a text (stage 4): inline formats and text icons */
+.gui-runs {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gui-text.set:not([style*="hidden"]) .gui-runs {
+  overflow: visible;
+}
+.gui-texticon {
+  vertical-align: middle;
+  margin: 0 1px;
+}
+
+/* zoom and minimap */
+.gui-work .gui-stage {
+  max-height: 75vh;
+}
+.gui-zoom {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.gui-zoom .slider {
+  width: 140px;
+}
+.gui-zoom .pct {
+  width: 38px;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+.gui-side {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: none;
+  width: 280px;
+}
+.gui-side .gui-tree {
+  width: auto;
+  max-height: calc(75vh - 200px);
+}
+.gui-minimap {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 6px;
+  display: flex;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.25);
+}
+.gui-minimap .frame-host {
+  position: relative;
+  cursor: pointer;
+}
+.gui-minimap canvas {
+  display: block;
+}
+.gui-minimap .view {
+  position: absolute;
+  border: 1.5px solid var(--accent);
+  background: rgba(201, 164, 92, 0.08);
+  pointer-events: none;
+}

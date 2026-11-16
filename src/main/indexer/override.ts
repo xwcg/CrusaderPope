@@ -1,6 +1,6 @@
 /**
  * Text for overriding an entry in the active mod (docs/mods.md, "Editing the active mod"): the definition exactly as
- * written in its file — the comment block right above it and a comment after its closing brace included — plus what
+ * written in its file (the comment block right above it and a comment after its closing brace included), plus what
  * it needs to stand alone in another file: its event namespace, the file's @constants it uses, the file-local
  * scripted triggers/effects it calls (events files). The index worker prepares it (GameIndex.overrideSource), the main
  * process picks the file and writes it (src/main/mods/edit.ts).
@@ -21,7 +21,7 @@ export function textHash(text: string): string
 }
 
 // ---------------------------------------------------------------------------
-// A statement's own checks (LineSource.stmt): hashes of its text with whitespace left out — two 32-bit multiplicative
+// A statement's own checks (LineSource.stmt): hashes of its text with whitespace left out: two 32-bit multiplicative
 // hashes over its characters that are no whitespace (64 bits in all), one tight pass (a story anchors hundreds of
 // statements, nested blocks inside each other: a cryptographic hash of each made AGOT's stories twice as slow)
 // ---------------------------------------------------------------------------
@@ -72,7 +72,7 @@ function aroundEnd(text: string, from: number, dir: 1 | -1): number
 
 /**
  * A statement's own checks (LineSource.stmt, docs/mods.md "Editing in place"): its length and hash without whitespace,
- * and hashes of the 32 characters that are no whitespace before and after it — how an edit finds the statement again
+ * and hashes of the 32 characters that are no whitespace before and after it: how an edit finds the statement again
  * after other parts of the file changed (the same after formatting: whitespace only).
  */
 export function stmtCheck(text: string, s: number, e: number): { n: number; text: string; before: string; after: string; }
@@ -144,7 +144,7 @@ export interface OverrideSource
 {
     type: string;
     name: string;
-    /** on_actions: definitions of several files merge — an appended copy adds to them */
+    /** on_actions: definitions of several files merge: an appended copy adds to them */
     merging: boolean;
     /** no definition at all (flags, variables, images, models) */
     none?: boolean;
@@ -170,7 +170,7 @@ export interface OverrideSource
     /** script definitions: the text to append; absent when `copyProblem` says why it cannot be copied alone */
     copy?: OverrideText;
     /**
-     * the definition sits in another definition: a faith in its religion, a law in its law group — copied whole —, a
+     * the definition sits in another definition: a faith in its religion, a law in its law group (copied whole), a
      * landed title in its de jure liege (`path`)
      */
     container?: { type: string; name: string; };
@@ -219,7 +219,7 @@ function lineStartOf(src: string, pos: number): number
 
 /**
  * Where the copied text starts: the definition's line when only indentation precedes it, extended upwards over the
- * comment block directly above it (no blank line in between, at most 40 lines — like the index's doc comments).
+ * comment block directly above it (no blank line in between, at most 40 lines, like the index's doc comments).
  */
 export function commentStart(src: string, start: number): number
 {
@@ -334,7 +334,7 @@ const own = (s: string): string => (s.length > 12 ? (' ' + s).slice(1) : s);
 
 /**
  * A file's `@name = value` constants as the "same as the game" check compares them (GameIndex.sameUses): name → the
- * value as written (a quoted string with its quotes, inline maths `@[ … ]`, a word; a block's text) — at any depth
+ * value as written (a quoted string with its quotes, inline maths `@[ … ]`, a word; a block's text), at any depth
  * (coat of arms files define constants inside blocks), the last of a name winning. Lines are read with a pattern; a
  * file with a constant the pattern doesn't read whole (a block value, a second statement on its line) is parsed.
  */
@@ -379,7 +379,7 @@ function constantNodes(src: string): Map<string, string>
 
 /**
  * The file-level definitions a text needs, transitively (a local effect may use a constant or another local), each
- * list in file order — a constant or local must be defined before its use.
+ * list in file order: a constant or local must be defined before its use.
  */
 export function carriedDefs(
     text: string,
@@ -440,7 +440,7 @@ export function overrideText(
     const to = trailingEnd(src, def.end);
     const text = src.slice(from, to);
     const locals = opts.area === 'events' ? fileLocals(ast, src) : new Map<string, CarriedDef & { s: number; }>();
-    // (the definition itself is not carried along — copying a local itself is refused before)
+    // (the definition itself is not carried along: copying a local itself is refused before)
     locals.delete(def.key);
     const carried = carriedDefs(text, fileConstants(ast, src), locals);
     const dot = opts.eventId ? opts.eventId.indexOf('.') : -1;
@@ -482,8 +482,8 @@ export function pathTo(top: PNode, s: number): PNode[] | undefined
 
 /**
  * A landed title written inside its de jure lieges (`chain`: the top-level title down to it). The game merges a title
- * written again into the one it has — the values written, its place from where it is written (docs/mods.md, "Editing
- * the active mod") — so the copy is the title's own block as written (its comment block and a trailing comment) without
+ * written again into the one it has: the values written, its place from where it is written (docs/mods.md, "Editing
+ * the active mod"). So the copy is the title's own block as written (its comment block and a trailing comment) without
  * its de jure vassals, which stay as they are, inside empty blocks of its lieges, with the constants it uses. Nothing
  * else of the empire is written again (a later copy of a liege can't reset a vassal the mod changed).
  */
@@ -497,8 +497,8 @@ export function titleText(src: string, ast: PNode[], chain: PNode[]): OverrideTe
     let cut = 0;
     const kids = Array.isArray(target.v) ? target.v : [];
 
-    // the vassals, back to front (the earlier offsets stay): each with its comment lines — a vassal on lines of its own
-    // takes them whole
+    // the vassals, back to front (the earlier offsets stay): each with its comment lines (a vassal on lines of its own
+    // takes them whole)
     for (let i = kids.length - 1; i >= 0; i--)
     {
         const k = kids[i];

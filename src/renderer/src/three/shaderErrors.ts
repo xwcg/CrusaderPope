@@ -61,5 +61,5 @@ export function reportShaderError(gl: WebGLRenderingContext, program: WebGLProgr
 
     void api.logShader({ kind: 'WEBGL', title: effect, detail: parts.join('\n') }).catch(() =>
     {});
-    console.error(`Shader error in ${effect} — details in logs/shaders.log`);
+    console.error(`Shader error in ${effect} (details in logs/shaders.log)`);
 }

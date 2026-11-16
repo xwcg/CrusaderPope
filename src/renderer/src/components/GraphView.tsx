@@ -8,6 +8,7 @@ import { TypeChip } from './common';
 import { useRevision } from '../revision';
 import { Select } from './Select';
 
+import { tr } from '../../../shared/i18n';
 type Layout = 'flow' | 'concentric' | 'breadthfirst' | 'cose';
 
 /** Types that make up "event flow": what fires what. */
@@ -37,7 +38,7 @@ export function GraphView(props: { type: string; name: string; navigate: Navigat
     const navigateRef = useRef(props.navigate);
     navigateRef.current = props.navigate;
 
-    // (an index update: the same graph again — laid out anew only when it changed)
+    // (an index update: the same graph again, laid out anew only when it changed)
     const revision = useRevision();
     const shown = useRef('');
     useEffect(() =>
@@ -98,7 +99,7 @@ export function GraphView(props: { type: string; name: string; navigate: Navigat
                     selector: 'node',
                     style: {
                         'background-color': 'data(color)',
-                        label: 'data(label)',
+                        label: tr('data(label)'),
                         color: '#d8d3c5',
                         'font-size': 10,
                         'font-family': 'Cascadia Code, Consolas, monospace',
@@ -133,7 +134,7 @@ export function GraphView(props: { type: string; name: string; navigate: Navigat
                         'line-color': '#c9a45c',
                         'target-arrow-color': '#c9a45c',
                         width: 2,
-                        label: 'data(ctx)',
+                        label: tr('data(ctx)'),
                         'font-size': 9,
                         color: '#e0c890',
                         'text-rotation': 'autorotate',
@@ -170,7 +171,7 @@ export function GraphView(props: { type: string; name: string; navigate: Navigat
 
         const clearHl = (): void =>
         {
-            cy.elements().removeClass('faded hl');
+            cy.elements().removeClass(tr('faded hl'));
         };
         cy.on('tap', 'node', (e) =>
         {
@@ -221,38 +222,32 @@ export function GraphView(props: { type: string; name: string; navigate: Navigat
         <>
             <div className="graph-toolbar">
                 <label>
-                    Depth
-                    <Select value={depth} onChange={(e) => setDepth(Number(e.target.value))}>
+                    {tr('Depth')}<Select value={depth} onChange={(e) => setDepth(Number(e.target.value))}>
                         <option value={1}>1</option>
                         <option value={2}>2</option>
                         <option value={3}>3</option>
                     </Select>
                 </label>
                 <label>
-                    Layout
-                    <Select value={layout} onChange={(e) => setLayout(e.target.value as Layout)}>
-                        <option value="flow">Flow (in → out)</option>
-                        <option value="concentric">Radial</option>
-                        <option value="breadthfirst">Tree</option>
-                        <option value="cose">Force</option>
+                    {tr('Layout')}<Select value={layout} onChange={(e) => setLayout(e.target.value as Layout)}>
+                        <option value="flow">{tr('Flow (in → out)')}</option>
+                        <option value="concentric">{tr('Radial')}</option>
+                        <option value="breadthfirst">{tr('Tree')}</option>
+                        <option value="cose">{tr('Force')}</option>
                     </Select>
                 </label>
                 <span className="sep" />
                 <label>
                     <input type="checkbox" checked={flowOnly} onChange={(e) => setFlowOnly(e.target.checked)} />
-                    Event flow only
-                </label>
+                    {tr('Event flow only')}</label>
                 <label>
                     <input type="checkbox" checked={hideLoc} onChange={(e) => setHideLoc(e.target.checked)} />
-                    Hide localization
-                </label>
+                    {tr('Hide localization')}</label>
                 <label>
                     <input type="checkbox" checked={hideImplicit} onChange={(e) => setHideImplicit(e.target.checked)} />
-                    Hide flags/variables
-                </label>
+                    {tr('Hide flags/variables')}</label>
                 <span className="info">
-                    {data ? `${data.nodes.length} nodes · ${data.edges.length} edges${data.truncated ? ' (truncated)' : ''}` : 'Loading…'} · click to highlight, double-click to open
-                </span>
+                    {data ? tr('{nodesCount} nodes · {edgesCount} edges{truncated}', { nodesCount: data.nodes.length, edgesCount: data.edges.length, truncated: data.truncated ? ' (truncated)' : '' }) : tr('Loading…')} {' '}{tr('· click to highlight, double-click to open')}</span>
             </div>
             <div className="graph-wrap">
                 <div className="graph-canvas" ref={containerRef} />
@@ -266,7 +261,7 @@ export function GraphView(props: { type: string; name: string; navigate: Navigat
                         <TypeChip type={selected.type} label={selected.type} />
                         <div className="n">{selected.name}</div>
                         {selected.display && <div className="d">{selected.display}</div>}
-                        <button onClick={() => props.navigate({ type: selected.type, name: selected.name })}>Open</button>
+                        <button onClick={() => props.navigate({ type: selected.type, name: selected.name })}>{tr('Open')}</button>
                     </div>
                 )}
             </div>

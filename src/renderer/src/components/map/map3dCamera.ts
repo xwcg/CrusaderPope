@@ -1,5 +1,5 @@
 /**
- * The 3D map's camera (docs/map.md, "3D map"): free — it orbits a point on the map, turned all the way round and tilted
+ * The 3D map's camera (docs/map.md, "3D map"): free, it orbits a point on the map, turned all the way round and tilted
  * from straight down to just above the horizon, at any distance (no zoom steps with fixed tilts as in the game).
  * Dragging pans (the grabbed point stays under the pointer), the wheel zooms smoothly towards the pointer, right /
  * middle dragging turns and tilts, `focus` flies to a box, `resetNorth` turns back to north up. `zoom` is the game's
@@ -49,7 +49,7 @@ export class MapCamera
     /** the eye's distance from the point looked at, and where the wheel is taking it */
     private dist: number;
     private distTo: number;
-    /** turned (radians; 0: north up — any angle) and tilted (degrees above the horizon) */
+    /** turned (radians; 0: north up, any angle) and tilted (degrees above the horizon) */
     private yaw = 0;
     private pitch: number;
     /** the tilt of the overview (the game's farthest step's) */
@@ -98,7 +98,7 @@ export class MapCamera
         return indexOf(this.cfg.heights, this.camera.position.y - this.ground);
     }
 
-    /** The turn (radians, 0: north up) — the compass. */
+    /** The turn (radians, 0: north up), for the compass. */
     get heading(): number
     {
         return this.yaw;
@@ -379,7 +379,7 @@ export class MapCamera
             this.apply();
             const after = this.anchor && this.onLevel(this.anchor[0], this.anchor[1], this.ground);
 
-            // (the pointer's ground point stays under it — unless it is far off towards the horizon)
+            // (the pointer's ground point stays under it, unless it is far off towards the horizon)
             if (before && after && Math.hypot(before.x - this.x, before.z - this.z) < this.dist * 3)
             {
                 this.x += before.x - after.x;

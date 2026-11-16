@@ -42,7 +42,7 @@ catch
 }
 
 for (const l of lists)
-    console.log(`list "${l.name}": ${l.mods.map((m) => m.name).join(', ') || '—'}`);
+    console.log(`list "${l.name}": ${l.mods.map((m) => m.name).join(', ') || 'none'}`);
 
 const want = process.argv[2] ?? lists.find((l) => l.name.endsWith('(active)'))?.name ?? 'game';
 const list = lists.find((l) => l.name === want || l.name.startsWith(want));

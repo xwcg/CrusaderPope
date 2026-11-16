@@ -8,6 +8,8 @@ import { createGameScene, drawnPositions, gameGeometry, gameMaterial, isSkinned,
 import { digest, useGfxRevision } from '../revision';
 import { viewerPixelRatio } from '../graphics';
 
+import { errorText } from '../errors';
+import { tr, trn } from '../../../shared/i18n';
 /** Parts shown only on request: simplified LOD copies, terrain decal planes, sky domes around court rooms. */
 const isExtra = (p: PortraitPart): boolean => !!p.lod || !!p.decal || /skybox/i.test(p.name);
 
@@ -60,7 +62,7 @@ export function MeshViewer(props: { path: string; pdxmesh?: string; onLoaded?: (
                 setData(g);
                 onLoaded?.(g);
             })
-            .catch((e: Error) => !cancelled && setError(e.message));
+            .catch((e: Error) => !cancelled && setError(errorText(e)));
         return () =>
         {
             cancelled = true;
@@ -261,13 +263,13 @@ export function MeshViewer(props: { path: string; pdxmesh?: string; onLoaded?: (
         <div className="mesh-viewer">
             {big && <div className="portrait-backdrop" onClick={() => setBig(false)} />}
             <div className={'portrait-box model-box' + (big ? ' big' : '')} ref={mount}>
-                {data === undefined && !error && <div className="portrait-empty">Loading the model…</div>}
-                {waiting && <div className="portrait-empty">Compiling the game&apos;s shaders…</div>}
-                {error && <div className="portrait-empty">Preview failed: {error}</div>}
-                {data === null && <div className="portrait-empty">No geometry to show.</div>}
-                {data?.parts.length === 0 && <div className="portrait-empty">This mesh file holds no geometry.</div>}
+                {data === undefined && !error && <div className="portrait-empty">{tr('Loading the model…')}</div>}
+                {waiting && <div className="portrait-empty">{tr('Compiling the game\'s shaders…')}</div>}
+                {error && <div className="portrait-empty">{tr('Preview failed: {error}', { error })}</div>}
+                {data === null && <div className="portrait-empty">{tr('No geometry to show.')}</div>}
+                {data?.parts.length === 0 && <div className="portrait-empty">{tr('This mesh file holds no geometry.')}</div>}
                 {!!data?.parts.length && (
-                    <button className="portrait-expand" title={big ? 'Back (Esc)' : 'Enlarge'} onClick={() => setBig(!big)}>
+                    <button className="portrait-expand" title={big ? tr('Back (Esc)') : tr('Enlarge')} onClick={() => setBig(!big)}>
                         {big ? '✕' : '⤢'}
                     </button>
                 )}
@@ -275,31 +277,26 @@ export function MeshViewer(props: { path: string; pdxmesh?: string; onLoaded?: (
             {!!data?.parts.length && (
                 <div className="portrait-info">
                     <span className="pr-dim">
-                        {data.parts.length} part{data.parts.length === 1 ? '' : 's'} · {vertices.toLocaleString()} vertices
-                        {data.bones ? ` · ${data.bones} bones (${posed ? `GPU-skinned: ${data.pose}, first frame` : 'bind pose'})` : ''}
-                        {data.decalsFrom && <span title="A creature shows this mesh: the preview uses the decal list of the first character whose portrait shows it">· colours of {data.decalsFrom}</span>}
+                        {trn('{n} part', '{n} parts', data.parts.length)} {' '}{tr('· {vertices} vertices', { vertices: vertices.toLocaleString() })}{data.bones ? tr(' · {bones} bones ({pose})', { bones: data.bones, pose: posed ? tr('GPU-skinned: {pose}, first frame', { pose: data.pose }) : tr('bind pose') }) : ''}
+                        {data.decalsFrom && <span title={tr('A creature shows this mesh: the preview uses the decal list of the first character whose portrait shows it')}>{tr('· colours of {decalsFrom}', { decalsFrom: data.decalsFrom })}</span>}
                         {gameShaders && programs && (
                             <span title={failed.join('\n\n')}>
                                 {' '}
-                                · {viaGame === data.parts.length ? 'game shaders' : `game shaders on ${viaGame} of ${data.parts.length} parts`}
-                                {failed.length > 0 && <span className="pr-bad-text">({failed.length} failed to compile — hover)</span>}
+                                · {viaGame === data.parts.length ? tr('game shaders') : tr('game shaders on {viaGame} of {partsCount} parts', { viaGame, partsCount: data.parts.length })}
+                                {failed.length > 0 && <span className="pr-bad-text">{tr('({failedCount} failed to compile — hover)', { failedCount: failed.length })}</span>}
                             </span>
                         )}
                     </span>
                     <span className="portrait-toggles">
-                        <label title="Render with the game's own shaders (gfx/FX effects compiled for WebGL), or with the viewer's approximation">
-                            <input type="checkbox" checked={gameShaders} onChange={(e) => setGameShaders(e.target.checked)} /> Game shaders
-                        </label>
-                        <label title="Materials with their textures, or plain clay to judge the shape">
-                            <input type="checkbox" checked={textured} onChange={(e) => setTextured(e.target.checked)} /> Textures
-                        </label>
-                        <label title="Show the triangles">
-                            <input type="checkbox" checked={wire} onChange={(e) => setWire(e.target.checked)} /> Wireframe
-                        </label>
+                        <label title={tr('Render with the game\'s own shaders (gfx/FX effects compiled for WebGL), or with the viewer\'s approximation')}>
+                            <input type="checkbox" checked={gameShaders} onChange={(e) => setGameShaders(e.target.checked)} /> {' '}{tr('Game shaders')}</label>
+                        <label title={tr('Materials with their textures, or plain clay to judge the shape')}>
+                            <input type="checkbox" checked={textured} onChange={(e) => setTextured(e.target.checked)} /> {' '}{tr('Textures')}</label>
+                        <label title={tr('Show the triangles')}>
+                            <input type="checkbox" checked={wire} onChange={(e) => setWire(e.target.checked)} /> {' '}{tr('Wireframe')}</label>
                         {extraCount > 0 && (
-                            <label title="Simplified LOD copies, terrain decal planes and sky domes (hidden by default)">
-                                <input type="checkbox" checked={extras} onChange={(e) => setExtras(e.target.checked)} /> LODs &amp; decals ({extraCount})
-                            </label>
+                            <label title={tr('Simplified LOD copies, terrain decal planes and sky domes (hidden by default)')}>
+                                <input type="checkbox" checked={extras} onChange={(e) => setExtras(e.target.checked)} /> {' '}{tr('LODs & decals ({extraCount})', { extraCount })}</label>
                         )}
                     </span>
                 </div>

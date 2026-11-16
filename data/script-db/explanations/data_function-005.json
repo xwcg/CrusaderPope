@@ -1,0 +1,2749 @@
+[
+ {
+  "kind": "data_function",
+  "key": "GetProgressBarValuePair",
+  "label": "Progress bar value pair",
+  "summary": "A game function of the GUI that returns a whole number and takes two arguments; the game documents nothing more.",
+  "details": "Going by its name, it has to do with the values of a progress bar. The game's texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetPtVThreshold",
+  "label": "Qualification threshold",
+  "summary": "The qualification threshold for PTV (progress to victory), read from the activity the GUI is about.",
+  "details": "It is a shortcut for reading the activity's saved variable `progress_to_victory_threshold`. The game's own description only calls it the qualification PTV threshold.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetPuppetActionType",
+  "label": "Puppet action type",
+  "summary": "Looks up a puppet action type by its key in the game's database.",
+  "details": "You give it the key as text. The game lists its return type only as a null placeholder, so what the result offers is not documented; nothing in the game's texts uses it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the puppet action type.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetPuppetType",
+  "label": "Puppet type",
+  "summary": "Looks up a puppet type by its key in the game's database.",
+  "details": "Vanilla texts do not call it with a key. They use the form on a puppet entry or a puppet interaction group (`PuppetEntry.GetPuppetType`) and print the result's name, in the scheme window.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the puppet type.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetR_CVector4f",
+  "label": "Red part of a 4-value vector",
+  "summary": "The R part of a vector of four decimal numbers; going by the name, the red part of a color.",
+  "details": "Going by its name, the R is the red component of a color-like four-part value. It returns a decimal number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector to read from.",
+    "values": "a four-part decimal vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetR_CVector4i",
+  "label": "Red of 4 whole numbers",
+  "summary": "The R part of a vector of four whole numbers; going by the name, the red part of a color.",
+  "details": "Going by its name, the R is the red component. It returns a whole number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector to read from.",
+    "values": "a four-part whole-number vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetRaidIntent",
+  "label": "Raid intent",
+  "summary": "Gives a raid intent; vanilla uses it on the army window.",
+  "details": "The game documents it as a lookup of a raid intent by key. Vanilla uses it only without an argument, as `ArmyWindow.GetRaidIntent`, to set the data of a part of the army window.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the raid intent, as the game documents it.",
+    "values": "a text key"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetRandomFrontendIllustration",
+  "label": "Random menu illustration",
+  "summary": "Gives a picture for the front-end (start menu) screens; going by its name, a randomly chosen one.",
+  "details": "Vanilla uses it as the texture of the multiplayer game setup and the multiplayer menu screens.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetRandomLogInfo",
+  "label": "Random log info",
+  "summary": "A text of log information, shown after the multiplayer checksum in the game's version info.",
+  "details": "Vanilla shows it in the version line of the top bar and in the tooltip about game modules. What exactly the text holds is not documented; the 'random' and 'log' come from the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetRelation",
+  "label": "Relation",
+  "summary": "Looks up a relation type (like friend or best friend) by its key.",
+  "details": "Vanilla texts call `GetReasonFor` on the result and give it two characters, in the descriptions of messages about a friend, best friend or rival relation being set.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the relation.",
+    "values": "a text key such as 'friend'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetReligion",
+  "label": "Religion",
+  "summary": "Gives a religion; the game documents only that it takes one argument.",
+  "details": "Vanilla texts do not call it with a key. They use the form on a faith (`GetFaith.GetReligion`) and print the religion's name or its family.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Not named by the game; going by the other lookups, probably a key.",
+    "values": "a text key"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetReligionByKey",
+  "label": "Religion by key",
+  "summary": "Gives the religion with the given key.",
+  "details": "Vanilla texts use it to print a religion's adjective, for example in the names of relics: 'Christian Relic'. Give it the religion key with its suffix, like 'christianity_religion'.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the religion.",
+    "values": "a text key such as 'christianity_religion'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetReligionFamily",
+  "label": "Religion family",
+  "summary": "Looks up a religion family (a group of related religions) by its key.",
+  "details": "Vanilla texts use it to print a family's name, for example 'rf_abrahamic'.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the religion family.",
+    "values": "a text key such as 'rf_abrahamic'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetReligionType",
+  "label": "Religion type",
+  "summary": "Looks up a religion type by its key in the game's database.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the religion type.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetResolutionWithAspectRatio",
+  "label": "Screen resolution",
+  "summary": "Gives the screen size, adjusted for the aspect ratio, as a two-part value.",
+  "details": "Going by its name and its single use, it gives a width and height. Vanilla uses it as the size of an element in the bookmarks screen of the start menu.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetRiteByKey",
+  "label": "Rite by key",
+  "summary": "Gives the rite with the given key.",
+  "details": "Vanilla texts use it to print a rite's name, for example in decisions that convert to a rite and in a text about adopting one as a personal rite.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the rite.",
+    "values": "a text key such as 'daoxue'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetRiteType",
+  "label": "Rite type",
+  "summary": "Looks up a rite type by its key in the game's database.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the rite type.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetRoyalCourtHoveredArtifact",
+  "label": "Hovered court artifact",
+  "summary": "The artifact the mouse is over in the royal court view.",
+  "details": "Going by its name. Vanilla uses it as the data of a part of the royal court window and of the court scene editor.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetRoyalCourtHoveredCharacter",
+  "label": "Hovered court character",
+  "summary": "The character the mouse is over in the royal court view.",
+  "details": "Going by its name. Vanilla uses it as the data of a part of the royal court window and of the court scene editor.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetRoyalCourtSelectedArtifact",
+  "label": "Selected court artifact",
+  "summary": "The artifact currently selected in the court scene editor.",
+  "details": "Going by its name and its single use in the court scene editor window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetRoyalCourtSelectedCharacter",
+  "label": "Selected court character",
+  "summary": "The character currently selected in the court scene editor.",
+  "details": "Going by its name and its single use in the court scene editor window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSceneSettingsName",
+  "label": "Scene settings name",
+  "summary": "The name of a court scene settings entry, as text.",
+  "details": "Vanilla passes it the court scene settings of the court scene editor and shows the result as text and tooltip.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The scene settings to name.",
+    "values": "for example CourtSceneSettings.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetScheme",
+  "label": "Scheme type",
+  "summary": "Gives the scheme type with the given key.",
+  "details": "Vanilla texts use it to print a scheme's name, for example 'murder' in the AI personality explanations.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the scheme type.",
+    "values": "a text key such as 'murder'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSchemeCountermeasureType",
+  "label": "Scheme countermeasure type",
+  "summary": "Looks up a scheme countermeasure type by its key in the game's database.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the countermeasure type.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSchemeOddsLevelFrameFromValue",
+  "label": "Scheme odds frame",
+  "summary": "Turns a scheme success value into the number of the frame that shows its odds level.",
+  "details": "Vanilla feeds it the predicted odds of an interaction scheme and uses the whole number as the frame of a GUI element.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The odds value.",
+    "values": "for example InteractionSchemeInfo.GetOddsPredictionValue",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSchemeOddsLevelNameFromValue",
+  "label": "Scheme odds level name",
+  "summary": "Turns a scheme success value into the name of its odds level, as text.",
+  "details": "Vanilla uses it in the text that shows the predicted difficulty of a scheme interaction.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The odds value.",
+    "values": "a number from the scheme prediction",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSchemePulseAction",
+  "label": "Scheme pulse action",
+  "summary": "Looks up a scheme pulse action by its key in the game's database.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the pulse action.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSchemeType",
+  "label": "Scheme type",
+  "summary": "Looks up a scheme type by its key in the game's database.",
+  "details": "Vanilla texts mostly call it on a scheme (`scheme.GetSchemeType`) to ask things like whether it is a contract, which picks between two texts.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the scheme type.",
+    "values": "a text key"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetScriptValueBreakdown",
+  "label": "Script value breakdown",
+  "summary": "Shows a breakdown of how a named script value comes out for a character.",
+  "details": "It is a shortcut: the target is turned into a scope and that scope's description of the script value is printed. Vanilla uses it in the cardinals window with the papal priority values of a character.",
+  "fields": [
+   {
+    "name": "Target",
+    "text": "The character the value is worked out for; it becomes the root.",
+    "values": "a character",
+    "required": true
+   },
+   {
+    "name": "ScriptValueName",
+    "text": "The name of the script value.",
+    "values": "a text key such as 'pam_papal_pious_priority_value'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetScriptedCharacterByHistoryID",
+  "label": "Scripted character by history ID",
+  "summary": "Gives the character with the given history ID, a character defined in the game's history files.",
+  "details": "Vanilla texts use it to print the name of such a character in decisions and game rules.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The history ID of the character.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetScriptedGui",
+  "label": "Scripted GUI",
+  "summary": "Gives the scripted GUI (a GUI behavior defined in script) with the given name.",
+  "details": "Vanilla GUI files use it as the data of a window part, or call things like `IsShown` on it to decide whether something is visible for a character.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The name of the scripted GUI.",
+    "values": "a text key such as 'rename_character_after_birth'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetScriptedRelation",
+  "label": "Scripted relation",
+  "summary": "Looks up a scripted relation by its key in the game's database.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the scripted relation.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetScriptedRelationTooltip",
+  "label": "Scripted relation tooltip",
+  "summary": "The tooltip text of a scripted relation between an owner and a target character.",
+  "details": "It joins two parts with a blank line: the relation's description, then the reason it holds between the two. Vanilla uses it in the character window and on portraits.",
+  "fields": [
+   {
+    "name": "Relation",
+    "text": "The scripted relation.",
+    "values": "a scripted relation",
+    "required": true
+   },
+   {
+    "name": "Owner",
+    "text": "The owner of the relation, the first character of the pair.",
+    "values": "a character",
+    "required": true
+   },
+   {
+    "name": "Target",
+    "text": "The other character of the pair.",
+    "values": "a character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSecretType",
+  "label": "Secret type",
+  "summary": "Looks up a secret type by its key.",
+  "details": "Vanilla texts use it to print the secret's name, for example in crime confession texts about murder.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the secret type.",
+    "values": "a text key such as 'secret_murder'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSegmentedProgressChanceBar",
+  "label": "Segmented chance bar",
+  "summary": "Builds the data for a progress bar split into segments that also shows a chance.",
+  "details": "Going by its name. Vanilla uses it as the data of bars in the HUD and the inspirations window, with defines for the maximum progress and the number of frames, and a scheme example in a shared GUI file. It takes four arguments; the game does not name them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSegmentedProgressTargetBar",
+  "label": "Segmented target bar",
+  "summary": "Builds the data for a progress bar split into segments that marks a target.",
+  "details": "Going by its name. Vanilla uses it as the data of bars in the holy site windows and the Christian church window. In the lines shown the first argument is a maximum or threshold. It takes three arguments; the game does not name them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetServerInfo",
+  "label": "Server info",
+  "summary": "The information about the multiplayer server of the current session.",
+  "details": "Vanilla uses it on the lobby view to get the server's name and whether it is an invite.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSituation",
+  "label": "Situation",
+  "summary": "Looks up a situation by its key, for example 'dynastic_cycle'.",
+  "details": "Vanilla texts use the result to ask for its participant groups.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the situation.",
+    "values": "a text key such as 'dynastic_cycle'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSituationCatalystType",
+  "label": "Situation catalyst type",
+  "summary": "Looks up a situation catalyst type by its key in the game's database.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the catalyst type.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSituationGroupType",
+  "label": "Situation group type",
+  "summary": "Looks up a situation group type by its key in the game's database.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the group type.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSituationOfType",
+  "label": "Situation of type",
+  "summary": "Gives the situation of a given situation type.",
+  "details": "Vanilla uses it in the dynastic cycle and natural disaster windows, passing the type of the window's situation.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The situation type.",
+    "values": "for example SituationType.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSituationType",
+  "label": "Situation type",
+  "summary": "Looks up a situation type by its key in the game's database.",
+  "details": "Vanilla texts use the result to reach the situation's phases, for example the phases of the dynastic cycle.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the situation type.",
+    "values": "a text key such as 'dynastic_cycle'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSmartBrushInterpolationNames",
+  "label": "Smart brush interpolation names",
+  "summary": "Gives the names of the interpolation modes of the map editor's smart material painter.",
+  "details": "The game's texts and GUI files do not use it. The game describes it as part of the map editor's smart material painter.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSmartBrushPatternNames",
+  "label": "Smart brush pattern names",
+  "summary": "Gives the names of the patterns of the map editor's smart material painter.",
+  "details": "The game's texts and GUI files do not use it. The game describes it as part of the map editor's smart material painter.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSpiritualFulfillmentType",
+  "label": "Spiritual fulfillment type",
+  "summary": "Looks up a spiritual fulfillment type by its key in the game's database.",
+  "details": "Vanilla uses the character form (`Character.GetSpiritualFulfillmentType`) as the data of a HUD part, not this key lookup.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the fulfillment type.",
+    "values": "a text key"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetStaticModifier",
+  "label": "Static modifier",
+  "summary": "Looks up a static modifier by its key in the game's database.",
+  "details": "Vanilla GUI files use the form on a modifier item or scheme modifier to get its static modifier and print its name.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the static modifier.",
+    "values": "a text key"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetStringSettingText",
+  "label": "String setting text",
+  "summary": "The text of a string setting from the game's settings.",
+  "details": "Vanilla uses it in the settings window, passing the setting being shown.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The setting.",
+    "values": "for example PdxSetting.GetSetting",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetString_CPdxFloatRect",
+  "label": "Rectangle (decimal) as text",
+  "summary": "Turns a rectangle of decimal numbers into text.",
+  "details": "Going by its name and return type. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The rectangle.",
+    "values": "a decimal rectangle",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetString_CPdxIntRect",
+  "label": "Rectangle (whole) as text",
+  "summary": "Turns a rectangle of whole numbers into text.",
+  "details": "Going by its name and return type. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The rectangle.",
+    "values": "a whole-number rectangle",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetString_CUTF8String",
+  "label": "Text as string",
+  "summary": "Turns a piece of text into a plain string.",
+  "details": "Vanilla uses it in the event window's animation tool, wrapping the selected text of a property search list before it is copied or shown.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The text.",
+    "values": "for example ToolPropertySearchList.GetSelectedText",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetString_CVector2f",
+  "label": "2-value vector as text",
+  "summary": "Turns a vector of two decimal numbers into text.",
+  "details": "Going by its name and return type. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a two-part decimal vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetString_CVector2i",
+  "label": "2-value int vector as text",
+  "summary": "Turns a vector of two whole numbers into text.",
+  "details": "Going by its name and return type. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a two-part whole-number vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetString_CVector3f",
+  "label": "3-value vector as text",
+  "summary": "Turns a vector of three decimal numbers into text.",
+  "details": "Going by its name and return type. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a three-part decimal vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetString_CVector3i",
+  "label": "3-value int vector as text",
+  "summary": "Turns a vector of three whole numbers into text.",
+  "details": "Going by its name and return type. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a three-part whole-number vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetString_CVector4f",
+  "label": "4-value vector as text",
+  "summary": "Turns a vector of four decimal numbers into text.",
+  "details": "Going by its name and return type. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a four-part decimal vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetString_CVector4i",
+  "label": "4-value int vector as text",
+  "summary": "Turns a vector of four whole numbers into text.",
+  "details": "Going by its name and return type. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a four-part whole-number vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetStruggle",
+  "label": "Struggle",
+  "summary": "Looks up a struggle by its key.",
+  "details": "Vanilla texts use the result to print the struggle's name, for example 'persian_struggle' or 'iberian_struggle', in oath decisions.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the struggle.",
+    "values": "a text key such as 'iberian_struggle'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetStrugglePhase",
+  "label": "Struggle phase",
+  "summary": "Looks up a struggle phase by its key in the game's database.",
+  "details": "Vanilla GUI files use the form on a catalyst history entry (`CatalystHistory.GetStrugglePhase`) to compare it with the struggle's current leading phase.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the phase.",
+    "values": "a text key"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetStruggleType",
+  "label": "Struggle type",
+  "summary": "Looks up a struggle type by its key in the game's database.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the struggle type.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSubjectContractGroup",
+  "label": "Subject contract group",
+  "summary": "Looks up a subject contract group by its key.",
+  "details": "Vanilla texts use it to print the group's name in war results, with keys like 'tributary_mandala', as in 'X becomes your ...'.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the contract group.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSubjectContractType",
+  "label": "Subject contract type",
+  "summary": "Looks up a subject contract type by its key in the game's database.",
+  "details": "Vanilla texts use it with a key such as 'special_contract' and then call `GetObligationName` on it to print the name of an obligation, in the vassal contract descriptions.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the contract type.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetSuggestionType",
+  "label": "Suggestion type",
+  "summary": "Looks up a suggestion type by its key in the game's database.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the suggestion type.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTargetCharacterPtV",
+  "label": "Character's progress to victory",
+  "summary": "The target character's PTV (progress to victory) value.",
+  "details": "It is a shortcut for reading that character's saved variable `progress_to_victory`.",
+  "fields": [
+   {
+    "name": "Target",
+    "text": "The character.",
+    "values": "a character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTaskContractType",
+  "label": "Task contract type",
+  "summary": "Looks up a task contract type by its key.",
+  "details": "Vanilla texts call `GetName` on it to print a task contract's name, for example in hints about actions and in war messages.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the task contract type.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTaxSlotObligation",
+  "label": "Tax slot obligation",
+  "summary": "Looks up a tax slot obligation by its key in the game's database.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the obligation.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTaxSlotType",
+  "label": "Tax slot type",
+  "summary": "Looks up a tax slot type by its key in the game's database.",
+  "details": "Vanilla texts use the form on a tax slot (`TaxSlot.GetTaxSlotType`) to print things like the tax collector aptitude.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the tax slot type.",
+    "values": "a text key"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTenetType",
+  "label": "Tenet type",
+  "summary": "Looks up a tenet (a faith's belief) by its key.",
+  "details": "Vanilla texts use it to print a tenet's name, for example 'tenet_confession'. They call `GetName` on it and often give a rite as its argument.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the tenet.",
+    "values": "a text key such as 'tenet_confession'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTerrain",
+  "label": "Terrain",
+  "summary": "Looks up a terrain type by its key.",
+  "details": "Vanilla texts use the result to print the terrain's name, for example in building requirements and memory texts.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the terrain.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTicksSinceLastProgress",
+  "label": "Ticks since last progress",
+  "summary": "The number of game ticks since an activity last made progress, going by its name.",
+  "details": "Vanilla uses it as a value in the activity window, with the activity's ID and the number of days per week. It returns a whole number.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The activity; vanilla passes its ID.",
+    "values": "for example Activity.GetID",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "Not named by the game; vanilla passes the days per week.",
+    "values": "for example DaysPerWeek",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTimeAnyoneUnpause",
+  "label": "Time until anyone can unpause",
+  "summary": "The seconds left before everyone, not only the one who paused, may unpause the game.",
+  "details": "Vanilla uses it in the multiplayer pause message: 'Only I can unpause the game for N more seconds'.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTimeBetweenDates",
+  "label": "Time between dates",
+  "summary": "A text that tells how much time lies between two dates, in days or months.",
+  "details": "Vanilla uses it in activity event texts and in the activity list window.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The first date.",
+    "values": "a date",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The second date.",
+    "values": "a date",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTimeDifferenceWithDays",
+  "label": "Time from days",
+  "summary": "A text that tells a number of days into the future, in days or months.",
+  "details": "Vanilla uses it in texts about waiting times, such as 'can only send a gift once every 5 years' and the wait before adopting another court language.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The number of days.",
+    "values": "a number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTitleByKey",
+  "label": "Title by key",
+  "summary": "Gives the title with the given key.",
+  "details": "Vanilla texts use it to print a title's name, for example 'd_cumbria' in a decision text.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the title.",
+    "values": "a text key such as 'd_cumbria'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetToggleCompanionAICommand",
+  "label": "Toggle companion AI command",
+  "summary": "The game command that switches the AI control of companions on or off.",
+  "details": "Going by its name and its use: vanilla passes it to `PostCommand` from a button in the military window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTotalDaysInMonth",
+  "label": "Days in month",
+  "summary": "The number of days in a given month.",
+  "details": "Give 1 for January, 2 for February and so on. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The month number.",
+    "values": "1 to 12",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTournamentPrizeCategory",
+  "label": "Tournament prize category",
+  "summary": "The option category of the tournament prizes.",
+  "details": "It is a shortcut for the 'tournament_option_prizes' category of the tournament activity type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTournamentPrizeLevel",
+  "label": "Tournament prize level",
+  "summary": "The prize level chosen for the tournament.",
+  "details": "It is a shortcut for the option the activity has active in the prize category. Vanilla uses it to pick texts about the likely rewards of a contest and as a frame number in tournament GUI widgets.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTrait",
+  "label": "Trait",
+  "summary": "Looks up a trait by its key.",
+  "details": "Vanilla texts use it very often to print a trait's name, for example in achievement descriptions.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the trait.",
+    "values": "a text key such as 'tourney_participant'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTraitForIndex",
+  "label": "Trait by index",
+  "summary": "Gives the trait at a given position in the list of traits.",
+  "details": "Going by its name and its single use in the multiplayer lobby, which passes a whole number.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The position in the list.",
+    "values": "a whole number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTraitGroup",
+  "label": "Trait group",
+  "summary": "Looks up a trait group by its key.",
+  "details": "Vanilla uses it in the ledger to find which trait a character has from a group, for example 'education_stewardship'.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the trait group.",
+    "values": "a text key such as 'education_martial'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTraits",
+  "label": "Traits",
+  "summary": "The list of traits of the thing it is used on.",
+  "details": "Vanilla uses it as the list shown for an accolade or for a character in guest and tax collector lists.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTraitsWithFlag",
+  "label": "Traits with flag",
+  "summary": "The list of traits that carry a given flag.",
+  "details": "Going by its name only. The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The flag.",
+    "values": "a text key"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTraitsWithoutFlag",
+  "label": "Traits without flag",
+  "summary": "The list of traits that do not carry a given flag.",
+  "details": "Going by its name only. The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The flag.",
+    "values": "a text key"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTravelOption",
+  "label": "Travel option",
+  "summary": "Looks up a travel option by its key.",
+  "details": "Vanilla texts use it to print the option's name in building descriptions, for example 'fancy_mounts_option'.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the travel option.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTravelPointOfInterestType",
+  "label": "Travel point of interest type",
+  "summary": "Looks up a travel point of interest type by its key in the game's database.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the type.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTriggeredLegendSeed",
+  "label": "Triggered legend seed",
+  "summary": "Looks up a triggered legend seed by its key in the game's database.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the legend seed.",
+    "values": "a text key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetTutorial",
+  "label": "Tutorial",
+  "summary": "Gives access to the game's tutorial.",
+  "details": "It is a promote: it turns the global context into the tutorial object. The game's texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetVarTimeRemaining",
+  "label": "Variable time remaining",
+  "summary": "The time left until a saved timed variable runs out.",
+  "details": "Going by its name and vanilla's use: texts use it with a date in cooldown messages, such as 'this task cannot be initiated until ...'. It returns a whole number.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The scope that holds the variable.",
+    "values": "a scope"
+   },
+   {
+    "name": "Arg1",
+    "text": "The name of the variable.",
+    "values": "a text key"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetVariableSystem",
+  "label": "Variable system",
+  "summary": "Gives the global variable system of the GUI.",
+  "details": "Vanilla GUI files use it as the data of windows, for example the interaction confirmation window. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetVassalStance",
+  "label": "Vassal stance",
+  "summary": "Looks up a vassal stance by its key.",
+  "details": "Vanilla texts use the key form with 'glory_hound' and the form on a character (`Character.GetVassalStance`) to print the stance's icon and name.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the vassal stance.",
+    "values": "a text key"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetViewHistoryTooltip",
+  "label": "View history tooltip",
+  "summary": "The tooltip text of the 'view history' button.",
+  "details": "Going by its name; vanilla uses it as the tooltip in the character and confederation windows.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetW_CVector4f",
+  "label": "Fourth part of a 4-value vector",
+  "summary": "The fourth (w) number of a vector of four decimal numbers.",
+  "details": "Going by its name. It returns a decimal number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a four-part decimal vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetW_CVector4i",
+  "label": "Fourth of 4 whole numbers",
+  "summary": "The fourth (w) number of a vector of four whole numbers.",
+  "details": "Going by its name. It returns a whole number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a four-part whole-number vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetWitContestTypeAptitude",
+  "label": "Wit contest aptitude",
+  "summary": "How good the character is at the wit contest, as a script value.",
+  "details": "It is a shortcut for the contest aptitude 'contest_type_aptitude_wit' of the character the GUI is about. Vanilla uses it in the tournament widgets.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GetX_CVector2f",
+  "label": "First part of a 2-value vector",
+  "summary": "The first (x) number of a vector of two decimal numbers.",
+  "details": "Going by its name. It returns a decimal number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a two-part decimal vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetX_CVector2i",
+  "label": "First of 2 whole numbers",
+  "summary": "The first (x) number of a vector of two whole numbers.",
+  "details": "Going by its name. It returns a whole number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a two-part whole-number vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetX_CVector3f",
+  "label": "First part of a 3-value vector",
+  "summary": "The first (x) number of a vector of three decimal numbers.",
+  "details": "Going by its name. It returns a decimal number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a three-part decimal vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetX_CVector3i",
+  "label": "First of 3 whole numbers",
+  "summary": "The first (x) number of a vector of three whole numbers.",
+  "details": "Going by its name. It returns a whole number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a three-part whole-number vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetX_CVector4f",
+  "label": "First part of a 4-value vector",
+  "summary": "The first (x) number of a vector of four decimal numbers.",
+  "details": "Going by its name. It returns a decimal number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a four-part decimal vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetX_CVector4i",
+  "label": "First of 4 whole numbers",
+  "summary": "The first (x) number of a vector of four whole numbers.",
+  "details": "Going by its name. It returns a whole number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a four-part whole-number vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetY_CVector2f",
+  "label": "Second part of a 2-value vector",
+  "summary": "The second (y) number of a vector of two decimal numbers.",
+  "details": "Going by its name. It returns a decimal number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a two-part decimal vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetY_CVector2i",
+  "label": "Second of 2 whole numbers",
+  "summary": "The second (y) number of a vector of two whole numbers.",
+  "details": "Going by its name. It returns a whole number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a two-part whole-number vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetY_CVector3f",
+  "label": "Second part of a 3-value vector",
+  "summary": "The second (y) number of a vector of three decimal numbers.",
+  "details": "Going by its name. It returns a decimal number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a three-part decimal vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetY_CVector3i",
+  "label": "Second of 3 whole numbers",
+  "summary": "The second (y) number of a vector of three whole numbers.",
+  "details": "Going by its name. It returns a whole number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a three-part whole-number vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetY_CVector4f",
+  "label": "Second part of a 4-value vector",
+  "summary": "The second (y) number of a vector of four decimal numbers.",
+  "details": "Going by its name. It returns a decimal number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a four-part decimal vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetY_CVector4i",
+  "label": "Second of 4 whole numbers",
+  "summary": "The second (y) number of a vector of four whole numbers.",
+  "details": "Going by its name. It returns a whole number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a four-part whole-number vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetZ_CVector3f",
+  "label": "Third part of a 3-value vector",
+  "summary": "The third (z) number of a vector of three decimal numbers.",
+  "details": "Going by its name. It returns a decimal number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a three-part decimal vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetZ_CVector3i",
+  "label": "Third of 3 whole numbers",
+  "summary": "The third (z) number of a vector of three whole numbers.",
+  "details": "Going by its name. It returns a whole number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a three-part whole-number vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetZ_CVector4f",
+  "label": "Third part of a 4-value vector",
+  "summary": "The third (z) number of a vector of four decimal numbers.",
+  "details": "Going by its name. It returns a decimal number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a four-part decimal vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetZ_CVector4i",
+  "label": "Third of 4 whole numbers",
+  "summary": "The third (z) number of a vector of four whole numbers.",
+  "details": "Going by its name. It returns a whole number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a four-part whole-number vector",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GetZoomLevel",
+  "label": "Zoom level",
+  "summary": "A game function that returns a whole number, most likely the current zoom level.",
+  "details": "Going by its name only. The game's texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Get_CVector2f",
+  "label": "Part of a 2-value vector",
+  "summary": "Reads one number, by position, from a vector of two decimal numbers.",
+  "details": "Going by its name and its two arguments (the vector and the position). It returns a decimal number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a two-part decimal vector",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The position to read.",
+    "values": "a whole number"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Get_CVector2i",
+  "label": "Part of a 2-value int vector",
+  "summary": "Reads one number, by position, from a vector of two whole numbers.",
+  "details": "Going by its name and its two arguments (the vector and the position). It returns a whole number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a two-part whole-number vector",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The position to read.",
+    "values": "a whole number"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Get_CVector3f",
+  "label": "Part of a 3-value vector",
+  "summary": "Reads one number, by position, from a vector of three decimal numbers.",
+  "details": "Going by its name and its two arguments (the vector and the position). It returns a decimal number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a three-part decimal vector",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The position to read.",
+    "values": "a whole number"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Get_CVector3i",
+  "label": "Part of a 3-value int vector",
+  "summary": "Reads one number, by position, from a vector of three whole numbers.",
+  "details": "Going by its name and its two arguments (the vector and the position). It returns a whole number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a three-part whole-number vector",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The position to read.",
+    "values": "a whole number"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Get_CVector4f",
+  "label": "Part of a 4-value vector",
+  "summary": "Reads one number, by position, from a vector of four decimal numbers.",
+  "details": "Going by its name and its two arguments (the vector and the position). It returns a decimal number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a four-part decimal vector",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The position to read.",
+    "values": "a whole number"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Get_CVector4i",
+  "label": "Part of a 4-value int vector",
+  "summary": "Reads one number, by position, from a vector of four whole numbers.",
+  "details": "Going by its name and its two arguments (the vector and the position). It returns a whole number. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The vector.",
+    "values": "a four-part whole-number vector",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The position to read.",
+    "values": "a whole number"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GfxGetSkins",
+  "label": "Graphics skins",
+  "summary": "Gives all the available graphics skins.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GfxSetActiveSkin",
+  "label": "Set graphics skin",
+  "summary": "Makes the given graphics skin the active one.",
+  "details": "It returns nothing. The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The skin to activate.",
+    "values": "a skin name",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GfxSkinIsActive",
+  "label": "Is graphics skin active",
+  "summary": "Whether the given graphics skin is the active one.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The skin to test.",
+    "values": "a skin name",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Glossary",
+  "label": "Glossary",
+  "summary": "A text function with two arguments, used all over the game's concept descriptions.",
+  "details": "Vanilla uses it very often in the texts of game concepts, for example in the barter goods and casus belli descriptions. What it prints is not documented; it is probably a glossary entry for the given key.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Not named by the game; vanilla passes a word, like 'rattan'.",
+    "values": "a text"
+   },
+   {
+    "name": "Arg1",
+    "text": "Not named by the game; vanilla passes an uppercase key, like 'RATTAN_GLOSS'.",
+    "values": "a text"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "GoToFrontend",
+  "label": "Go to start menu",
+  "summary": "Goes back to the game's start menu from the multiplayer interface.",
+  "details": "It returns nothing. The game's texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GreaterThanOrEqualTo_CFixedPoint",
+  "label": "At least (decimal)",
+  "summary": "Whether the first fixed-point number is greater than or equal to the second.",
+  "details": "Vanilla uses it inside texts, often as the check of a text choice, for example for progress to victory in the tournament and for hegemon stability.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The number to test.",
+    "values": "a fixed-point number",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The number to compare with.",
+    "values": "a fixed-point number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GreaterThanOrEqualTo_float",
+  "label": "At least (float)",
+  "summary": "Whether the first decimal number is greater than or equal to the second.",
+  "details": "Vanilla uses it to show something only from a value on, for example when a great holy war's strength progress reaches 50. Write the second number as '(float)50'.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The number to test.",
+    "values": "a decimal number",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The number to compare with.",
+    "values": "a decimal number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GreaterThanOrEqualTo_int32",
+  "label": "At least (whole number)",
+  "summary": "Whether the first whole number is greater than or equal to the second.",
+  "details": "Vanilla uses it as the check of a text choice, for example in faith and rite creation texts.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The number to test.",
+    "values": "a whole number",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The number to compare with.",
+    "values": "a whole number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GreaterThanOrEqualTo_uint32",
+  "label": "At least (unsigned whole number)",
+  "summary": "Whether the first non-negative whole number is greater than or equal to the second.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The number to test.",
+    "values": "a non-negative whole number",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The number to compare with.",
+    "values": "a non-negative whole number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GreaterThanZero",
+  "label": "Greater than zero",
+  "summary": "Whether a whole number is above zero.",
+  "details": "It is a shortcut for comparing the value with 0.",
+  "fields": [
+   {
+    "name": "Value",
+    "text": "The number to test.",
+    "values": "a whole number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GreaterThanZero_CFixedPoint",
+  "label": "Greater than zero (decimal)",
+  "summary": "Whether a fixed-point number is above zero.",
+  "details": "It is a shortcut for comparing the value with 0.",
+  "fields": [
+   {
+    "name": "Value",
+    "text": "The number to test.",
+    "values": "a fixed-point number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GreaterThan_CFixedPoint",
+  "label": "Greater than (decimal)",
+  "summary": "Whether the first fixed-point number is strictly greater than the second.",
+  "details": "Vanilla uses it in texts, for example for vassal contract obligation levels and oath conditions.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The number to test.",
+    "values": "a fixed-point number",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The number to compare with.",
+    "values": "a fixed-point number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GreaterThan_float",
+  "label": "Greater than (float)",
+  "summary": "Whether the first decimal number is strictly greater than the second.",
+  "details": "Vanilla uses it to show things when a siege's progress passes a value like 50 or 60. Write the second number as '(float)60'.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The number to test.",
+    "values": "a decimal number",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The number to compare with.",
+    "values": "a decimal number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GreaterThan_int32",
+  "label": "Greater than (whole number)",
+  "summary": "Whether the first whole number is strictly greater than the second.",
+  "details": "Vanilla uses it often in texts, for example for legitimacy and merit level checks.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The number to test.",
+    "values": "a whole number",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The number to compare with.",
+    "values": "a whole number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GreaterThan_uint32",
+  "label": "Greater than (unsigned whole number)",
+  "summary": "Whether the first non-negative whole number is strictly greater than the second.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The number to test.",
+    "values": "a non-negative whole number",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The number to compare with.",
+    "values": "a non-negative whole number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GuiEditor",
+  "label": "GUI editor",
+  "summary": "Gives access to the game's GUI editor.",
+  "details": "It is a promote: it turns the global context into the GUI editor object.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "GuiScope",
+  "label": "GUI scope",
+  "summary": "Gives the top scope of the scripted GUI system, to build a scope from in the interface.",
+  "details": "Vanilla GUI lines in this list build scopes from it with `SetRoot` and `AddScope` before asking a scripted GUI or script value something.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HISTORY_ENTRY",
+  "label": "History entry",
+  "summary": "The history entry the text is about, for example in an artifact's history.",
+  "details": "It is a promote: it turns the context into a history entry. Vanilla uses it in the artifact history text 'Created by ...'.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HOLDING",
+  "label": "Holding",
+  "summary": "A holding, as a game object; the game documents nothing more.",
+  "details": "It is a promote: it turns the context into a holding. The one text that contains the word, a warning about a holding under construction, writes it as a text variable (`$HOLDING|V$`), so it may not be this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "HOLDING_TYPE",
+  "label": "Holding type",
+  "summary": "The kind of holding (the central settlement of a barony or county capital) a game text is about.",
+  "details": "Vanilla uses it for the holding being built and for which holdings a government can hold. In the text about a holding changing, it is the old type and TARGET_HOLDING_TYPE the new one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HOLY_ORDER",
+  "label": "Holy order",
+  "summary": "The holy order a game text is about.",
+  "details": "Vanilla's effect texts use it as the holy order a title is leased out to.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HOLY_SITE",
+  "label": "Holy site",
+  "summary": "The holy site a game text is about.",
+  "details": "Vanilla uses it as the holy site that becomes the owner of an artifact, for example when the artifact is enshrined there.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HOLY_SITE_TYPE",
+  "label": "Holy site type",
+  "summary": "The holy site type the text is about.",
+  "details": "It is a promote: it turns the context into a holy site type. The game's texts do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "HOOK",
+  "label": "Hook",
+  "summary": "The hook (a relationship where one character can get another to do their will) a game text is about.",
+  "details": "Vanilla's messages use it to name the kind of hook gained, or the one an old hook was replaced with.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:480"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HOUSE_ASPIRATION_TYPE",
+  "label": "House aspiration",
+  "summary": "The house aspiration the text is about.",
+  "details": "It is a promote: it turns the context into a house aspiration. The game's texts do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "HOUSE_RELATION",
+  "label": "House relation",
+  "summary": "The relation between two houses that a game text is about.",
+  "details": "Vanilla uses it for the relation's name and the description of its current level, for example in its tooltip and in the message that relations were set up.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HOUSE_RELATION_LEVEL",
+  "label": "House relation level",
+  "summary": "The house relation level a game text is about, such as the level a relation moves to.",
+  "details": "Vanilla's house relation effect texts name it as the new or starting level of the relation.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HOUSE_RELATION_TYPE",
+  "label": "House relation type",
+  "summary": "The house relation type the text is about.",
+  "details": "It is a promote: it turns the context into a house relation type. The game's texts do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "HasAccessToMinistry",
+  "label": "Has access to ministry",
+  "summary": "Whether a character has access to the ministry, judged by a scripted GUI check.",
+  "details": "It runs the scripted GUI 'tgp_has_access_to_ministry_trigger_gui' with the character as its owner. Vanilla uses it to show or hide parts of the council window. The game's own description ('failed the Children examination') does not match the name or the macro.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The character to check.",
+    "values": "a character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "HasCharacterInteractionCategory",
+  "label": "Has interaction category",
+  "summary": "Whether a character interaction category exists or applies; the game documents nothing more.",
+  "details": "Going by its name, it checks for a character interaction category. It returns yes or no. The game's texts do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The category.",
+    "values": "a text key"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "HasDifferentChecksumThanCompiled",
+  "label": "Checksum differs from compiled",
+  "summary": "Whether the game's checksum differs from the one it was compiled with.",
+  "details": "Going by its name only; it returns yes or no. The game's texts do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "HasDlcFeature",
+  "label": "Has DLC feature",
+  "summary": "Whether the DLC feature with the given name is available in the game.",
+  "details": "Vanilla uses it to pick between two texts, for example a building description that changes if the 'tours_and_tournaments' feature is present.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The name of the DLC feature.",
+    "values": "a text key such as 'tours_and_tournaments'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HasErrors",
+  "label": "Has errors",
+  "summary": "Whether the GUI part it is used on has errors.",
+  "details": "Going by its name; vanilla uses it as a visibility condition in the shared GUI components file.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ }
+]

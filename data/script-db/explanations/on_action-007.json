@@ -1,0 +1,402 @@
+[
+ {
+  "kind": "on_action",
+  "key": "laamp_base_0021_contract_scheme_on_going_events",
+  "label": "Hobnob contract events",
+  "summary": "Picks one of four random events during the ongoing phase of the Hobnob with local ruler contract.",
+  "details": "Script fires it for a character. It only runs when the scheme in `scope:scheme` is the laamp_base_0021 contract scheme. The four events are equally likely: impress with a personal skill, hang out with influential figures at court, lean on someone important to them, or focus on fleecing them ahead of time. It is one of the choices of laamp_base_contract_scheme_on_going_events.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "laamp_base_0031_contract_scheme_arrival_events",
+  "label": "Mediator arrival events",
+  "summary": "Picks one of ten random challenge events for the Paid Mediator contract; going by its name, it runs when the character arrives.",
+  "details": "Script fires it for a character. All ten events are equally likely, and each one is a challenge that combines three skills: diplomacy and martial plus one of stewardship, intrigue, learning or prowess, or diplomacy with two of stewardship, intrigue, learning and prowess. It has no trigger of its own.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "laamp_base_0041_contract_scheme_on_going_events",
+  "label": "Trickster contract events",
+  "summary": "Picks one of four random events during the ongoing phase of the Confidence trickster contract.",
+  "details": "Script fires it for a character. It only runs when the scheme in `scope:scheme` is the laamp_base_0041 contract scheme. The four events are equally likely: also rob the place, officers help out, try harder to get into their good graces, or agents running side-games. It is one of the choices of laamp_base_contract_scheme_on_going_events.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "laamp_base_4015_contract_arrival_events",
+  "label": "Theology dispute arrival events",
+  "summary": "Runs the event chain for the contract that helps settle theological arguments, using the first event in the list that is allowed to fire.",
+  "details": "Script fires it for a character. The game tries the intro event first, then the re-triggered challenge event, then the conclusion, and fires the first one whose own conditions pass. Only one fires per run.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "laamp_base_contract_scheme_on_going_events",
+  "label": "Contract ongoing events",
+  "summary": "The general pool of ongoing events for contract schemes: a 25 percent chance of picking one contract-specific event group.",
+  "details": "Script fires it for a character. With a 25 percent chance something happens at all. If so, it picks equally between the on actions for regaling the court with stories, hobnobbing with a local ruler, the confidence trickster, and the general agent events (agent_events_on_action).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "learn_commander_trait_failure",
+  "label": "Commander trait lesson failed",
+  "summary": "Picks the event shown when a character fails to learn a commander trait.",
+  "details": "Script fires it for a character. The game tries the event for a teacher who is no longer with you first, and otherwise the second listed event. Only the first one that is allowed to fire runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "learn_commander_trait_offer",
+  "label": "Commander trait lesson offered",
+  "summary": "Picks the event in which another character approaches with an offer to teach a commander trait.",
+  "details": "Script fires it for a character. In vanilla the list holds a single event, so that event is always the one used if its own conditions pass.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "learn_commander_trait_success",
+  "label": "Commander trait lesson succeeded",
+  "summary": "Picks the event shown when a character succeeds in learning a commander trait.",
+  "details": "Script fires it for a character. The game tries the event for a teacher who is no longer with you first, and otherwise the second listed event. Only the first one that is allowed to fire runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "learn_commander_trait_test",
+  "label": "Commander trait final test",
+  "summary": "Picks the event for the final test of learning a commander trait.",
+  "details": "Script fires it for a character. The game tries the event for a teacher who is no longer with you first, and otherwise the second listed event. Only the first one that is allowed to fire runs.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "learn_language_failure",
+  "label": "Learn language failed",
+  "summary": "Fires the outcome event when a learn language scheme fails, and tells the puppeteer about it.",
+  "details": "Script fires it for a character. It fires the single failure event of the learn language outcome set. It also runs vanilla's effect that notifies the puppeteer of a scheme outcome, as a bad-news toast, passing `scope:owner` and `scope:target` to it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "learn_language_ongoing",
+  "label": "Learn language ongoing events",
+  "summary": "Gives the character a chance of a random event; the events are about learning a language, so vanilla uses it for the learn language scheme.",
+  "details": "Script fires it for a character. It only runs for a playable character who is physically able. An AI character has a 75 percent chance of no event (a player has none from this rule), and the pool also holds a no-event entry of weight 500. Most events weigh 2 to 6; picking up language tips while traveling weighs 100, so it is by far the most likely. The events are small incidents: a fast learner, a helper, a sabotaged notebook, an offended listener, a tutor helping, a loss of prestige for reading children's fables, a gain of cultural acceptance, or the travel tips.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "learn_language_success",
+  "label": "Learn language succeeded",
+  "summary": "Fires the outcome event when a learn language scheme succeeds, and tells the puppeteer about it.",
+  "details": "Script fires it for a character. It fires the single success event of the learn language outcome set. It also runs vanilla's effect that notifies the puppeteer of a scheme outcome, as a good-news toast, passing `scope:owner` and `scope:target` to it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "learning_lifestyle_common_events",
+  "label": "Learning common events",
+  "summary": "The pool of common learning lifestyle events, one random pick from scholarship, medicine and theology events.",
+  "details": "Script fires it for a character. The vanilla comment says a character gets a common event roughly once every 24 months, and that most lifestyle events belong here. All events have the same weight. They are small stories such as learning to read, fertility treatment, or flattering the chaplain.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "learning_lifestyle_ongoing_events",
+  "label": "Learning ongoing events",
+  "summary": "The general event pool of the learning lifestyle, which chooses between common, uncommon and rare events.",
+  "details": "Script fires it for a character who is available. There is a 10 percent chance something happens (vanilla says about one event every 18 months). If so, the split is 80 common, 15 uncommon, 5 rare. An AI character gets extra no-event chance: 30 for a king or higher, 70 for a duke, 95 for anyone else, to save performance.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "learning_lifestyle_progress_pulse",
+  "label": "Learning lifestyle pulse",
+  "summary": "The regular pulse that gives a character with the learning lifestyle a chance of a lifestyle event.",
+  "details": "The vanilla comment says it fires 4 times per year. It runs only for a playable character who has the learning lifestyle, has a capital, and is not in the middle of a learning event chain or a recent lifestyle event. A player must also have had the focus for more than 30 days. It then uses the general pool, and the pool for unavailable characters (prisoners, commanders, the infirm) if the first one does not apply. The game's documentation says the root is none, but the triggers act on a character, so it is run for a character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "learning_lifestyle_rare_events",
+  "label": "Learning rare events",
+  "summary": "The pool of rare learning lifestyle events, with the uncommon pool as a fallback.",
+  "details": "Script fires it for a character. The vanilla comment says a character gets one roughly every 30 years, and that character-defining and easter egg events belong here. It holds a scholar visiting the court, a lead-to-gold experiment, an automaton songbird, and two nickname events. If none can fire, the uncommon pool is tried.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "learning_lifestyle_unavailable_events",
+  "label": "Learning events when unavailable",
+  "summary": "The event pool for characters who are not available (imprisoned, commanding an army, infirm), but vanilla leaves it empty.",
+  "details": "Script fires it for a character who is not available. It has a 10 percent chance of firing, but the list of events in vanilla is empty, so nothing happens. A vanilla comment warns that every event added here must set its own availability conditions. The game's documentation lists the root as none.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "learning_lifestyle_uncommon_events",
+  "label": "Learning uncommon events",
+  "summary": "The pool of uncommon learning lifestyle events, with the common pool as a fallback.",
+  "details": "Script fires it for a character. The vanilla comment says a character gets one roughly every 10 years, and that longer chains and lucrative opportunities belong here. Examples are becoming a herbalist, translating a book (player only), studying cadavers, and finding an old text. If none can fire, the common pool is tried.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "legend_changing_events",
+  "label": "Legend changing events",
+  "summary": "Picks a random event that lets the character change or add to their legend.",
+  "details": "Script fires it for a character. Most of the time (90 percent chance of no event) nothing happens, and an event comes after a random delay of 50 to 100 days. The events are questions and tales about how the legend came to be, such as did you really kill that monster, or I punched a bear. Most weigh 100; a few weigh 150 and one weighs 60.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "legend_ongoing_events",
+  "label": "Legend ongoing events",
+  "summary": "Picks a random event about spreading and defending the character's legend.",
+  "details": "Script fires it for a character. Most of the time (90 percent chance of no event) nothing happens, and an event comes after a random delay of 1 to 100 days so they do not all fire on the same day. The pool covers event chains, legend spreading, questions about the tale, and events about getting rulers and vassals to promote the legend. The event legend_spread_events.0070 is listed twice, with weights 50 and 100.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "lover_quarterly_pulse",
+  "label": "Lover yearly check",
+  "summary": "Once a year, passes a character on to the lover status change check.",
+  "details": "Script fires it for a character from the quarterly pulse. It continues only when the pulse's quarter is 1 (`scope:quarter = 1`), so the lover check runs once a year, not every quarter. It then runs lover_status_changes.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "lover_status_changes",
+  "label": "Lover status changes",
+  "summary": "Gives a character with a lover a chance of an event in which the lover breaks up with them.",
+  "details": "Script fires it for a character. It runs only for an available adult who has at least one lover relation. With a 50 percent chance something is picked, and then a no-event entry competes with the breakup event at equal weight. The breakup event is for a lover with a low opinion of the character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "low_control_pulse",
+  "label": "Low control corruption",
+  "summary": "Gives counties with low county control a chance to start a corruption event for their holder.",
+  "details": "It runs for a ruler, though the game's documentation lists the root as none. It only runs if the ruler holds a county whose county control (how firmly the holder controls it) is under the low-control limit and which is not immune to corruption. For each such county there is a random chance (county_control_corruption_gain_chance). If it hits, the county is saved as `scope:county`, its holder as `scope:corruption_holder`, and event realm_maintenance.0003 fires 10 to 40 days later.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "manage_domain_setup",
+  "label": "Spouse councillor task setup",
+  "summary": "Picks which spouse councillor task event group may run, with a chance of nothing.",
+  "details": "Script fires it for a character. The chance that anything happens is set by the vanilla constant @spouse_on_action_setup_chance. An AI character gets extra no-event chance (30 for a king or higher, 70 for a duke, 95 for anyone else) to save performance. The groups are court politics, chivalry, manage domain (the most likely, weight 100), patronage and court intrigue; the others have weight 20.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "manage_domain_task_on_action",
+  "label": "Spouse manage domain events",
+  "summary": "Picks a stewardship event for when the character's spouse is their councillor and manages the domain.",
+  "details": "Script fires it for a character. It runs only if the character has a spouse councillor and that councillor is `scope:councillor`. Weight 300 is given to no event. Eleven events of weight 100 are boons such as cheaper regiments or buildings, gold, prestige, opinion or health bonuses, faster development, a favor hook, or removing a negative county modifier. Five of weight 50 are about investing money, borrowing from a courtier, a trade partner, a favor hook, and a risky business opportunity.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "manage_guards_marshal_task_side_effects",
+  "label": "Marshal guards side effects",
+  "summary": "Gives a tiny chance of a good or bad side effect event; going by its name, it belongs to the marshal's task of managing the guards.",
+  "details": "Script fires it for a character. It runs only if the character has a marshal councillor and has not yet had a marshal task side effect (the variable had_marshal_task_side_effect is missing). There is only a 1 percent chance that anything is picked, and then no event (weight 1000) competes with four events of weight 100 each. The bad effects are a wounded knight and disorganized royal guards. The good ones are an improved knight and a disrupted scheme.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "map_painting_event_selection",
+  "label": "Map painting event choice",
+  "summary": "Picks one of six events for the map painting chain of the stewardship lifestyle.",
+  "details": "Script fires it for a character. All six events are equally likely. Vanilla gives no description of them beyond the chain name.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "map_painting_outcome",
+  "label": "Map painting outcome",
+  "summary": "Picks one of six outcome events for the map painting chain.",
+  "details": "Script fires it for a character. All six events are equally likely. It sits in the stewardship lifestyle file, next to the event choice step; vanilla does not describe the outcomes.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "martial_lifestyle_common_events",
+  "label": "Martial common events",
+  "summary": "The pool of common martial lifestyle events, with groups for strategy, authority, chivalry and learning commander traits.",
+  "details": "Script fires it for a character. The vanilla comment says a character gets a common event roughly once every 24 months. Most events weigh 100. Besides the strategy, authority and chivalry stories, it holds the chain for learning commander traits (the trait events weigh 25, the start of the learning chain 100) and events inspired by historical battles and generals.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "martial_lifestyle_ongoing_events",
+  "label": "Martial ongoing events",
+  "summary": "The general event pool of the martial lifestyle, which chooses between common, uncommon and rare events.",
+  "details": "Script fires it for a character who is available. There is a 10 percent chance something happens (vanilla says about one event every 18 months). If so, the split is 80 common, 15 uncommon, 5 rare. An AI character gets extra no-event chance: 30 for a king or higher, 70 for a duke, 95 for anyone else, to save performance.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "martial_lifestyle_progress_pulse",
+  "label": "Martial lifestyle pulse",
+  "summary": "The regular pulse that gives a character with the martial lifestyle a chance of a lifestyle event.",
+  "details": "The vanilla comment says it fires 4 times per year. It runs only for a playable character who has the martial lifestyle, has a capital, and is not in the middle of a martial event chain or a recent lifestyle event. A player must also have had the focus for more than 30 days. It then uses the general pool, and the pool for unavailable characters (prisoners, commanders, the infirm) if the first one does not apply.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "martial_lifestyle_rare_events",
+  "label": "Martial rare events",
+  "summary": "The pool of rare martial lifestyle events, with the uncommon pool as a fallback.",
+  "details": "Script fires it for a character. The vanilla comment says a character gets one roughly every 30 years. It holds two nickname events, one for an arrogant character and one for a humble one. If none can fire, the uncommon pool is tried.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "martial_lifestyle_unavailable_events",
+  "label": "Martial events when unavailable",
+  "summary": "The event pool for characters who are not available (imprisoned, commanding an army, infirm) with two martial events.",
+  "details": "Script fires it for a character who is not available. There is a 10 percent chance of an event, then a choice between resolving a dispute between soldiers and a strategy meeting with two vassals. A vanilla comment warns that every event added here must set its own availability conditions.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "martial_lifestyle_uncommon_events",
+  "label": "Martial uncommon events",
+  "summary": "The pool of uncommon martial lifestyle events, with the common pool as a fallback.",
+  "details": "Script fires it for a character. The vanilla comment says a character gets one roughly every 10 years. It holds storming your own castle, a march gone awry, mounted warrior practice, and training a warhorse (weight 50). If none can fire, the common pool is tried.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "mentor_student_quarterly_pulse",
+  "label": "Mentor yearly check",
+  "summary": "Once a year, passes a character on to the mentor and student relation check.",
+  "details": "Script fires it for a character from the quarterly pulse. It continues only when the pulse's quarter is 4 (`scope:quarter = 4`), so it runs once a year. It then runs mentor_student_relation_changes.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "mentor_student_relation_changes",
+  "label": "Mentor relation changes",
+  "summary": "Gives a character with an intrigue mentor relation a chance of one of three mentor and student events.",
+  "details": "Script fires it for a character. It runs only for an available adult who has a relation of type intrigue_mentor. With a 50 percent chance something is picked, and then a no-event entry (weight 500) competes with three events of weight 100 each. Vanilla does not describe what the events do.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "migration_events_on_action",
+  "label": "Migration events",
+  "summary": "Gives a migrating character a chance of a travel event, and cleans up travelling hostages, wards and guardians.",
+  "details": "Script fires it for a character who is migrating. First it runs vanilla's invalidation effects for travelling hostages, wards and guardians. Then it picks an event: there is an 80 percent chance of no event (99 percent for an AI), and the pool also has a no-event entry of weight 200, so events are rare. The events are nomad stories such as raiding a settlement, herds that must cross a river, a sick herd, or a courtier who wants to stay behind.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "mpo_de_jure_shift",
+  "label": "Nomad de jure shift",
+  "summary": "Runs the de jure shifting effect for a nomadic ruler who holds a kingdom or empire title; going by that effect's name, it shifts de jure borders.",
+  "details": "It runs for a ruler with a nomadic government who holds at least a kingdom title. The effect depends on the ruler's highest title tier: for an empire it runs the de jure shifting effect between empire and kingdom, for a kingdom between kingdom and duchy. Vanilla has the hegemony case commented out for now. What the shifting effect itself does is not shown in the input. The game's documentation lists the root as none.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "mpo_generic_nomadic_region_yearly_pulse",
+  "label": "Nomadic region yearly pulse",
+  "summary": "Spreads the yearly Great Steppe pulse over the year by scheduling it for each participant of the nomad capital groups.",
+  "details": "For every participant group of type nomad_rulers_capital, and every participant in it, the game schedules the on action mpo_the_great_steppe_yearly_pulse_random to run after a random 1 to 250 days. This keeps all participants from running at once. The game's documentation lists the root as none.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "mpo_migration_contract",
+  "label": "Migration contract events",
+  "summary": "Gives a recently migrated nomad ruler with a county under 90 county control a random contract event.",
+  "details": "Script fires it for a character. It runs only for a landed ruler with the Mpo DLC, a nomadic government, the variable recently_migrated, and at least one held county that is not landless-type, has a province, and has county control below 90. One of ten contract events is picked; they are equally likely except one with weight 20.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

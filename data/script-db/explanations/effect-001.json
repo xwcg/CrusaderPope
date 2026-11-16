@@ -1,0 +1,434 @@
+[
+ {
+  "kind": "effect", "key": "abort_travel_plan",
+  "label": "Abort the journey",
+  "summary": "Stops a travel plan at once.",
+  "details": "No further travelling happens. The game then runs the on_action `on_travel_plan_abort`. Runs on a travel plan, and vanilla only ever writes `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "accept_activity_invite",
+  "label": "Accept activity invite",
+  "summary": "Makes the character accept an invitation to the given activity.",
+  "details": "The character uses their default travel plan for it. Runs on a character; the value is the activity.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "accept_activity_invite_without_travel",
+  "label": "Accept invite, no travel",
+  "summary": "Makes the character accept an invitation to the given activity without giving them a travel plan.",
+  "details": "The character must already be at the activity's location, otherwise they are kicked out of the activity. Runs on a character; the value is the activity.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "accept_task_contract",
+  "label": "Accept task contract",
+  "summary": "Going by its name, makes the character accept the given task contract; the game documents nothing more.",
+  "details": "The game's documentation gives only the syntax, so the exact consequences are not stated. Vanilla passes a saved task contract, for example `scope:contract`. Runs on a character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "activate_struggle_catalyst",
+  "label": "Activate a catalyst",
+  "summary": "Activates a catalyst of a struggle.",
+  "details": "Runs on a struggle. The short form is just the catalyst name. The long form can also name a character; vanilla mostly uses the long form.",
+  "fields": [
+   { "name": "catalyst", "text": "Which catalyst to activate.", "values": "a struggle catalyst key", "required": true },
+   { "name": "character", "text": "A character tied to the catalyst (the app asks \"Caused by whom?\"). Vanilla passes actors such as `root`, `scope:attacker` or `scope:defender`.", "values": "a character, for example `root` or a saved scope", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_activity_log_entry",
+  "label": "Add a log entry",
+  "summary": "Adds an entry to the log of an activity.",
+  "details": "Runs on an activity. Vanilla always gives a text key and a character. The score is a script value; vanilla uses values such as 5, 10, 25, 50 and 100. If the location is left out, the activity's current location is used. If `show_in_conclusion` is left out, it is `no`.",
+  "fields": [
+   { "name": "key", "text": "The localization key of the entry's text.", "values": "a localization key", "required": true },
+   { "name": "character", "text": "The character the entry is about.", "values": "a character", "required": true },
+   { "name": "score", "text": "The points the entry is worth.", "values": "a number or a script value" },
+   { "name": "tags", "text": "Labels attached to the entry; vanilla uses words like `good`, `bad` and `contest`.", "values": "a list of words in braces", "required": false },
+   { "name": "show_in_conclusion", "text": "Whether the entry is shown in the activity's conclusion.", "values": "yes or no", "required": false, "default": "no" },
+   { "name": "target", "text": "A second character the entry involves.", "values": "a character", "required": false },
+   { "name": "location", "text": "The province the entry is tied to.", "values": "a province", "required": false, "default": "the activity's current location" },
+   { "name": "artifact", "text": "An artifact the entry involves.", "values": "an artifact", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_agent_slot",
+  "label": "Agent slot",
+  "summary": "Adds an agent slot of the given type to a scheme.",
+  "details": "Runs on a scheme. The value is the agent type, for example `agent_footpad` or `agent_muscle` in vanilla.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_amenity_level",
+  "label": "Amenity level",
+  "summary": "Raises one amenity type of a character by the given value.",
+  "details": "Runs on a character. Vanilla uses it with `court_fashion` and `court_food_quality` and a value of 1; the documented example uses `food`.",
+  "fields": [
+   { "name": "type", "text": "Which amenity to raise.", "values": "an amenity type, for example `court_fashion`", "required": true },
+   { "name": "value", "text": "How much to add.", "values": "a number", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_animate_domicile_building",
+  "label": "Domicile building (animated)",
+  "summary": "Adds a building to a domicile without cost or construction time.",
+  "details": "Runs on a domicile (vanilla keys point to things like yurts and estates). The value is the domicile building key. The sibling `add_domicile_building` is documented as adding without a building animation, so this one is the variant for use with the animation.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_artifact_history",
+  "label": "Artifact history entry",
+  "summary": "Adds an entry to an artifact's history, such as it being given, inherited or stolen.",
+  "details": "Runs on an artifact. Vanilla uses the types `given`, `inherited`, `stolen`, `conquest` and `created`. A date is written like `624.3.13`.",
+  "fields": [
+   { "name": "type", "text": "What kind of event happened.", "values": "a history entry type, for example `given` or `inherited`", "required": true },
+   { "name": "date", "text": "When the event took place.", "values": "a date", "required": false },
+   { "name": "actor", "text": "Who did it, for example who created or gave the artifact.", "values": "a character", "required": false },
+   { "name": "recipient", "text": "Who received it, for example who the artifact was given to.", "values": "a character", "required": false },
+   { "name": "location", "text": "Where the event took place.", "values": "a province", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_artifact_modifier",
+  "label": "Artifact modifier",
+  "summary": "Adds a static modifier to an artifact.",
+  "details": "Runs on an artifact. The value is the name of the modifier. It cannot be given a duration.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_artifact_title_history",
+  "label": "Artifact title history",
+  "summary": "Adds a title's history to an artifact's history, from a given date onwards.",
+  "details": "Runs on an artifact. Vanilla uses it with titles such as `title:e_byzantium` and `title:d_shiite`.",
+  "fields": [
+   { "name": "target", "text": "The title whose history entries are taken.", "values": "a landed title", "required": true },
+   { "name": "date", "text": "The date from which entries are copied.", "values": "a date", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_attacker",
+  "label": "Attacker",
+  "summary": "Adds the given character to a war as an attacker.",
+  "details": "Runs on a war. The value is the character who joins as an attacker.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_barter_goods",
+  "label": "Barter goods",
+  "summary": "Adds barter goods to a character; the game documents nothing more.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "add_building",
+  "label": "Building",
+  "summary": "Adds a building to a province.",
+  "details": "Runs on a province. The value is the building key, for example `temple_02` or `curtain_walls_01` in vanilla.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_character_flag",
+  "label": "Character flag",
+  "summary": "Puts a named flag on a character, optionally for a set time.",
+  "details": "Runs on a character. A flag is a marker that scripts can check later. The short form is just a name; the long form adds a duration in days, weeks or years (vanilla also uses months). The duration can be a number or a range of two numbers, from which the game picks.",
+  "fields": [
+   { "name": "flag", "text": "The name of the flag.", "values": "a name you choose", "required": true },
+   { "name": "days", "text": "How long the flag lasts, in days.", "values": "a number, a range or a script value", "required": false },
+   { "name": "weeks", "text": "How long the flag lasts, in weeks.", "values": "a number, a range or a script value", "required": false },
+   { "name": "months", "text": "How long the flag lasts, in months.", "values": "a number, a range or a script value", "required": false },
+   { "name": "years", "text": "How long the flag lasts, in years.", "values": "a number, a range or a script value", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_character_modifier",
+  "label": "Character modifier",
+  "summary": "Gives a character a modifier, optionally for a set time.",
+  "details": "Runs on a character. The short form is just the modifier name. The long form can add a duration in days, weeks, months or years. An optional `desc` gives the timed modifier its own description text.",
+  "fields": [
+   { "name": "modifier", "text": "The modifier to add.", "values": "a modifier name", "required": true },
+   { "name": "days", "text": "How long it lasts, in days.", "values": "a number or a script value", "required": false },
+   { "name": "weeks", "text": "How long it lasts, in weeks.", "values": "a number or a script value", "required": false },
+   { "name": "months", "text": "How long it lasts, in months.", "values": "a number or a script value", "required": false },
+   { "name": "years", "text": "How long it lasts, in years.", "values": "a number or a script value", "required": false },
+   { "name": "desc", "text": "A dynamic description shown for the timed modifier.", "values": "a localization key", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_character_realm_to_sub_region",
+  "label": "Realm to sub-region",
+  "summary": "Adds every county that is de facto part of a character's realm to a situation's sub-region.",
+  "details": "Runs on a situation sub-region. The value is the character whose realm is added.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_clerical_elector",
+  "label": "Clerical elector",
+  "summary": "Marks a title as a clerical elector for the given faith.",
+  "details": "If the title already is a clerical elector, only the faith it elects for changes. Otherwise it must be a regular title without special data and without de jure vassals. Runs on a title; the value is the faith.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_clerical_realm_to_sub_region",
+  "label": "Clerical realm to sub-region",
+  "summary": "Adds every county in a clerical title's realm to a situation's sub-region.",
+  "details": "Runs on a situation sub-region. The value is the clerical title.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_companion",
+  "label": "Companion",
+  "summary": "Adds a character as a companion on a travel plan.",
+  "details": "Runs on a travel plan. The value is the character who joins the entourage.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_confederation_member",
+  "label": "Confederation member",
+  "summary": "Adds a character to a confederation, unless they already belong to one.",
+  "details": "The character's primary title must be of a lower tier than the confederation's title. They also become a vassal of the confederation's leader. Runs on a confederation. The documented example writes `add_member = <character>`, but vanilla writes `add_confederation_member = <character>`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_confederation_member_house",
+  "label": "Confederation member house",
+  "summary": "Adds a dynasty house to a confederation, unless it is already part of it.",
+  "details": "Runs on a confederation. The value is the house.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_contact",
+  "label": "Contact",
+  "summary": "Adds the given character to the character's list of contacts.",
+  "details": "Runs on a character; the value is the character who becomes a contact.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_county_modifier",
+  "label": "County modifier",
+  "summary": "Gives a county a modifier, optionally for a set time.",
+  "details": "Runs on a title (the county). The short form is just the modifier name. The long form can add a duration in days, weeks, months or years, and an optional `desc` as the timed modifier's description. Vanilla also uses `duration_desc`, always with `until_the_disaster_is_over`; the game's documentation does not explain it.",
+  "fields": [
+   { "name": "modifier", "text": "The modifier to add.", "values": "a modifier name", "required": true },
+   { "name": "days", "text": "How long it lasts, in days.", "values": "a number or a script value", "required": false },
+   { "name": "weeks", "text": "How long it lasts, in weeks.", "values": "a number or a script value", "required": false },
+   { "name": "months", "text": "How long it lasts, in months.", "values": "a number or a script value", "required": false },
+   { "name": "years", "text": "How long it lasts, in years.", "values": "a number or a script value", "required": false },
+   { "name": "desc", "text": "A dynamic description shown for the timed modifier.", "values": "a localization key", "required": false },
+   { "name": "duration_desc", "text": "Not documented; vanilla only writes `until_the_disaster_is_over` here, so going by its name it is a text shown about the duration.", "values": "a localization key", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_courtier",
+  "label": "Courtier",
+  "summary": "Adds the given character to the court of the character.",
+  "details": "Runs on a character (the ruler whose court it is). The value is the character who joins the court.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_culture_tradition",
+  "label": "Culture tradition",
+  "summary": "Adds a tradition to a culture.",
+  "details": "Runs on a culture. The value is the tradition, for example `tradition_horse_lords`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_dead_character_flag",
+  "label": "Dead character flag",
+  "summary": "Puts a named flag on a dead character for a set time.",
+  "details": "A duration is required. It can be a number or a range of two numbers. Runs on a character; vanilla uses it with years.",
+  "fields": [
+   { "name": "flag", "text": "The name of the flag.", "values": "a name you choose", "required": true },
+   { "name": "years", "text": "How long the flag lasts, in years.", "values": "a number or a range of two numbers", "required": false },
+   { "name": "weeks", "text": "How long the flag lasts, in weeks.", "values": "a number or a range of two numbers", "required": false },
+   { "name": "days", "text": "How long the flag lasts, in days.", "values": "a number or a range of two numbers", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_defender",
+  "label": "Defender",
+  "summary": "Adds the given character to a war as a defender.",
+  "details": "Runs on a war. The value is the character who joins as a defender.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_dejure_title_to_sub_region",
+  "label": "De jure title to sub-region",
+  "summary": "Adds every county that lawfully (de jure) belongs to a title to a situation's sub-region.",
+  "details": "Runs on a situation sub-region. The value is the title.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_destination_progress",
+  "label": "Advance towards the next stop",
+  "summary": "Moves a travel plan forward by the given time towards its next destination.",
+  "details": "Progress beyond the destination is thrown away. The on_action `on_travel_plan_movement` is not fired for any of the provinces passed, but `on_travel_plan_arrival` is fired if the destination is reached. Runs on a travel plan.",
+  "fields": [
+   { "name": "days", "text": "Progress in days.", "values": "a number", "required": false },
+   { "name": "weeks", "text": "Progress in weeks.", "values": "a number", "required": false },
+   { "name": "months", "text": "Progress in months.", "values": "a number", "required": false },
+   { "name": "years", "text": "Progress in years.", "values": "a number", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_diplomacy_lifestyle_perk_points",
+  "label": "Diplomacy perk points",
+  "summary": "Gives the character perk points in the diplomacy lifestyle.",
+  "details": "Runs on a character. The game's documentation says \"lifestyle per points\", which reads as a typo for perk points. Vanilla almost always writes `1`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_diplomacy_lifestyle_xp",
+  "label": "Diplomacy lifestyle XP",
+  "summary": "Gives the character experience in the diplomacy lifestyle.",
+  "details": "Runs on a character. Vanilla writes named amounts such as `minor_lifestyle_xp`, `medium_lifestyle_xp` and `major_lifestyle_xp`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_diplomacy_skill",
+  "label": "Diplomacy skill",
+  "summary": "Adds to a character's diplomacy skill.",
+  "details": "A negative amount lowers it (vanilla writes -1 and -10). The input lists no scope for this effect, but the game's documentation and the name point to a character. Vanilla mostly writes a plain number, sometimes a range like `{ 3 5 }` or a block with `value` and `subtract`.",
+  "fields": [
+   { "name": "value", "text": "The amount to add.", "values": "a number or a script value", "required": false },
+   { "name": "subtract", "text": "A script value step: vanilla's `subtract = diplomacy` takes the named skill of the character away from `value`, so the result is the amount to add. The documentation does not cover this form for the effect.", "values": "a skill name", "required": false }
+  ],
+  "sources": ["doc", "vanilla", "vanilla: game/common/decisions/dlc_decisions/fp3_decisions.txt:756"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "add_doctrine",
+  "label": "Doctrine",
+  "summary": "Adds a doctrine to a faith.",
+  "details": "Fails if the faith already has a doctrine from the same group. Runs on a faith; the value is the doctrine.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_domicile_building",
+  "label": "Domicile building",
+  "summary": "Adds a building to a domicile without cost or construction time and without a building animation.",
+  "details": "Runs on a domicile (vanilla keys point to things like yurts and estates). The value is the domicile building key, for example `yurt_main_02`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_dread",
+  "label": "Dread",
+  "summary": "Adds dread to a character, or takes it away with a negative amount.",
+  "details": "Runs on a character. Vanilla mostly uses named amounts such as `minor_dread_gain` and `medium_dread_loss`. A block form takes a `value` and a `multiply` factor.",
+  "fields": [
+   { "name": "value", "text": "The amount of dread.", "values": "a number or a script value", "required": true },
+   { "name": "multiply", "text": "A factor the value is multiplied by; vanilla uses `-1` with a cost value.", "values": "a number or a script value", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_durability",
+  "label": "Durability",
+  "summary": "Adds to an artifact's durability, or lowers it with a negative amount.",
+  "details": "Runs on an artifact. Vanilla also writes a block with `value`, `multiply` and `max`; the game's documentation does not explain the block.",
+  "fields": [
+   { "name": "value", "text": "The amount to add.", "values": "a number or a script value", "required": true },
+   { "name": "multiply", "text": "A factor the value is multiplied by; vanilla uses values like -0.50 and 7.", "values": "a number", "required": false },
+   { "name": "max", "text": "Used in vanilla with numbers like 60 and with `artifact_max_durability`; going by its name, an upper limit.", "values": "a number or a script value", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_dynasty_modifier",
+  "label": "Dynasty modifier",
+  "summary": "Gives a dynasty a modifier, optionally for a set time.",
+  "details": "Runs on a dynasty. The short form is just the modifier name. The long form can add a duration in days, weeks, months or years, and an optional `desc` as the timed modifier's description.",
+  "fields": [
+   { "name": "modifier", "text": "The modifier to add.", "values": "a modifier name", "required": true },
+   { "name": "days", "text": "How long it lasts, in days.", "values": "a number or a script value", "required": false },
+   { "name": "weeks", "text": "How long it lasts, in weeks.", "values": "a number or a script value", "required": false },
+   { "name": "months", "text": "How long it lasts, in months.", "values": "a number or a script value", "required": false },
+   { "name": "years", "text": "How long it lasts, in years.", "values": "a number or a script value", "required": false },
+   { "name": "desc", "text": "A dynamic description shown for the timed modifier.", "values": "a localization key", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "add_dynasty_perk",
+  "label": "Legacy (dynasty perk)",
+  "summary": "Gives a dynasty a dynasty perk (a legacy).",
+  "details": "Runs on a dynasty. The value is the perk key, for example `warfare_legacy_1`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

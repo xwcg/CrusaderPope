@@ -10,6 +10,7 @@ import type { StoryBuilder } from '../stories.ts';
 import { fieldOf } from '../../../shared/fieldCatalog.ts';
 import { capitalize, humanize, rich, titleCase } from '../text.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 /** The statements of a block (none for a scalar). */
 export const kids = (n: PNode | undefined): PNode[] => (n && Array.isArray(n.v) ? n.v : []);
 
@@ -121,7 +122,7 @@ const HUES: [number, string][] = [
     [80, 'lime'],
     [160, 'green'],
     [190, 'teal'],
-    [215, 'sky blue'],
+    [215, tr('sky blue')],
     [255, 'blue'],
     [285, 'purple'],
     [330, 'magenta'],
@@ -162,7 +163,7 @@ function colorRgb(n: PNode): [number, number, number] | undefined
     return v.slice(0, 3).map((x) => Math.round(Math.min(255, Math.max(0, x * scale)))) as [number, number, number];
 }
 
-/** "dark red", "light grey" — a rough name for a colour. */
+/** "dark red", "light grey": a rough name for a colour. */
 function colorName(rgb: [number, number, number]): string
 {
     const [r, g, b] = rgb.map((x) => x / 255);
@@ -201,8 +202,8 @@ export function colorText(n: PNode, src: string): Rich | undefined
 // ---------------------------------------------------------------------------
 
 /**
- * A definition's scalar settings as lines — how each field of the set reads (shared/fields/presentation.ts; an entry
- * it names as a link), "Key: value" for others; `show` reads a key its own way (a picture, a text) —, anchored as
+ * A definition's scalar settings as lines (how each field of the set reads (shared/fields/presentation.ts; an entry
+ * it names as a link), "Key: value" for others; `show` reads a key its own way (a picture, a text)), anchored as
  * fields of `set` (changed and added with the picker).
  */
 export function settingLines(b: StoryBuilder, set: string, list: PNode[], ctx: Ctx, show?: (k: string, v: string) => Rich | undefined): Line[]
@@ -245,7 +246,7 @@ const scans = new WeakMap<StoryBuilder, Map<string, Map<string, Entity[]>>>();
 /**
  * The entries of `type` whose definition says `key = <value>` at its top level, by value (decisions by
  * `decision_group_type`, interactions by `category`, concepts by `parent`): one pass over the type's texts per story
- * builder — a new one comes with every index update. For links the index does not make (the groups are context-only
+ * builder; a new one comes with every index update. For links the index does not make (the groups are context-only
  * types without a context rule).
  */
 export function membersBy(b: StoryBuilder, type: string, key: string): Map<string, Entity[]>
@@ -325,13 +326,13 @@ export function entryLines(b: StoryBuilder, list: Entity[], icon?: string, max =
     const out: Line[] = segs.map((s, i) => ({ text: twice.has(s.text) ? [s, ' ', note(`(${humanize(list[i].name)})`)] : [s], icon }));
 
     if (list.length > max)
-        out.push({ text: [`… and ${list.length - max} more`] });
+        out.push({ text: [tr('… and {value} more', { value: list.length - max })] });
 
     return out;
 }
 
 /**
- * Where conditions of an entry go ("＋ if"): its `trigger` block, or — none yet — where one is made (before its first
+ * Where conditions of an entry go ("＋ if"): its `trigger` block, or (none yet) where one is made (before its first
  * statement).
  */
 function triggerPlace(b: StoryBuilder, n: PNode, ctx: Ctx): SectionSource | undefined
@@ -357,8 +358,8 @@ function triggerPlace(b: StoryBuilder, n: PNode, ctx: Ctx): SectionSource | unde
 
 /**
  * Entries of which the game uses the first whose `trigger` passes (event backgrounds, a theme's icons and sounds,
- * customizable localization texts; `random`: one of those that pass): one line each — `show` gives its text and
- * details —, the trigger as its conditions; an unconditional entry after conditional ones reads "Otherwise:".
+ * customizable localization texts; `random`: one of those that pass): one line each (`show` gives its text and
+ * details), the trigger as its conditions; an unconditional entry after conditional ones reads "Otherwise:".
  * Anchored to the entry's block.
  */
 export function firstValidLines(b: StoryBuilder, entries: PNode[], ctx: Ctx, show: (list: PNode[]) => { text: Rich; children?: Line[]; tip?: string; }, random = false): Line[]
@@ -372,7 +373,7 @@ export function firstValidLines(b: StoryBuilder, entries: PNode[], ctx: Ctx, sho
         const s = show(list);
         const label = lineComment(ctx.src, n);
         // (at random every entry that passes can be picked: none is the others' fallback)
-        const l: Line = { text: rich(!conds.length && conditional && !random ? 'Otherwise: ' : '', s.text, label ? rich(' ', note(`— ${label}`)) : ''), icon: conds.length ? 'if' : 'note', tip: s.tip };
+        const l: Line = { text: rich(!conds.length && conditional && !random ? tr('Otherwise: ') : '', s.text, label ? rich(' ', note(`(${label})`)) : ''), icon: conds.length ? 'if' : 'note', tip: s.tip };
 
         if (conds.length)
         {

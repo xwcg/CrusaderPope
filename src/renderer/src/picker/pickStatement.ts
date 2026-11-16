@@ -11,7 +11,8 @@ import { createRoot, type Root } from 'react-dom/client';
 import type { PickRequest, PickResult } from '../../../shared/api';
 import { prefetch } from './data';
 import { Picker } from './Picker';
-import { viewTargets } from './targets';
+import type { ChoiceMenu } from './model';
+import { awayAt, inReach, setAwayTargets, setPlaceScopes, viewTargets, viewTargetsKnown } from './targets';
 
 let root: Root | null = null;
 /** resolves the open picker's promise */
@@ -64,13 +65,32 @@ function warmUp(): void
 }
 warmUp();
 
+/**
+ * Closes the open picker, if any (its promise resolves null). The test API's goto calls it so a picker a walk left open
+ * does not stay over the next page, with its callback still pointing at the entry it was opened on.
+ */
+export function closePicker(): void
+{
+    current?.(null);
+}
+
 export function pickStatement(req: PickRequest): Promise<PickResult | null>
 {
     const t0 = performance.now();
 
-    // (the event shown: its scopes are targets too)
+    // (the event shown: its scopes are targets too, the ones in reach where the statement goes; the others are only
+    // warned about when typed: picker/model.ts chainType; known only inside the shown entry's own definition)
     if (!req.targets)
-        req = { ...req, targets: viewTargets() };
+    {
+        const all = viewTargets();
+        req = { ...req, targets: inReach(all, req.place), targetsKnown: viewTargetsKnown(req.place) };
+        setAwayTargets(awayAt(all, req.place));
+    }
+    else
+        setAwayTargets([]);
+
+    // (`prev` where the statement goes, and whether its scope is a guess: picker/model.ts prevStack, chainType)
+    setPlaceScopes(req.kind === 'choice' ? {} : { prev: req.prev, scope: req.scope, guessed: req.scopeGuessed });
 
     current?.(null);
     // lists, flags and the "Other…" keys: loaded while the first menus are chosen
@@ -96,6 +116,16 @@ export function pickStatement(req: PickRequest): Promise<PickResult | null>
         current = done;
         root!.render(createElement(Picker, { key: ++seq, req, t0, onDone: done }));
     });
+}
+
+/**
+ * Plain menus in the picker (its cascade, keys, filter, breadcrumb): the map's right-click menu. Resolves with the
+ * chosen row's value, or null when cancelled.
+ */
+export async function pickChoice(menu: ChoiceMenu, opts: { at?: { x: number; y: number; }; title?: string; } = {}): Promise<string | null>
+{
+    const r = await pickStatement({ kind: 'choice', choice: menu, at: opts.at, title: opts.title, targets: [] });
+    return r ? r.text : null;
 }
 
 declare global

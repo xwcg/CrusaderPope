@@ -1,7 +1,7 @@
 /**
  * Where a group's name goes (docs/map.md, "Presentation"): the group's pixels sampled on a grid over its bounds (up
- * to ~8k cells), its big connected parts, and per part a gentle curve through its middle — along the principal axis
- * (horizontal for roundish parts), the offset of the part's middle across it fitted with a parabola — with the part's
+ * to ~8k cells), its big connected parts, and per part a gentle curve through its middle (along the principal axis
+ * (horizontal for roundish parts), the offset of the part's middle across it fitted with a parabola) with the part's
  * thickness around it. In map pixels; computed once per group and mode.
  */
 import type { Groups } from './model';

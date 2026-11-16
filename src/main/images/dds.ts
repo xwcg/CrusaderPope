@@ -1,3 +1,5 @@
+import { tr } from '../../shared/i18n.ts';
+import { decodePng, isPng } from './png.ts';
 /**
  * DDS texture decoder → RGBA8.
  *
@@ -65,7 +67,7 @@ export function parseDds(buf: Uint8Array): DdsInfo
     const dv = new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
 
     if (buf.length < 128 || dv.getUint32(0, true) !== 0x20534444)
-        throw new Error('Not a DDS file');
+        throw new Error(tr('Not a DDS file'));
 
     const height = dv.getUint32(12, true);
     const width = dv.getUint32(16, true);
@@ -107,7 +109,7 @@ export function parseDds(buf: Uint8Array): DdsInfo
 export function formatLabel(info: DdsInfo): string
 {
     if (info.format === 'MASKED')
-        return info.masks[3] ? `${info.bpp}-bit RGBA` : `${info.bpp}-bit RGB`;
+        return info.masks[3] ? tr('{bpp}-bit RGBA', { bpp: info.bpp }) : tr('{bpp}-bit RGB', { bpp: info.bpp });
 
     const legacy: Record<string, string> = { BC1: 'BC1 (DXT1)', BC2: 'BC2 (DXT3)', BC3: 'BC3 (DXT5)' };
     return legacy[info.format] ?? info.format;
@@ -136,6 +138,9 @@ export interface Decoded
 /** `face` picks a cubemap face (+X, −X, +Y, −Y, +Z, −Z order, each with its own mip chain). */
 export async function decodeDds(buf: Uint8Array, maxSize = 0, face = 0): Promise<Decoded>
 {
+    if (isPng(buf))
+        return fromPng(buf, maxSize);
+
     const { info, data, w, h } = selectLevel(buf, maxSize, face);
 
     if (info.format === 'BC6H' || info.format === 'BC7')
@@ -144,9 +149,21 @@ export async function decodeDds(buf: Uint8Array, maxSize = 0, face = 0): Promise
     return { width: w, height: h, rgba: decodeLevelSync(info, data, w, h) };
 }
 
+/**
+ * A PNG under a .dds name (the game ships one, interface/icons/knight_badge/frame/accolades_frames_background.dds, which
+ * nothing references; a mod can do the same): shown as the PNG it is, brought to `maxSize` like a mip level would be.
+ */
+function fromPng(buf: Uint8Array, maxSize: number): Decoded
+{
+    return downscale(decodePng(buf), maxSize);
+}
+
 /** Synchronous decode for every format except BC6H/BC7 (those need the WebAssembly decoder). */
 export function decodeDdsSync(buf: Uint8Array, maxSize = 0, face = 0): Decoded
 {
+    if (isPng(buf))
+        return fromPng(buf, maxSize);
+
     const { info, data, w, h } = selectLevel(buf, maxSize, face);
     return { width: w, height: h, rgba: decodeLevelSync(info, data, w, h) };
 }
@@ -190,7 +207,7 @@ function selectLevel(buf: Uint8Array, maxSize: number, face = 0): { info: DdsInf
     const size = levelSize(info, w, h);
 
     if (offset + size > buf.length)
-        throw new Error(`Truncated DDS (${info.format} ${w}x${h})`);
+        throw new Error(tr('Truncated DDS ({format} {w}x{h})', { format: info.format, w, h }));
 
     return { info, data: buf.subarray(offset, offset + size), w, h };
 }
@@ -241,7 +258,7 @@ function decodeLevelSync(info: DdsInfo, data: Uint8Array, w: number, h: number):
         case 'MASKED':
             return decodeMasked(data, w, h, info.bpp, info.masks);
         default:
-            throw new Error('Unsupported DDS format ' + info.format);
+            throw new Error(tr('Unsupported DDS format ') + info.format);
     }
 }
 
@@ -550,7 +567,7 @@ async function wasmDecode(format: string, data: Uint8Array, w: number, h: number
     const out = format === 'BC7' ? await m.decode_bc7(data, pw, ph) : await m.decode_bc6(data, pw, ph);
 
     if (!out)
-        throw new Error('BC decode failed');
+        throw new Error(tr('BC decode failed'));
 
     if (pw === w && ph === h)
         return out;

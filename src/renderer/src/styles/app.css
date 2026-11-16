@@ -117,6 +117,47 @@ select:focus {
   height: calc(100% - var(--change-bar-h, 0px));
 }
 
+/* a newer release (components/UpdateBanner.tsx): a row of its own under the top bar */
+.app.with-update {
+  grid-template-rows: 44px auto 1fr;
+}
+
+.update-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px 6px 14px;
+  background: linear-gradient(90deg, rgba(201, 164, 92, .18), rgba(201, 164, 92, .07));
+  border-bottom: 1px solid var(--accent-dim);
+  font-size: 13px;
+}
+
+.update-banner b {
+  font-family: var(--font-display);
+  font-weight: normal;
+  color: var(--accent);
+  font-size: 14px;
+}
+
+.update-banner a {
+  color: var(--link);
+}
+
+.update-mark {
+  color: var(--accent);
+}
+
+.update-banner .check {
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.update-close {
+  padding: 0 8px;
+  font-size: 16px;
+  line-height: 22px;
+}
+
 .main {
   display: grid;
   grid-template-columns: 230px 320px 1fr;
@@ -127,7 +168,7 @@ select:focus {
   display: flex;
   align-items: center;
   gap: 8px;
-  /* (its content shrinks — the index stats first — instead of widening the whole app) */
+  /* (its content shrinks, the index stats first, instead of widening the whole app) */
   min-width: 0;
   padding: 0 10px;
   background: var(--bg-panel);
@@ -504,6 +545,44 @@ select:focus {
   color: var(--text-faint);
 }
 
+/* a view waiting for its data (common.tsx Throbber) */
+.throbber {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  color: var(--text-faint);
+  font-size: 12.5px;
+}
+.throbber.centered {
+  justify-content: center;
+  padding: 60px 16px;
+}
+.throbber-ring {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(201, 164, 92, 0.3);
+  border-top-color: var(--accent);
+  animation: throbber-spin 0.8s linear infinite;
+}
+/* shown only once the wait is longer than a moment */
+.throbber.later {
+  opacity: 0;
+  animation: throbber-show 0.2s 0.4s forwards;
+}
+@keyframes throbber-show {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes throbber-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* ------------------------------------------------------------------ detail */
 
 .detail {
@@ -771,7 +850,7 @@ select:focus {
   max-height: none;
 }
 .code .gutter {
-  /* (not the code's flex: 1 — the line numbers keep their own width) */
+  /* (not the code's flex: 1; the line numbers keep their own width) */
   flex: none;
   margin: 0;
   padding: 10px 8px 10px 12px;
@@ -1246,37 +1325,81 @@ select:focus {
   gap: 8px;
 }
 
-/* first-run wizard (FirstRunWizard.tsx) */
+/* first-run wizard (FirstRunWizard.tsx): each step a panel of its own with a numbered badge, room to breathe */
 .wizard {
   height: 100vh;
   overflow: auto;
   display: flex;
   justify-content: center;
-  background: var(--bg);
+  background: radial-gradient(ellipse 70% 40% at 50% 0%, rgba(201, 164, 92, 0.09), transparent 70%), var(--bg);
   color: var(--text);
 }
 .wizard-box {
-  width: min(760px, 94vw);
-  padding: 36px 8px 48px;
+  width: min(820px, calc(100vw - 32px));
+  padding: 56px 0 0;
 }
 .wizard-box h1 {
   font-family: var(--font-display);
-  margin: 0 0 6px;
+  font-weight: normal;
+  font-size: 34px;
+  color: var(--accent);
+  margin: 0 0 10px;
 }
 .wizard-lead {
-  color: var(--text-dim, var(--text));
-  margin-bottom: 18px;
+  color: var(--text-dim);
+  font-size: 15px;
+  line-height: 1.55;
+  margin: 0 0 32px;
+  max-width: 640px;
 }
-.wizard-box section {
-  margin: 18px 0;
+.wizard-step {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px 22px;
+  margin: 0 0 18px;
+}
+.wizard-step-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.wizard-num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--accent-dim);
+  color: var(--accent);
+  /* (lining figures: the display font's old-style ones sit at different heights and are never centred) */
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: lining-nums tabular-nums;
+  line-height: 1;
+  /* (the digits sit 1px low in the line box: measured on screenshots) */
+  padding-bottom: 2px;
+  box-sizing: border-box;
 }
 .wizard-box h3 {
-  margin: 0 0 4px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: normal;
+  font-size: 19px;
+}
+.wizard-step .hint {
+  display: block;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin: 0 0 12px;
 }
 .wizard-box .row {
   display: flex;
   gap: 8px;
-  margin: 6px 0;
+  margin: 10px 0 0;
 }
 .wizard-box .row input {
   flex: 1;
@@ -1291,11 +1414,47 @@ select:focus {
   color: var(--text-faint);
   margin-left: 6px;
 }
+/* (the wizard's choices: rows with room, the chosen one framed) */
+.wizard-step .wizard-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 6px 0;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  line-height: 1.45;
+}
+.wizard-step .wizard-choice:hover {
+  background: var(--bg-hover);
+}
+.wizard-step .wizard-choice:has(input:checked) {
+  border-color: var(--accent-dim);
+  background: var(--bg-active);
+}
+.wizard-step .wizard-choice input {
+  margin-top: 2px;
+}
+.wizard-check .hint {
+  margin: 3px 0 0;
+  font-size: 12px;
+}
 .wizard-warn {
   color: var(--danger);
+  margin: 10px 0 0;
+}
+/* (a Browse… that was moved to the folder near it: FirstRunWizard.tsx BrowseNote, also in Settings) */
+.wizard-note {
+  color: var(--accent);
+  font-size: 12px;
+  margin: 8px 0 0;
+}
+.wizard-note code {
+  color: var(--text-dim);
 }
 .wizard-ok {
   color: #8fbf6a;
+  margin: 10px 0 0;
 }
 .wizard-box .actions {
   display: flex;
@@ -1310,7 +1469,7 @@ select:focus {
   margin-top: 8px;
 }
 
-/* the settings dialog: pages listed on the left, only the page scrolls — the title and Save stay in view on small
+/* the settings dialog: pages listed on the left, only the page scrolls; the title and Save stay in view on small
    screens and at high display scaling; below 640 px the list becomes a row of tabs */
 .modal.settings-modal {
   width: min(900px, calc(100vw - 24px));
@@ -1376,7 +1535,263 @@ select:focus {
 .wizard-box .actions {
   position: sticky;
   bottom: 0;
-  background: var(--bg);
-  padding: 10px 0;
+  background: linear-gradient(transparent, var(--bg) 35%);
+  padding: 28px 0 22px;
   flex-wrap: wrap;
+}
+.wizard-box .actions .primary {
+  padding: 8px 28px;
+  font-size: 14px;
+}
+
+/* the in-app folder picker (components/FolderPicker.tsx): its own layer, over the settings and the wizard */
+.fp-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+}
+.fp {
+  width: min(980px, calc(100vw - 32px));
+  height: min(680px, calc(100vh - 32px));
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 16px 18px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+.fp h2 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-weight: normal;
+}
+.fp-pathbar {
+  display: flex;
+  gap: 6px;
+}
+.fp-path {
+  flex: 1;
+  font-family: var(--font-code);
+  font-size: 12px;
+}
+.fp-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 14px;
+  margin-top: 12px;
+}
+.fp-places {
+  flex: 0 0 210px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.fp-places h4 {
+  margin: 10px 0 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.fp-places h4:first-child {
+  margin-top: 0;
+}
+.fp-place {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  background: none;
+  border: 1px solid transparent;
+  padding: 5px 8px;
+}
+.fp-place:hover {
+  background: var(--bg-hover);
+}
+.fp-place.active {
+  border-color: var(--accent-dim);
+  background: var(--bg-active);
+}
+.fp-place small {
+  color: var(--text-faint);
+  font-size: 11px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fp-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.fp-tools {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.fp-filter {
+  flex: 1;
+}
+.fp-list {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+}
+.fp-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 4px 10px;
+  cursor: pointer;
+}
+.fp-row:hover {
+  background: var(--bg-hover);
+}
+.fp-icon {
+  color: var(--accent-dim);
+}
+.fp-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fp-select {
+  visibility: hidden;
+  padding: 1px 10px;
+  font-size: 12px;
+}
+.fp-row:hover .fp-select {
+  visibility: visible;
+}
+.fp-new {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.fp-new input {
+  flex: 1;
+}
+.fp-status {
+  padding: 10px 12px;
+  color: var(--text-dim);
+}
+.fp-error {
+  color: var(--danger);
+}
+.fp-count {
+  padding-top: 6px;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+.fp .actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* Settings → Characters (CharacterPresets.tsx): relatives' ages, the presets, the one being edited */
+.preset-ages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.preset-ages label,
+.preset-skills label {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.preset-ages input,
+.preset-skills input {
+  width: 72px;
+}
+.preset-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.preset-list button.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.preset-edit {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 16px;
+  margin-top: 6px;
+}
+.preset-edit > label {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.preset-skills,
+.preset-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.preset-entry {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.preset-entry > button:first-child {
+  flex: 1;
+  text-align: left;
+}
+.preset-traits {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.preset-traits > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.preset-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 1px 2px 1px 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+}
+.preset-icon {
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+/* the loaded save's player in Savegame → Characters (EntityList YouButton) */
+.you-button {
+  margin-left: auto;
+  border-color: var(--accent-dim);
+  color: var(--accent);
 }

@@ -3,6 +3,7 @@ import type { BracketLink, EventPreview } from '../../../shared/api';
 import type { Navigate } from '../App';
 import { TypeDot } from './common';
 
+import { tr } from '../../../shared/i18n';
 /**
  * Renders localization text: [data functions] and $keys$ are highlighted, \n are line breaks (via pre-wrap); brackets
  * naming an entity (EntityDetail.textRefs) are links with hover cards.
@@ -51,24 +52,24 @@ export function EventCard({ ev, navigate, refs }: { ev: EventPreview; navigate: 
     return (
         <div className="event-card">
             <div className="ev-head">
-                <div className="ev-title">{title ? <LocText text={title.text ?? title.key} refs={refs} navigate={navigate} /> : <i>(no title)</i>}</div>
+                <div className="ev-title">{title ? <LocText text={title.text ?? title.key} refs={refs} navigate={navigate} /> : <i>{tr('(no title)')}</i>}</div>
                 {altTitles.map((t) => (
                     <div key={t.key} className="ev-title alt" title={t.key}>
-                        or: <LocText text={t.text ?? t.key} refs={refs} navigate={navigate} />
+                        {tr('or:')}{' '}<LocText text={t.text ?? t.key} refs={refs} navigate={navigate} />
                     </div>
                 ))}
                 <div className="ev-meta">
                     {ev.eventType && <span className="chip accent">{ev.eventType}</span>}
                     {ev.theme && (
                         <span className="chip link" onClick={() => navigate({ type: 'event_themes', name: ev.theme! })}>
-                            theme: {ev.theme}
+                            {tr('theme: {theme}', { theme: ev.theme })}
                         </span>
                     )}
-                    {ev.hidden && <span className="chip">hidden</span>}
-                    {ev.cooldown && <span className="chip">cooldown {ev.cooldown}</span>}
-                    {ev.hasTrigger && <span className="chip">trigger</span>}
-                    {ev.hasImmediate && <span className="chip">immediate</span>}
-                    {ev.hasAfter && <span className="chip">after</span>}
+                    {ev.hidden && <span className="chip">{tr('hidden')}</span>}
+                    {ev.cooldown && <span className="chip">{tr('cooldown {cooldown}', { cooldown: ev.cooldown })}</span>}
+                    {ev.hasTrigger && <span className="chip">{tr('trigger')}</span>}
+                    {ev.hasImmediate && <span className="chip">{tr('immediate')}</span>}
+                    {ev.hasAfter && <span className="chip">{tr('after')}</span>}
                 </div>
             </div>
             {ev.portraits.length > 0 && (
@@ -96,16 +97,16 @@ export function EventCard({ ev, navigate, refs }: { ev: EventPreview; navigate: 
                     {ev.options.map((o, i) => (
                         <div key={i} className="event-option">
                             <div className="opt-text">
-                                {o.names.length ? <LocText text={o.names[0].text ?? o.names[0].key} refs={refs} navigate={navigate} /> : <i>(unnamed option)</i>}
+                                {o.names.length ? <LocText text={o.names[0].text ?? o.names[0].key} refs={refs} navigate={navigate} /> : <i>{tr('(unnamed option)')}</i>}
                             </div>
                             {o.names.slice(1).map((n) => (
                                 <div key={n.key} className="opt-text" style={{ fontSize: 12, color: '#bca97c' }}>
-                                    or: <LocText text={n.text ?? n.key} refs={refs} navigate={navigate} />
+                                    {tr('or:')}{' '}<LocText text={n.text ?? n.key} refs={refs} navigate={navigate} />
                                 </div>
                             ))}
                             <div className="opt-meta">
-                                {o.conditional && <span className="chip">conditional</span>}
-                                {o.fallback && <span className="chip">fallback</span>}
+                                {o.conditional && <span className="chip">{tr('conditional')}</span>}
+                                {o.fallback && <span className="chip">{tr('fallback')}</span>}
                                 {o.references.map((r) => (
                                     <span key={r.type + r.name} className="chip link" title={r.type} onClick={() => navigate(r)}>
                                         <TypeDot type={r.type} /> {r.name}

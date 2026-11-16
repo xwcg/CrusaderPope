@@ -32,7 +32,7 @@ try
         arrays: { Data: 48 },
         post: true
     });
-    console.log(`OK ${(performance.now() - t0).toFixed(0)} ms (${label}) — defines ${p.defines.join(' ')}`);
+    console.log(`OK ${(performance.now() - t0).toFixed(0)} ms (${label}), defines ${p.defines.join(' ')}`);
     console.log('attributes', p.attributes.map((a) => `${a.name}:${a.type}`).join(' '));
     console.log('samplers  ', p.samplers.map((s) => `${s.name}:${s.type}${s.ref ? '@' + s.ref : ''}${s.file ? ' ' + s.file : ''}`).join(' '));
     console.log('states    ', JSON.stringify(p.states));

@@ -1,6 +1,6 @@
 /**
  * The app's dropdown: a button that looks like one and opens a statement-picker menu (styles/picker.css) right below
- * it — the same keys: the row letters pick, typing filters, ↑↓ Home End PageUp PageDown move, ⏎ picks, Esc clears the
+ * it, with the same keys: the row letters pick, typing filters, ↑↓ Home End PageUp PageDown move, ⏎ picks, Esc clears the
  * filter / closes, Backspace edits the filter. A drop-in for <select>: the same `value` / `onChange(e)` (e.target.value,
  * a string) and <option> / <optgroup> children.
  */
@@ -8,6 +8,8 @@ import { Children, Fragment, isValidElement, useEffect, useLayoutEffect, useRef,
 import { createPortal } from 'react-dom';
 import '../styles/picker.css';
 
+import { tr } from '../../../shared/i18n';
+import { fold, foldHas } from '../../../shared/fold';
 interface Opt
 {
     value: string;
@@ -115,18 +117,18 @@ export function Select(props: Props): React.JSX.Element
     const all = optionsOf(props.children);
     const value = props.value === undefined ? undefined : String(props.value);
     const current = all.find((o) => !o.group && o.value === value);
-    const f = filter.trim().toLowerCase();
-    // (filtering: the matches, words starting with the filter first; headings go)
+    const f = fold(filter.trim());
+    // (filtering, accents and case aside: the matches, words starting with the filter first; headings go)
     const rows = f
         ? all
-            .filter((o) => !o.group && o.text.toLowerCase().includes(f))
+            .filter((o) => !o.group && foldHas(o.text, f))
             .sort((a, b) =>
                 Number(
-                    !a.text.toLowerCase()
+                    !fold(a.text)
                         .split(/\W+/)
                         .some((w) => w.startsWith(f))
                 ) - Number(
-                    !b.text.toLowerCase()
+                    !fold(b.text)
                         .split(/\W+/)
                         .some((w) => w.startsWith(f))
                 )
@@ -226,7 +228,7 @@ export function Select(props: Props): React.JSX.Element
         setSel(t ? 0 : firstIn(all));
     };
 
-    // (keys go to the open menu first — nothing behind it reacts)
+    // (keys go to the open menu first; nothing behind it reacts)
     useEffect(() =>
     {
         if (!open)
@@ -340,7 +342,7 @@ export function Select(props: Props): React.JSX.Element
                             </div>
                         )}
                         <div className="pk-rows">
-                            {rows.length === 0 && <div className="pk-empty">Nothing matches</div>}
+                            {rows.length === 0 && <div className="pk-empty">{tr('Nothing matches')}</div>}
                             {rows.map((o, i) =>
                                 o.group ?
                                     (

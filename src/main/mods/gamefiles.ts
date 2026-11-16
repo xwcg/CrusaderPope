@@ -4,11 +4,15 @@
  * hides the game's and earlier mods' files directly in that folder (not in subfolders). Folders and zip archives.
  *
  * Engine layers (only with `engine: true`, e.g. gfx): the game folder wins over its DLC folders, then jomini, then
- * clausewitz — like the existing gfx/FX lookups.
+ * clausewitz, like the existing gfx/FX lookups.
+ *
+ * A loaded game save (docs/saves.md, "The save as a layer of the index") is the last source: virtual files made from
+ * it in memory (`SaveLayer`), over the game and every mod.
  */
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join, resolve, sep } from 'node:path';
 import type { ModInfo } from '../../shared/api.ts';
+import { decodeTextBody } from './textCodec.ts';
 import { ZipArchive, type ZipEntry } from './zip.ts';
 
 export interface GameFile
@@ -21,6 +25,38 @@ export interface GameFile
     abs?: string;
     zip?: ZipArchive;
     entry?: ZipEntry;
+    /** a file of the save layer: its bytes (made in memory) */
+    data?: Buffer;
+}
+
+/** A line a loaded save adds to an entry's card ("Savegame"): a value, or links. */
+export interface SaveFact
+{
+    label: string;
+    text?: string;
+    /** an entry (no type: whatever has the name) */
+    ref?: { type?: string; name: string; };
+    refs?: { type?: string; name: string; }[];
+}
+
+/** The loaded save as the last source: its files made in memory (saves/project.ts). */
+export interface SaveLayer
+{
+    /** `save:<file>`: the source's modId (mod touches name it) */
+    id: string;
+    name: string;
+    /** the save file (where() names it) */
+    file: string;
+    mtime: number;
+    /** game-relative path → bytes */
+    files: Map<string, Buffer>;
+    /**
+     * game entries the save carries as entries of its own (`type|name` → the save's): a historical character the save
+     * has (`character_lookup`), marked overridden by the save
+     */
+    overrides: Map<string, { type?: string; name?: string; }>;
+    /** `type|name` → what the save says about it (its card's "Savegame" section) */
+    facts: Map<string, SaveFact[]>;
 }
 
 export interface HiddenFile
@@ -34,7 +70,7 @@ export interface HiddenFile
 export interface FileSource
 {
     index: number;
-    kind: 'game' | 'mod';
+    kind: 'game' | 'mod' | 'save';
     name: string;
     /** ModInfo.id */
     modId?: string;
@@ -58,9 +94,37 @@ const parentOf = (rel: string): string =>
     return i < 0 ? '' : rel.slice(0, i);
 };
 const norm = (rel: string): string => rel.replace(/\\/g, '/').replace(/^\/+|\/+$/g, '');
-/** order of listed files: by path, case-insensitive */
-const byPath = (a: GameFile, b: GameFile): number => (lc(a.rel) < lc(b.rel) ? -1 : lc(a.rel) > lc(b.rel) ? 1 : 0);
-/** order of hidden files: by the source that hid them, then by path — the same for a fresh listing and a patched one */
+/**
+ * The game's load order of two relative paths: the files directly in a folder first (alphabetical), then each subfolder,
+ * depth first. Segment by segment, case-insensitive; at the first differing segment a file (the last segment) sorts before
+ * a folder, otherwise alphabetical. (Proven against every "Overriding entry" of a game run's database_conflicts.log: a plain
+ * sort of the whole path puts `common/decisions/dlc_decisions/x.txt` before `common/decisions/zz.txt`, the game loads it after.)
+ */
+export function gamePathOrder(a: string, b: string): number
+{
+    const x = lc(a).split('/');
+    const y = lc(b).split('/');
+    const n = Math.min(x.length, y.length);
+
+    for (let i = 0; i < n; i++)
+    {
+        if (x[i] === y[i])
+            continue;
+
+        const xf = i === x.length - 1;
+        const yf = i === y.length - 1;
+
+        if (xf !== yf)
+            return xf ? -1 : 1;
+
+        return x[i] < y[i] ? -1 : 1;
+    }
+
+    return x.length - y.length;
+}
+/** order of listed files: the game's load order */
+const byPath = (a: GameFile, b: GameFile): number => gamePathOrder(a.rel, b.rel);
+/** order of hidden files: by the source that hid them, then by path; the same for a fresh listing and a patched one */
 const byHider = (a: HiddenFile, b: HiddenFile): number => a.by - b.by || byPath(a.file, b.file);
 
 function walk(root: string, dir: string, shallow: boolean, out: { rel: string; abs: string; }[], skipDots = false): void
@@ -118,11 +182,11 @@ export class GameFiles
     readonly sources: FileSource[];
     /** the game's engine layers below the game folder, highest first */
     private readonly engineRoots: string[];
-    private readonly mods: { root?: string; zip?: ZipArchive; replace: Set<string>; }[];
+    private readonly mods: { root?: string; zip?: ZipArchive; replace: Set<string>; save?: { layer: SaveLayer; byLc: Map<string, string>; }; }[];
     private readonly listed = new Map<string, { files: GameFile[]; hidden: HiddenFile[]; }>();
 
-    /** @param mods enabled mods in load order (later wins); missing ones are skipped */
-    constructor(gameDir: string, mods: ModInfo[] = [])
+    /** @param mods enabled mods in load order (later wins); missing ones are skipped. `save`: a loaded save, over all */
+    constructor(gameDir: string, mods: ModInfo[] = [], save?: SaveLayer)
     {
         this.gameDir = gameDir;
         const install = dirname(gameDir);
@@ -158,12 +222,24 @@ export class GameFiles
             this.sources.push({ index: this.sources.length, kind: 'mod', name: m.name, modId: m.id, replacePaths });
             this.mods.push({ root: m.root, zip, replace: new Set(replacePaths.map(lc)) });
         }
+
+        if (save)
+        {
+            this.sources.push({ index: this.sources.length, kind: 'save', name: save.name, modId: save.id, replacePaths: [] });
+            this.mods.push({ replace: new Set(), save: { layer: save, byLc: new Map([...save.files.keys()].map((r) => [lc(r), r])) } });
+        }
     }
 
-    /** Identity of the layering (mods, locations, replace paths) — part of cache fingerprints. */
+    /** The loaded save's layer (undefined: none). */
+    get save(): SaveLayer | undefined
+    {
+        return this.mods[this.mods.length - 1]?.save?.layer;
+    }
+
+    /** Identity of the layering (mods, locations, replace paths), part of cache fingerprints. */
     identity(): string
     {
-        return JSON.stringify(this.sources.map((s, i) => [s.kind, s.modId ?? '', this.mods[i].root ?? this.mods[i].zip?.file ?? '', s.replacePaths]));
+        return JSON.stringify(this.sources.map((s, i) => [s.kind, s.modId ?? '', this.mods[i].root ?? this.mods[i].zip?.file ?? this.mods[i].save?.layer.file ?? '', s.replacePaths, this.mods[i].save?.layer.mtime ?? 0]));
     }
 
     private sourceFiles(i: number, dir: string, shallow: boolean): GameFile[]
@@ -186,6 +262,19 @@ export class GameFiles
 
         const prefix = dir ? lc(dir) + '/' : '';
         const out: GameFile[] = [];
+
+        if (m.save)
+        {
+            for (const [rel, data] of m.save.layer.files)
+            {
+                const l = lc(rel);
+
+                if (l.startsWith(prefix) && !(shallow && l.slice(prefix.length).includes('/')))
+                    out.push({ rel, source: i, data });
+            }
+
+            return out;
+        }
 
         for (const e of m.zip!.files())
         {
@@ -281,6 +370,34 @@ export class GameFiles
         return opts.ext ? hidden.filter((h) => opts.ext!.test(h.file.rel)) : hidden;
     }
 
+    /**
+     * The files directly in a folder that the mods before a source ship and load now: what a `replace_path` of that source
+     * (or of a mod right behind it) would hide besides the game's: per mod (its index) its paths, a path under the last mod
+     * that ships it, nothing of a mod before a mod that replaces the folder itself.
+     */
+    earlierFiles(source: number, dir: string): Map<number, string[]>
+    {
+        const d = norm(dir);
+        const owner = new Map<string, number>();
+
+        for (let i = 1; i <= source && i < this.mods.length; i++)
+        {
+            if (this.mods[i].replace.has(lc(d)))
+                owner.clear();
+
+            if (i < source)
+                for (const f of this.sourceFiles(i, d, true))
+                    owner.set(lc(f.rel), i);
+        }
+
+        const out = new Map<number, string[]>();
+
+        for (const [path, i] of owner)
+            out.set(i, [...(out.get(i) ?? []), path]);
+
+        return out;
+    }
+
     /** The file the game loads for a path, if any. */
     get(rel: string, opts: { engine?: boolean; } = {}): GameFile | undefined
     {
@@ -288,7 +405,7 @@ export class GameFiles
     }
 
     /**
-     * The file a path had before a mod's replace_path hid it — what get() gives without replace paths (a removed
+     * The file a path had before a mod's replace_path hid it: what get() gives without replace paths (a removed
      * picture shown in the gallery as removed). The file get() gives when nothing hid it.
      */
     former(rel: string, opts: { engine?: boolean; } = {}): GameFile | undefined
@@ -319,6 +436,13 @@ export class GameFiles
                 if (e && !e.dir)
                     return { rel: e.name, source: i, zip: m.zip, entry: e };
             }
+            else if (m.save)
+            {
+                const name = m.save.byLc.get(lc(r));
+
+                if (name)
+                    return { rel: name, source: i, data: m.save.layer.files.get(name) };
+            }
 
             // this mod's replace_path hides everything before it in that folder
             if (replacePaths && m.replace.has(parent))
@@ -345,6 +469,9 @@ export class GameFiles
 
         try
         {
+            if (file.data)
+                return file.data;
+
             if (file.abs)
                 return readFileSync(file.abs);
 
@@ -356,12 +483,11 @@ export class GameFiles
         }
     }
 
-    /** UTF-8 text without a byte order mark. */
+    /** UTF-8 text without a byte order mark (bytes that are no UTF-8 as `decodeText` keeps them). */
     readText(f: GameFile | string, opts: { engine?: boolean; } = {}): string | undefined
     {
-        return this.read(f, opts)
-            ?.toString('utf8')
-            .replace(/^﻿/, '');
+        const buf = this.read(f, opts);
+        return buf && decodeTextBody(buf);
     }
 
     /**
@@ -372,6 +498,9 @@ export class GameFiles
     {
         if (f.entry)
             return { size: f.entry.size, mtime: f.entry.mtime };
+
+        if (f.data)
+            return { size: f.data.length, mtime: this.save?.mtime ?? 0 };
 
         try
         {
@@ -387,7 +516,7 @@ export class GameFiles
     /** A readable location: the disk path, or `archive.zip › entry`. */
     where(f: GameFile): string
     {
-        return f.abs ?? `${f.zip?.file} › ${f.entry?.name}`;
+        return f.abs ?? (f.data ? `${this.save?.file ?? 'save'} › ${f.rel}` : `${f.zip?.file} › ${f.entry?.name}`);
     }
 
     /** Forget listings (files changed on disk). */
@@ -395,6 +524,25 @@ export class GameFiles
     {
         this.listed.clear();
         this.hiddenKeys = null;
+    }
+
+    /**
+     * A loaded mod's replace paths changed (its descriptor): the layering takes the new ones, the listings are read again
+     * (GameIndex.relayer). The paths it had (lower case); null when no loaded mod has that id.
+     */
+    setReplacePaths(modId: string, replacePaths: string[]): string[] | null
+    {
+        const i = this.sources.findIndex((s) => s.modId?.toLowerCase() === modId.toLowerCase());
+
+        if (i < 1)
+            return null;
+
+        const before = [...this.mods[i].replace];
+        const paths = replacePaths.map(norm);
+        this.sources[i] = { ...this.sources[i], replacePaths: paths };
+        this.mods[i].replace = new Set(paths.map(lc));
+        this.refresh();
+        return before;
     }
 
     /**
@@ -447,7 +595,7 @@ export class GameFiles
         }
     }
 
-    /** `source|path` (lower case) of every hidden file of the cached listings — isListed(); dropped when they change */
+    /** `source|path` (lower case) of every hidden file of the cached listings, for isListed(); dropped when they change */
     private hiddenKeys: Set<string> | null = null;
 
     /** Whether a cached listing has this source's file of a path (the one loaded, or hidden by a later source). */
@@ -476,8 +624,8 @@ export class GameFiles
     }
 
     /**
-     * The files behind a changed path of a mod folder: the path itself when it is a file (or gone), plus — when it is a
-     * folder now, or was one — every file below it on disk and every file listed below it before (deleted or moved
+     * The files behind a changed path of a mod folder: the path itself when it is a file (or gone), plus (when it is a
+     * folder now, or was one) every file below it on disk and every file listed below it before (deleted or moved
      * away). Dot folders are skipped; for the mod folder itself only the top folders in `tops` are walked.
      */
     expand(source: number, rel: string, tops: string[]): string[]
@@ -541,7 +689,7 @@ export class GameFiles
 
     /**
      * Files of a mod folder changed on disk (written, created, deleted): every cached listing covering a path takes it
-     * in — the files of the other sources for that path stay, this source's is looked up again and the layering is
+     * in: the files of the other sources for that path stay, this source's is looked up again and the layering is
      * applied to that path alone, which gives the same listing as listing afresh (docs/indexer.md, "Incremental updates").
      */
     update(source: number, rels: string[]): void
@@ -583,6 +731,41 @@ export class GameFiles
                 this.patch(l, lr, source, mine);
             }
         }
+    }
+
+    /**
+     * A file of the loaded save's layer made anew (an edit of the save, docs/saves.md): its bytes replaced, the cached
+     * listings patched (the index takes it in with refreshFiles' `virtual`). False without a save.
+     */
+    setSaveFile(rel: string, data: Buffer): boolean
+    {
+        const source = this.mods.length - 1;
+        const s = this.mods[source]?.save;
+
+        if (!s)
+            return false;
+
+        const r = norm(rel);
+        const name = s.byLc.get(lc(r)) ?? r;
+        s.layer.files.set(name, data);
+        s.byLc.set(lc(r), name);
+        this.hiddenKeys = null;
+        const lr = lc(r);
+
+        for (const [key, l] of this.listed)
+        {
+            const [dir, shallow] = key.split('|');
+
+            if (dir && !lr.startsWith(dir + '/'))
+                continue;
+
+            if (shallow === 'true' && lc(parentOf(r)) !== dir)
+                continue;
+
+            this.patch(l, lr, source, { rel: name, source, data });
+        }
+
+        return true;
     }
 
     private patch(l: { files: GameFile[]; hidden: HiddenFile[]; }, lr: string, source: number, mine: GameFile | undefined): void

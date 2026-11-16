@@ -1,6 +1,6 @@
 /**
  * Examples of the game's text codes (docs/picker.md, "Text codes"): what `[ROOT.Char.GetTitledFirstName]` and the
- * like print, worked out for one historical character at the 1066 bookmark — William of Normandy (history id 140),
+ * like print, worked out for one historical character at the 1066 bookmark: William of Normandy (history id 140),
  * with his wife, parents, liege, faith, culture and duchy as the "others". The common character, title, faith and
  * culture functions are known; a faith's words come from its religion's `localization = { HighGodName = … }` block;
  * pairs like GetHerHis / GetWomanMan read "his / her". Anything else has no example.
@@ -9,6 +9,7 @@ import type { PNode } from '../indexer/parser.ts';
 import type { GameIndex } from '../indexer/gameIndex.ts';
 import type { CharacterFacts, History } from '../portraits/modifiers.ts';
 
+import { tr } from '../../shared/i18n.ts';
 type V =
     | { t: 'char'; f: CharacterFacts; }
     | { t: 'title'; name: string; tier: number; }
@@ -115,7 +116,7 @@ export class LocExamples
                 if (i < parts.length - 1)
                     return undefined;
 
-                // (|U capitalizes, |l lowers the first letter — of each half of a pair)
+                // (|U capitalizes, |l lowers the first letter, of each half of a pair)
                 const each = (f: (s: string) => string): string =>
                     r.split(' / ')
                         .map(f)
@@ -151,7 +152,9 @@ export class LocExamples
                 if (fn === 'GetTitle' || fn === 'GetCounty')
                     return { t: 'title', name: v.county, tier: 2 };
 
-                if (/^Get(Name|BaseName|BaseNameNoTier|NameNoTier)$/.test(fn))
+                // (a Province's names, data_types 1.20.1.2: GetName, GetNameNoTooltip, GetBaronyNameExplicitly; it has no
+                // GetBaseName or NoTier forms, those are a Title's. The place is its county here: its name stands in)
+                if (/^Get(Name|NameNoTooltip|BaronyNameExplicitly)$/.test(fn))
                     return this.titleBase(v.county);
 
                 return undefined;
@@ -202,7 +205,7 @@ export class LocExamples
             case 'GetFullName':
                 return `${first} ${f.dynasty ? this.houseName(f.dynasty, true) : ''}`.trim();
             case 'GetTitleAsName':
-                return top && rank ? `${rank} of ${this.titleBase(top.name)}` : first;
+                return top && rank ? tr('{rank} of {titleBase}', { rank, titleBase: this.titleBase(top.name) }) : first;
             case 'GetTitleTierName':
                 return rank;
             case 'GetDynastyName':
@@ -227,8 +230,10 @@ export class LocExamples
                 const p = id ? this.history.facts(id, f.date) : null;
                 return p ? { t: 'char', f: p } : undefined;
             }
+            // (Character has no GetSpouse, GetCourtOwner or GetLocation in data_types 1.20.1.2: GetPrimarySpouse,
+            // GetPrimarySpouseOrBetrothed, GetCurrentLocation, GetCapitalLocation)
             case 'GetPrimarySpouse':
-            case 'GetSpouse':
+            case 'GetPrimarySpouseOrBetrothed':
             case 'GetBetrothed':
             {
                 const s = f.spouses[0] ? this.history.facts(f.spouses[0], f.date) : null;
@@ -236,7 +241,6 @@ export class LocExamples
             }
             case 'GetLiege':
             case 'GetEmployer':
-            case 'GetCourtOwner':
             {
                 const l = this.history.liege(f);
                 return l ? { t: 'char', f: l } : undefined;
@@ -245,7 +249,6 @@ export class LocExamples
                 return { t: 'char', f: this.history.topLiege(f) };
             case 'GetCapitalLocation':
             case 'GetCurrentLocation':
-            case 'GetLocation':
             {
                 const county = f.titles.find((t) => t.tier === 2);
                 return county ? { t: 'place', county: county.name } : undefined;
@@ -288,7 +291,7 @@ export class LocExamples
         switch (fn)
         {
             case 'GetName':
-                return tier ? `${tier} of ${base}` : base;
+                return tier ? tr('{tier} of {base}', { tier, base }) : base;
             case 'GetNameNoTier':
             case 'GetBaseName':
             case 'GetBaseNameNoTier':
@@ -298,7 +301,7 @@ export class LocExamples
             case 'GetTierAsName':
                 return tier;
             case 'GetDefinitiveName':
-                return tier ? `the ${tier} of ${base}` : base;
+                return tier ? tr('the {tier} of {base}', { tier, base }) : base;
             case 'GetHolder':
             {
                 const id = this.history.holderAt(v.name, this.history.facts(SAMPLE)?.date ?? 10660915);

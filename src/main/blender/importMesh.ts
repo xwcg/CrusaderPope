@@ -1,7 +1,7 @@
 /**
  * glTF (as Blender exports it) → PDX `.mesh` + changed textures for the active mod (docs/blender.md).
  *
- * Geometry: every mesh node becomes a shape — matched to the original by node (or mesh) name, Blender's `.001`
+ * Geometry: every mesh node becomes a shape, matched to the original by node (or mesh) name, Blender's `.001`
  * suffixes tolerated; others are new shapes. Primitives become sub-meshes by material: materials match the export's
  * by name (the manifest's, or the names the export would give); other materials take the first shape's. Node
  * transforms (an object moved or scaled in Blender) are applied to the vertices; skinned meshes are evaluated in
@@ -24,6 +24,7 @@ import { bonesOf, strProps, subMeshMaterials, txMatrix, type PdxBone, type SubMe
 import { channelHashes, decodeTexture, normalFromGltf, normalToGltf, opaque, propertiesFromOrm, propertiesToOrm, withAlpha } from './textures.ts';
 import type { BlenderManifest, ImportOutcome, ImportWrite, ManifestTexture, ModelExportPlan } from './types.ts';
 
+import { tr } from '../../shared/i18n.ts';
 export interface ImportInput
 {
     plan: ModelExportPlan;
@@ -83,7 +84,7 @@ function findManifest(gltfPath: string, f: GltfFile, plan: ModelExportPlan, mesh
             others.push({ file: join(dir, n), m });
     }
 
-    const other = (mesh: string): string => `This file was exported from ${mesh}, not from ${plan.mesh}. Open ${mesh} to import it there.`;
+    const other = (mesh: string): string => tr('This file was exported from {mesh}, not from {mesh2}. Open {mesh} to import it there.', { mesh, mesh2: plan.mesh });
     // decisive: the glTF's own record (when Blender kept it) and the manifest named like the file
     const extras = (f.doc.asset.extras?.crusaderpope ?? f.doc.scenes?.[f.doc.scene ?? 0]?.extras?.crusaderpope) as { mesh?: string; } | undefined;
 
@@ -206,7 +207,7 @@ const isIdentity = (m: ArrayLike<number>, eps: number): boolean =>
 };
 
 /**
- * Per-vertex tangents in game space (u0): T along +u, w = sign of cross(N, T) · dP/dv — the relation the game's
+ * Per-vertex tangents in game space (u0): T along +u, w = sign of cross(N, T) · dP/dv, the relation the game's
  * files show (docs/blender.md).
  */
 function computeTangents(s: SubMesh): void
@@ -283,13 +284,13 @@ export async function importMesh(input: ImportInput): Promise<ImportOutcome>
     const object = find(root, 'object');
 
     if (!object)
-        throw new Error(`${plan.mesh} has no objects.`);
+        throw new Error(tr('{mesh} has no objects.', { mesh: plan.mesh }));
 
     const origShapes = object.children;
     const { manifest, dir: manifestDir } = findManifest(input.gltfPath, f, plan, origShapes.map((s) => s.name));
 
     if (!manifest)
-        warnings.push('No manifest of the export found next to the file: shapes and materials are matched by name, textures compared with the game’s current files.');
+        warnings.push(tr('No manifest of the export found next to the file: shapes and materials are matched by name, textures compared with the game’s current files.'));
 
     // ---- materials ----
     const subs = subMeshMaterials(object, plan);
@@ -348,7 +349,7 @@ export async function importMesh(input: ImportInput): Promise<ImportOutcome>
     const meshNodes = order.filter((i) => nodes[i].mesh !== undefined && !jointSet.has(i));
 
     if (!meshNodes.length)
-        throw new Error('The file has no meshes.');
+        throw new Error(tr('The file has no meshes.'));
 
     // ---- skeletons of the original (kept as they are) ----
     const skeletonOf = new Map<number, PdxNode>();
@@ -505,7 +506,7 @@ export async function importMesh(input: ImportInput): Promise<ImportOutcome>
         {
             if (prim.mode !== undefined && prim.mode !== 4)
             {
-                warnings.push(`${name}: a primitive of mode ${prim.mode} (not triangles) is left out.`);
+                warnings.push(tr('{name}: a primitive of mode {mode} (not triangles) is left out.', { name, mode: prim.mode }));
                 continue;
             }
 
@@ -569,7 +570,7 @@ export async function importMesh(input: ImportInput): Promise<ImportOutcome>
             }
 
             const offset = sub.p.length / 3;
-            // per-vertex transform: skinned — the joints' rest-pose matrices blended by weight (Blender: identity, the
+            // per-vertex transform: skinned: the joints' rest-pose matrices blended by weight (Blender: identity, the
             // vertices are as they are); else the node's world matrix (an object moved or scaled in Blender)
             const skinnedPrim = !!jointMats && joints.length > 0;
             const cm: M4 | undefined = !skinnedPrim ? nodeWorld : allRest ? IDENTITY : undefined;
@@ -676,7 +677,7 @@ export async function importMesh(input: ImportInput): Promise<ImportOutcome>
             }
 
             if (!N)
-                warnings.push(`${name}: no normals in the file — flat up-normals written; export with Normals on.`);
+                warnings.push(tr('{name}: no normals in the file — flat up-normals written; export with Normals on.', { name }));
 
             // a mirroring transform turns the faces inside out: flip them back (on top of the z mirror's flip)
             const flipAgain = flipped > count / 2;
@@ -699,13 +700,13 @@ export async function importMesh(input: ImportInput): Promise<ImportOutcome>
     }
 
     if (fallbackUsed.size)
-        warnings.push(`Materials that are not the model’s (${[...fallbackUsed].slice(0, 5).join(', ')}) took ${firstMaterial.name} — assign one of the exported materials in Blender to choose.`);
+        warnings.push(tr('Materials that are not the model’s ({join}) took {name} — assign one of the exported materials in Blender to choose.', { join: [...fallbackUsed].slice(0, 5).join(', '), name: firstMaterial.name }));
 
     if (unknownJoints.size)
-        warnings.push(`Joints not in the game skeleton (${[...unknownJoints].slice(0, 5).join(', ')}): their weights moved to the nearest bone that is.`);
+        warnings.push(tr('Joints not in the game skeleton ({join}): their weights moved to the nearest bone that is.', { join: [...unknownJoints].slice(0, 5).join(', ') }));
 
     if (unweighted.size)
-        warnings.push(`${[...unweighted].join(', ')}: skinned in the game, but without weights in the file — bound to the root bone.`);
+        warnings.push(tr('{join}: skinned in the game, but without weights in the file — bound to the root bone.', { join: [...unweighted].join(', ') }));
 
     // ---- PDX tree ----
     const removed = origShapes.filter((s, i) => s.children.some((c) => c.name === 'mesh') && !taken.has(i)).map((s) => s.name);
@@ -812,19 +813,19 @@ export async function importMesh(input: ImportInput): Promise<ImportOutcome>
     if (!newRoot.children.includes(newObject))
         newRoot.children.unshift(newObject);
 
-    const writes: ImportWrite[] = [{ rel: plan.mesh, data: writePdx(newRoot), what: `mesh: ${shapeInfo.length} shape${shapeInfo.length === 1 ? '' : 's'}, ${shapeInfo.reduce((n, s) => n + s.triangles, 0).toLocaleString('en')} triangles` }];
+    const writes: ImportWrite[] = [{ rel: plan.mesh, data: writePdx(newRoot), what: tr('mesh: {length} shape{value}, {toLocaleString} triangles', { length: shapeInfo.length, value: shapeInfo.length === 1 ? '' : 's', toLocaleString: shapeInfo.reduce((n, s) => n + s.triangles, 0).toLocaleString('en') }) }];
     const newShapes = shapeInfo.filter((s) => s.status === 'new').map((s) => s.name);
 
     if (newShapes.length)
         notes.push(
-            `New shape${newShapes.length === 1 ? '' : 's'} ${newShapes.join(', ')}${plan.asset ? ` — ${plan.asset} has no meshsettings for ${newShapes.length === 1 ? 'it' : 'them'} yet (the game gives shapes their textures and shader by name there)` : ''}.`
+            tr('New shape{value} {join}{value2}.', { value: newShapes.length === 1 ? '' : 's', join: newShapes.join(', '), value2: plan.asset ? tr(' — {asset} has no meshsettings for {value} yet (the game gives shapes their textures and shader by name there)', { asset: plan.asset, value: newShapes.length === 1 ? 'it' : 'them' }) : '' })
         );
 
     if (removed.length)
-        notes.push(`Not in the file, so removed: ${removed.join(', ')}.`);
+        notes.push(tr('Not in the file, so removed: {join}.', { join: removed.join(', ') }));
 
     if (removed.length && !shapeInfo.some((s) => s.status === 'matched'))
-        warnings.push(`None of the file's objects is named like a shape of ${plan.mesh}: all of them are new shapes and the model's own are gone — is this the right file?`);
+        warnings.push(tr('None of the file\'s objects is named like a shape of {mesh}: all of them are new shapes and the model\'s own are gone — is this the right file?', { mesh: plan.mesh }));
 
     // ---- blend shapes: new targets in the new vertex order ----
     const lost: string[] = [];
@@ -888,7 +889,11 @@ export async function importMesh(input: ImportInput): Promise<ImportOutcome>
 
                 return targetMesh(e.mesh, pn, tMesh);
             });
-            return { name: tShape?.name ?? bs.name, props: tShape ? { ...tShape.props } : { ...bs.props }, children: meshes };
+            // (the target's other blocks stay where they are: a few vanilla targets carry the skeleton after the meshes)
+            const rest = tShape?.children.filter((c) => c.name !== 'mesh') ?? [];
+            const firstMesh = tShape?.children.findIndex((c) => c.name === 'mesh') ?? -1;
+            const before = Math.max(firstMesh, 0);
+            return { name: tShape?.name ?? bs.name, props: tShape ? { ...tShape.props } : { ...bs.props }, children: [...rest.slice(0, before), ...meshes, ...rest.slice(before)] };
         });
         const target: PdxNode = {
             name: troot?.name ?? 'file',
@@ -899,17 +904,17 @@ export async function importMesh(input: ImportInput): Promise<ImportOutcome>
         if (!fromFile)
             lost.push(b.id);
 
-        writes.push({ rel: b.file, data: writePdx(target), what: `blend shape ${b.id}${fromFile ? ' (from its shape key)' : retargeted ? ' (re-targeted by nearest vertex)' : ' (flat)'}` });
+        writes.push({ rel: b.file, data: writePdx(target), what: tr('blend shape {id}{value}', { id: b.id, value: fromFile ? ' (from its shape key)' : retargeted ? ' (re-targeted by nearest vertex)' : ' (flat)' }) });
     }
 
     if (lost.length)
         warnings.push(
-            `${lost.length === plan.blendShapes!.length - unfit.length ? 'No blend shape' : `Blend shape${lost.length === 1 ? '' : 's'} ${lost.join(', ')}`} came as a shape key (export from Blender with Shape Keys on): re-targeted to the new vertex order by nearest vertex.`
+            tr('{value} came as a shape key (export from Blender with Shape Keys on): re-targeted to the new vertex order by nearest vertex.', { value: lost.length === plan.blendShapes!.length - unfit.length ? 'No blend shape' : `Blend shape${lost.length === 1 ? '' : 's'} ${lost.join(', ')}` })
         );
 
     if (unfit.length)
         notes.push(
-            `${unfit.length} blend shape target${unfit.length === 1 ? '' : 's'} left as ${unfit.length === 1 ? 'it is' : 'they are'}: ${unfit.length === 1 ? 'it has' : 'they have'} other vertices than the mesh in the game already (${unfit.slice(0, 4).join(', ')}${unfit.length > 4 ? ' …' : ''}).`
+            tr('{length} blend shape target{value} left as {value2}: {value3} other vertices than the mesh in the game already ({join}{value4}).', { length: unfit.length, value: unfit.length === 1 ? '' : 's', value2: unfit.length === 1 ? tr('it is') : tr('they are'), value3: unfit.length === 1 ? tr('it has') : tr('they have'), join: unfit.slice(0, 4).join(', '), value4: unfit.length > 4 ? ' …' : '' })
         );
 
     // ---- textures ----
@@ -944,13 +949,13 @@ function buildMesh(sub: SubMesh, orig: PdxNode | undefined, bones: BoneMap | und
         const uv = sub.uv[k] ?? sub.uv[0];
 
         if (!sub.uv[k])
-            warnings.push(`${shape}: UV set ${k + 1} missing — a copy of the first written (the game's material reads ${origUv}).`);
+            warnings.push(tr('{shape}: UV set {value} missing — a copy of the first written (the game\'s material reads {origUv}).', { shape, value: k + 1, origUv }));
 
         props['u' + k] = uv ? f32(uv) : new Float32Array(nv * 2);
     }
 
     if (sub.uv.length > origUv)
-        warnings.push(`${shape}: ${sub.uv.length - origUv} extra UV set${sub.uv.length - origUv === 1 ? '' : 's'} left out (the original has ${origUv}).`);
+        warnings.push(tr('{shape}: {value} extra UV set{value2} left out (the original has {origUv}).', { shape, value: sub.uv.length - origUv, value2: sub.uv.length - origUv === 1 ? '' : 's', origUv }));
 
     props.tri = Int32Array.from(sub.tri);
     const min = [Infinity, Infinity, Infinity];
@@ -1033,7 +1038,7 @@ function buildMesh(sub: SubMesh, orig: PdxNode | undefined, bones: BoneMap | und
 
 /**
  * A blend shape target for a sub-mesh the file brought no shape key for: each vertex takes the offset (position,
- * normal) of its original vertex — the one with the same UV nearest in position, else the nearest one.
+ * normal) of its original vertex (the one with the same UV nearest in position, else the nearest one).
  */
 /** new vertex → original vertex, per sub-mesh and original (one search serves every blend shape) */
 const correspondences = new WeakMap<SubMesh, { base: PdxNode; map: Int32Array; }>();
@@ -1188,7 +1193,7 @@ function vertexFaceNormals(p: ArrayLike<number>, tri: ArrayLike<number>, nv: num
 
 /**
  * Normals of a blend shape target: each base normal turned by the rotation that takes the vertex's surface normal
- * in the base to the one in the target (same triangles) — custom and flipped normals keep their relation.
+ * in the base to the one in the target (same triangles), so custom and flipped normals keep their relation.
  */
 function deformNormals(base: SubMesh, target: number[]): number[]
 {
@@ -1468,7 +1473,7 @@ async function importTextures(
             return true;
 
         const now = channelHashes(img);
-        // an opaque diffuse: the exporter may have dropped the alpha — compared on colour only
+        // an opaque diffuse: the exporter may have dropped the alpha, so compared on colour only
         const noAlpha = kind === 'diffuse' && opaque(img);
         return DATA_CHANNELS[kind].some((use, c) => use && !(noAlpha && c === 3) && now[c] !== channels[c]);
     };
@@ -1478,7 +1483,7 @@ async function importTextures(
 
         if (!isPng(bytes))
         {
-            warnings.push(`Image ${uri ?? name ?? i} is ${mime.replace('image/', '').toUpperCase()}, not PNG — not imported (export from Blender with Images: PNG).`);
+            warnings.push(tr('Image {value} is {toUpperCase}, not PNG — not imported (export from Blender with Images: PNG).', { value: uri ?? name ?? i, toUpperCase: mime.replace('image/', '').toUpperCase() }));
             return undefined;
         }
 
@@ -1516,7 +1521,7 @@ async function importTextures(
 
         if (prev && (prev.img.width !== img.width || prev.img.height !== img.height || Buffer.compare(Buffer.from(prev.img.rgba), Buffer.from(img.rgba)) !== 0))
         {
-            conflict.add(`${path} (${prev.via} and ${via} differ — ${prev.via} taken)`);
+            conflict.add(`${path} (${prev.via} and ${via} differ; ${prev.via} taken)`);
             return;
         }
 
@@ -1553,7 +1558,7 @@ async function importTextures(
             if (!changed(img, kind, kind === 'orm' ? ref.orm?.channels : ref.channels, ref.width, ref.height))
                 continue;
 
-            take(t.path, t.role + (kind === 'orm' ? '/orm' : ''), img, `${gm.name}'s ${t.role === 'properties' ? 'metallic-roughness' : t.role} image`);
+            take(t.path, t.role + (kind === 'orm' ? '/orm' : ''), img, tr('{name}\'s {value} image', { name: gm.name, value: t.role === 'properties' ? 'metallic-roughness' : t.role }));
         }
     }
 
@@ -1577,7 +1582,7 @@ async function importTextures(
     }
 
     for (const c of conflict)
-        warnings.push(`Texture ${c}.`);
+        warnings.push(tr('Texture {c}.', { c }));
 
     // back to the game's layout and DDS
     const done = new Set<string>();
@@ -1595,7 +1600,7 @@ async function importTextures(
         const use = direct ?? r;
 
         if (direct && results.has(role + '/orm|' + lc(r.path)))
-            warnings.push(`${r.path}: both ${direct.via} and the metallic-roughness image changed — ${direct.via} taken.`);
+            warnings.push(tr('{path}: both {via} and the metallic-roughness image changed — {via} taken.', { path: r.path, via: direct.via }));
 
         done.add(key);
         const o = await original(r.path);
@@ -1608,7 +1613,7 @@ async function importTextures(
         {
             if (!o)
             {
-                warnings.push(`${r.path}: the original properties map could not be read — its roughness/metalness edit is left out.`);
+                warnings.push(tr('{path}: the original properties map could not be read — its roughness/metalness edit is left out.', { path: r.path }));
                 continue;
             }
 
@@ -1624,12 +1629,12 @@ async function importTextures(
         const target = ddsTargetFor(o?.info, input.read(r.path), o?.img);
         const data = encodeDds(img, target);
         const users = input.plan.textureUsers[lc(r.path)] ?? 0;
-        writes.push({ rel: r.path, data, what: `${role} texture ${img.width}×${img.height} ${target.format}${target.mips ? ' with mips' : ''}${how}` });
+        writes.push({ rel: r.path, data, what: tr('{role} texture {width}×{height} {format}{value}{how}', { role, width: img.width, height: img.height, format: target.format, value: target.mips ? ' with mips' : '', how }) });
 
         if (users > 1)
-            notes.push(`${r.path} is used by ${users} materials of the game’s models — the change shows on all of them.`);
+            notes.push(tr('{path} is used by {users} materials of the game’s models — the change shows on all of them.', { path: r.path, users }));
 
         if (o?.format && !/^BC[13]|RGBA|MASKED/.test(o.format) && target.format === 'BGRA8')
-            notes.push(`${r.path} was ${o.format}; it is written uncompressed (BGRA8), which the game reads but is larger.`);
+            notes.push(tr('{path} was {format}; it is written uncompressed (BGRA8), which the game reads but is larger.', { path: r.path, format: o.format }));
     }
 }

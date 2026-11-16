@@ -1,7 +1,7 @@
 /**
  * Undo of what the app writes into mods (docs/mods.md, "Undo"): in-place edits, overrides, new entries, duplicates,
  * texts, map edits, imports and replaced assets. Every write goes through `recordWrite` / `recordRemove` (edit.ts
- * `write`); the writes of one operation (`change`) are one step — each file with its bytes before (or that the app
+ * `write`); the writes of one operation (`change`) are one step: each file with its bytes before (or that the app
  * made it, and the folders made for it) and the checksum of what it wrote last. Undoing a step restores every file
  * when all of them are still what it wrote (else refused: changed in another editor, or by a later step), removes the
  * files it made and the folders made for them when empty, and hands the files to the index.
@@ -9,6 +9,10 @@
  * The steps survive a restart: kept in the app's userData (`undo/journal.json`, each file's earlier bytes in a file of
  * its own), the last 100 steps and at most 64 MB of earlier bytes (the oldest go first). Without a folder (scripts):
  * in memory. Plain Node.
+ *
+ * Redo: undoing a step keeps what it had written (each file's bytes after it, or that it had removed the file) as a
+ * redo entry; redoing writes that again when every file is still what the undo left, and the step is back. Any new
+ * change drops the redo entries (they would write over it).
  */
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { createHash } from 'node:crypto';
@@ -16,7 +20,9 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, rmdirSync, unlinkSync
 import { basename, dirname, isAbsolute, join, relative } from 'node:path';
 import type { UndoResult } from '../../shared/api.ts';
 import { writeAtomic, type ModsHost } from './manager.ts';
+import { encodeText } from './textCodec.ts';
 
+import { tr } from '../../shared/i18n.ts';
 /** One file of a step. */
 interface StepFile
 {
@@ -41,7 +47,7 @@ interface Step
     at: number;
     /** what it was, in words ("Changed: +4 Martial", "Override of brave") */
     label: string;
-    /** edit, override, create, map, import … — the map page undoes only its own */
+    /** edit, override, create, map, import …; the map page undoes only its own */
     kind: string;
     mod?: { id: string; name: string; };
     files: StepFile[];
@@ -49,12 +55,19 @@ interface Step
     line?: number;
 }
 
+/** An undone step, to redo: the step, and per file what it had written (bytes, or gone) and what the undo left. */
+interface RedoEntry
+{
+    step: Step;
+    files: { file: string; rel: string; data?: Buffer; blob?: string; gone: boolean; undone: string | null; }[];
+}
+
 const MAX_STEPS = 100;
 const MAX_BYTES = 64 << 20;
 
 const sha1 = (b: Uint8Array): string => createHash('sha1').update(b).digest('hex');
 
-/** An operation being recorded (the writes made while it runs — AsyncLocalStorage keeps concurrent ones apart). */
+/** An operation being recorded (the writes made while it runs; AsyncLocalStorage keeps concurrent ones apart). */
 interface Pending
 {
     label: string;
@@ -73,6 +86,7 @@ const pending = new AsyncLocalStorage<Pending>();
 export class UndoJournal
 {
     private steps: Step[] = [];
+    private redos: RedoEntry[] = [];
     private next = 1;
     private dir?: string;
 
@@ -90,8 +104,9 @@ export class UndoJournal
 
         try
         {
-            const j = JSON.parse(readFileSync(join(this.dir, 'journal.json'), 'utf8')) as { next: number; steps: Step[]; };
+            const j = JSON.parse(readFileSync(join(this.dir, 'journal.json'), 'utf8')) as { next: number; steps: Step[]; redos?: RedoEntry[]; };
             this.steps = j.steps.filter((s) => s.files.every((f) => f.created || (f.blob && existsSync(join(this.dir!, f.blob)))));
+            this.redos = (j.redos ?? []).filter((r) => r.files.every((f) => f.gone || (f.blob && existsSync(join(this.dir!, f.blob)))));
             this.next = Math.max(j.next ?? 1, ...this.steps.map((s) => s.id + 1));
         }
         catch
@@ -107,9 +122,10 @@ export class UndoJournal
 
         mkdirSync(this.dir, { recursive: true });
         const steps = this.steps.map((s) => ({ ...s, files: s.files.map(({ data: _d, ...f }) => f) }));
-        writeAtomic(join(this.dir, 'journal.json'), JSON.stringify({ next: this.next, steps }));
-        // (blobs of steps no longer kept)
-        const keep = new Set(this.steps.flatMap((s) => s.files.map((f) => f.blob)));
+        const redos = this.redos.map((r) => ({ step: { ...r.step, files: r.step.files.map(({ data: _d, ...f }) => f) }, files: r.files.map(({ data: _d, ...f }) => f) }));
+        writeAtomic(join(this.dir, 'journal.json'), JSON.stringify({ next: this.next, steps, redos }));
+        // (blobs of steps and redo entries no longer kept)
+        const keep = new Set([...this.steps, ...this.redos.map((r) => r.step)].flatMap((s) => s.files.map((f) => f.blob)).concat(this.redos.flatMap((r) => r.files.map((f) => f.blob))));
 
         for (const name of readdirSync(this.dir))
         {
@@ -146,6 +162,8 @@ export class UndoJournal
             }
         });
         this.steps.push({ id, at: Date.now(), label: p.label, kind: p.kind, mod: p.mod, files, line: p.line });
+        // (a new change: what was undone before can't come back over it)
+        this.redos = [];
 
         // (the newest step always stays)
         const bytes = (): number => this.steps.reduce((n, s) => n + s.files.reduce((m, f) => m + f.size, 0), 0);
@@ -166,7 +184,27 @@ export class UndoJournal
             .map((s) => ({ id: s.id, label: s.label, kind: s.kind, at: s.at }));
     }
 
-    /** Drops a step without undoing it (one that can't be undone any more: its files changed since — "Forget"). */
+    /** Undone steps of a mod that can be redone (all when no mod), the last undone first. */
+    listRedo(mod?: string): { id: number; label: string; kind: string; at: number; }[]
+    {
+        return this.redos
+            .filter((r) => !mod || r.step.mod?.id.toLowerCase() === mod.toLowerCase())
+            .reverse()
+            .map((r) => ({ id: r.step.id, label: r.step.label, kind: r.step.kind, at: r.step.at }));
+    }
+
+    /** Drops a step without undoing it ("Forget"; one that can't be undone any more: its files changed since). */
+    /** Drops every step and redo entry of a mod (deleted: its files are gone). Returns how many steps went. */
+    forgetMod(modId: string): number
+    {
+        const of = (s: Step): boolean => s.mod?.id.toLowerCase() === modId.toLowerCase();
+        const n = this.steps.filter(of).length;
+        this.steps = this.steps.filter((s) => !of(s));
+        this.redos = this.redos.filter((r) => !of(r.step));
+        this.save();
+        return n;
+    }
+
     forget(id: number): boolean
     {
         const i = this.steps.findIndex((s) => s.id === id);
@@ -180,7 +218,7 @@ export class UndoJournal
     }
 
     /**
-     * Why a step can't be undone now, or undefined: every file must be as it left it — a file it made and that is gone
+     * Why a step can't be undone now, or undefined: every file must be as it left it; a file it made and that is gone
      * since is no obstacle (removing it is what undo would do). A later step that touched the file is named: undo that
      * first; else the file changed outside the app (another editor, deleted).
      */
@@ -197,21 +235,21 @@ export class UndoJournal
             const later = this.steps.find((s) => s.id > pick.id && s.files.some((x) => (process.platform === 'win32' ? x.file.toLowerCase() : x.file) === key));
 
             if (later)
-                return `${f.rel} was changed again by a later change (“${later.label}”) — undo that one first.`;
+                return tr('{rel} was changed again by a later change (“{label}”) — undo that one first.', { rel: f.rel, label: later.label });
 
             if (f.after === null)
-                return `${f.rel} is there again since (made in another editor?) — nothing was undone.`;
+                return tr('{rel} is there again since (made in another editor?) — nothing was undone.', { rel: f.rel });
 
-            return now === null ? `${f.rel} was deleted since (outside the app) — nothing was undone.` : `${f.rel} changed since (in another editor?) — nothing was undone.`;
+            return now === null ? tr('{rel} was deleted since (outside the app) — nothing was undone.', { rel: f.rel }) : tr('{rel} changed since (in another editor?) — nothing was undone.', { rel: f.rel });
         }
 
         return undefined;
     }
 
     /**
-     * Undoes a step (`id`, else the newest of `mod` — of `kind`): when every file is still what it wrote (blocked), each
+     * Undoes a step (`id`, else the newest of `mod`, of `kind`): when every file is still what it wrote (blocked), each
      * goes back to its bytes before, the files it made are removed (and the folders made for them, when empty). Returns
-     * the files changed — for the index —, or `refused` with why (the step stays: "Forget" drops it); null when there is
+     * the files changed (for the index), or `refused` with why (the step stays: "Forget" drops it); null when there is
      * nothing to undo.
      */
     undo(host: ModsHost, which: { id?: number; mod?: string; kind?: string; }): (UndoResult & { changed: string[]; }) | null
@@ -221,7 +259,7 @@ export class UndoJournal
         if (!pick)
         {
             if (which.id !== undefined)
-                return { id: which.id, label: 'That change', kind: '', removed: [], also: [], left: 0, refused: 'It can’t be undone any more (it is no longer kept: the last 100 changes are).', changed: [] };
+                return { id: which.id, label: tr('That change'), kind: '', removed: [], also: [], left: 0, refused: tr('It can’t be undone any more (it is no longer kept: the last 100 changes are).'), changed: [] };
 
             return null;
         }
@@ -233,8 +271,30 @@ export class UndoJournal
         if (refused)
             return { ...base, rel: pick.files[0]?.rel, removed: [], also: [], left: left().length + 1, refused, changed: [] };
 
+        // (what the step had written, for redo: each file's bytes now, or that it is gone)
+        const had = pick.files.map((f, i) =>
+        {
+            const now = existsSync(f.file) ? readFileSync(f.file) : undefined;
+            const e: RedoEntry['files'][number] = { file: f.file, rel: f.rel, gone: !now, undone: null };
+
+            if (now && this.dir)
+            {
+                mkdirSync(this.dir, { recursive: true });
+                e.blob = `${pick.id}-r${i}.bin`;
+                writeFileSync(join(this.dir, e.blob), now);
+            }
+            else if (now)
+                e.data = now;
+
+            return e;
+        });
         // (every file checked first: all or nothing)
         const changed = restore(host, pick.files, (f) => f.data ?? readFileSync(join(this.dir!, f.blob!)));
+
+        for (const e of had)
+            e.undone = existsSync(e.file) ? sha1(readFileSync(e.file)) : null;
+
+        this.redos.push({ step: pick, files: had });
         this.steps.splice(this.steps.indexOf(pick), 1);
         this.save();
         const shown = pick.files.find((f) => !f.created) ?? pick.files[0];
@@ -242,6 +302,7 @@ export class UndoJournal
         const next = rest[rest.length - 1];
         return {
             ...base,
+            redo: pick.id,
             file: shown.created ? undefined : shown.file,
             rel: shown.rel,
             line: shown === pick.files[0] ? pick.line : undefined,
@@ -252,7 +313,73 @@ export class UndoJournal
             changed
         };
     }
+
+    /**
+     * Redo of an undone step (`id`, else the mod's last undone one): every file must still be what the undo left; each gets
+     * the bytes the step had written again (or is removed again), and the step is back in the journal (undoable again).
+     */
+    redo(host: ModsHost, which: { id?: number; mod?: string; }): (RedoResult & { changed: string[]; }) | null
+    {
+        const pick = which.id !== undefined ? this.redos.find((r) => r.step.id === which.id) : this.redos.filter((r) => !which.mod || r.step.mod?.id.toLowerCase() === which.mod.toLowerCase()).pop();
+
+        if (!pick)
+            return null;
+
+        const left = (): number => this.redos.filter((r) => r !== pick && (!pick.step.mod || r.step.mod?.id.toLowerCase() === pick.step.mod.id.toLowerCase())).length;
+        const base = { id: pick.step.id, label: pick.step.label, mod: pick.step.mod };
+
+        for (const f of pick.files)
+        {
+            const now = existsSync(f.file) ? sha1(readFileSync(f.file)) : null;
+
+            if (now !== f.undone)
+                return { ...base, rel: f.rel, refused: tr('{rel} changed since the undo — nothing was redone.', { rel: f.rel }), left: left() + 1, changed: [] };
+        }
+
+        const changed: string[] = [];
+
+        for (const f of pick.files)
+        {
+            host.wrote?.([f.file, f.file + '.crusaderpope-tmp']);
+
+            if (f.gone)
+            {
+                if (existsSync(f.file))
+                    unlinkSync(f.file);
+            }
+            else
+            {
+                mkdirSync(dirname(f.file), { recursive: true });
+                writeAtomic(f.file, f.data ?? readFileSync(join(this.dir!, f.blob!)));
+            }
+
+            changed.push(f.file);
+        }
+
+        this.redos.splice(this.redos.indexOf(pick), 1);
+        // (back in its place among the steps, by id)
+        const at = this.steps.findIndex((s) => s.id > pick.step.id);
+        this.steps.splice(at < 0 ? this.steps.length : at, 0, pick.step);
+        this.save();
+        const shown = pick.step.files.find((f) => !f.created) ?? pick.step.files[0];
+        return { ...base, file: shown?.file, rel: shown?.rel, line: shown === pick.step.files[0] ? pick.step.line : undefined, left: left(), changed };
+    }
 }
+
+export interface RedoResult
+{
+    id: number;
+    label: string;
+    mod?: { id: string; name: string; };
+    rel?: string;
+    file?: string;
+    line?: number;
+    /** why it was not redone (a file changed since the undo); nothing written */
+    refused?: string;
+    /** redo entries left (of the mod) */
+    left: number;
+}
+
 
 /**
  * The files of a step back to their bytes before (newest first): made ones removed with the folders made for them when
@@ -308,9 +435,14 @@ function restore(host: ModsHost, files: StepFile[], before: (f: StepFile) => Buf
 const journals = new Map<string, UndoJournal>();
 const memory = new WeakMap<ModsHost, UndoJournal>();
 
-/** The host's journal: kept in its data folder (`undo/`), else in memory. */
+/** The host's journal: another thread's when the host forwards it (`undoJournal`), else kept in its data folder (`undo/`), else in memory. */
 export function journalOf(host: ModsHost): UndoJournal
 {
+    const forwarded = host.undoJournal?.();
+
+    if (forwarded)
+        return forwarded;
+
     const dir = host.dataDir?.();
 
     if (!dir)
@@ -332,7 +464,97 @@ export function journalOf(host: ModsHost): UndoJournal
     return j;
 }
 
-/** Forgets the journals read (the next use reads them again from their folder — a restart, for the check script). */
+/** What a forwarded journal asks of the journal it stands for (`ForwardedJournal`, `takeForwarded`). */
+export type JournalOp = 'commit' | 'list' | 'listRedo' | 'forget' | 'forgetMod' | 'undo' | 'redo';
+
+/**
+ * The journal of a thread whose steps another thread keeps (the migration worker's: main's journal, which the app's undo and
+ * change bar read, migrationThread.ts): each call goes to that journal and waits for its answer (`send`), so there is one
+ * journal and one `journal.json` however many threads write into mods. A step's earlier bytes go along with it.
+ */
+export class ForwardedJournal extends UndoJournal
+{
+    private readonly send: (op: JournalOp, args: unknown[]) => unknown;
+
+    constructor(send: (op: JournalOp, args: unknown[]) => unknown)
+    {
+        super();
+        this.send = send;
+    }
+
+    override commit(p: Pending): number | undefined
+    {
+        return p.files.size ? (this.send('commit', [p]) as number | undefined) : undefined;
+    }
+
+    override list(mod?: string, kind?: string): { id: number; label: string; kind: string; at: number; }[]
+    {
+        return this.send('list', [mod, kind]) as { id: number; label: string; kind: string; at: number; }[];
+    }
+
+    override listRedo(mod?: string): { id: number; label: string; kind: string; at: number; }[]
+    {
+        return this.send('listRedo', [mod]) as { id: number; label: string; kind: string; at: number; }[];
+    }
+
+    override forgetMod(modId: string): number
+    {
+        return this.send('forgetMod', [modId]) as number;
+    }
+
+    override forget(id: number): boolean
+    {
+        return this.send('forget', [id]) as boolean;
+    }
+
+    // (undo and redo write files and hand them to the index: done by the journal's own thread with its own host)
+    override undo(_host: ModsHost, which: { id?: number; mod?: string; kind?: string; }): (UndoResult & { changed: string[]; }) | null
+    {
+        return this.send('undo', [which]) as (UndoResult & { changed: string[]; }) | null;
+    }
+
+    override redo(_host: ModsHost, which: { id?: number; mod?: string; }): (RedoResult & { changed: string[]; }) | null
+    {
+        return this.send('redo', [which]) as (RedoResult & { changed: string[]; }) | null;
+    }
+}
+
+/**
+ * A call of another thread's `ForwardedJournal` on this host's journal. A step's earlier bytes arrive as plain byte arrays
+ * (structured clone): Buffers again, as this thread's own steps hold them.
+ */
+export function takeForwarded(host: ModsHost, op: JournalOp, args: unknown[]): unknown
+{
+    const j = journalOf(host);
+
+    switch (op)
+    {
+        case 'commit':
+        {
+            const p = args[0] as Pending;
+
+            for (const f of p.files.values())
+                if (f.data && !Buffer.isBuffer(f.data))
+                    f.data = Buffer.from((f.data as Uint8Array).buffer, (f.data as Uint8Array).byteOffset, (f.data as Uint8Array).byteLength);
+
+            return j.commit(p);
+        }
+        case 'list':
+            return j.list(args[0] as string | undefined, args[1] as string | undefined);
+        case 'listRedo':
+            return j.listRedo(args[0] as string | undefined);
+        case 'forget':
+            return j.forget(args[0] as number);
+        case 'forgetMod':
+            return j.forgetMod(args[0] as string);
+        case 'undo':
+            return j.undo(host, args[0] as { id?: number; mod?: string; kind?: string; });
+        case 'redo':
+            return j.redo(host, args[0] as { id?: number; mod?: string; });
+    }
+}
+
+/** Forgets the journals read (the next use reads them again from their folder: a restart, for the check script). */
 export function dropJournals(): void
 {
     journals.clear();
@@ -340,9 +562,9 @@ export function dropJournals(): void
 
 /**
  * Runs an operation that writes into a mod as one undoable step (nested operations join the outer one). The result
- * gets the step's id (`step`) when it is an object and something was written — and a numeric `undo` becomes how many
+ * gets the step's id (`step`) when it is an object and something was written, and a numeric `undo` becomes how many
  * changes of the mod can be undone. `rollback`: when the operation fails, what it wrote so far is taken back at once
- * (a picked statement refused after its new entries were made: no step is left) — the outermost operation decides;
+ * (a picked statement refused after its new entries were made: no step is left); the outermost operation decides;
  * without it, what was written stays as a step (undoable).
  */
 export async function change<T>(host: ModsHost, label: string, kind: string, fn: () => Promise<T>, opts: { rollback?: boolean; } = {}): Promise<T>
@@ -363,7 +585,7 @@ export async function change<T>(host: ModsHost, label: string, kind: string, fn:
     {
         if (opts.rollback && p.files.size)
         {
-            // (the files back as they were before the operation — nothing to undo, no step)
+            // (the files back as they were before the operation: nothing to undo, no step)
             const files = restore(host, [...p.files.values()], (f) => f.data);
             p.files.clear();
 
@@ -424,7 +646,7 @@ function current(file: string): { p: Pending; own: boolean; }
     if (p)
         return { p, own: false };
 
-    return { p: { label: `Wrote ${basename(file)}`, kind: 'write', files: new Map() }, own: true };
+    return { p: { label: tr('Wrote {basename}', { basename: basename(file) }), kind: 'write', files: new Map() }, own: true };
 }
 
 /** A file's path in the operation's mod (`common/traits/x.txt`), else its name. */
@@ -434,7 +656,7 @@ function relIn(p: Pending, file: string): string
     return r && !r.startsWith('..') && !isAbsolute(r) ? r.replace(/\\/g, '/') : basename(file);
 }
 
-/** The folders that don't exist yet above a file (deepest first) — those a write makes. */
+/** The folders that don't exist yet above a file (deepest first): those a write makes. */
 function missingDirs(file: string): string[]
 {
     const out: string[] = [];
@@ -477,7 +699,7 @@ export function recordWrite<T extends Uint8Array | string>(host: ModsHost, file:
     const { p, own } = current(file);
     const f = remember(p, file);
     const out = write();
-    f.after = sha1(typeof out === 'string' ? Buffer.from(out, 'utf8') : out);
+    f.after = sha1(typeof out === 'string' ? encodeText(out) : out);
 
     if (own)
         journalOf(host).commit(p);
@@ -485,7 +707,7 @@ export function recordWrite<T extends Uint8Array | string>(host: ModsHost, file:
     return out;
 }
 
-/** Removes a file of a mod (`remove`: how — to the recycle bin) and records it for undo. */
+/** Removes a file of a mod (`remove`: how, e.g. to the recycle bin) and records it for undo. */
 export async function recordRemove(host: ModsHost, file: string, remove: () => Promise<void> | void): Promise<void>
 {
     const { p, own } = current(file);
@@ -497,7 +719,7 @@ export async function recordRemove(host: ModsHost, file: string, remove: () => P
         journalOf(host).commit(p);
 }
 
-/** Undoes a step (see UndoJournal.undo — `refused`: why not, nothing written) and hands the files to the index. */
+/** Undoes a step (see UndoJournal.undo; `refused`: why not, nothing written) and hands the files to the index. */
 export async function undoChange(host: ModsHost, which: { id?: number; mod?: string; kind?: string; }): Promise<UndoResult | null>
 {
     const r = journalOf(host).undo(host, which);
@@ -514,6 +736,27 @@ export async function undoChange(host: ModsHost, which: { id?: number; mod?: str
         await host.refreshFiles(changed);
     else
         host.reindex();
+
+    return result;
+}
+
+/** Redoes an undone step (see the journal's redo; `refused`: why not) and hands the files to the index. */
+export async function redoChange(host: ModsHost, which: { id?: number; mod?: string; }): Promise<RedoResult | null>
+{
+    const r = journalOf(host).redo(host, which);
+
+    if (!r)
+        return null;
+
+    const { changed, ...result } = r;
+
+    if (changed.length)
+    {
+        if (host.refreshFiles)
+            await host.refreshFiles(changed);
+        else
+            host.reindex();
+    }
 
     return result;
 }

@@ -1,7 +1,7 @@
 /**
  * How far each point of the 3D map is from its group's border (docs/map.md, "3D map"): per cell of CELL map pixels
- * the chamfer distance (3-4, two passes) to the nearest cell of another region — water is one, rivers are none (a
- * realm goes on across them) — as map pixels × 4 in an R8 texture (up to ~64 px). The terrain shader lays the mode's
+ * the chamfer distance (3-4, two passes) to the nearest cell of another region (water is one, rivers are none: a
+ * realm goes on across them), as map pixels × 4 in an R8 texture (up to ~64 px). The terrain shader lays the mode's
  * colours by it the way the game's gradient borders do (hollow near, filled far).
  */
 export const FIELD_CELL = 4;

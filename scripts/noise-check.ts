@@ -1,11 +1,12 @@
 // Prints the most-referenced entities per type to spot false-positive reference matches.
 // Usage: node --experimental-strip-types --expose-gc scripts/noise-check.ts
-import { GameIndex, resolveGameDir } from '../src/main/indexer/gameIndex.ts';
+// The index: scripts/fast-index.ts, built on parse threads, never from its cache (the heap printed below is a built index's).
+import { resolveGameDir } from '../src/main/indexer/gameIndex.ts';
 import { defaultInstall } from './ck3-install.ts';
+import { fastIndex } from './fast-index.ts';
 
 const gameDir = resolveGameDir(process.argv[2] ?? defaultInstall())!;
-const idx = new GameIndex(gameDir, 'english');
-idx.build();
+const idx = await fastIndex(gameDir);
 (globalThis as { gc?: () => void; }).gc?.();
 console.log(idx.stats, `heap after gc ${(process.memoryUsage().heapUsed / 1e6) | 0} MB`);
 

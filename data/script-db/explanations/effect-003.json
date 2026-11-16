@@ -1,0 +1,477 @@
+[
+ {
+  "kind": "effect",
+  "key": "add_legitimacy_level",
+  "label": "Legitimacy level",
+  "summary": "Raises or lowers the legitimacy level of a living, playable character.",
+  "details": "Use a negative number to lower it. Vanilla only uses small negative steps (-1 and -2). It works on a character who is alive and can be played.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_long_term_gold",
+  "label": "AI long term gold",
+  "summary": "Puts gold into the AI's 'long term' budget of the character, creating that gold out of nothing.",
+  "details": "The AI splits its money into budget categories. The long term category has a maximum, and anything over it flows into the short term budget. This does not take gold from anyone. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_loot",
+  "label": "Loot",
+  "summary": "Adds loot to an army that is raiding or bartering.",
+  "details": "It runs on an army. The value can be a number, a script value or a value read from a scope. Vanilla uses it with the treasury loot of a raid and with the raid gold value of a sacked barony's province.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_manual_participant",
+  "label": "Manual participant",
+  "summary": "Marks a character as a candidate to take part in a situation.",
+  "details": "The character is placed in the first participant group of the situation that accepts them. If no group accepts them, they stay a candidate and are checked again later, but they do not take part until a group fits. `remove_manual_participant` takes them out again. Vanilla always gives the character as `prev`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_martial_lifestyle_perk_points",
+  "label": "Martial perk points",
+  "summary": "Gives the character perk points in the martial lifestyle (the lifestyle tree for martial perks).",
+  "details": "Perk points are spent to unlock perks. Vanilla gives a plain number, mostly 1.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_martial_lifestyle_xp",
+  "label": "Martial lifestyle XP",
+  "summary": "Gives the character experience in the martial lifestyle.",
+  "details": "Vanilla mostly writes a named value such as `minor_lifestyle_xp` or `medium_lifestyle_xp`. It can also be a block with `value` and an optional `multiply` that scales the amount.",
+  "fields": [
+    { "name": "value", "text": "How much experience to give.", "values": "a number, a named script value", "required": true },
+    { "name": "multiply", "text": "Scales the amount; vanilla uses factors below 1 to give less.", "values": "a number or a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_martial_skill",
+  "label": "Martial skill",
+  "summary": "Adds points to the character's martial skill.",
+  "details": "A negative amount lowers it. Vanilla uses a number, a named value, or a range like `{ 1 2 }` (apparently a number picked between the two). The block form takes `value` and `subtract`, for example to raise the skill up to a target by subtracting the current value. The input does not say which scope it runs in; vanilla uses it on characters.",
+  "fields": [
+    { "name": "value", "text": "The amount to add.", "values": "a number, a script value or a range { min max }" },
+    { "name": "subtract", "text": "Taken off the amount; vanilla writes `martial` here, so the result is the value minus the current martial skill.", "values": "a number or a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_name_list",
+  "label": "Name list",
+  "summary": "Adds a name list to a culture.",
+  "details": "Characters of that culture can then be named from that list. Vanilla uses it once, to add the Romansh name list.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_opinion",
+  "label": "Opinion",
+  "summary": "Gives the character a temporary opinion modifier towards another character.",
+  "details": "The modifier is a named opinion modifier defined in script. If no time is given, the modifier's own default duration is used. The game's documentation lets the time be a value or a range { min max }. The game's documentation does not mention `opinion = ...`, which vanilla writes in most uses (for example 20 or -10); going by vanilla's use, it seems to set how much opinion this instance gives.",
+  "fields": [
+    { "name": "modifier", "text": "The opinion modifier to add.", "values": "an opinion modifier key", "required": true },
+    { "name": "target", "text": "The character the scoped character's opinion is about: whose opinion of whom changes is the scoped character's opinion of this target.", "values": "a character, such as root or scope:actor", "required": true },
+    { "name": "opinion", "text": "Not in the game's documentation. Vanilla writes it often, apparently the amount of opinion given.", "values": "a number" },
+    { "name": "days", "text": "How long it lasts, in days.", "values": "a number or a range { min max }" },
+    { "name": "months", "text": "How long it lasts, in months.", "values": "a number or a range { min max }" },
+    { "name": "years", "text": "How long it lasts, in years.", "values": "a number or a range { min max }" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "add_perk",
+  "label": "Perk",
+  "summary": "Gives the character a perk.",
+  "details": "Vanilla names the perk, such as `peacemaker_perk`. The game's documentation does not say whether perk points or earlier perks are required.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_personal_artifact_claim",
+  "label": "Artifact claim",
+  "summary": "Gives the character a personal claim on an artifact.",
+  "details": "The artifact is given as a scope, such as one created earlier in the same script. Vanilla mostly uses a freshly created artifact saved as a scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_phase_max_duration",
+  "label": "Phase max duration",
+  "summary": "Lengthens the maximum duration of the current phase of a situation's sub-region, or shortens it with negative values.",
+  "details": "It runs on a situation sub-region and changes the longest time its present phase can last. Time is given in days and months. Vanilla does not use it.",
+  "fields": [
+    { "name": "days", "text": "Days to add or remove.", "values": "a number" },
+    { "name": "months", "text": "Months to add or remove.", "values": "a number" }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_piety",
+  "label": "Piety",
+  "summary": "Gives the character piety, or takes it away with a negative amount.",
+  "details": "Piety is the currency of religious standing. Vanilla mostly uses named values such as `medium_piety_gain` and `minor_piety_loss`. It also accepts a block with `value` and modifiers that scale or limit the amount.",
+  "fields": [
+    { "name": "value", "text": "The base amount.", "values": "a number or a named script value" },
+    { "name": "multiply", "text": "Multiplies the amount; -1 turns a gain into a loss.", "values": "a number or a script value" },
+    { "name": "add", "text": "Adds to the amount.", "values": "a number or a script value" },
+    { "name": "subtract", "text": "Takes off the amount.", "values": "a number or a script value" },
+    { "name": "divide", "text": "Divides the amount.", "values": "a number or a script value" },
+    { "name": "min", "text": "The lowest the amount can be.", "values": "a number or a script value" },
+    { "name": "max", "text": "The highest the amount can be.", "values": "a number or a script value" },
+    { "name": "round", "text": "Rounds the amount; vanilla writes yes.", "values": "yes" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_piety_and_experience",
+  "label": "Piety and experience",
+  "summary": "Gives the character piety and experience together, or takes them away when negative.",
+  "details": "The game's documentation does not say how the experience amount relates to the piety amount. Vanilla uses it only with piety loss values, such as `minor_piety_loss`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_piety_experience",
+  "label": "Piety experience",
+  "summary": "Gives the character piety experience, or takes it away with a negative amount.",
+  "details": "This changes the piety experience, which the game's documentation names separately from piety itself. Vanilla uses named values, and blocks with `value` and optional `multiply`, `add` or `max`.",
+  "fields": [
+    { "name": "value", "text": "The base amount.", "values": "a number or a named script value" },
+    { "name": "multiply", "text": "Multiplies the amount; vanilla scales by title tier.", "values": "a number or a script value" },
+    { "name": "add", "text": "Adds to the amount.", "values": "a number or a script value" },
+    { "name": "max", "text": "The highest the amount can be.", "values": "a number or a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_piety_level",
+  "label": "Piety level",
+  "summary": "Raises or lowers the character's piety level.",
+  "details": "A negative number lowers it. Vanilla mostly uses -1 or 1, and sometimes larger steps.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_piety_no_experience",
+  "label": "Piety, no experience",
+  "summary": "Gives the character piety, or takes it away, without giving piety experience.",
+  "details": "Going by the name, plain `add_piety` also gives experience and this one does not; the game's documentation does not say so. Vanilla uses it for costs, such as the piety spent on taking vows, and once with a `multiply` of -0.75.",
+  "fields": [
+    { "name": "value", "text": "The amount of piety.", "values": "a number or a script value" },
+    { "name": "multiply", "text": "Multiplies the amount.", "values": "a number or a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "add_pressed_claim",
+  "label": "Claim (pressed)",
+  "summary": "Gives the character a pressed claim on a title.",
+  "details": "The title is given as a scope or a link, such as `scope:target` or `location.duchy`. Vanilla uses it with titles saved earlier in the script.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_prestige",
+  "label": "Prestige",
+  "summary": "Gives the character prestige, or takes it away with a negative amount.",
+  "details": "Vanilla mostly uses named values such as `medium_prestige_gain` and `minor_prestige_loss`. It also accepts a block with `value` and modifiers that scale or limit the amount; vanilla often multiplies by -1.0 to make a loss.",
+  "fields": [
+    { "name": "value", "text": "The base amount.", "values": "a number or a named script value" },
+    { "name": "multiply", "text": "Multiplies the amount.", "values": "a number or a script value" },
+    { "name": "add", "text": "Adds to the amount.", "values": "a number or a script value" },
+    { "name": "subtract", "text": "Takes off the amount; vanilla subtracts tier scaled values.", "values": "a number or a script value" },
+    { "name": "divide", "text": "Divides the amount.", "values": "a number or a script value" },
+    { "name": "min", "text": "The lowest the amount can be.", "values": "a number or a script value" },
+    { "name": "max", "text": "The highest the amount can be.", "values": "a number or a script value" },
+    { "name": "round", "text": "Rounds the amount; vanilla writes yes.", "values": "yes" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_prestige_and_experience",
+  "label": "Prestige and experience",
+  "summary": "Gives the character prestige and experience together, or takes them away when negative.",
+  "details": "The game's documentation does not say how the experience amount relates to the prestige amount. Vanilla does not use this effect.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_prestige_experience",
+  "label": "Prestige experience",
+  "summary": "Gives the character prestige experience, or takes it away with a negative amount.",
+  "details": "This changes the prestige experience, which the game's documentation names separately from prestige itself. Vanilla uses named values, and blocks with `value` and optional `multiply` or `max`.",
+  "fields": [
+    { "name": "value", "text": "The base amount.", "values": "a number or a named script value" },
+    { "name": "multiply", "text": "Multiplies the amount.", "values": "a number or a script value" },
+    { "name": "max", "text": "The highest the amount can be.", "values": "a number or a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_prestige_level",
+  "label": "Prestige level",
+  "summary": "Raises or lowers the character's prestige level.",
+  "details": "A negative number lowers it. Vanilla mostly uses -1, and sometimes named values such as `break_truce_prestige_level_loss`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_prestige_no_experience",
+  "label": "Prestige, no experience",
+  "summary": "Gives the character prestige, or takes it away, without giving prestige experience.",
+  "details": "Going by the name, plain `add_prestige` also gives experience and this one does not; the game's documentation does not say so. Vanilla uses it with a number or a named value, often a cost.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "add_province_modifier",
+  "label": "Province modifier",
+  "summary": "Adds a modifier to a province, permanently or for a set time.",
+  "details": "Written as a plain name, no time is given. Written as a block, it takes a duration in days, weeks, months or years. An optional `desc` gives a dynamic description for a timed modifier. Vanilla mostly uses years.",
+  "fields": [
+    { "name": "modifier", "text": "The modifier to add.", "values": "a modifier key", "required": true },
+    { "name": "days", "text": "How long it lasts, in days.", "values": "a number" },
+    { "name": "weeks", "text": "How long it lasts, in weeks.", "values": "a number" },
+    { "name": "months", "text": "How long it lasts, in months.", "values": "a number" },
+    { "name": "years", "text": "How long it lasts, in years.", "values": "a number" },
+    { "name": "desc", "text": "A dynamic description shown for the timed modifier.", "values": "a description" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_prowess_skill",
+  "label": "Prowess skill",
+  "summary": "Adds points to the character's prowess skill.",
+  "details": "A negative amount lowers it. Vanilla uses a number, a named value, or a range like `{ 5 10 }`. The block form takes `value` and `subtract`, for example to raise the skill up to a target by subtracting the current value. The input does not say which scope it runs in; vanilla uses it on characters.",
+  "fields": [
+    { "name": "value", "text": "The amount to add.", "values": "a number, a script value or a range { min max }" },
+    { "name": "subtract", "text": "Taken off the amount; vanilla writes `prowess`, so the result is the value minus the current prowess.", "values": "a number or a script value" },
+    { "name": "multiply", "text": "Multiplies the amount; vanilla uses -1.", "values": "a number or a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_random_innovation",
+  "label": "Random innovation",
+  "summary": "Gives a culture one random innovation that is available to it.",
+  "details": "The value limits which kind is picked: `culture_group_military`, `culture_group_civic` or `culture_group_regional`, or `yes` for any. Vanilla uses the civic and military groups.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_random_valid_tradition",
+  "label": "Random tradition",
+  "summary": "Adds one random valid tradition to a culture.",
+  "details": "The character you give is used as the context when the game checks each tradition's can_pick and is_shown conditions. If the culture would end up over its tradition limit, an error is logged. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_random_valid_tradition_replace_if_necessary",
+  "label": "Random tradition (replace)",
+  "summary": "Adds one random valid tradition to a culture, removing a random existing one if the culture is full.",
+  "details": "The character you give is used as the context when the game checks each tradition's can_pick and is_shown conditions. Unlike `add_random_valid_tradition`, going over the limit is not an error: a random tradition the culture has is removed instead. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_realm_law",
+  "label": "Realm law",
+  "summary": "Gives the character's realm a law.",
+  "details": "Vanilla uses it with succession laws, crown authority levels, nomadic authority levels and similar. The input does not say whether the law's usual cost and effects apply; `add_realm_law_skip_effects` is the variant that skips them.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_realm_law_skip_effects",
+  "label": "Realm law (no effects)",
+  "summary": "Gives the character's realm a law without paying its cost or running its effects.",
+  "details": "It skips the cost, the effect run when the law passes, and the effects of revoking the law that was in place before. Vanilla uses it a lot, for example to set crown authority, succession laws and camp purposes.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_relation_flag",
+  "label": "Relation flag",
+  "summary": "Sets a flag on an existing relation between the character and another one.",
+  "details": "The relation must already exist. The flag name has to be declared in that relation's own script. Vanilla uses it with friend, best friend, ward, lover and crush relations, for example to mark that one confided in the other.",
+  "fields": [
+    { "name": "relation", "text": "The relation to put the flag on.", "values": "a scripted relation key, such as friend", "required": true },
+    { "name": "target", "text": "The other character in the relation.", "values": "a character, such as root or scope:ward", "required": true },
+    { "name": "flag", "text": "The flag to set.", "values": "a flag name declared in the relation's script", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_reserved_gold",
+  "label": "AI reserved gold",
+  "summary": "Puts gold into the AI's 'reserved' budget of the character, creating that gold out of nothing.",
+  "details": "The AI splits its money into budget categories. The reserved category has a maximum, and anything over it flows into the short term budget. This does not take gold from anyone. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_rite_culture",
+  "label": "Rite culture",
+  "summary": "Adds a culture to the cultures linked to a rite.",
+  "details": "It runs on a rite and takes a culture. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_rite_doctrine",
+  "label": "Rite doctrine",
+  "summary": "Adds a doctrine to a rite.",
+  "details": "It fails if the rite already has another doctrine of the same group. The documented example writes the inner key as `add_doctrine`, not `add_rite_doctrine`, which does not match the effect's name. Vanilla does not use it, so the right form is not confirmed.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "add_rite_tenet",
+  "label": "Rite tenet",
+  "summary": "Adds a tenet to a rite.",
+  "details": "It runs on a rite. Vanilla writes the tenet by name, such as `tenet_armed_pilgrimages`, or as a saved scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_saint",
+  "label": "Saint",
+  "summary": "Makes a character a saint of a faith.",
+  "details": "It runs on a faith. The game's documentation says the first faith to add a saint must also give a burial province, and later additions ignore it. The game's documentation names the character field `target`, but vanilla writes `character`, so the field name is unsure.",
+  "fields": [
+    { "name": "character", "text": "The character who becomes a saint. The game's documentation calls this field `target`, vanilla uses `character`.", "values": "a character, such as scope:chalcedonian_saint", "required": true },
+    { "name": "burial_province", "text": "The province where the saint is buried. Needed only the first time any faith adds this saint.", "values": "a province" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "add_sanctified_for_faith",
+  "label": "Sanctify artifact",
+  "summary": "Makes an artifact sanctified for a faith.",
+  "details": "It runs on an artifact. The faith is written as a faith key, like `faith:catholic`, or a scope. Vanilla uses it once, with the root scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_scheme_breach",
+  "label": "Scheme breach",
+  "summary": "Adds breaches to a scheme.",
+  "details": "A breach is a count the game keeps on the scheme. The input does not say what a breach does. Vanilla adds 1.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "add_scheme_cooldown",
+  "label": "Scheme cooldown",
+  "summary": "Sets a cooldown on one scheme type for the character towards a target character.",
+  "details": "The game's documentation does not say what the cooldown does; by its name it holds off that scheme type for the given time. Vanilla uses it with the dispute border and subsume province schemes, towards the owner, for 5 years.",
+  "fields": [
+    { "name": "target", "text": "The character the cooldown applies towards.", "values": "a character, such as scope:owner", "required": true },
+    { "name": "type", "text": "The scheme type the cooldown is for.", "values": "a scheme type key", "required": true },
+    { "name": "days", "text": "Length of the cooldown in days.", "values": "a number" },
+    { "name": "weeks", "text": "Length of the cooldown in weeks.", "values": "a number" },
+    { "name": "months", "text": "Length of the cooldown in months.", "values": "a number" },
+    { "name": "years", "text": "Length of the cooldown in years.", "values": "a number" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_scheme_modifier",
+  "label": "Scheme modifier",
+  "summary": "Adds a scheme modifier to a scheme, permanently or for a set time.",
+  "details": "Without a time it does not expire on its own, per the game's documentation, which states days as optional. Vanilla also uses years.",
+  "fields": [
+    { "name": "type", "text": "The scheme modifier to add.", "values": "a scheme modifier key", "required": true },
+    { "name": "days", "text": "Expires after this many days.", "values": "a number or a script value" },
+    { "name": "years", "text": "Expires after this many years; vanilla uses it often.", "values": "a number or a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

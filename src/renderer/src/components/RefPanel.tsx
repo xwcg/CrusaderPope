@@ -5,6 +5,7 @@ import { TypeDot } from './common';
 import { GameImg } from '../img';
 import { ModChip } from './ModChip';
 
+import { tr } from '../../../shared/i18n';
 export function RefColumns(props: { incoming: RefGroup[]; outgoing: RefGroup[]; navigate: Navigate; ownType: string; }): React.JSX.Element
 {
     const inCount = props.incoming.reduce((s, g) => s + g.items.length, 0);
@@ -12,13 +13,13 @@ export function RefColumns(props: { incoming: RefGroup[]; outgoing: RefGroup[]; 
     return (
         <div className="ref-columns">
             <div className="ref-column">
-                <h3>Referenced by · {inCount}</h3>
-                {props.incoming.length === 0 && <div className="list-empty" style={{ padding: 0 }}>Nothing references this.</div>}
+                <h3>{tr('Referenced by · {inCount}', { inCount })}</h3>
+                {props.incoming.length === 0 && <div className="list-empty" style={{ padding: 0 }}>{tr('Nothing references this.')}</div>}
                 {props.incoming.map((g) => <RefGroupView key={g.type} group={g} navigate={props.navigate} initiallyOpen={g.type !== 'localization' || g.items.length <= 8} />)}
             </div>
             <div className="ref-column">
-                <h3>References · {outCount}</h3>
-                {props.outgoing.length === 0 && <div className="list-empty" style={{ padding: 0 }}>No outgoing references.</div>}
+                <h3>{tr('References · {outCount}', { outCount })}</h3>
+                {props.outgoing.length === 0 && <div className="list-empty" style={{ padding: 0 }}>{tr('No outgoing references.')}</div>}
                 {props.outgoing.map((g) => <RefGroupView key={g.type} group={g} navigate={props.navigate} initiallyOpen={g.type !== 'localization' || props.ownType !== 'localization'} />)}
             </div>
         </div>
@@ -67,8 +68,7 @@ function RefGroupView(props: { group: RefGroup; navigate: Navigate; initiallyOpe
                 ))}
             {open && group.items.length > limit && (
                 <button className="show-more" onClick={() => setLimit((l) => l + PAGE * 4)}>
-                    Show more ({group.items.length - limit} remaining)
-                </button>
+                    {tr('Show more ({more} remaining)', { more: group.items.length - limit })}</button>
             )}
         </div>
     );

@@ -8,6 +8,7 @@ import type { IndexStatus, MapInfo, MapOverlaysInfo } from '../../../../shared/a
 import { api } from '../../api';
 import { track } from '../../pending';
 
+import { tr } from '../../../../shared/i18n';
 /** points per run (the 2D map culls runs by their box) */
 const RUN = 32;
 /** steps per width class in the file's classes */
@@ -38,6 +39,10 @@ export interface Overlays
 /** A river's width (map pixels) at a point's class value (× CLASS_STEPS): NRivers' widths, even steps between. */
 export function riverWidth(rivers: NonNullable<MapOverlaysInfo['rivers']>, value: number): number
 {
+    // (below the narrowest class: a river's fading end, a share of the narrowest width)
+    if (value < CLASS_STEPS)
+        return (rivers.widths[0] * value) / CLASS_STEPS;
+
     const c = Math.min(rivers.classes, Math.max(1, value / CLASS_STEPS));
     return rivers.widths[0] + ((rivers.widths[1] - rivers.widths[0]) * (c - 1)) / (rivers.classes - 1);
 }
@@ -99,7 +104,7 @@ const asked = new WeakMap<MapInfo, Promise<Overlays | null>>();
 const ready = new WeakMap<MapInfo, Overlays | null>();
 const waited = new WeakSet<MapInfo>();
 
-/** The overlays of a map (null: none — no rivers.png nor adjacencies.csv, or they could not be read). */
+/** The overlays of a map (null: none; no rivers.png nor adjacencies.csv, or they could not be read). */
 export function overlaysOf(info: MapInfo): Promise<Overlays | null>
 {
     let p = asked.get(info);
@@ -122,7 +127,7 @@ export function overlaysOf(info: MapInfo): Promise<Overlays | null>
                     const res = o.rivers ? await track(fetch(`ck3://map/${o.key}-riverlines.bin`)) : null;
 
                     if (res && !res.ok)
-                        throw new Error(`The map file ${o.key}-riverlines.bin could not be loaded (${res.status})`);
+                        throw new Error(tr('The map file {key}-riverlines.bin could not be loaded ({status})', { key: o.key, status: res.status }));
 
                     const buf = res && (await res.arrayBuffer());
                     return keep({ info: o, levels: buf && o.rivers ? o.rivers.levels.map((l) => level(buf, l)) : [] });
@@ -145,7 +150,7 @@ export function overlaysOf(info: MapInfo): Promise<Overlays | null>
 }
 
 /**
- * The overlays of a map when they are here (null: none) — meanwhile those loaded before for the same province raster
+ * The overlays of a map when they are here (null: none); meanwhile those loaded before for the same province raster
  * (a new date), else undefined; asks for them, `onReady` runs once when they come.
  */
 export function overlaysNow(info: MapInfo, onReady?: () => void): Overlays | null | undefined

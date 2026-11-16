@@ -1,0 +1,242 @@
+[
+ {
+  "kind": "on_action", "key": "on_culture_created", "label": "Culture created",
+  "summary": "Fires when a new culture comes into being, through hybridization or divergence.",
+  "details": "The game's code fires it. The new culture is the root, and scope:founder is the character who founded it. Vanilla copies the parent cultures' unlocked innovations to the new culture (with The Great Steppe content), saves the parent cultures as scopes and converts the founder to the new culture. For a hybrid culture it also prepares a toast for the players whose culture is the new one or one of its parents (the shown text is cut off before the sending).",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_culture_era_changed", "label": "Culture era changed",
+  "summary": "Fires when a culture reaches a new era.",
+  "details": "The game's code fires it, with the culture as the root. Vanilla's definition is empty, so it does nothing by itself; mods can add effects to it.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_death", "label": "Character dies",
+  "summary": "Fires when a character dies.",
+  "details": "The game's code fires it, with the dying character as the root. Vanilla plays the death music cue and gives the character a flag named about-to-die-but-not-dead-yet, which a comment says perk calculations use. It also passes things on to heirs: achievement variables for a promoted legend and the player's heir (with the CE1 DLC), camp purpose variables to the primary heir, and vassal directives (the shown text is cut off there).",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_death_relation_best_friend", "label": "Best friend dies",
+  "summary": "Fires, scripted rather than from code, when a character with a best friend dies.",
+  "details": "Scope:target is the best friend. Vanilla removes best-friend synergy modifiers with a toast, and if the bp1 DLC is active, triggers an event on the best friend. A living best friend who is not close family of the root also gets a memory that their best friend died. A vanilla comment says the one who loses the synergy modifiers is the one whose best friend dies, but the script runs that on the root, which the sibling relation on-actions use as the dying character, so who loses them is unclear.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "on_death_relation_blood_brother", "label": "Blood brother dies",
+  "summary": "Fires, scripted rather than from code, when a character with a blood brother dies.",
+  "details": "Vanilla uses it only to run one effect that removes the blood brother modifiers.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_death_relation_disciple", "label": "Disciple dies",
+  "summary": "Fires, scripted rather than from code, when a character with a disciple relation dies.",
+  "details": "Vanilla goes to scope:target and removes the fellow disciple relations it has. The input does not say who scope:target is here, so the exact people affected are unclear.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "on_death_relation_friend", "label": "Friend dies",
+  "summary": "Fires, scripted rather than from code, when a character with a friend dies.",
+  "details": "The dying character is the root and scope:target is the friend. Vanilla removes the Confidants perk modifier from the dying character and triggers a death management event on both. The friend gets a memory of the death (unless dead or close family of the root), and also loses the Confidants modifier if they have the perk. If the dying character had an AI spouse who is not the friend, is not an eunuch and is not chaste or celibate, the friend also gets another event, with that spouse saved for its texts.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_death_relation_guardian", "label": "Ward dies",
+  "summary": "Fires, scripted rather than from code, for the ward when they die while having a guardian.",
+  "details": "The dying ward is the root and scope:target is the guardian. If the ward has a liege, vanilla removes the opinions the guardian relationship gave, and sends the ward back to their own court if they were a foreign court guest of someone other than their liege.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_death_relation_lover", "label": "Lover dies",
+  "summary": "Fires, scripted rather than from code, when a character with a lover dies.",
+  "details": "The dying character is the root and scope:target is the lover. Unless the lover is also their soulmate, a living lover who is not close family gets a memory that their lover died.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_death_relation_nemesis", "label": "Nemesis dies",
+  "summary": "Fires, scripted rather than from code, when a character with a nemesis dies.",
+  "details": "The dying character is the root and scope:target is the nemesis. Vanilla saves the dead character and one AI spouse of theirs as scopes. A living nemesis who is not close family gets a memory of the death, and the nemesis also gets an event one day later.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_death_relation_nursed_child", "label": "Wet nurse dies",
+  "summary": "Fires, scripted rather than from code, when a wet nurse dies, for the child they nursed.",
+  "details": "The dying nurse is the root and scope:target is the child. A living child gets a memory that their nurse died. If the child is also not an adult, is at least 3 years old, and either has a clearly positive opinion of the nurse or is their friend or best friend, the nurse's employer gets an event after 5 to 10 days. That only happens when the employer exists and is not the child.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_death_relation_rival", "label": "Rival dies",
+  "summary": "Fires, scripted rather than from code, when a character with a rival dies.",
+  "details": "The dying character is the root and scope:target is the rival. Unless the two are nemeses, a living rival who is not close family gets a memory that their rival died.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_death_relation_soulmate", "label": "Soulmate dies",
+  "summary": "Fires, scripted rather than from code, when a character with a soulmate dies.",
+  "details": "The dying character is the root and scope:target is the soulmate. A living soulmate who is not close family gets a memory that their soulmate died.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_death_relation_ward", "label": "Guardian dies",
+  "summary": "Fires, scripted rather than from code, for the guardian when they die while having a ward.",
+  "details": "The dying guardian is the root and scope:target is the ward. Vanilla's code removes the guardian opinions between the two, and sends a foreign court guest back to their own court.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_defeat_barter_army", "label": "Barter army defeated",
+  "summary": "Fires when an army carrying barter loot is beaten in battle and its loot is taken.",
+  "details": "The game's code fires it. The root is the bartering army, scope:barterer owns it, scope:receiver gets the loot, and scope:barter_loot is how much it carried. Vanilla sends a message to the barterer that the loot was lost, and to the receiver (if there is one) that it was won.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_defeat_raid_army", "label": "Raid army defeated",
+  "summary": "Fires when a raiding army is beaten in battle and its loot is taken.",
+  "details": "The game's code fires it. The root is the raid army, scope:raider owns it, and scope:receiver gets the loot. Vanilla runs one event that notifies the defending side about taking the raider's loot.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_diarch_change", "label": "Diarch changes",
+  "summary": "Fires when a liege's diarch (the liege's co-ruler in a diarchy) changes to someone else.",
+  "details": "The game's code fires it after the new diarch is in place. The root is the liege, scope:old_diarch is the former diarch, and scope:reason is death, depose, invalid, inheritance or regular. Vanilla gives a new diarch a starting event and, for death, deposition and invalidation, notifies the liege and their vassals with a text for each reason (the shown text is cut off after those).",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_diarch_designation", "label": "Diarch designated",
+  "summary": "Fires when a liege chooses a designated diarch by hand.",
+  "details": "The game's code fires it when no diarchy exists yet. The root is the liege and scope:former_designated_diarch is the earlier choice (it may be empty). Vanilla makes the new designee like the liege, and angers characters who score higher in the succession order but were passed over. Courtly vassals are angry too if the designee is a lowborn non-relative.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_divorce", "label": "Divorce",
+  "summary": "Fires when a marriage ends in any way, except historical divorces.",
+  "details": "The game's code fires it. The root is the character who starts the divorce and scope:spouse is the divorced spouse. scope:reason is script or faith. Vanilla sends divorce notifications, updates the opinion effects of the ex-spouse and the remaining consorts, removes blood brother family opinions, and lowers the relations between the two houses (the shown text is cut off there).",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_domicile_building_cancelled", "label": "Domicile building cancelled",
+  "summary": "Fires when the construction of a building in a domicile is cancelled.",
+  "details": "The game's code fires it. The root is the domicile and scope:owner is its owner. Vanilla only sends the owner a message.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_domicile_building_completed", "label": "Domicile building completed",
+  "summary": "Fires when a building in a domicile is finished.",
+  "details": "The game's code fires it. The root is the domicile and scope:owner is its owner. Vanilla messages the owner. If the owner's culture has the matching cultural parameter, they are landed and the domicile is in their capital county, that county gains development progress. If the owner has the stewardship oath building variable, it is raised by 1.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_domicile_building_started", "label": "Domicile building started",
+  "summary": "Fires when construction of a building in a domicile begins.",
+  "details": "The game's code fires it. The root is the domicile and scope:owner is its owner. Vanilla messages the owner and handles the subsidised estate buildings modifier: if the owner has it and the domicile's counter variable is above 1, the counter drops by 1 and the modifier is renewed; otherwise the modifier and the variable are removed.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_domicile_moved", "label": "Domicile moved",
+  "summary": "Fires on every province a moving domicile passes during a travel plan.",
+  "details": "The game's code fires it. The root is the domicile and scope:owner is its owner. A vanilla comment warns that it runs very often, so keep it light. Vanilla only removes a visiting variable from the owner.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_dynasty_created", "label": "Dynasty created",
+  "summary": "Fires when a new dynasty is created in the game.",
+  "details": "The game's code fires it, with the new dynasty as the root. Vanilla saves the dynasty, its house and its head as scopes and swaps a bastard trait for the bastard founder trait. Unless a variable blocks it, it then names the house by the culture's style: a barony-based house name, or a Japanese-style name for both dynasty and house.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_entered_diarchy", "label": "Entered diarchy",
+  "summary": "Fires when a liege has just entered a diarchy.",
+  "details": "The game's code fires it after the diarchy exists. The root is the liege, and scope:reason is new_diarchy or inheritance. Vanilla saves the diarch as a scope, schedules follow-up events 3 to 18 months later, and notifies all vassals, stating a reason such as child, incapable, imprisoned or travelling.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_explicit_claim_gain", "label": "Claim gained",
+  "summary": "Fires when a character gains a claim on a title.",
+  "details": "The game's code fires it. The root is the claimant, scope:title is the claimed title, and scope:transfer_type is inheritance or empty. Vanilla refreshes the England title's coat of arms if the claimant holds it, and gives struggle catalysts to characters involved in the Iberian or Persian struggle when the claim is on a title within those empires and is not from inheritance.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_explicit_claim_lost", "label": "Claim lost",
+  "summary": "Fires when a character loses a claim on a title.",
+  "details": "The game's code fires it. The root is the claimant and scope:title is the title. Vanilla only refreshes the England title's coat of arms if the claimant holds it.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_faction_demand_accepted", "label": "Faction demand accepted",
+  "summary": "Fires, scripted, when a faction's demand is accepted by its target.",
+  "details": "Script fires it, not the game's code: each faction demand event must call it itself, at the top of its effect block. The root is the faction target, scope:faction is the faction and scope:faction_leader its leader. Vanilla counts accepted demands in global variables for nation fracturing and claimant factions, and gives a struggle catalyst when an Arabian caliph accepts. A last part checks for a landless adventurer's join-faction task contract (the shown text is cut off there).",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_faction_demand_rejected", "label": "Faction demand rejected",
+  "summary": "Fires, scripted, when a faction's demand is rejected by its target.",
+  "details": "Script fires it, not the game's code: each faction demand event must call it itself. The root is the faction target, scope:faction is the faction and scope:faction_leader its leader. Vanilla's definition is empty.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_faith_conversion", "label": "Faith conversion",
+  "summary": "Fires when a character converts to another faith, through the convert window or the effect that works the same way.",
+  "details": "The game's code fires it. The root is the converted character, scope:old_faith and scope:old_rite are what they had before, and scope:founder is the character who caused it. Vanilla fires events that convert the capital county and close family and tell vassals, and stores the old rite in a variable for 30 days. It also handles state faith opinions and influence. A second definition in the same file adds an on-action for taxing nonbelievers.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_faith_created", "label": "Faith created",
+  "summary": "Fires when a new faith is created.",
+  "details": "The game's code fires it, with the new faith as the root, when a character creates or converts to a faith, or a rite splits off into its own faith. scope:founder may be missing, scope:old_faith and scope:old_rite are what existed before, and scope:diverged is true if a rite diverged too far. Vanilla gives a diverged faith zero fervor, carries sanctified artifacts over from the old faith, removes antipopes after a divergence, and clears the founder's reformer modifier.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_faith_holy_site_added", "label": "Holy site added",
+  "summary": "Fires after a holy site is added to a faith.",
+  "details": "The game's code fires it. The root is the faith, scope:title is the barony of the site, and scope:is_new_holy_site and scope:is_eminent_site tell what kind it is. scope:actor is the responsible character, if any. Vanilla records the dynamic holy site's kingdom, sends a created or adopted toast, and stores the actor's dynasty on a new site.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_faith_holy_site_eminence_changed", "label": "Holy site eminence changed",
+  "summary": "Fires after a holy site of a faith becomes eminent or stops being eminent.",
+  "details": "The game's code fires it. The root is the faith, scope:title is the site's barony and scope:is_eminent_site says what it is now. Vanilla sends the faith an elevated or demoted notification.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_faith_holy_site_removed", "label": "Holy site removed",
+  "summary": "Fires after a holy site is removed from a faith.",
+  "details": "The game's code fires it. The root is the faith, scope:title is the site's barony and scope:is_eminent_site says if it was eminent. Vanilla releases the dynamic site's kingdom record, records the last remaining faith on a shared site, and sends an abandoned notification.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_faith_monthly", "label": "Faith monthly",
+  "summary": "Fires once a month for each faith.",
+  "details": "The game's code fires it, with the faith as the root. Vanilla uses it to start follow-up rite, holy order and heresy pulses with delays of a few days, to fire holy war and hajj events, and to move religious migrants created by county conversion somewhere safe, with a 4 percent chance a month.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_fired_from_council", "label": "Fired from council",
+  "summary": "Fires when a councillor is fired, right after the general position-fired on-action.",
+  "details": "The game's code fires it. The root is the council owner. Other scopes are the council task, the fired councillor and the replacement (which may be empty). Vanilla runs an event after 1 day that informs the fired character.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_game_start", "label": "Game start",
+  "summary": "Fires once when a new game starts, with an empty scope.",
+  "details": "The game's code fires it. Vanilla starts a few events, sets a global variable for one day that marks the start date, and sets up rite tenet permissions. It also gives epidemics a 10 year grace period, adjusts some titles and doctrines depending on the date, and triggers bookmark events for some historical characters.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_game_start_after_lobby", "label": "Game start after lobby",
+  "summary": "Fires once when the host leaves the lobby, so players and game rules are known.",
+  "details": "The game's code fires it. It is like the game start on-action, but runs later. Vanilla turns off succession calculation, marks participants of The Great Steppe with a variable, and (with the MPO DLC and the matching game rule) applies the extra nomad region for north-east Asia.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_game_start_with_tutorial", "label": "Game start in tutorial",
+  "summary": "Fires after history generation when the tutorial is running, with an empty scope.",
+  "details": "The game's code fires it. For tutorial index 1, vanilla swaps a rite, gives 1000 gold to the holder of the Munster duchy, adds buildings in some baronies and creates spouses and children for unmarried relatives of certain rulers (the shown text is cut off).",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_government_change", "label": "Government changed",
+  "summary": "Fires when a character changes government type.",
+  "details": "The game's code fires it. The root is the character and scope:old_government is the previous government. Vanilla runs an effect for Christian clergy learning a liturgical language, destroys nomad titles when leaving nomad government, and removes a character from a confederation if their government no longer fits. It also adds the crowned king or emperor law back when coronation laws apply, and clears Mandala modifiers and variables when leaving that government.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ }
+]

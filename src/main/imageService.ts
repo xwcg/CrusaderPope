@@ -1,5 +1,5 @@
 /**
- * Serves game images to the renderer through the `ck3://img/<game path>?w=<max size>` protocol — the file the game
+ * Serves game images to the renderer through the `ck3://img/<game path>?w=<max size>` protocol: the file the game
  * would load for that path, with the loaded mods layered on top (a mod's texture replaces the game's).
  * Decoding happens in a pool of image workers (one per CPU core unless set in Settings) fed least-busy first, so a big texture
  * doesn't hold up the ones queued behind it; identical requests in flight share one decode; results are kept in an
@@ -11,12 +11,16 @@ import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { availableParallelism } from 'node:os';
 import { resolveGameDir } from './gameDir.ts';
+import { onWorkerGone } from './workerGuard.ts';
 import type { ModInfo } from '../shared/api.ts';
 
+import { tr } from '../shared/i18n.ts';
 const CACHE_BYTES = 160 * 1024 * 1024;
 
 interface Pending
 {
+    /** the worker that has the request: its end rejects it */
+    worker: Worker;
     resolve: (v: unknown) => void;
     reject: (e: Error) => void;
 }
@@ -24,15 +28,25 @@ interface Pending
 let workers: Worker[] = [];
 /** requests in flight per worker */
 const busy = new Map<Worker, number>();
+/** each worker's init (the game folder and mods loaded): a request goes to the worker once it is done */
+const inited = new Map<Worker, Promise<unknown>>();
 const decoding = new Map<string, Promise<Buffer>>();
 let reqId = 0;
 const pending = new Map<number, Pending>();
 const cache = new Map<string, Buffer>();
 let cacheBytes = 0;
-let ready: Promise<unknown> = Promise.resolve();
+/** what initImages was given, for the workers started again after one ended; null without a game folder */
+let setup: { gameDir: string; cacheDir: string; mods: ModInfo[]; } | null = null;
+/** workers started again since initImages (a worker that keeps dying is not replaced for ever) */
+let respawns = 0;
+const MAX_RESPAWNS = 16;
 
 /** A request whose worker was terminated by initImages (another mod list): asked again on the new workers. */
 class Restarted extends Error
+{}
+
+/** A request whose worker ended (crashed, ran out of memory) on its own: asked once more on another one. */
+class WorkerEnded extends Restarted
 {}
 
 function call(w: Worker, msg: Record<string, unknown>, transfer?: ArrayBuffer[]): Promise<unknown>
@@ -40,9 +54,71 @@ function call(w: Worker, msg: Record<string, unknown>, transfer?: ArrayBuffer[])
     return new Promise((resolve, reject) =>
     {
         const id = ++reqId;
-        pending.set(id, { resolve, reject });
-        w.postMessage({ ...msg, id }, transfer ?? []);
+        pending.set(id, { worker: w, resolve, reject });
+
+        try
+        {
+            w.postMessage({ ...msg, id }, transfer ?? []);
+        }
+        catch (e)
+        {
+            pending.delete(id);
+            reject(e as Error);
+        }
     });
+}
+
+/**
+ * Starts a worker for `setup`. One that ends on its own (an uncaught error, out of memory) is dropped from the pool,
+ * its requests fail (asked again by getImage) and a new one takes its place, up to MAX_RESPAWNS times; without a
+ * listener its 'error' would be thrown in the main process.
+ */
+function spawn(): void
+{
+    const w = new Worker(join(__dirname, 'imageWorker.js'), { resourceLimits: { maxOldGenerationSizeMb: 2048 } });
+    w.on('message', (msg: { id: number; result?: unknown; error?: string; }) =>
+    {
+        const p = pending.get(msg.id);
+
+        if (!p)
+            return;
+
+        pending.delete(msg.id);
+
+        if (msg.error)
+            p.reject(new Error(msg.error));
+        else
+            p.resolve(msg.result);
+    });
+    onWorkerGone(w, (error, exitCode) =>
+    {
+        // (one initImages terminated: already replaced)
+        if (!workers.includes(w))
+            return;
+
+        const why = error ? error.message : tr('Image worker stopped (exit code {code}).', { code: exitCode });
+        console.warn('image worker ended:', why);
+        workers = workers.filter((x) => x !== w);
+        busy.delete(w);
+        inited.delete(w);
+
+        for (const [id, p] of [...pending])
+        {
+            if (p.worker !== w)
+                continue;
+
+            pending.delete(id);
+            p.reject(new WorkerEnded(why));
+        }
+
+        if (setup && respawns++ < MAX_RESPAWNS)
+            spawn();
+    });
+    workers.push(w);
+    inited.set(w, call(w, { op: 'init', ...setup! }));
+    // (a worker that ends or restarts before it is up rejects it: the waiting requests retry)
+    inited.get(w)!.catch(() =>
+    {});
 }
 
 function remember(key: string, buf: Buffer): void
@@ -58,6 +134,9 @@ function remember(key: string, buf: Buffer): void
     }
 }
 
+/** the game folder `ck3://font/` serves from (the GUI preview's texts: fonts/fonts.font names the files) */
+let fontDir: string | null = null;
+
 /** Must run before app 'ready'. */
 export function registerImageScheme(): void
 {
@@ -65,7 +144,7 @@ export function registerImageScheme(): void
 }
 
 /**
- * (Re)starts the workers for a game folder and the loaded mods (enabled mods of the selected list in load order —
+ * (Re)starts the workers for a game folder and the loaded mods (enabled mods of the selected list in load order,
  * each worker layers them like the index does); `poolSize` 0/absent = one per CPU core.
  */
 export function initImages(installDir: string, poolSize?: number, mods: ModInfo[] = []): void
@@ -79,43 +158,24 @@ export function initImages(installDir: string, poolSize?: number, mods: ModInfo[
 
     pending.clear();
     workers = [];
-    ready = Promise.resolve();
+    inited.clear();
     busy.clear();
     decoding.clear();
     cache.clear();
     cacheBytes = 0;
+    respawns = 0;
+    setup = null;
     const gameDir = resolveGameDir(installDir);
+    fontDir = gameDir ?? null;
 
     if (!gameDir)
         return;
 
-    const cacheDir = join(app.getPath('userData'), 'imgcache');
+    setup = { gameDir, cacheDir: join(app.getPath('userData'), 'imgcache'), mods };
     const size = poolSize && poolSize > 0 ? Math.min(64, Math.round(poolSize)) : availableParallelism();
 
     for (let i = 0; i < size; i++)
-    {
-        const w = new Worker(join(__dirname, 'imageWorker.js'));
-        w.on('message', (msg: { id: number; result?: unknown; error?: string; }) =>
-        {
-            const p = pending.get(msg.id);
-
-            if (!p)
-                return;
-
-            pending.delete(msg.id);
-
-            if (msg.error)
-                p.reject(new Error(msg.error));
-            else
-                p.resolve(msg.result);
-        });
-        workers.push(w);
-    }
-
-    ready = Promise.all(workers.map((w) => call(w, { op: 'init', gameDir, cacheDir, mods })));
-    // (a restart before the workers are up rejects it: the waiting requests retry)
-    ready.catch(() =>
-    {});
+        spawn();
 }
 
 /** `removed`: the picture a mod's replace_path hid (galleries show it as removed). */
@@ -142,10 +202,8 @@ async function getImage(rel: string, w: number, face = 0, ch = '', removed = fal
         {
             try
             {
-                await ready;
-
                 if (!workers.length)
-                    throw new Error('No game folder');
+                    throw new Error(setup ? tr('The image workers stopped') : tr('No game folder'));
 
                 let worker = workers[0];
 
@@ -157,6 +215,8 @@ async function getImage(rel: string, w: number, face = 0, ch = '', removed = fal
 
                 try
                 {
+                    // (its game folder and mods loaded)
+                    await inited.get(worker);
                     const ab = (await call(worker, { op: 'img', rel, w, face, ch, removed })) as ArrayBuffer;
                     const buf = Buffer.from(ab);
                     remember(key, buf);
@@ -170,8 +230,9 @@ async function getImage(rel: string, w: number, face = 0, ch = '', removed = fal
             }
             catch (e)
             {
-                // the workers restarted meanwhile (another mod list): ask the new ones
-                if (!(e instanceof Restarted) || attempt >= 3)
+                // the workers restarted meanwhile (another mod list): ask the new ones; a worker that ended with the
+                // request (it may be what ended it): once more
+                if (!(e instanceof Restarted) || attempt >= (e instanceof WorkerEnded ? 1 : 3))
                     throw e;
             }
         }
@@ -193,7 +254,7 @@ async function getImage(rel: string, w: number, face = 0, ch = '', removed = fal
 /**
  * Image files of a loaded mod changed (an incremental index update): their decoded copies go, and the workers look
  * for the files again (a new one may now replace the game's, a deleted one uncover it). Thumbnails on disk are keyed
- * by the file's size and time — a changed file gets new ones.
+ * by the file's size and time: a changed file gets new ones.
  */
 export function refreshImages(rels: string[]): void
 {
@@ -218,18 +279,8 @@ export function refreshImages(rels: string[]): void
         {});
 }
 
-export async function imageInfo(rel: string): Promise<unknown>
-{
-    await ready;
-
-    if (!workers.length)
-        return { found: false };
-
-    return call(workers[0], { op: 'info', rel });
-}
-
 /**
- * Call after app 'ready'. `files`: other hosts serving one folder's files by name (`ck3://map/<key>.bin` — the map's
+ * Call after app 'ready'. `files`: other hosts serving one folder's files by name (`ck3://map/<key>.bin`, the map's
  * province rasters, docs/map.md), streamed as they are.
  */
 export function handleImageProtocol(files: Record<string, { dir: () => string; name: RegExp; }> = {}): void
@@ -244,18 +295,35 @@ export function handleImageProtocol(files: Record<string, { dir: () => string; n
             const name = url.pathname.replace(/^\/+/, '');
 
             if (!folder.name.test(name))
-                return new Response('Not found', { status: 404 });
+                return new Response(tr('Not found'), { status: 404 });
 
             const r = await net.fetch(pathToFileURL(join(folder.dir(), name)).href).catch(() => null);
 
             if (!r?.ok)
-                return new Response('Not found', { status: 404 });
+                return new Response(tr('Not found'), { status: 404 });
 
             return new Response(r.body, { headers: { 'content-type': 'application/octet-stream', 'access-control-allow-origin': '*' } });
         }
 
+        // ck3://font/fonts/Gitan/GitanLatin-Regular.otf: a font of the game for the GUI preview (the game's own folder:
+        // mods replacing a font are not layered here)
+        if (url.hostname === 'font')
+        {
+            const rel = decodeURIComponent(url.pathname.replace(/^\/+/, ''));
+
+            if (!fontDir || !/^fonts\/[\w ./-]+\.(otf|ttf)$/i.test(rel) || rel.includes('..'))
+                return new Response(tr('Not found'), { status: 404 });
+
+            const r = await net.fetch(pathToFileURL(join(fontDir, rel)).href).catch(() => null);
+
+            if (!r?.ok)
+                return new Response(tr('Not found'), { status: 404 });
+
+            return new Response(r.body, { headers: { 'content-type': rel.toLowerCase().endsWith('.otf') ? 'font/otf' : 'font/ttf', 'access-control-allow-origin': '*' } });
+        }
+
         if (url.hostname !== 'img')
-            return new Response('Not found', { status: 404 });
+            return new Response(tr('Not found'), { status: 404 });
 
         const rel = decodeURIComponent(url.pathname.replace(/^\/+/, ''));
         // (callers append `?face=…` to a URL that may carry `?v=…` already: every `?` separates parameters)
@@ -273,7 +341,7 @@ export function handleImageProtocol(files: Record<string, { dir: () => string; n
         try
         {
             const png = await getImage(rel, w, face, ch, removed);
-            // no-cache: the same URL shows another file once a different mod list is loaded — a newly mounted image asks
+            // no-cache: the same URL shows another file once a different mod list is loaded; a newly mounted image asks
             // again (answered from the LRU above, which initImages empties) instead of reusing the renderer's old copy.
             // (Chromium sends no If-None-Match for this scheme, so an ETag would not save the transfer.)
             return new Response(new Uint8Array(png), { headers: { 'content-type': 'image/png', 'cache-control': 'no-cache', 'access-control-allow-origin': '*' } });

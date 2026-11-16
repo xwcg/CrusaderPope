@@ -1,20 +1,21 @@
 /**
- * Cards: Characters' lives and things — death reasons, memories, accolades, artifacts (life-artifacts.ts), bookmarks
- * (life-bookmarks.ts), chronicles, domiciles, catalysts, court amenities, character backgrounds, tutorial lessons.
+ * Cards: Characters' lives and things (death reasons, memories, accolades, artifacts (life-artifacts.ts), bookmarks
+ * (life-bookmarks.ts), chronicles, domiciles, catalysts, court amenities, character backgrounds, tutorial lessons).
  */
 import type { PNode } from '../../indexer/parser.ts';
 import type { Line, Rich, RichSeg } from '../../../shared/api.ts';
 import type { Ctx } from '../describer.ts';
 import type { StoryBuilder } from '../stories.ts';
-import { capitalize, humanize, rich, signed } from '../text.ts';
+import { capitalize, humanize, rich, signed, titleCase } from '../text.ts';
 import type { CardFn } from './types.ts';
 import { weightLines } from './weight.ts';
 import { ARTIFACT_CARDS } from './life-artifacts.ts';
 import { BOOKMARK_CARDS } from './life-bookmarks.ts';
 import { addSection, blockOf, charTriggers, commentLines, costLines, descLines, durationText, entries, joined, kids, modifierGroup, quoted, settingsSection, str, triggerSection, trimmed, words } from './life-shared.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 /** What a death reason's icon (common/deathreasons: death_<kind>.dds) says about the death. */
-const DEATH_KINDS: Record<string, string> = { murder: 'Violent death', disease: 'Death by disease', natural: 'Natural death', unknown: 'Unknown cause' };
+const DEATH_KINDS: Record<string, string> = { murder: tr('Violent death'), disease: tr('Death by disease'), natural: tr('Natural death'), unknown: tr('Unknown cause') };
 
 /** Death reason texts speak of the one who died (CHARACTER) and the killer (TARGET_CHARACTER). */
 function deathText(r: Rich): Rich
@@ -23,8 +24,8 @@ function deathText(r: Rich): Rich
 }
 
 /**
- * A chronicle's texts (legends/chronicles/_chronicles.info): root is the legend — `[ROOT.Legend.GetProtagonist.GetName]`
- * its protagonist —, `[Localize( beast )]` the value of a property.
+ * A chronicle's texts (legends/chronicles/_chronicles.info): root is the legend (`[ROOT.Legend.GetProtagonist.GetName]`
+ * its protagonist), `[Localize( beast )]` the value of a property.
  */
 function legendText(r: Rich): Rich
 {
@@ -40,18 +41,18 @@ function legendText(r: Rich): Rich
             return { ...s, text: up(humanize(prop[1])) };
 
         if (/GetProtagonist\.Get\w*Name\w*\|?\w*\]$/.test(s.tip))
-            return { ...s, text: up(/Possessive/.test(s.tip) ? 'the protagonist’s' : 'the protagonist') };
+            return { ...s, text: up(/Possessive/.test(s.tip) ? tr('the protagonist’s') : tr('the protagonist')) };
 
         // (longer chains: "the protagonist’s faith high god name")
-        return { ...s, text: s.text.replace(/^[Yy]our legend protagonist /, up('the protagonist’s ')) };
+        return { ...s, text: s.text.replace(/^[Yy]our legend protagonist /, up(tr('the protagonist’s '))) };
     });
 }
 
 /** The perspectives of a memory's texts (common/character_memory_types/_character_memories.info). */
 const MEMORY_TEXTS: [string, string][] = [
-    ['description', 'As they remember it'],
-    ['second_perspective_description', 'As it is said to them'],
-    ['third_perspective_description', 'As others tell it']
+    ['description', tr('As they remember it')],
+    ['second_perspective_description', tr('As it is said to them')],
+    ['third_perspective_description', tr('As others tell it')]
 ];
 
 /** The glory each accolade rank needs (common/defines: NAccolade.ACCOLADE_GLORY_LEVELS; rank 1 → 100 …). */
@@ -63,7 +64,7 @@ function gloryLevels(b: StoryBuilder): number[]
 }
 
 /** Who an accolade rank's modifier blocks apply to (common/accolade_types/_accolade_type.info). */
-const RANK_MODIFIERS: Record<string, string> = { liege_modifier: 'The liege:', knight_modifier: 'The knight:', knight_army_modifier: 'The knight’s army:' };
+const RANK_MODIFIERS: Record<string, string> = { liege_modifier: tr('The liege:'), knight_modifier: tr('The knight:'), knight_army_modifier: tr('The knight’s army:') };
 
 /** An accolade parameter's text (its loc key; the engine's list bullet `$EFFECT_LIST_BULLET$` at its start dropped). */
 function parameterText(b: StoryBuilder, key: string): Rich
@@ -92,7 +93,7 @@ function bonusLines(b: StoryBuilder, n: PNode, consts: Map<string, string>): Lin
                         const v = b.d.evalValue(raw.startsWith('@') ? (consts.get(raw.slice(1)) ?? raw) : raw);
                         return rich(v !== undefined ? { text: signed(v), kind: v >= 0 ? 'good' : 'bad' } : { text: raw, kind: 'value' }, ' ', humanize(s.k!));
                     });
-                return { text: rich(b.d.ref(maa.k!, ['men_at_arms_types']), ' in ', b.d.ref(t.k!, ['terrain_types', 'holdings']), ': ', joined(stats)), icon: 'modifier', tip: `${maa.k} › ${t.k}` };
+                return { text: rich(b.d.ref(maa.k!, ['men_at_arms_types']), tr(' in '), b.d.ref(t.k!, ['terrain_types', 'holdings']), ': ', joined(stats)), icon: 'modifier', tip: `${maa.k} › ${t.k}` };
             })
     );
 }
@@ -112,14 +113,14 @@ function rankLines(b: StoryBuilder, list: PNode[], ctx: Ctx, consts: Map<string,
         if (RANK_MODIFIERS[c.k] && Array.isArray(c.v))
             out.push(modifierGroup(b, c, RANK_MODIFIERS[c.k], ctx, consts));
         else if (c.k === 'men_at_arms')
-            out.push({ text: rich('The liege can raise ', joined(words(c).map((m) => b.d.ref(m, ['men_at_arms_types'])))), icon: 'modifier', tip: c.k, src });
+            out.push({ text: rich(tr('The liege can raise '), joined(words(c).map((m) => b.d.ref(m, ['men_at_arms_types'])))), icon: 'modifier', tip: c.k, src });
         else if (c.k === 'accolade_parameters')
         {
             for (const p of words(c))
                 out.push({ text: parameterText(b, p), icon: 'note', tip: p, src });
         }
         else if (/_bonus$/.test(c.k) && Array.isArray(c.v))
-            out.push({ text: [`${capitalize(humanize(c.k.replace(/_bonus$/, '')))} bonuses of the knight’s men-at-arms:`], icon: 'modifier', children: bonusLines(b, c, consts), tip: c.k, src });
+            out.push({ text: [tr('{capitalize} bonuses of the knight’s men-at-arms:', { capitalize: capitalize(humanize(c.k.replace(/_bonus$/, ''))) })], icon: 'modifier', children: bonusLines(b, c, consts), tip: c.k, src });
     }
 
     return out;
@@ -161,7 +162,7 @@ function catalystLines(b: StoryBuilder, name: string): Line[]
                     const n = b.d.evalValue(v);
                     const points: RichSeg = n !== undefined ? { text: signed(n), kind: 'value', tip: v } : b.d.valueSeg(v);
                     const from = path[path.length - 2]?.k === 'future_phases' ? path[path.length - 3] : undefined;
-                    found.push({ text: rich(points, ' points towards ', phase(path[path.length - 1]), from ? rich(' during ', phase(from)) : ''), icon: 'chance', tip: `${hit.k} = ${v}` });
+                    found.push({ text: rich(points, tr(' points towards '), phase(path[path.length - 1]), from ? rich(tr(' during '), phase(from)) : ''), icon: 'chance', tip: `${hit.k} = ${v}` });
                 }
             };
             walk(body, []);
@@ -174,16 +175,16 @@ function catalystLines(b: StoryBuilder, name: string): Line[]
     return out;
 }
 
-/** A catalyst: only a name (situation/catalysts, struggle/catalysts _catalysts.info) — the phases that count it. */
+/** A catalyst: only a name (situation/catalysts, struggle/catalysts _catalysts.info): the phases that count it. */
 const catalyst: CardFn = (b, { e, card }) =>
 {
     const lines = catalystLines(b, e.name);
 
     if (!lines.length)
-        card.facts.push(['Not counted by any phase']);
+        card.facts.push([tr('Not counted by any phase')]);
 
-    addSection(card, e.type.startsWith('struggle') ? 'Moves the struggle' : 'Moves the situation', lines);
-    addSection(card, 'Notes in the file', commentLines(b, e));
+    addSection(card, e.type.startsWith('struggle') ? tr('Moves the struggle') : tr('Moves the situation'), lines);
+    addSection(card, tr('Notes in the file'), commentLines(b, e));
     return true;
 };
 
@@ -194,12 +195,12 @@ const LESSON_KEYS = new Set(['chain', 'start_automatically', 'trigger', 'gui_tag
 function lessonTarget(lesson: string, target: string | undefined): Rich
 {
     if (target === 'lesson_finish')
-        return ['finishes the lesson'];
+        return [tr('finishes the lesson')];
 
     if (target === 'lesson_abort')
-        return ['closes the lesson for now'];
+        return [tr('closes the lesson for now')];
 
-    return target ? rich('goes on to ', { text: capitalize(humanize(target.replace(lesson + '_', ''))), kind: 'value', tip: target }) : ['—'];
+    return target ? rich(tr('goes on to '), { text: capitalize(humanize(target.replace(lesson + '_', ''))), kind: 'value', tip: target }) : ['?'];
 }
 
 /** A lesson (step)'s transitions: buttons (`gui_transition`, enabled when …) and automatic ones (`trigger_transition`). */
@@ -216,8 +217,8 @@ function transitionLines(b: StoryBuilder, lesson: string, list: PNode[], ctx: Ct
         const button = str(c.v, 'button_text');
         const conds = blockOf(c.v, c.k === 'gui_transition' ? 'enabled' : 'trigger');
         const l: Line = c.k === 'gui_transition'
-            ? { text: rich('Button ', button ? quoted(b, button) : '', ' ', target, conds ? ' — enabled when:' : ''), icon: 'event' }
-            : { text: rich(capitalize(b.d.richString(target)), ' by itself', button ? rich(' (button ', quoted(b, button), ')') : '', ' when:'), icon: 'if' };
+            ? { text: rich(tr('Button '), button ? quoted(b, button) : '', ' ', target, conds ? tr(' — enabled when:') : ''), icon: 'event' }
+            : { text: rich(capitalize(b.d.richString(target)), tr(' by itself'), button ? rich(tr(' (button '), quoted(b, button), ')') : '', tr(' when:')), icon: 'if' };
 
         if (conds)
             l.conditions = charTriggers(b, conds, ctx);
@@ -249,13 +250,13 @@ export const LIFE_CARDS: Record<string, CardFn> = {
             card.facts.push([kind]);
 
         if (epidemic)
-            card.facts.push(rich('From the epidemic ', b.d.ref(epidemic, ['epidemics'])));
+            card.facts.push(rich(tr('From the epidemic '), b.d.ref(epidemic, ['epidemics'])));
         else if (trigger)
-            card.facts.push([`Natural death, priority ${str(body, 'priority') ?? 0}`]);
+            card.facts.push([tr('Natural death, priority {value}', { value: str(body, 'priority') ?? 0 })]);
         else if (str(body, 'default') === 'yes')
-            card.facts.push(['Fallback natural death']);
+            card.facts.push([tr('Fallback natural death')]);
         else
-            card.facts.push([str(body, 'public_knowledge') === 'yes' ? 'The killer is known to all' : 'The killer can stay secret']);
+            card.facts.push([str(body, 'public_knowledge') === 'yes' ? tr('The killer is known to all') : tr('The killer can stay secret')]);
 
         // the text after the character's name: `<key>`, `<key>_killer` when the killer is known
         const lines: Line[] = [];
@@ -273,8 +274,8 @@ export const LIFE_CARDS: Record<string, CardFn> = {
                 lines.push({ text: rich(label, '“', deathText(t), '”'), icon: 'death', tip: k });
         }
 
-        addSection(card, 'How it reads', lines);
-        triggerSection(b, card, trigger, 'Dies of it naturally when', ctx);
+        addSection(card, tr('How it reads'), lines);
+        triggerSection(b, card, trigger, tr('Dies of it naturally when'), ctx);
         settingsSection(b, x);
         b.genericSections(e, body, card, ctx, x.own, new Set(['icon', 'natural_death_trigger', 'public_knowledge', 'priority', 'default', 'epidemic', 'use_equipped_artifact_in_slot']));
         return true;
@@ -289,12 +290,12 @@ export const LIFE_CARDS: Record<string, CardFn> = {
         const cats = words(blockOf(body, 'categories')).sort((p, q) => +/^(posi|nega)tive$/.test(q) - +/^(posi|nega)tive$/.test(p));
 
         if (cats.length)
-            card.facts.push(rich(...cats.flatMap((c, i): (RichSeg | string)[] => [i ? ' · ' : '', c === 'positive' ? { text: 'Positive', kind: 'good' } : c === 'negative' ? { text: 'Negative', kind: 'bad' } : capitalize(humanize(c))])));
+            card.facts.push(rich(...cats.flatMap((c, i): (RichSeg | string)[] => [i ? ' · ' : '', c === 'positive' ? { text: tr('Positive'), kind: 'good' } : c === 'negative' ? { text: tr('Negative'), kind: 'bad' } : capitalize(humanize(c))])));
 
         const dur = durationText(b, kids(blockOf(body, 'duration')), ctx);
 
         if (dur)
-            card.facts.push(rich('Remembered for ', dur));
+            card.facts.push(rich(tr('Remembered for '), dur));
 
         for (const [k, title] of MEMORY_TEXTS)
         {
@@ -311,7 +312,7 @@ export const LIFE_CARDS: Record<string, CardFn> = {
         const who = blockOf(body, 'participants');
 
         if (who)
-            addSection(card, 'Who else takes part', words(who).map((p) => ({ text: [{ text: capitalize(humanize(p)), kind: 'scope', tip: `memory_participant:${p}` }], icon: 'scope' })), b.blockSection(who, 'other', ctx));
+            addSection(card, tr('Who else takes part'), words(who).map((p) => ({ text: [{ text: capitalize(humanize(p)), kind: 'scope', tip: `memory_participant:${p}` }], icon: 'scope' })), b.blockSection(who, 'other', ctx));
 
         b.genericSections(e, body, card, ctx, x.own, new Set(['categories', 'icon', 'duration', 'participants', ...MEMORY_TEXTS.map(([k]) => k)]));
         return true;
@@ -324,11 +325,11 @@ export const LIFE_CARDS: Record<string, CardFn> = {
         const consts = b.idx.fileConstants(e);
         const catNode = blockOf(body, 'accolade_categories');
         const cats = words(catNode);
-        // (the tier: `tier`, or one of the categories — 00_accolade_categories.txt)
+        // (the tier: `tier`, or one of the categories; 00_accolade_categories.txt)
         const tier = str(body, 'tier') ?? cats.find((c) => ['common', 'skilled', 'exceptional', 'eminent'].includes(c));
 
         if (tier)
-            card.facts.push([`${capitalize(tier)} accolade`]);
+            card.facts.push([tr('{capitalize} accolade', { capitalize: capitalize(tier) })]);
 
         const adj = str(body, 'adjective');
         const noun = str(body, 'noun');
@@ -338,7 +339,7 @@ export const LIFE_CARDS: Record<string, CardFn> = {
         {
             const n = body.find((c) => c.k === (adj ? 'adjective' : 'noun'))!;
             about.push({
-                text: rich('Called ', adj ? rich(quoted(b, adj), noun ? ' or ' : '') : '', noun ? quoted(b, noun) : '', ' when no name of its own fits'),
+                text: rich(tr('Called '), adj ? rich(quoted(b, adj), noun ? tr(' or ') : '') : '', noun ? quoted(b, noun) : '', tr(' when no name of its own fits')),
                 icon: 'note',
                 tip: [adj && `adjective = ${adj}`, noun && `noun = ${noun}`].filter(Boolean).join('\n'),
                 src: ctx.file ? b.d.anchor(n, ctx, 'other', false) : undefined
@@ -348,7 +349,7 @@ export const LIFE_CARDS: Record<string, CardFn> = {
         if (catNode)
             about.push({
                 text: rich(
-                    'Categories: ',
+                    tr('Categories: '),
                     cats.filter((c) => c !== tier)
                         .map(humanize)
                         .join(', ')
@@ -357,7 +358,7 @@ export const LIFE_CARDS: Record<string, CardFn> = {
                 src: ctx.file ? b.d.anchor(catNode, ctx, 'other', false) : undefined
             });
 
-        addSection(card, 'About', about);
+        addSection(card, tr('About'), about);
         const ranks = blockOf(body, 'ranks');
 
         if (ranks)
@@ -368,7 +369,7 @@ export const LIFE_CARDS: Record<string, CardFn> = {
                 .map((r) =>
                 {
                     const n = Number(r.k);
-                    const need = Number.isInteger(n) && n >= 1 && n <= glory.length ? `Rank ${n} — from ${glory[n - 1]} glory` : `From ${r.k} glory`;
+                    const need = Number.isInteger(n) && n >= 1 && n <= glory.length ? tr('Rank {n} — from {glory} glory', { n, glory: glory[n - 1] }) : tr('From {k} glory', { k: r.k });
                     const l: Line = { text: [need], icon: 'skill', children: rankLines(b, kids(r), ctx, consts), tip: r.k! };
 
                     if (ctx.file)
@@ -376,27 +377,27 @@ export const LIFE_CARDS: Record<string, CardFn> = {
 
                     return l;
                 });
-            addSection(card, 'Ranks', lines, b.blockSection(ranks, 'other', ctx));
+            addSection(card, tr('Ranks'), lines, b.blockSection(ranks, 'other', ctx));
         }
 
-        triggerSection(b, card, blockOf(body, 'squire_perfect_fit'), 'A perfect fit', ctx, 'Anyone');
-        triggerSection(b, card, blockOf(body, 'squire_acceptable_fit'), 'An acceptable fit', ctx, 'Anyone');
+        triggerSection(b, card, blockOf(body, 'squire_perfect_fit'), tr('A perfect fit'), ctx, 'Anyone');
+        triggerSection(b, card, blockOf(body, 'squire_acceptable_fit'), tr('An acceptable fit'), ctx, 'Anyone');
         b.genericSections(e, body, card, ctx, x.own, new Set(['adjective', 'noun', 'icon', 'portrait_pose', 'accolade_categories', 'tier', 'ranks', 'squire_perfect_fit', 'squire_acceptable_fit', 'weight']));
         const w = body.find((c) => c.k === 'weight');
 
         if (w)
-            addSection(card, 'Chance to be picked', weightLines(b, Array.isArray(w.v) ? w.v : [{ ...w, k: 'value' }], ctx));
+            addSection(card, tr('Chance to be picked'), weightLines(b, Array.isArray(w.v) ? w.v : [{ ...w, k: 'value' }], ctx));
 
         return true;
     },
 
-    // common/character_backgrounds: `trait` — what characters generated with the background (pool_character_selectors) get
+    // common/character_backgrounds: `trait`: what characters generated with the background (pool_character_selectors) get
     character_backgrounds: (b, x) =>
     {
         const trait = str(x.body, 'trait');
 
         if (trait)
-            x.card.facts.push(rich('Comes with the trait ', b.d.ref(trait, ['traits'])));
+            x.card.facts.push(rich(tr('Comes with the trait '), b.d.ref(trait, ['traits'])));
 
         settingsSection(b, x);
         b.genericSections(x.e, x.body, x.card, x.ctx, x.own, new Set(['trait']));
@@ -412,10 +413,10 @@ export const LIFE_CARDS: Record<string, CardFn> = {
         const levels = body.filter((c) => c.k && Array.isArray(c.v));
         const name = (k: string): string => b.d.richString(b.d.loc(k) ?? [capitalize(humanize(k))]);
         const def = str(body, 'default') ?? levels[0]?.k ?? undefined;
-        card.facts.push([`${levels.length} levels`]);
+        card.facts.push([tr('{length} levels', { length: levels.length })]);
 
         if (def)
-            card.facts.push(rich('Starts at ', { text: name(def), kind: 'value', tip: def }));
+            card.facts.push(rich(tr('Starts at '), { text: name(def), kind: 'value', tip: def }));
 
         const ai: Line[] = [];
         levels.forEach((lv, i) =>
@@ -429,10 +430,10 @@ export const LIFE_CARDS: Record<string, CardFn> = {
             for (const c of kids(lv))
             {
                 if (c.k === 'cost' && Array.isArray(c.v))
-                    lines.push({ text: ['Costs:'], icon: 'gold', children: costLines(b, c.v, ctx), src: b.fieldAnchor(c, ctx, 'cost', true) });
+                    lines.push({ text: [tr('Costs:')], icon: 'gold', children: costLines(b, c.v, ctx), src: b.fieldAnchor(c, ctx, 'cost', true) });
                 else if (c.k === 'owner_modifier' || c.k === 'courtier_guest_modifier')
                 {
-                    const g = modifierGroup(b, c, c.k === 'owner_modifier' ? 'The ruler:' : 'Courtiers and guests:', ctx);
+                    const g = modifierGroup(b, c, c.k === 'owner_modifier' ? tr('The ruler:') : tr('Courtiers and guests:'), ctx);
                     const note = str(kids(lv), c.k + '_description');
 
                     if (note)
@@ -441,7 +442,7 @@ export const LIFE_CARDS: Record<string, CardFn> = {
                     lines.push(g);
                 }
                 else if (c.k === 'can_pick' && Array.isArray(c.v))
-                    lines.push({ text: ['Can be picked when:'], icon: 'if', children: charTriggers(b, c, ctx), src: ctx.file ? b.d.anchor(c, ctx, 'trigger', true) : undefined });
+                    lines.push({ text: [tr('Can be picked when:')], icon: 'if', children: charTriggers(b, c, ctx), src: ctx.file ? b.d.anchor(c, ctx, 'trigger', true) : undefined });
                 else if (c.k === 'ai_will_do' && Array.isArray(c.v))
                     ai.push({ text: [name(lv.k!) + ':'], children: weightLines(b, c.v, ctx), src: ctx.file ? b.d.anchor(c, ctx, 'other', false) : undefined });
             }
@@ -449,7 +450,7 @@ export const LIFE_CARDS: Record<string, CardFn> = {
             card.sections.push({ title: `${i + 1}. ${name(lv.k!)}`, lines, src: b.blockSection(lv, 'other', ctx) });
         });
         b.genericSections(e, body, card, ctx, own, new Set(['default', ...levels.map((l) => l.k!)]));
-        addSection(card, 'AI', ai);
+        addSection(card, tr('AI'), ai);
         return true;
     },
 
@@ -459,16 +460,16 @@ export const LIFE_CARDS: Record<string, CardFn> = {
         const { e, body, card, ctx } = x;
 
         if (str(body, 'start_automatically') === 'no')
-            card.facts.push(['Started by script']);
+            card.facts.push([tr('Started by script')]);
 
         const chain = str(body, 'chain');
 
         if (chain)
-            card.facts.push(rich('Chain: ', b.d.ref(chain, ['tutorial_lesson_chains'])));
+            card.facts.push(rich(tr('Chain: '), b.d.ref(chain, ['tutorial_lesson_chains'])));
 
-        triggerSection(b, card, blockOf(body, 'trigger'), 'Starts when', ctx);
+        triggerSection(b, card, blockOf(body, 'trigger'), tr('Starts when'), ctx);
         settingsSection(b, x);
-        addSection(card, 'While it is open', transitionLines(b, e.name, body, ctx));
+        addSection(card, tr('While it is open'), transitionLines(b, e.name, body, ctx));
 
         for (const step of body.filter((c) => c.k && Array.isArray(c.v) && !LESSON_KEYS.has(c.k)))
         {
@@ -489,12 +490,12 @@ export const LIFE_CARDS: Record<string, CardFn> = {
             const delay = str(list, 'delay');
 
             if (delay && delay !== '0')
-                lines.push({ text: [`Waits ${delay} seconds before it shows`], icon: 'note', tip: `delay = ${delay}` });
+                lines.push({ text: [tr('Waits {delay} seconds before it shows', { delay })], icon: 'note', tip: `delay = ${delay}` });
 
             if (str(list, 'force_pause_game') === 'yes')
-                lines.push({ text: ['Pauses the game until it moves on'], icon: 'note' });
+                lines.push({ text: [tr('Pauses the game until it moves on')], icon: 'note' });
             else if (str(list, 'pause_game') === 'yes')
-                lines.push({ text: ['Pauses the game'], icon: 'note' });
+                lines.push({ text: [tr('Pauses the game')], icon: 'note' });
 
             lines.push(...transitionLines(b, e.name, list, ctx));
 
@@ -505,7 +506,7 @@ export const LIFE_CARDS: Record<string, CardFn> = {
 
                 // (only behind-the-scenes effects: the group is one too)
                 if (n && effects)
-                    lines.push({ text: [k === 'effect' ? 'Effects:' : 'Interface effects:'], icon: 'event', children: effects, hidden: effects.every((l) => l.hidden) || undefined, src: ctx.file ? b.d.anchor(n, ctx, 'effect', true) : undefined });
+                    lines.push({ text: [k === 'effect' ? tr('Effects:') : tr('Interface effects:')], icon: 'event', children: effects, hidden: effects.every((l) => l.hidden) || undefined, src: ctx.file ? b.d.anchor(n, ctx, 'effect', true) : undefined });
             }
 
             const title = capitalize(humanize(step.k!.startsWith(e.name + '_') ? step.k!.slice(e.name.length + 1) : step.k!));
@@ -535,8 +536,8 @@ export const LIFE_CARDS: Record<string, CardFn> = {
 
         for (
             const [k, t] of [
-                ['name', 'Name'],
-                ['description', 'Description']
+                ['name', tr('Name')],
+                ['description', tr('Description')]
             ]
         )
         {
@@ -551,10 +552,10 @@ export const LIFE_CARDS: Record<string, CardFn> = {
         if (props)
             addSection(
                 card,
-                'What it is about',
+                tr('What it is about'),
                 kids(props)
                     .filter((p) => p.k && typeof p.v === 'string')
-                    .map((p) => ({ text: rich({ text: capitalize(humanize(p.k!)), kind: 'scope', tip: `scope:${p.k}` }, ' — ', /^[aeiou]/.test(p.v as string) ? 'an ' : 'a ', humanize(p.v as string)), icon: 'scope', src: ctx.file ? b.d.anchor(p, ctx, 'other', false) : undefined })),
+                    .map((p) => ({ text: rich({ text: capitalize(humanize(p.k!)), kind: 'scope', tip: `scope:${p.k}` }, ': ', /^[aeiou]/.test(p.v as string) ? tr('an ') : 'a ', humanize(p.v as string)), icon: 'scope', src: ctx.file ? b.d.anchor(p, ctx, 'other', false) : undefined })),
                 b.blockSection(props, 'other', ctx)
             );
 
@@ -562,16 +563,16 @@ export const LIFE_CARDS: Record<string, CardFn> = {
 
         if (chapters)
         {
-            card.facts.push([`${kids(chapters).length} chapters`]);
+            card.facts.push([tr('{length} chapters', { length: kids(chapters).length })]);
             addSection(
                 card,
-                'Chapters',
+                tr('Chapters'),
                 kids(chapters).map((c) =>
                 {
                     const label = c.k ?? (typeof c.v === 'string' ? c.v : '');
                     const loc = typeof c.v === 'string' && c.k ? b.d.loc(c.v) : undefined;
                     const text = loc && legendText(loc);
-                    return { text: rich({ text: capitalize(humanize(label)), kind: 'value' }, text ? rich(': “', text, '”') : ' (no default text)'), icon: 'note', tip: c.k ? `${c.k} = ${c.v}` : label, src: ctx.file ? b.d.anchor(c, ctx, 'other', false) : undefined };
+                    return { text: rich({ text: capitalize(humanize(label)), kind: 'value' }, text ? rich(': “', text, '”') : tr(' (no default text)')), icon: 'note', tip: c.k ? `${c.k} = ${c.v}` : label, src: ctx.file ? b.d.anchor(c, ctx, 'other', false) : undefined };
                 }),
                 b.blockSection(chapters, 'other', ctx)
             );
@@ -581,7 +582,7 @@ export const LIFE_CARDS: Record<string, CardFn> = {
 
         if (impact)
         {
-            const WHO: Record<string, string> = { province_modifier: 'Provinces with the legend:', county_modifier: 'Counties whose capital adopted it:', owner_modifier: 'Its owner:', promoter_modifier: 'Everyone promoting it:' };
+            const WHO: Record<string, string> = { province_modifier: tr('Provinces with the legend:'), county_modifier: tr('Counties whose capital adopted it:'), owner_modifier: tr('Its owner:'), promoter_modifier: tr('Everyone promoting it:') };
             const lines: Line[] = [];
 
             for (const c of kids(impact))
@@ -592,10 +593,10 @@ export const LIFE_CARDS: Record<string, CardFn> = {
                 if (WHO[c.k])
                     lines.push(modifierGroup(b, c, WHO[c.k], ctx));
                 else if (c.k === 'on_complete')
-                    lines.push({ text: ['When its owner completes it:'], icon: 'event', children: b.d.effects(c.v, { ...ctx, scopeType: 'character' }), src: ctx.file ? b.d.anchor(c, ctx, 'effect', true) : undefined });
+                    lines.push({ text: [tr('When its owner completes it:')], icon: 'event', children: b.d.effects(c.v, { ...ctx, scopeType: 'character' }), src: ctx.file ? b.d.anchor(c, ctx, 'effect', true) : undefined });
             }
 
-            addSection(card, 'Impact', lines, b.blockSection(impact, 'other', ctx));
+            addSection(card, tr('Impact'), lines, b.blockSection(impact, 'other', ctx));
         }
 
         b.genericSections(e, body, card, ctx, own, new Set(['name', 'description', 'properties', 'chapters', 'impact', 'portrait_animation']));
@@ -608,35 +609,35 @@ export const LIFE_CARDS: Record<string, CardFn> = {
         const { e, body, card, ctx } = x;
         card.title = capitalize(card.title);
         const yes = (k: string): boolean => str(body, k) === 'yes';
-        card.facts.push([yes('travel') ? (yes('provisions') ? 'Travels, on provisions' : 'Travels') : 'Stays in one place']);
+        card.facts.push([yes('travel') ? (yes('provisions') ? tr('Travels, on provisions') : tr('Travels')) : tr('Stays in one place')]);
 
         if (yes('herd'))
-            card.facts.push(['Keeps a herd']);
+            card.facts.push([tr('Keeps a herd')]);
 
         if (yes('culture_and_faith'))
-            card.facts.push(['Has its own culture and faith']);
+            card.facts.push([tr('Has its own culture and faith')]);
 
-        triggerSection(b, card, blockOf(body, 'allowed_for_character'), 'Who can have it', ctx);
+        triggerSection(b, card, blockOf(body, 'allowed_for_character'), tr('Who can have it'), ctx);
         settingsSection(b, x);
         const moving: Line[] = [];
         const cooldown = blockOf(body, 'move_cooldown');
         const every = cooldown && durationText(b, kids(cooldown), ctx);
 
         if (every)
-            moving.push({ text: rich('Can be moved again after ', every), icon: 'note', tip: 'move_cooldown', src: ctx.file ? b.d.anchor(cooldown, ctx, 'other', false) : undefined });
+            moving.push({ text: rich(tr('Can be moved again after '), every), icon: 'note', tip: 'move_cooldown', src: ctx.file ? b.d.anchor(cooldown, ctx, 'other', false) : undefined });
 
         const cost = blockOf(body, 'move_cost');
 
         if (cost)
-            moving.push({ text: ['Costs:'], icon: 'gold', children: costLines(b, kids(cost), ctx), src: b.fieldAnchor(cost, ctx, 'cost', true) });
+            moving.push({ text: [tr('Costs:')], icon: 'gold', children: costLines(b, kids(cost), ctx), src: b.fieldAnchor(cost, ctx, 'cost', true) });
 
-        addSection(card, 'Moving it', moving);
+        addSection(card, tr('Moving it'), moving);
 
         // the temperament modifiers: `name` (their loc) and a `scale` script value
         for (
             const [k, title] of [
-                ['domicile_temperament_low_modifier', 'When most of the court dislikes them'],
-                ['domicile_temperament_high_modifier', 'When most of the court likes them']
+                ['domicile_temperament_low_modifier', tr('When most of the court dislikes them')],
+                ['domicile_temperament_high_modifier', tr('When most of the court likes them')]
             ]
         )
         {
@@ -649,7 +650,7 @@ export const LIFE_CARDS: Record<string, CardFn> = {
                     const scale = blockOf(kids(c), 'scale');
 
                     if (scale)
-                        g.children!.push({ text: ['Scaled by:'], icon: 'chance', children: b.formula(kids(scale), ctx) });
+                        g.children!.push({ text: [tr('Scaled by:')], icon: 'chance', children: b.formula(kids(scale), ctx) });
 
                     return g;
                 });
@@ -661,14 +662,76 @@ export const LIFE_CARDS: Record<string, CardFn> = {
         if (slots)
             addSection(
                 card,
-                'Building slots',
+                tr('Building slots'),
                 kids(slots)
                     .filter((s) => s.k && Array.isArray(s.v))
-                    .map((s) => ({ text: rich({ text: capitalize(humanize(s.k!)), kind: 'value' }, str(kids(s), 'slot_type') === 'main' ? ' — the main building' : ' — an external building'), icon: 'note', tip: s.k!, src: ctx.file ? b.d.anchor(s, ctx, 'other', false) : undefined })),
+                    .map((s) =>
+                    {
+                        // (its pictures: empty and under construction, each picked by terrain or culture)
+                        const art = [['empty_slot_asset', tr('Pictures while empty')], ['construction_slot_asset', tr('Pictures while building')]]
+                            .map(([k, label]) => assetLine(kids(s).filter((a) => a.k === k && Array.isArray(a.v)), label))
+                            .filter((l): l is Line => !!l);
+                        return {
+                            text: rich({ text: capitalize(humanize(s.k!)), kind: 'value' }, str(kids(s), 'slot_type') === 'main' ? tr(' — the main building') : tr(' — an external building')),
+                            icon: 'note',
+                            tip: s.k!,
+                            src: ctx.file ? b.d.anchor(s, ctx, 'other', false) : undefined,
+                            children: art.length ? art : undefined
+                        };
+                    }),
                 b.blockSection(slots, 'other', ctx)
             );
+
+        // (the domicile's own pictures, by terrain or culture)
+        const own = assetLine(body.filter((c) => c.k === 'domicile_asset' && Array.isArray(c.v)), tr('Pictures of the domicile'));
+
+        if (own)
+            addSection(card, tr('Pictures'), [own]);
 
         b.genericSections(e, body, card, ctx, x.own, new Set(['allowed_for_character', 'move_cooldown', 'move_cost', 'domicile_temperament_low_modifier', 'domicile_temperament_high_modifier', 'domicile_building_slots', 'domicile_asset', 'map_entity']));
         return true;
     }
 };
+
+/**
+ * Pictures picked by a trigger (`empty_slot_asset = { trigger = { … terrain = jungle … } texture = … }`): how many and
+ * what picks them: the terrains, graphical cultures and other conditions their triggers name.
+ */
+function assetLine(assets: PNode[], label: string): Line | undefined
+{
+    if (!assets.length)
+        return undefined;
+
+    const terrains = new Set<string>();
+    const cultures = new Set<string>();
+    let other = false;
+    const walk = (ns: PNode[]): void =>
+    {
+        for (const n of ns)
+        {
+            if (n.k === 'terrain' && typeof n.v === 'string')
+                terrains.add(humanize(n.v));
+            else if (n.k && /^has_graphical_(\w+?)_culture(_group)?_trigger$/.test(n.k))
+                cultures.add(titleCase(humanize(/^has_graphical_(\w+?)_culture(_group)?_trigger$/.exec(n.k)![1])));
+            else if (Array.isArray(n.v))
+                walk(n.v);
+            else if (n.k && !['OR', 'AND', 'NOT', 'NOR'].includes(n.k))
+                other = true;
+        }
+    };
+
+    for (const a of assets)
+    {
+        const t = (a.v as PNode[]).find((c) => c.k === 'trigger' && Array.isArray(c.v));
+
+        if (t)
+            walk(t.v as PNode[]);
+    }
+
+    const by = [
+        terrains.size ? `terrain (${[...terrains].join(', ')})` : '',
+        cultures.size ? `culture (${[...cultures].join(', ')})` : '',
+        other && !terrains.size && !cultures.size ? 'conditions' : ''
+    ].filter(Boolean);
+    return { text: [`${label}: ${assets.length}${by.length ? ', by ' + by.join(' and ') : ''}`], icon: 'note' };
+}

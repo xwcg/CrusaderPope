@@ -11,6 +11,7 @@ import { rootCtx } from '../describer.ts';
 import { capitalize, humanize, rich, titleCase } from '../text.ts';
 import { entryLines, firstValidLines, join, kids, membersBy, note, pictureSeg, settingLines, str, values } from './presentation-util.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 /** `$VALUE|+0$` template parameters as italic placeholders ("value"). */
 function withParams(r: Rich): Rich
 {
@@ -29,8 +30,12 @@ function withParams(r: Rich): Rich
 /** A text by its key in quotes, its codes as placeholders; a missing one as the key, marked. */
 function locText(b: StoryBuilder, key: string): Rich
 {
+    // (`global = ""`: written so the game shows no text, set_add_claim_on_loss)
+    if (!key)
+        return [note(tr('(empty: the game shows no text)'))];
+
     const t = b.d.loc(key);
-    return t ? rich('“', withParams(t), '”') : rich({ text: key, kind: 'code' }, ' ', note('(no text)'));
+    return t ? rich('“', withParams(t), '”') : rich({ text: key, kind: 'code' }, ' ', note(tr('(no text)')));
 }
 
 /**
@@ -46,16 +51,16 @@ function messageSeg(b: StoryBuilder, type: string, key: string): Exclude<RichSeg
 }
 
 /** What the placeholder-only texts of messages stand for (`event_message_title` = "$TITLE$" …: send_interface_message's). */
-const MESSAGE_PARTS: Record<string, string> = { TITLE: 'the title the sending effect gives', DESCRIPTION: 'the text the sending effect gives', EFFECT: 'what the sending effect does' };
+const MESSAGE_PARTS: Record<string, string> = { TITLE: tr('the title the sending effect gives'), DESCRIPTION: tr('the text the sending effect gives'), EFFECT: tr('what the sending effect does') };
 
 /** A message's texts: key, label, the default key's suffix to the message's key (_messages.info). */
 const MESSAGE_TEXTS: [string, string, string?][] = [
     ['title', 'Title', ''],
     ['desc', 'Text', '_desc'],
-    ['tooltip', 'Tooltip']
+    ['tooltip', tr('Tooltip')]
 ];
 
-/** A message text: the loc text, or — only `$TITLE$` / `$DESCRIPTION$` / `$EFFECT$` — what fills it in. */
+/** A message text: the loc text, or (only `$TITLE$` / `$DESCRIPTION$` / `$EFFECT$`) what fills it in. */
 function messageText(b: StoryBuilder, key: string): Rich
 {
     const raw = b.idx.locRaw(key);
@@ -75,7 +80,7 @@ function customTexts(b: StoryBuilder, texts: PNode[], ctx: Ctx, suffix: string, 
             const key = str(list, 'localization_key');
             const setup = list.find((c) => c.k === 'setup_scope');
             return {
-                text: rich(key ? locText(b, key + suffix) : '(no text)', str(list, 'fallback') === 'yes' ? rich(' ', note('— when none fits')) : ''),
+                text: rich(key ? locText(b, key + suffix) : tr('(no text)'), str(list, 'fallback') === 'yes' ? rich(' ', note(tr('— when none fits'))) : ''),
                 tip: key && `localization_key = ${key}${suffix ? ` (+ ${suffix})` : ''}`,
                 children: setup ? b.d.effects(kids(setup), ctx) : undefined,
                 // (✎ text in a mod's entry)
@@ -87,7 +92,7 @@ function customTexts(b: StoryBuilder, texts: PNode[], ctx: Ctx, suffix: string, 
 }
 
 /** Effect / trigger localization keys: `global|first|third|none` + `_past` / `_neg` / `_not` (the .info files). */
-const PERSON: Record<string, string> = { global: 'Plain', first: 'You', third: 'Someone', none: 'They' };
+const PERSON: Record<string, string> = { global: 'Plain', first: 'You', third: 'Someone', none: tr('They') };
 
 /** `third_past_neg` → "Someone, past, for a loss" */
 function variantLabel(k: string): string | undefined
@@ -104,7 +109,7 @@ function variantLabel(k: string): string | undefined
 /**
  * The texts of an effect_localization / trigger_localization entry, one line per variant (a `_category = { … }` group
  * holds entries). A trigger's variant without its own `_not` is negated by the key `NOT_<key>`
- * (_trigger_localization.info) — shown too, when it has a text.
+ * (_trigger_localization.info), shown too, when it has a text.
  */
 function variantLines(b: StoryBuilder, body: PNode[], ctx: Ctx, trigger: boolean): Line[]
 {
@@ -126,8 +131,9 @@ function variantLines(b: StoryBuilder, body: PNode[], ctx: Ctx, trigger: boolean
 
         out.push(l);
 
+        // (no statement of its own: its text is the variant's, "✎ text" where that is the active mod's)
         if (trigger && label && !c.k.endsWith('_not') && !body.some((x) => x.k === `${c.k}_not`) && b.idx.locRaw(`NOT_${c.v}`) !== undefined)
-            out.push({ text: rich(`${label}, negated: `, locText(b, `NOT_${c.v}`)), tip: `NOT_${c.v} (the negation of ${c.v})`, locKey: `NOT_${c.v}` });
+            out.push({ text: rich(tr('{label}, negated: ', { label }), locText(b, `NOT_${c.v}`)), tip: tr('NOT_{v} (the negation of {v})', { v: c.v }), locKey: `NOT_${c.v}`, ...(l.src ? { locAt: l.src } : {}) });
     }
 
     return out;
@@ -139,43 +145,43 @@ function flavorFor(list: PNode[]): string
     const type = str(list, 'type') ?? 'character';
     const tier = str(list, 'tier');
     // (named titles: "the listed")
-    const t = tier && tier !== 'none' ? `${tier}-tier ` : list.some((c) => c.k === 'titles' || c.k === 'de_jure_liege') ? 'the listed ' : '';
+    const t = tier && tier !== 'none' ? `${tier}-tier ` : list.some((c) => c.k === 'titles' || c.k === 'de_jure_liege') ? tr('the listed ') : '';
 
     if (type === 'title')
-        return `Name of ${t || 'any '}titles`;
+        return tr('Name of {value}titles', { value: t || 'any ' });
 
     if (type === 'domicile')
-        return 'Name of a domicile';
+        return tr('Name of a domicile');
 
     const g = str(list, 'gender') === 'female' ? 'female ' : str(list, 'gender') === 'male' ? 'male ' : '';
 
     switch (str(list, 'special') ?? 'holder')
     {
         case 'ruler_child':
-            return capitalize(`${g}children of ${t}rulers`);
+            return capitalize(tr('{g}children of {t}rulers', { g, t }));
         case 'queen_mother':
-            return capitalize(`${g}mothers of child ${t}rulers`);
+            return capitalize(tr('{g}mothers of child {t}rulers', { g, t }));
         case 'head_of_faith':
-            return capitalize(`${g}heads of faith`) + (t ? ` (${t}title)` : '');
+            return capitalize(tr('{g}heads of faith', { g })) + (t ? ` (${t}title)` : '');
         case 'councillor':
             return capitalize(`${g}councillors`) + (t ? ` (${t}realm)` : '');
         case 'domicile':
-            return capitalize(`${g}characters with a domicile`);
+            return capitalize(tr('{g}characters with a domicile', { g }));
     }
 
-    return capitalize(`${g}holders of ${t || 'any '}titles`);
+    return capitalize(tr('{g}holders of {value}titles', { g, value: t || 'any ' }));
 }
 
 /** The lists a flavorization checks on the character whose title counts: what each is called, the type it names. */
 const FLAVOR_LISTS: [string, string, string?][] = [
     ['governments', 'Government:', 'governments'],
-    ['heritages', 'Culture heritage:', 'culture/pillars'],
-    ['name_lists', 'Culture name list:', 'culture/name_lists'],
+    ['heritages', tr('Culture heritage:'), 'culture/pillars'],
+    ['name_lists', tr('Culture name list:'), 'culture/name_lists'],
     ['religions', 'Religion:', 'religion/religion_types'],
     ['faiths', 'Faith:', 'faith'],
-    ['titles', 'The title is', 'landed_titles'],
-    ['de_jure_liege', 'The title is de jure under', 'landed_titles'],
-    ['subject_contract_obligation_flags', 'A contract obligation flagged']
+    ['titles', tr('The title is'), 'landed_titles'],
+    ['de_jure_liege', tr('The title is de jure under'), 'landed_titles'],
+    ['subject_contract_obligation_flags', tr('A contract obligation flagged')]
 ];
 
 export const TEXT_CARDS: Record<string, CardFn> = {
@@ -183,7 +189,9 @@ export const TEXT_CARDS: Record<string, CardFn> = {
     game_concepts: (b, { e, body, card, ctx, own }) =>
     {
         const seen = new Set([card.title.toLowerCase()]);
-        const aliases: RichSeg[] = [];
+        // (each alias's name is a key of its own, `game_concept_<alias>`: a line with "✎ text" where the concept is the
+        // active mod's)
+        const aliases: Line[] = [];
 
         for (const a of values(body.find((c) => c.k === 'alias')))
         {
@@ -198,49 +206,49 @@ export const TEXT_CARDS: Record<string, CardFn> = {
                 continue;
 
             seen.add(text.toLowerCase());
-            aliases.push({ text, kind: 'value', tip: `[${a}|E]` });
+            aliases.push({ text: [{ text, kind: 'value' }], icon: 'note', tip: `[${a}|E]`, locKey: `game_concept_${a}`, ...(card.src ? { locAt: card.src } : {}) });
         }
 
         if (aliases.length)
-            card.facts.push(rich('Also called ', join(aliases)));
+            card.sections.push({ title: tr('Also called'), lines: aliases });
 
         const parent = str(body, 'parent');
 
         if (parent)
-            card.facts.push(rich('Part of ', b.d.ref(parent, ['game_concepts'])));
+            card.facts.push(rich(tr('Part of '), b.d.ref(parent, ['game_concepts'])));
 
         const dlc = str(body, 'requires_dlc_flag');
 
         if (dlc)
-            card.facts.push([`Needs ${titleCase(humanize(dlc))}`]);
+            card.facts.push([tr('Needs {titleCase}', { titleCase: titleCase(humanize(dlc)) })]);
 
-        card.facts.push(rich('In texts: ', { text: `[${e.name}|E]`, kind: 'code', tip: 'A localization text links the concept with this code' }));
+        card.facts.push(rich(tr('In texts: '), { text: `[${e.name}|E]`, kind: 'code', tip: tr('A localization text links the concept with this code') }));
         const narrower = membersBy(b, e.type, 'parent').get(e.name);
 
         if (narrower)
-            card.sections.push({ title: 'Related', lines: [{ text: rich('More specific: ', join(narrower.map((x) => b.d.entitySeg(x)), ', ')), icon: 'note' }] });
+            card.sections.push({ title: tr('Related'), lines: [{ text: rich(tr('More specific: '), join(narrower.map((x) => b.d.entitySeg(x)), ', ')), icon: 'note' }] });
 
         const show = (k: string, v: string): Rich | undefined =>
         {
             if (k === 'texture')
-                return rich('Icon: ', pictureSeg(b, v, e.type));
+                return rich(tr('Icon: '), pictureSeg(b, v, e.type));
 
-            return k === 'requires_dlc_flag' ? rich('Needs the DLC feature ', { text: titleCase(humanize(v)), kind: 'value', tip: v }) : undefined;
+            return k === 'requires_dlc_flag' ? rich(tr('Needs the DLC feature '), { text: titleCase(humanize(v)), kind: 'value', tip: v }) : undefined;
         };
         const settings = settingLines(b, e.type, body, ctx, show);
-        card.sections.push({ title: 'Settings', lines: settings, src: own('field', e.type) });
+        card.sections.push({ title: tr('Settings'), lines: settings, src: own('field', e.type) });
         return true;
     },
     // common/messages/_messages.info: texts default to the key and <key>_desc
     messages: (b, { e, body, card, ctx, own }) =>
     {
         const style = str(body, 'style') ?? 'neutral';
-        card.facts.push([{ text: `${capitalize(style)} news`, kind: style === 'good' ? 'good' : style === 'bad' ? 'bad' : 'value' }]);
-        card.facts.push([str(body, 'display') === 'toast' ? 'Pops up as a toast' : 'In the message feed']);
+        card.facts.push([{ text: tr('{capitalize} news', { capitalize: capitalize(style) }), kind: style === 'good' ? 'good' : style === 'bad' ? 'bad' : 'value' }]);
+        card.facts.push([str(body, 'display') === 'toast' ? tr('Pops up as a toast') : tr('In the message feed')]);
         const filter = str(body, 'message_filter_type');
 
         if (filter)
-            card.facts.push(rich('Filter: ', messageSeg(b, 'message_filter_types', filter)));
+            card.facts.push(rich(tr('Filter: '), messageSeg(b, 'message_filter_types', filter)));
 
         const texts: Line[] = [];
 
@@ -252,13 +260,16 @@ export const TEXT_CARDS: Record<string, CardFn> = {
             if (!key || (!n && b.idx.locRaw(key) === undefined))
                 continue;
 
-            const l: Line = { text: rich(label, ': ', messageText(b, key)), tip: n ? `${k} = ${key}` : `${key} (the default)`, locKey: key };
+            const l: Line = { text: rich(label, ': ', messageText(b, key)), tip: n ? `${k} = ${key}` : tr('{key} (the default)', { key }), locKey: key };
 
             if (n && ctx.file)
                 l.src = b.fieldAnchor(n, ctx, e.type);
+            // (the default text, not written: the message's own)
+            else if (!n && card.src)
+                l.locAt = card.src;
 
             texts.push(l);
-            // (the card is named by its title: another key's when it names one — unless that is filled in by the effect)
+            // (the card is named by its title: another key's when it names one, unless that is filled in by the effect)
             const t = k === 'title' && n && !/\$(TITLE|DESCRIPTION|EFFECT)\$/.test(b.idx.locRaw(key) ?? '$TITLE$') ? b.idx.plainLoc(key) : undefined;
 
             if (t?.trim())
@@ -267,17 +278,17 @@ export const TEXT_CARDS: Record<string, CardFn> = {
 
         // (the texts are the section below)
         card.description = undefined;
-        card.sections.push({ title: 'What it says', lines: texts, src: own('field', e.type) });
+        card.sections.push({ title: tr('What it says'), lines: texts, src: own('field', e.type) });
         const rest = body.filter((c) => c.k !== 'title' && c.k !== 'desc' && c.k !== 'tooltip');
         const show = (k: string, v: string): Rich | undefined =>
         {
             if (k === 'message_filter_type')
-                return rich('Filter: ', messageSeg(b, 'message_filter_types', v));
+                return rich(tr('Filter: '), messageSeg(b, 'message_filter_types', v));
 
             const img = k === 'icon' ? b.idx.resolveImageName(v.replace(/\.dds$/i, ''), e.type, false) : undefined;
-            return img ? rich('Icon: ', pictureSeg(b, img.name, e.type)) : undefined;
+            return img ? rich(tr('Icon: '), pictureSeg(b, img.name, e.type)) : undefined;
         };
-        card.sections.push({ title: 'Settings', lines: settingLines(b, e.type, rest, ctx, show), src: own('field', e.type) });
+        card.sections.push({ title: tr('Settings'), lines: settingLines(b, e.type, rest, ctx, show), src: own('field', e.type) });
         return true;
     },
     // common/message_filter_types: name message_filter_<key>, text …_desc
@@ -286,24 +297,24 @@ export const TEXT_CARDS: Record<string, CardFn> = {
         card.title = messageSeg(b, e.type, e.name).text || card.title;
         card.description = b.d.loc(`message_filter_${e.name}_desc`) ?? card.description;
         const display = str(body, 'display') ?? 'feed';
-        card.facts.push([display === 'toast' ? 'Pops up as a toast' : display === 'hidden' ? 'Not shown' : 'In the message feed']);
+        card.facts.push([display === 'toast' ? tr('Pops up as a toast') : display === 'hidden' ? tr('Not shown') : tr('In the message feed')]);
 
         if (str(body, 'always_show') === 'yes')
-            card.facts.push(['Cannot be hidden']);
+            card.facts.push([tr('Cannot be hidden')]);
 
         if (str(body, 'auto_pause') === 'yes')
-            card.facts.push(['Pauses the game']);
+            card.facts.push([tr('Pauses the game')]);
 
-        // (without a group: the settings window's default one — _message_filter_types.info says misc, the game's groups have default)
+        // (without a group: the settings window's default one; _message_filter_types.info says misc, the game's groups have default)
         const group = str(body, 'group');
-        card.facts.push(group ? rich('Group: ', messageSeg(b, 'message_group_types', group)) : ['No group set']);
-        const show = (k: string, v: string): Rich | undefined => (k === 'group' ? rich('In the group ', messageSeg(b, 'message_group_types', v)) : undefined);
+        card.facts.push(group ? rich(tr('Group: '), messageSeg(b, 'message_group_types', group)) : [tr('No group set')]);
+        const show = (k: string, v: string): Rich | undefined => (k === 'group' ? rich(tr('In the group '), messageSeg(b, 'message_group_types', v)) : undefined);
         const members = membersBy(b, 'messages', 'message_filter_type').get(e.name);
 
         if (members)
-            card.sections.push({ title: `Messages (${members.length})`, lines: entryLines(b, members, 'note') });
+            card.sections.push({ title: tr('Messages ({length})', { length: members.length }), lines: entryLines(b, members, 'note') });
 
-        card.sections.push({ title: 'Settings', lines: settingLines(b, e.type, body, ctx, show), src: own('field', e.type) });
+        card.sections.push({ title: tr('Settings'), lines: settingLines(b, e.type, body, ctx, show), src: own('field', e.type) });
         return true;
     },
     // common/message_group_types: a foldable group of filters in the message settings
@@ -311,12 +322,12 @@ export const TEXT_CARDS: Record<string, CardFn> = {
     {
         card.title = messageSeg(b, e.type, e.name).text || card.title;
         const filters = membersBy(b, 'message_filter_types', 'group').get(e.name) ?? [];
-        card.facts.push([`${filters.length} filter${filters.length === 1 ? '' : 's'}`]);
+        card.facts.push([tr('{length} filter{value}', { length: filters.length, value: filters.length === 1 ? '' : 's' })]);
 
         if (filters.length)
-            card.sections.push({ title: 'Filters', lines: filters.map((f) => ({ text: [messageSeg(b, 'message_filter_types', f.name)] })) });
+            card.sections.push({ title: tr('Filters'), lines: filters.map((f) => ({ text: [messageSeg(b, 'message_filter_types', f.name)] })) });
 
-        card.sections.push({ title: 'Settings', lines: settingLines(b, e.type, body, ctx), src: own('field', e.type) });
+        card.sections.push({ title: tr('Settings'), lines: settingLines(b, e.type, body, ctx), src: own('field', e.type) });
         return true;
     },
     // common/customizable_localization/_custom_loc.info: `[<scope>.Custom('<key>')]` in a text picks one of its texts
@@ -324,7 +335,7 @@ export const TEXT_CARDS: Record<string, CardFn> = {
     {
         const type = str(body, 'type');
         const sctx = { ...ctx, scopeType: type && type !== 'all' ? type : undefined };
-        card.facts.push(rich('In texts: ', { text: !type || type === 'character' ? `[ROOT.Char.Custom('${e.name}')]` : `[<${type === 'all' ? 'scope' : type}>.Custom('${e.name}')]`, kind: 'code', tip: 'How a localization text uses it, on the scope it runs on' }));
+        card.facts.push(rich(tr('In texts: '), { text: !type || type === 'character' ? tr('[ROOT.Char.Custom(\'{name}\')]', { name: e.name }) : `[<${type === 'all' ? 'scope' : type}>.Custom('${e.name}')]`, kind: 'code', tip: tr('How a localization text uses it, on the scope it runs on') }));
         let texts = body.filter((c) => c.k === 'text' && Array.isArray(c.v));
         let random = str(body, 'random_valid') === 'yes';
         let lines = customTexts(b, texts, sctx, '', random);
@@ -339,28 +350,28 @@ export const TEXT_CARDS: Record<string, CardFn> = {
             texts = kids(pd.node).filter((c) => c.k === 'text' && Array.isArray(c.v));
             random = str(kids(pd.node), 'random_valid') === 'yes';
             lines = customTexts(b, texts, rootCtx(pd.src, undefined, sctx.scopeType), suffix, random);
-            card.facts.push(rich('Picks like ', b.d.entitySeg(p), suffix ? `, then “${suffix}” is added to the text’s key` : ''));
+            card.facts.push(rich(tr('Picks like '), b.d.entitySeg(p), suffix ? tr(', then “{suffix}” is added to the text’s key', { suffix }) : ''));
         }
 
-        card.facts.push([`${texts.length} text${texts.length === 1 ? '' : 's'}`]);
-        card.sections.push({ title: random ? 'Texts — one of those that fit, at random' : 'Texts — the first that fits', lines, src: pd ? undefined : own('other') });
-        card.sections.push({ title: 'Settings', lines: settingLines(b, e.type, body, ctx), src: own('field', e.type) });
+        card.facts.push([tr('{length} text{value}', { length: texts.length, value: texts.length === 1 ? '' : 's' })]);
+        card.sections.push({ title: random ? tr('Texts — one of those that fit, at random') : tr('Texts — the first that fits'), lines, src: pd ? undefined : own('other') });
+        card.sections.push({ title: tr('Settings'), lines: settingLines(b, e.type, body, ctx), src: own('field', e.type) });
         return true;
     },
     // common/effect_localization: the texts the game shows for an effect (engine or scripted)
     effect_localization: (b, { e, body, card, ctx, own }) =>
     {
         const se = b.idx.get('scripted_effects', e.name);
-        card.facts.push(rich('Texts for ', se ? b.d.entitySeg(se) : { text: capitalize(humanize(e.name)), kind: 'code', tip: e.name }));
-        card.sections.push({ title: 'Texts', lines: variantLines(b, body, ctx, false), src: own('other') });
+        card.facts.push(rich(tr('Texts for '), se ? b.d.entitySeg(se) : { text: capitalize(humanize(e.name)), kind: 'code', tip: e.name }));
+        card.sections.push({ title: tr('Texts'), lines: variantLines(b, body, ctx, false), src: own('other') });
         return true;
     },
     // common/trigger_localization: the texts of a condition (engine or scripted), or of a `custom_description = { text = <key> }`
     trigger_localization: (b, { e, body, card, ctx, own }) =>
     {
         const st = b.idx.get('scripted_triggers', e.name);
-        card.facts.push(rich('Texts for ', st ? b.d.entitySeg(st) : { text: capitalize(humanize(e.name)), kind: 'code', tip: e.name }));
-        card.sections.push({ title: 'Texts', lines: variantLines(b, body, ctx, true), src: own('other') });
+        card.facts.push(rich(tr('Texts for '), st ? b.d.entitySeg(st) : { text: capitalize(humanize(e.name)), kind: 'code', tip: e.name }));
+        card.sections.push({ title: tr('Texts'), lines: variantLines(b, body, ctx, true), src: own('other') });
         return true;
     },
     // common/flavorization/_flavourization.info: the name (loc key = the entry's key) of whoever fits, highest priority first
@@ -389,7 +400,7 @@ export const TEXT_CARDS: Record<string, CardFn> = {
 
         if (rules)
         {
-            const l: Line = { text: ['Rules:'], children: settingLines(b, 'flavourization_rules', kids(rules), ctx), tip: 'flavourization_rules' };
+            const l: Line = { text: [tr('Rules:')], children: settingLines(b, 'flavourization_rules', kids(rules), ctx), tip: 'flavourization_rules' };
 
             if (ctx.file)
                 l.src = b.fieldAnchor(rules, ctx, 'flavourization_rules', true);
@@ -397,10 +408,10 @@ export const TEXT_CARDS: Record<string, CardFn> = {
             lines.push(l);
         }
 
-        card.sections.push({ title: 'Who gets this name', lines, src: own('field', e.type) });
+        card.sections.push({ title: tr('Who gets this name'), lines, src: own('field', e.type) });
         return true;
     },
-    // common/modifier_definition_formats/_definitions.info: how a (code-defined) modifier reads — name MOD_<KEY>
+    // common/modifier_definition_formats/_definitions.info: how a (code-defined) modifier reads: name MOD_<KEY>
     modifier_definition_formats: (b, { e, body, card, ctx, own }) =>
     {
         const f = b.d.modifierFormat(e.name);
@@ -412,29 +423,29 @@ export const TEXT_CARDS: Record<string, CardFn> = {
         const neg = b.d.statLine(e.name, '-' + ex);
 
         if (pos && neg)
-            card.facts.push(rich('Reads ', pos.text, ' or ', neg.text));
+            card.facts.push(rich(tr('Reads '), pos.text, tr(' or '), neg.text));
         else
-            card.facts.push(['Hidden in game']);
+            card.facts.push([tr('Hidden in game')]);
 
-        card.facts.push([f.color === 'neutral' ? 'Neither good nor bad' : f.color === 'bad' ? 'More is bad' : 'More is good']);
+        card.facts.push([f.color === 'neutral' ? tr('Neither good nor bad') : f.color === 'bad' ? tr('More is bad') : tr('More is good')]);
         const dlc = str(body, 'dlc_feature');
 
         if (dlc)
-            card.facts.push([`Only with the DLC feature ${humanize(dlc)}`]);
+            card.facts.push([tr('Only with the DLC feature {humanize}', { humanize: humanize(dlc) })]);
 
         // (prefix / suffix are loc keys, mostly an icon)
         const show = (k: string, v: string): Rich | undefined =>
         {
             if (k === 'dlc_feature')
-                return rich('Only with the DLC feature ', { text: humanize(v), kind: 'value', tip: v });
+                return rich(tr('Only with the DLC feature '), { text: humanize(v), kind: 'value', tip: v });
 
             if (!/suffix|prefix/.test(k))
                 return undefined;
 
             const t = b.d.loc(v);
-            return rich(capitalize(humanize(k)), ': ', t && b.d.richString(t).trim() ? rich('“', t, '”') : note('an icon', v));
+            return rich(capitalize(humanize(k)), ': ', t && b.d.richString(t).trim() ? rich('“', t, '”') : note(tr('an icon'), v));
         };
-        card.sections.push({ title: 'Settings', lines: settingLines(b, e.type, body, ctx, show), src: own('field', e.type) });
+        card.sections.push({ title: tr('Settings'), lines: settingLines(b, e.type, body, ctx, show), src: own('field', e.type) });
         return true;
     }
 };

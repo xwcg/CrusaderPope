@@ -1,9 +1,10 @@
-/** Cards: Scripted helpers — scripted modifiers, rules, costs, lists, animations, relations, character templates, pool selectors, agent types, guest invite rules and management, ruler objective advice, achievements, activity intents. */
+/** Cards: Scripted helpers (scripted modifiers, rules, costs, lists, animations, relations, character templates, pool selectors, agent types, guest invite rules and management, ruler objective advice, achievements, activity intents). */
 import type { PNode } from '../../indexer/parser.ts';
 import type { Entity } from '../../indexer/gameIndex.ts';
 import type { EntityCard, FollowUp, Line, Rich } from '../../../shared/api.ts';
 import { fieldOf } from '../../../shared/fieldCatalog.ts';
-import type { Ctx } from '../describer.ts';
+import { ITERATORS } from '../../../shared/scriptCatalog.ts';
+import { pushPrev, scopeName, type Ctx } from '../describer.ts';
 import type { StoryBuilder } from '../stories.ts';
 import { capitalize, humanize, rich, signed } from '../text.ts';
 import type { CardFn } from './types.ts';
@@ -11,6 +12,7 @@ import { conditional, operand, subjectOf, valueLines, weightLines } from './weig
 import { templateCard } from './scripted-templates.ts';
 import { blockOf, capFirst, joinRich, listOf, plural, raw, scalarOf } from './scripted-common.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 /** The comment lines right above a statement in the definition's text (`# Can this character visit a court?`). */
 function commentAbove(src: string, n: PNode): string[]
 {
@@ -67,16 +69,16 @@ function roles(lines: string[]): { notes: string[]; who: Role[]; }
     return { notes, who };
 }
 
-/** Who's who lines: "You — the potential commander", "Army Owner — who owns the army to command". */
+/** Who's who lines: "You: the potential commander", "Army Owner: who owns the army to command". */
 function whoLines(b: StoryBuilder, who: Role[], ctx: Ctx): Line[]
 {
-    // (names for the same one share a line: "You, Guest — the potential guest")
+    // (names for the same one share a line: "You, Guest: the potential guest")
     const same = new Map<string, Role[]>();
 
     for (const w of who)
         same.set(w.who, [...(same.get(w.who) ?? []), w]);
 
-    return [...same].map(([text, ws]) => ({ text: rich(joinRich(ws.map((w) => [w.name === 'root' ? 'You' : b.d.scopeSeg(w.name, ctx, true)]), ', '), ' — ', text), icon: 'scope' }));
+    return [...same].map(([text, ws]) => ({ text: rich(joinRich(ws.map((w) => [w.name === 'root' ? 'You' : b.d.scopeSeg(w.name, ctx, true)]), ', '), ': ', text), icon: 'scope' }));
 }
 
 /** Comment lines as one text, each ending as a sentence. */
@@ -86,7 +88,7 @@ function sentences(notes: string[]): string
 }
 
 /**
- * A definition's comment above it: the description (when it has no text of its own) and a "Who’s who" section — added
+ * A definition's comment above it: the description (when it has no text of its own) and a "Who’s who" section, added
  * after the card's own sections (the hover card shows the first section with lines).
  */
 function docSections(b: StoryBuilder, e: Entity, card: EntityCard, ctx: Ctx): void
@@ -102,7 +104,7 @@ function docSections(b: StoryBuilder, e: Entity, card: EntityCard, ctx: Ctx): vo
         card.description = [sentences(notes)];
 
     if (who.length)
-        card.sections.push({ title: 'Who’s who', lines: whoLines(b, who, ctx) });
+        card.sections.push({ title: tr('Who’s who'), lines: whoLines(b, who, ctx) });
 }
 
 /**
@@ -157,15 +159,15 @@ function animationOf(b: StoryBuilder, list: PNode[]): Rich
             else
             {
                 const names = c.v.filter((x) => typeof x.v === 'string').map((x) => animSeg(x.v as string));
-                parts.push(names.length > 1 ? rich('one of ', joinRich(names, ' or '), ' at random') : rich(...names));
+                parts.push(names.length > 1 ? rich(tr('one of '), joinRich(names, ' or '), tr(' at random')) : rich(...names));
             }
         }
         else if (c.k === 'scripted_animation' && typeof c.v === 'string')
-            parts.push(rich('as ', b.d.ref(c.v, ['scripted_animations'])));
+            parts.push(rich(tr('as '), b.d.ref(c.v, ['scripted_animations'])));
     }
 
     const camera = scalarOf(list, 'camera');
-    return parts.length ? rich(joinRich(parts, ' or '), camera ? rich(' (camera: ', humanize(camera), ')') : '') : [];
+    return parts.length ? rich(joinRich(parts, ' or '), camera ? rich(tr(' (camera: '), humanize(camera), ')') : '') : [];
 }
 
 /** The animations of a scripted animation: each `triggered_animation` with its conditions (the first that applies), then the default. */
@@ -186,7 +188,7 @@ function animationLines(b: StoryBuilder, list: PNode[], ctx: Ctx): Line[]
 
     if (fallback.length)
         out.push({
-            text: out.length ? rich('Otherwise: ', fallback) : capFirst(fallback),
+            text: out.length ? rich(tr('Otherwise: '), fallback) : capFirst(fallback),
             tip: list.filter((c) => typeof c.v === 'string')
                 .map((c) => `${c.k} = ${c.v}`)
                 .join('\n')
@@ -197,13 +199,13 @@ function animationLines(b: StoryBuilder, list: PNode[], ctx: Ctx): Line[]
 
 /**
  * A guest invite rule's `effect` (activities/guest_invite_rules/_invite_rules.info): who it puts in the list
- * `characters` — "Every relation (Friend)", "Your liege" — with the iterators' limits as conditions; other effects as
+ * `characters` ("Every relation (Friend)", "Your liege") with the iterators' limits as conditions; other effects as
  * they read.
  */
 function invited(b: StoryBuilder, list: PNode[], ctx: Ctx): Line[]
 {
     const out: Line[] = [];
-    const isInvite = (l: Line): boolean => !l.children && l.text.length === 1 && l.text[0] === 'Invited';
+    const isInvite = (l: Line): boolean => !l.children && l.text.length === 1 && l.text[0] === tr('Invited');
 
     for (const c of list)
     {
@@ -215,13 +217,13 @@ function invited(b: StoryBuilder, list: PNode[], ctx: Ctx): Line[]
         // (another list: gathered for a scripted effect that picks the guests from it)
         if (c.k === 'add_to_list' && typeof c.v === 'string')
         {
-            out.push({ text: c.v === 'characters' ? ['Invited'] : rich('Put on the list ', { text: `“${humanize(c.v)}”`, kind: 'code', tip: c.v }), icon: 'note', tip: raw(c, ctx), src });
+            out.push({ text: c.v === 'characters' ? [tr('Invited')] : rich(tr('Put on the list '), { text: `“${humanize(c.v)}”`, kind: 'code', tip: c.v }), icon: 'note', tip: raw(c, ctx), src });
             continue;
         }
 
         const block = Array.isArray(c.v) ? c.v : null;
         const it = block && /^(every|random|ordered)_(\w+)$/.exec(c.k);
-        // (`x ?= { }`: in x when it exists — a scope link the describer may not know, like suzerain)
+        // (`x ?= { }`: in x when it exists: a scope link the describer may not know, like suzerain)
         const scope = block && !it && (b.d.isScopeKey(c.k) || c.op === '?=');
         const branch = block && (c.k === 'if' || c.k === 'else_if' || c.k === 'else');
 
@@ -234,11 +236,12 @@ function invited(b: StoryBuilder, list: PNode[], ctx: Ctx): Line[]
         const limit = scope ? undefined : blockOf(block, 'limit');
         const conds = limit ? b.d.triggers(limit.v, ctx) : [];
         const type = it ? scalarOf(block, 'type') : undefined;
-        const label = it ? `the ${humanize(it[2])}` : scope ? b.d.scopeLabel(c.k, ctx) : ctx.scope;
+        const label = it ? tr('the {humanize}', { humanize: humanize(it[2]) }) : scope ? b.d.scopeLabel(c.k, ctx) : scopeName(ctx);
         const kids = invited(
             b,
             block.filter((x) => x.k !== 'limit' && x.k !== 'type'),
-            { ...ctx, scope: label, scopeType: undefined }
+            // (an iterator or a scope switch puts the scope it leaves on the prev stack; an if stays in the same scope)
+            { ...ctx, scope: label, ...(branch ? {} : { scopeType: undefined, prevTypes: pushPrev(ctx, it ? undefined : c.k) }) }
         );
 
         if (!kids.length)
@@ -247,11 +250,11 @@ function invited(b: StoryBuilder, list: PNode[], ctx: Ctx): Line[]
         let head: Rich;
 
         if (it)
-            head = rich(it[1] === 'every' ? 'Every ' : it[1] === 'random' ? 'One random ' : 'The best ', humanize(it[2]), type ? rich(' (', b.d.ref(type, ['scripted_relations']), ')') : '');
+            head = rich(it[1] === 'every' ? tr('Every ') : it[1] === 'random' ? tr('One random ') : tr('The best '), humanize(it[2]), type ? rich(' (', b.d.ref(type, ['scripted_relations']), ')') : '');
         else if (scope)
             head = [b.d.scopeSeg(c.k, ctx, true)];
         else
-            head = [c.k === 'else' ? 'Otherwise' : c.k === 'if' ? 'If' : 'Otherwise, if'];
+            head = [c.k === 'else' ? tr('Otherwise') : c.k === 'if' ? tr('If') : tr('Otherwise, if')];
 
         // (only "Invited" inside: the head says who)
         const only = kids.length === 1 && isInvite(kids[0]);
@@ -284,11 +287,11 @@ function descriptionLines(b: StoryBuilder, list: PNode[], ctx: Ctx): Line[]
             const limit = blockOf(c.v, 'limit');
             const weight = blockOf(c.v, 'weight');
             const base = weight && weight.v.length === 1 ? scalarOf(weight.v, 'base') : undefined;
-            const head = rich('“', desc ? text(desc) : '…', '”', base ? rich(' — weight ', operand(b, base, ctx)) : '');
+            const head = rich('“', desc ? text(desc) : '…', '”', base ? rich(tr(' — weight '), operand(b, base, ctx)) : '');
             const l: Line = { ...conditional(b, head, limit ? b.d.triggers(limit.v, ctx) : []), icon: 'note', tip: raw(c, ctx), src: ctx.file && b.d.anchor(c, ctx, 'other', false) };
 
             if (weight && !base)
-                l.children = [{ text: ['Weight:'], children: weightLines(b, weight.v, ctx) }];
+                l.children = [{ text: [tr('Weight:')], children: weightLines(b, weight.v, ctx) }];
 
             return l;
         });
@@ -296,18 +299,18 @@ function descriptionLines(b: StoryBuilder, list: PNode[], ctx: Ctx): Line[]
 
 /** The blocks of the courtier / guest management (common/courtier_guest_management): section title and what it holds. */
 const MANAGEMENT: Record<string, [string, 'trigger' | 'weight' | 'descriptions']> = {
-    guest_can_arrive: ['Can arrive when', 'trigger'],
-    guest_score: ['Which guests arrive first', 'weight'],
-    guest_description: ['How a guest is described', 'descriptions'],
-    can_leave: ['Wants to leave when', 'trigger'],
-    monthly_leave_chance_x10: ['Chance to leave each month (‰)', 'weight']
+    guest_can_arrive: [tr('Can arrive when'), 'trigger'],
+    guest_score: [tr('Which guests arrive first'), 'weight'],
+    guest_description: [tr('How a guest is described'), 'descriptions'],
+    can_leave: [tr('Wants to leave when'), 'trigger'],
+    monthly_leave_chance_x10: [tr('Chance to leave each month (‰)'), 'weight']
 };
 
 /** schemes/agent_types/_agent_types.info: what an agent adds to (the field set's choices). */
 const contributionLabel = (v: string): string => fieldOf('schemes/agent_types', 'contribution_type')?.options?.find(([k]) => k === v)?.[1] ?? capitalize(humanize(v));
 
 /** activities/intents/_intents.info `ai_target_quick_trigger`: cheap checks on the target. */
-const QUICK_TARGET: Record<string, string> = { adult: 'an adult', attracted_to_owner: 'attracted to the one picking it', owner_attracted: 'attractive to the one picking it', prison: 'in prison' };
+const QUICK_TARGET: Record<string, string> = { adult: tr('an adult'), attracted_to_owner: tr('attracted to the one picking it'), owner_attracted: tr('attractive to the one picking it'), prison: tr('in prison') };
 
 export const SCRIPTED_CARDS: Record<string, CardFn> = {
     // common/scripted_modifiers/_scripted_modifiers.info: a weight block used by name, with $PARAM$ arguments
@@ -316,16 +319,16 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
         const params = [...new Set([...ctx.src.matchAll(/\$(\w+)\$/g)].map((m) => m[1]))];
 
         if (params.length)
-            card.facts.push(rich('Arguments: ', joinRich(params.map((p) => [{ text: capitalize(humanize(p)), kind: 'ph', tip: `$${p}$` }]))));
+            card.facts.push(rich(tr('Arguments: '), joinRich(params.map((p) => [{ text: capitalize(humanize(p)), kind: 'ph', tip: `$${p}$` }]))));
 
-        card.sections.push({ title: 'How it weighs', lines: weightLines(b, paramScopes(body, b.idx.fileConstants(e)), ctx), src: own('field', 'weight') });
+        card.sections.push({ title: tr('How it weighs'), lines: weightLines(b, paramScopes(body, b.idx.fileConstants(e)), ctx), src: own('field', 'weight') });
         return true;
     },
 
     // common/scripted_rules: conditions the game itself checks (the comment above says when and who root is)
     scripted_rules: (b, { e, body, card, ctx, own }) =>
     {
-        card.sections.push({ title: 'Holds when', lines: b.d.triggers(body, ctx), src: own('trigger') });
+        card.sections.push({ title: tr('Holds when'), lines: b.d.triggers(body, ctx), src: own('trigger') });
         docSections(b, e, card, ctx);
         return true;
     },
@@ -343,7 +346,7 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
             if (c.k === 'round')
             {
                 if (c.v === 'yes')
-                    card.facts.push(['Rounded to whole numbers']);
+                    card.facts.push([tr('Rounded to whole numbers')]);
 
                 continue;
             }
@@ -357,7 +360,7 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
                 lines.push({ text: [label + ':'], icon: c.k, children: valueLines(b, c.v, ctx), tip: raw(c, ctx), src });
         }
 
-        card.sections.push({ title: 'Cost', lines, src: own('field', 'cost') });
+        card.sections.push({ title: tr('Cost'), lines, src: own('field', 'cost') });
         docSections(b, e, card, ctx);
         return true;
     },
@@ -369,18 +372,23 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
         const what = base ? humanize(base) : 'item';
 
         if (base)
-            card.facts.push(rich('Narrows the list of ', { text: plural(what), kind: 'value', tip: `base = ${base}` }));
+            card.facts.push(rich(tr('Narrows the list of '), { text: plural(what), kind: 'value', tip: `base = ${base}` }));
 
-        card.facts.push(rich('Used as ', { text: `every_${e.name}`, kind: 'code' }, ' (and any_, random_, ordered_)'));
+        card.facts.push(rich(tr('Used as '), { text: `every_${e.name}`, kind: 'code' }, tr(' (and any_, random_, ordered_)')));
         const conds = blockOf(body, 'conditions');
-        const lines = conds ? b.d.triggers(conds.v, { ...ctx, scope: `the ${what}`, scopeType: undefined }) : [];
-        card.sections.push({ title: `Which ${plural(what)} it lists`, lines, src: conds && b.blockSection(conds, 'trigger', ctx) });
+        // (the conditions are about each item of the base list: its type (ITERATORS' `to`: held_title → a title), not
+        // the card's; root there is not documented, so it stays as it is)
+        const item = base && b.blockScopes ? ITERATORS.find((i) => i.list === base)?.to : undefined;
+        const cctx: Ctx = { ...ctx, scope: `the ${what}`, scopeType: item };
+        const lines = conds ? b.d.triggers(conds.v, cctx) : [];
+        const src = conds && b.blockSection(conds, 'trigger', cctx);
+        card.sections.push({ title: tr('Which {plural} it lists', { plural: plural(what) }), lines, src: src && item ? { ...src, scope: item } : src });
         return true;
     },
 
     scripted_animations: (b, { body, card, ctx, own }) =>
     {
-        card.sections.push({ title: 'Which animation', lines: animationLines(b, body, ctx), src: own('other') });
+        card.sections.push({ title: tr('Which animation'), lines: animationLines(b, body, ctx), src: own('other') });
         return true;
     },
 
@@ -392,13 +400,13 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
         if (op)
         {
             const n = b.d.evalValue(op);
-            card.facts.push(rich('Opinion ', n !== undefined ? { text: signed(n), kind: n >= 0 ? 'good' : 'bad' } : b.d.valueSeg(op, ctx)));
+            card.facts.push(rich(tr('Opinion '), n !== undefined ? { text: signed(n), kind: n >= 0 ? 'good' : 'bad' } : b.d.valueSeg(op, ctx)));
         }
 
         const other = scalarOf(body, 'corresponding');
 
         if (other)
-            card.facts.push(other === e.name ? ['Two-way'] : rich('Paired with ', b.d.ref(other, ['scripted_relations'])));
+            card.facts.push(other === e.name ? ['Two-way'] : rich(tr('Paired with '), b.d.ref(other, ['scripted_relations'])));
 
         if (scalarOf(body, 'hidden') === 'yes')
             card.facts.push(['Hidden']);
@@ -410,9 +418,9 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
             ctx
         );
         const lists: [string, string, string?][] = [
-            ['opposites', 'Opposite of ', 'scripted_relations'],
-            ['relation_aliases', 'Also counts as ', 'scripted_relations'],
-            ['flags', 'Can carry the flags ']
+            ['opposites', tr('Opposite of '), 'scripted_relations'],
+            ['relation_aliases', tr('Also counts as '), 'scripted_relations'],
+            ['flags', tr('Can carry the flags ')]
         ];
 
         for (const [k, label, type] of lists)
@@ -427,20 +435,20 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
             lines.push({ text: rich(label, joinRich(segs)), icon: k === 'flags' ? 'flag' : 'opinion', tip: raw(n, ctx), src: ctx.file && b.d.anchor(n, ctx, 'other', false) });
         }
 
-        card.sections.push({ title: 'Settings', lines, src: own('field', 'scripted_relations') });
+        card.sections.push({ title: tr('Settings'), lines, src: own('field', 'scripted_relations') });
         const mod = blockOf(body, 'modifier');
 
         if (mod)
-            card.sections.push({ title: 'Modifiers', lines: b.d.statsOf(mod.v, ctx), src: b.blockSection(mod, 'modifier', ctx) });
+            card.sections.push({ title: tr('Modifiers'), lines: b.d.statsOf(mod.v, ctx), src: b.blockSection(mod, 'modifier', ctx) });
 
         // each relation has its on_actions: on_set_relation_<key>, on_remove_relation_<key>, on_death_relation_<key>
         const hooks: Line[] = [];
 
         for (
             const [when, label] of [
-                ['set', 'When it is set'],
-                ['remove', 'When it is removed'],
-                ['death', 'When its holder is about to die']
+                ['set', tr('When it is set')],
+                ['remove', tr('When it is removed')],
+                ['death', tr('When its holder is about to die')]
             ]
         )
         {
@@ -451,7 +459,7 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
         }
 
         if (hooks.length)
-            card.sections.push({ title: 'On actions', lines: hooks });
+            card.sections.push({ title: tr('On actions'), lines: hooks });
 
         return true;
     },
@@ -465,23 +473,23 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
         const bg = scalarOf(cfg, 'background');
 
         if (bg)
-            card.facts.push(rich('Background: ', b.d.ref(bg, ['character_backgrounds'])));
+            card.facts.push(rich(tr('Background: '), b.d.ref(bg, ['character_backgrounds'])));
 
         const age = blockOf(cfg, 'age');
         const ages = age ? age.v.filter((x) => typeof x.v === 'string').map((x) => operand(b, x.v as string, ctx)) : [];
 
         if (ages.length === 2)
-            card.facts.push(rich('Aged ', ages[0], '–', ages[1]));
+            card.facts.push(rich(tr('Aged '), ages[0], '–', ages[1]));
 
         const valid = blockOf(body, 'valid_character');
 
         if (valid)
-            card.sections.push({ title: 'Who can be picked', lines: b.d.triggers(valid.v, ctx), src: b.blockSection(valid, 'trigger', ctx) });
+            card.sections.push({ title: tr('Who can be picked'), lines: b.d.triggers(valid.v, ctx), src: b.blockSection(valid, 'trigger', ctx) });
 
         const score = blockOf(body, 'character_score');
 
         if (score)
-            card.sections.push({ title: 'How they are scored', lines: weightLines(b, score.v, ctx), src: b.blockSection(score, 'field', ctx, 'weight') });
+            card.sections.push({ title: tr('How they are scored'), lines: weightLines(b, score.v, ctx), src: b.blockSection(score, 'field', ctx, 'weight') });
 
         const settings: Line[] = [];
 
@@ -492,19 +500,20 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
 
             const n = c.k === 'selection_count' ? b.d.evalValue(c.v) : undefined;
             const text = c.k === 'selection_count'
-                ? (n !== undefined && n <= 0 ? ['Picks among all valid ones'] : n === 1 ? ['Always picks the best one'] : rich('Picks at random among the ', b.d.valueSeg(c.v, ctx), ' best'))
+                ? (n !== undefined && n <= 0 ? [tr('Picks among all valid ones')] : n === 1 ? [tr('Always picks the best one')] : rich(tr('Picks at random among the '), b.d.valueSeg(c.v, ctx), tr(' best')))
                 : rich(capitalize(humanize(c.k)), ': ', { text: humanize(c.v), kind: 'value' as const, tip: c.v });
-            settings.push({ text, tip: `${c.k} = ${c.v}`, src: ctx.file && b.d.anchor(c, ctx, 'other', false) });
+            // (any key a field of the type's set: changed through the picker's "Other setting…")
+            settings.push({ text, tip: `${c.k} = ${c.v}`, src: ctx.file && b.fieldAnchor(c, ctx, 'pool_character_selectors') });
         }
 
         if (settings.length)
-            card.sections.push({ title: 'Settings', lines: settings, src: own('other') });
+            card.sections.push({ title: tr('Settings'), lines: settings, src: own('field', 'pool_character_selectors'), addLabel: 'setting' });
 
         const who = [
-            { name: 'root', who: 'the pool character considered' },
-            { name: 'scope:base', who: 'the base character, usually the council owner or the predecessor' }
+            { name: 'root', who: tr('the pool character considered') },
+            { name: 'scope:base', who: tr('the base character, usually the council owner or the predecessor') }
         ];
-        card.sections.push({ title: 'Who’s who', lines: whoLines(b, who, ctx) });
+        card.sections.push({ title: tr('Who’s who'), lines: whoLines(b, who, ctx) });
         return true;
     },
 
@@ -514,19 +523,19 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
         const type = body.find((c) => c.k === 'contribution_type' && typeof c.v === 'string');
 
         if (type)
-            card.facts.push(rich('Contributes to ', { text: contributionLabel(type.v as string), kind: 'value', tip: `contribution_type = ${type.v}` }));
+            card.facts.push(rich(tr('Contributes to '), { text: contributionLabel(type.v as string), kind: 'value', tip: `contribution_type = ${type.v}` }));
 
         const valid = blockOf(body, 'valid_agent_for_slot');
 
         if (valid)
-            card.sections.push({ title: 'Who can fill the slot', lines: b.d.triggers(valid.v, ctx), src: b.blockSection(valid, 'trigger', ctx) });
+            card.sections.push({ title: tr('Who can fill the slot'), lines: b.d.triggers(valid.v, ctx), src: b.blockSection(valid, 'trigger', ctx) });
 
         const contribution = blockOf(body, 'contribution');
 
         if (contribution)
-            card.sections.push({ title: 'How much they contribute', lines: valueLines(b, contribution.v, ctx), src: b.blockSection(contribution, 'field', ctx, 'script_value') });
+            card.sections.push({ title: tr('How much they contribute'), lines: valueLines(b, contribution.v, ctx), src: b.blockSection(contribution, 'field', ctx, 'script_value') });
 
-        card.sections.push({ title: 'Settings', lines: type ? b.fieldLines('schemes/agent_types', [type], ctx) : [], src: own('field', 'schemes/agent_types') });
+        card.sections.push({ title: tr('Settings'), lines: type ? b.fieldLines('schemes/agent_types', [type], ctx) : [], src: own('field', 'schemes/agent_types') });
         return true;
     },
 
@@ -534,7 +543,7 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
     'activities/guest_invite_rules': (b, { body, card, ctx }) =>
     {
         const effect = blockOf(body, 'effect');
-        card.sections.push({ title: 'Who is invited', lines: effect ? invited(b, effect.v, ctx) : [], src: effect && b.blockSection(effect, 'effect', ctx) });
+        card.sections.push({ title: tr('Who is invited'), lines: effect ? invited(b, effect.v, ctx) : [], src: effect && b.blockSection(effect, 'effect', ctx) });
         return true;
     },
 
@@ -568,7 +577,7 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
         }
 
         if (who.size)
-            card.sections.push({ title: 'Who’s who', lines: whoLines(b, [...who.values()], ctx) });
+            card.sections.push({ title: tr('Who’s who'), lines: whoLines(b, [...who.values()], ctx) });
 
         return true;
     },
@@ -577,7 +586,7 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
     guest_system: (b, { e, body, card, ctx, own }) =>
     {
         const fctx = { ...ctx, followUps: [] as FollowUp[] };
-        card.sections.push({ title: 'What it does', lines: b.d.effects(body, fctx), followUps: fctx.followUps, src: own('effect') });
+        card.sections.push({ title: tr('What it does'), lines: b.d.effects(body, fctx), followUps: fctx.followUps, src: own('effect') });
         docSections(b, e, card, ctx);
         return true;
     },
@@ -603,9 +612,9 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
         const names = listOf(blockOf(body, 'decisions')).map((x) => [b.d.ref(x, ['decisions'])]);
 
         if (names.length)
-            card.facts.push(rich('Advice for ', joinRich(names, ' and ')));
+            card.facts.push(rich(tr('Advice for '), joinRich(names, ' and ')));
 
-        const triggers: Record<string, string> = { is_valid_advice: 'Relevant when', is_doing: 'Already followed when', is_valid_for_title: 'Fits a title when' };
+        const triggers: Record<string, string> = { is_valid_advice: tr('Relevant when'), is_doing: tr('Already followed when'), is_valid_for_title: tr('Fits a title when') };
 
         for (const c of body)
         {
@@ -615,15 +624,15 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
             if (triggers[c.k])
                 card.sections.push({ title: triggers[c.k], lines: b.d.triggers(c.v, ctx), src: b.blockSection(c, 'trigger', ctx) });
             else if (c.k === 'relevance')
-                card.sections.push({ title: 'How relevant it is', lines: valueLines(b, c.v, ctx), src: b.blockSection(c, 'field', ctx, 'script_value') });
+                card.sections.push({ title: tr('How relevant it is'), lines: valueLines(b, c.v, ctx), src: b.blockSection(c, 'field', ctx, 'script_value') });
         }
 
         const who = [
-            { name: 'root', who: 'the one taking the objective decision (the player)' },
-            { name: 'scope:title', who: 'the title the advice is evaluated for' },
-            { name: 'scope:doing', who: 'whether you already follow it (after “Already followed when”)' }
+            { name: 'root', who: tr('the one taking the objective decision (the player)') },
+            { name: 'scope:title', who: tr('the title the advice is evaluated for') },
+            { name: 'scope:doing', who: tr('whether you already follow it (after “Already followed when”)') }
         ];
-        card.sections.push({ title: 'Who’s who', lines: whoLines(b, who, ctx) });
+        card.sections.push({ title: tr('Who’s who'), lines: whoLines(b, who, ctx) });
         return true;
     },
 
@@ -651,7 +660,7 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
         const lines = possible ? b.d.triggers(possible.v, ctx) : [];
 
         if (possible)
-            card.sections.push({ title: 'Can be earned in this game when', lines: lines.length ? lines : [{ text: ['Always'] }], src: b.blockSection(possible, 'trigger', ctx) });
+            card.sections.push({ title: tr('Can be earned in this game when'), lines: lines.length ? lines : [{ text: [tr('Always')] }], src: b.blockSection(possible, 'trigger', ctx) });
 
         const happened = blockOf(body, 'happened');
 
@@ -661,7 +670,7 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
             const kids = happened.v.filter((c) => c.k);
             const inner = kids.length === 1 && kids[0].k === 'custom_description' && Array.isArray(kids[0].v) ? (kids[0] as PNode & { v: PNode[]; }) : undefined;
             const nodes = inner ? inner.v.filter((c) => !['text', 'subject', 'object', 'value'].includes(c.k ?? '')) : happened.v;
-            card.sections.push({ title: 'Earned when', lines: b.d.triggers(nodes, ctx), src: b.blockSection(inner ?? happened, 'trigger', ctx) });
+            card.sections.push({ title: tr('Earned when'), lines: b.d.triggers(nodes, ctx), src: b.blockSection(inner ?? happened, 'trigger', ctx) });
         }
 
         return true;
@@ -671,7 +680,7 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
     'activities/intents': (b, { e, body, card, ctx, own }) =>
     {
         if (scalarOf(body, 'auto_complete') === 'yes')
-            card.facts.push([{ text: 'Completes on its own', kind: 'value', tip: 'auto_complete = yes' }]);
+            card.facts.push([{ text: tr('Completes on its own'), kind: 'value', tip: 'auto_complete = yes' }]);
 
         b.genericSections(e, body, card, ctx, own, new Set(['icon', 'auto_complete', 'ai_will_do', 'ai_target_score', 'ai_targets', 'ai_target_quick_trigger', 'is_target_valid', 'scripted_animation']));
         const targets: Line[] = [];
@@ -679,11 +688,11 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
         for (const c of body)
         {
             if (c.k === 'is_target_valid' && Array.isArray(c.v))
-                card.sections.push({ title: 'Valid targets', lines: b.d.triggers(c.v, ctx), src: b.blockSection(c, 'trigger', ctx) });
+                card.sections.push({ title: tr('Valid targets'), lines: b.d.triggers(c.v, ctx), src: b.blockSection(c, 'trigger', ctx) });
             else if (c.k === 'ai_will_do' && Array.isArray(c.v))
-                card.sections.push({ title: 'How much the AI wants it', lines: weightLines(b, c.v, ctx), src: b.blockSection(c, 'field', ctx, 'weight') });
+                card.sections.push({ title: tr('How much the AI wants it'), lines: weightLines(b, c.v, ctx), src: b.blockSection(c, 'field', ctx, 'weight') });
             else if (c.k === 'ai_target_score' && Array.isArray(c.v))
-                card.sections.push({ title: 'Which target the AI picks', lines: weightLines(b, c.v, ctx), src: b.blockSection(c, 'field', ctx, 'weight') });
+                card.sections.push({ title: tr('Which target the AI picks'), lines: weightLines(b, c.v, ctx), src: b.blockSection(c, 'field', ctx, 'weight') });
             else if (c.k === 'ai_targets' && Array.isArray(c.v))
             {
                 // (one line per block: its lists, how many of them at most, the chance each is looked at)
@@ -692,24 +701,24 @@ export const SCRIPTED_CARDS: Record<string, CardFn> = {
                 const chance = scalarOf(c.v, 'chance');
 
                 if (lists.length)
-                    targets.push({ text: rich(joinRich(lists), max ? rich(', at most ', b.d.valueSeg(max, ctx)) : '', chance ? rich(', each with a chance of ', b.d.valueSeg(chance, ctx)) : ''), icon: 'scope', tip: raw(c, ctx), src: ctx.file && b.d.anchor(c, ctx, 'other', false) });
+                    targets.push({ text: rich(joinRich(lists), max ? rich(tr(', at most '), b.d.valueSeg(max, ctx)) : '', chance ? rich(tr(', each with a chance of '), b.d.valueSeg(chance, ctx)) : ''), icon: 'scope', tip: raw(c, ctx), src: ctx.file && b.d.anchor(c, ctx, 'other', false) });
             }
             else if (c.k === 'ai_target_quick_trigger' && Array.isArray(c.v))
             {
                 const musts = c.v.filter((x) => x.k && x.v === 'yes').map((x) => QUICK_TARGET[x.k!] ?? humanize(x.k!));
 
                 if (musts.length)
-                    targets.push({ text: [`Only those who are ${musts.join(', ')}`], tip: raw(c, ctx), src: ctx.file && b.d.anchor(c, ctx, 'other', false) });
+                    targets.push({ text: [tr('Only those who are {join}', { join: musts.join(', ') })], tip: raw(c, ctx), src: ctx.file && b.d.anchor(c, ctx, 'other', false) });
             }
             else if (c.k === 'scripted_animation')
             {
-                const lines = typeof c.v === 'string' ? [{ text: rich('Shown as ', b.d.ref(c.v, ['scripted_animations'])), tip: `scripted_animation = ${c.v}` }] : animationLines(b, c.v, ctx);
-                card.sections.push({ title: 'Animation', lines, src: b.blockSection(c, 'other', ctx) });
+                const lines = typeof c.v === 'string' ? [{ text: rich(tr('Shown as '), b.d.ref(c.v, ['scripted_animations'])), tip: `scripted_animation = ${c.v}` }] : animationLines(b, c.v, ctx);
+                card.sections.push({ title: tr('Animation'), lines, src: b.blockSection(c, 'other', ctx) });
             }
         }
 
         if (targets.length)
-            card.sections.push({ title: 'Whom the AI considers', lines: targets });
+            card.sections.push({ title: tr('Whom the AI considers'), lines: targets });
 
         return true;
     }

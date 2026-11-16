@@ -7,6 +7,7 @@ import type { CardFn } from './types.ts';
 import { weightLines } from './weight.ts';
 import { addSection, blockOf, charTriggers, commentLines, entries, joined, kids, settingsSection, str, triggerSection, words, type SettingValue } from './life-shared.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 /** An artifact slot type by its name (loc `artifact_slot_<type>`: primary_armament → "Weapon"). */
 function slotTypeSeg(b: StoryBuilder, type: string): RichSeg
 {
@@ -55,7 +56,7 @@ function linkLines(segs: RichSeg[]): Line[]
     const out: Line[] = segs.slice(0, 40).map((s) => ({ text: [s], icon: 'note' }));
 
     if (segs.length > 40)
-        out.push({ text: [`… and ${segs.length - 40} more`] });
+        out.push({ text: [tr('… and {value} more', { value: segs.length - 40 })] });
 
     return out;
 }
@@ -81,17 +82,17 @@ export const ARTIFACT_CARDS: Record<string, CardFn> = {
         const slot = str(body, 'slot');
 
         if (slot)
-            card.facts.push(rich('Goes into ', slotTypeSeg(b, slot), ' slots'));
+            card.facts.push(rich(tr('Goes into '), slotTypeSeg(b, slot), tr(' slots')));
 
         if (str(body, 'can_reforge') === 'yes')
-            card.facts.push(['Can be reforged']);
+            card.facts.push([tr('Can be reforged')]);
 
         const features: Line[] = [];
 
         for (
             const [k, label] of [
-                ['required_features', 'Always gets one of each: '],
-                ['optional_features', 'Script can add one of each: ']
+                ['required_features', tr('Always gets one of each: ')],
+                ['optional_features', tr('Script can add one of each: ')]
             ]
         )
         {
@@ -101,20 +102,20 @@ export const ARTIFACT_CARDS: Record<string, CardFn> = {
                 features.push({ text: rich(label, joined(words(n).map((g) => b.d.ref(g, ['artifacts/feature_groups'])))), icon: 'note', tip: k, src: ctx.file ? b.d.anchor(n, ctx, 'other', false) : undefined });
         }
 
-        addSection(card, 'Features', features);
+        addSection(card, tr('Features'), features);
         settingsSection(b, x, artifactValue(b));
         addSection(
             card,
-            'Where it goes',
+            tr('Where it goes'),
             listLine(
-                'Fits the slots ',
+                tr('Fits the slots '),
                 [...entries(b, 'artifacts/slots')].filter((s) => slot && str(s.body, 'type') === slot).map((s) => slotSeg(b, s.e))
             )
         );
         const reforge = [...entries(b, 'artifacts/blueprints')]
             .filter((bp) => str(bp.body, 'in_type') === e.name)
             .map((bp): Line => ({ text: rich(b.d.entitySeg(bp.e), ': into ', typeSeg(b, str(bp.body, 'out_type') ?? '?')), icon: 'note' }));
-        addSection(card, 'Reforging', reforge);
+        addSection(card, tr('Reforging'), reforge);
         b.genericSections(e, body, card, ctx, x.own, new Set(['slot', 'required_features', 'optional_features', 'default_visuals', 'can_reforge']));
         return true;
     },
@@ -129,14 +130,14 @@ export const ARTIFACT_CARDS: Record<string, CardFn> = {
             card.title = own.text;
 
         const type = str(body, 'type');
-        card.facts.push([str(body, 'category') === 'court' ? 'In the royal court' : 'In the inventory']);
+        card.facts.push([str(body, 'category') === 'court' ? tr('In the royal court') : tr('In the inventory')]);
 
         if (type)
-            card.facts.push(rich('Holds ', slotTypeSeg(b, type)));
+            card.facts.push(rich(tr('Holds '), slotTypeSeg(b, type)));
 
         settingsSection(b, x, artifactValue(b));
-        addSection(card, 'Artifact types it holds', linkLines(typeLinks(b, [...entries(b, 'artifacts/types')].filter((t) => type && str(t.body, 'slot') === type).map((t) => t.e.name))));
-        addSection(card, 'Slots of the same kind', listLine('', [...entries(b, 'artifacts/slots')].filter((s) => s.e !== e && type && str(s.body, 'type') === type).map((s) => slotSeg(b, s.e))));
+        addSection(card, tr('Artifact types it holds'), linkLines(typeLinks(b, [...entries(b, 'artifacts/types')].filter((t) => type && str(t.body, 'slot') === type).map((t) => t.e.name))));
+        addSection(card, tr('Slots of the same kind'), listLine('', [...entries(b, 'artifacts/slots')].filter((s) => s.e !== e && type && str(s.body, 'type') === type).map((s) => slotSeg(b, s.e))));
         b.genericSections(e, body, card, ctx, x.own, new Set(['type', 'category', 'icon']));
         return true;
     },
@@ -149,8 +150,8 @@ export const ARTIFACT_CARDS: Record<string, CardFn> = {
         if (str(body, 'unique') === 'yes')
             card.facts.push(['Unique']);
 
-        triggerSection(b, card, blockOf(body, 'can_equip'), 'Can be equipped by', ctx, 'Anyone');
-        triggerSection(b, card, blockOf(body, 'can_benefit'), 'Gives its full modifiers to', ctx, 'Everyone');
+        triggerSection(b, card, blockOf(body, 'can_equip'), tr('Can be equipped by'), ctx, 'Anyone');
+        triggerSection(b, card, blockOf(body, 'can_benefit'), tr('Gives its full modifiers to'), ctx, 'Everyone');
         const fallback = blockOf(body, 'fallback');
 
         if (fallback)
@@ -158,19 +159,19 @@ export const ARTIFACT_CARDS: Record<string, CardFn> = {
             const lines = b.d.statsOf(kids(fallback), ctx);
 
             if (!lines.length)
-                lines.push({ text: ['Nothing'], icon: 'note' });
+                lines.push({ text: [tr('Nothing')], icon: 'note' });
 
-            addSection(card, 'Gives the others instead', lines, b.blockSection(fallback, 'modifier', ctx));
+            addSection(card, tr('Gives the others instead'), lines, b.blockSection(fallback, 'modifier', ctx));
         }
 
-        triggerSection(b, card, blockOf(body, 'can_repair'), 'Can be repaired by', ctx, 'Anyone');
-        triggerSection(b, card, blockOf(body, 'can_reforge'), 'Can be reforged by', ctx, 'Anyone');
+        triggerSection(b, card, blockOf(body, 'can_repair'), tr('Can be repaired by'), ctx, 'Anyone');
+        triggerSection(b, card, blockOf(body, 'can_reforge'), tr('Can be reforged by'), ctx, 'Anyone');
         settingsSection(b, x);
         b.genericSections(e, body, card, ctx, x.own, new Set(['can_equip', 'can_benefit', 'fallback', 'can_repair', 'can_reforge', 'unique', 'ai_score']));
         const ai = blockOf(body, 'ai_score');
 
         if (ai)
-            addSection(card, 'AI', weightLines(b, kids(ai), ctx));
+            addSection(card, tr('AI'), weightLines(b, kids(ai), ctx));
 
         return true;
     },
@@ -182,7 +183,7 @@ export const ARTIFACT_CARDS: Record<string, CardFn> = {
         const def = str(body, 'default_type');
 
         if (def)
-            card.facts.push(rich('For ', typeSeg(b, def)));
+            card.facts.push(rich(tr('For '), typeSeg(b, def)));
 
         const looks: Line[] = [];
 
@@ -199,7 +200,7 @@ export const ARTIFACT_CARDS: Record<string, CardFn> = {
             const img = c.k === 'icon' ? b.idx.resolveImagePath(ref, e.type) : undefined;
             const what: RichSeg = img ? b.d.entitySeg(img) : { text: ref, kind: 'code', tip: ref };
             const cond = Array.isArray(c.v) ? blockOf(c.v, 'trigger') : undefined;
-            const l: Line = { text: rich(c.k === 'icon' ? 'Icon ' : '3D model ', what, cond ? ' when:' : ''), icon: 'note', tip: `${c.k} = ${ref}` };
+            const l: Line = { text: rich(c.k === 'icon' ? tr('Icon ') : tr('3D model '), what, cond ? tr(' when:') : ''), icon: 'note', tip: `${c.k} = ${ref}` };
 
             if (cond)
                 l.conditions = charTriggers(b, cond, ctx);
@@ -210,7 +211,7 @@ export const ARTIFACT_CARDS: Record<string, CardFn> = {
             looks.push(l);
         }
 
-        addSection(card, 'Looks', looks);
+        addSection(card, tr('Looks'), looks);
         settingsSection(b, x, artifactValue(b));
         b.genericSections(e, body, card, ctx, x.own, new Set(['icon', 'asset', 'default_type', 'pedestal', 'support_type']));
         return true;
@@ -232,7 +233,7 @@ export const ARTIFACT_CARDS: Record<string, CardFn> = {
         if (lost)
         {
             const labels = [...new Set(words(lost).map((k) => b.d.modifierFormat(k).label))];
-            addSection(card, 'Modifiers it loses', [{ text: [labels.join(', ')], icon: 'modifier', tip: words(lost).join(' '), src: ctx.file ? b.d.anchor(lost, ctx, 'other', false) : undefined }]);
+            addSection(card, tr('Modifiers it loses'), [{ text: [labels.join(', ')], icon: 'modifier', tip: words(lost).join(' '), src: ctx.file ? b.d.anchor(lost, ctx, 'other', false) : undefined }]);
         }
 
         const repl = blockOf(body, 'replacement_modifiers');
@@ -240,10 +241,10 @@ export const ARTIFACT_CARDS: Record<string, CardFn> = {
         if (repl)
             addSection(
                 card,
-                'Gets instead, at random',
+                tr('Gets instead, at random'),
                 kids(repl)
                     .filter((r) => r.k && Array.isArray(r.v))
-                    .map((r) => ({ text: [`${capitalize(humanize(r.k!))} artifacts:`], icon: 'modifier', children: words(r).map((m) => ({ text: modifierWithStats(b, m), tip: m })), src: ctx.file ? b.d.anchor(r, ctx, 'other', false) : undefined })),
+                    .map((r) => ({ text: [tr('{capitalize} artifacts:', { capitalize: capitalize(humanize(r.k!)) })], icon: 'modifier', children: words(r).map((m) => ({ text: modifierWithStats(b, m), tip: m })), src: ctx.file ? b.d.anchor(r, ctx, 'other', false) : undefined })),
                 b.blockSection(repl, 'other', ctx)
             );
 
@@ -259,28 +260,28 @@ export const ARTIFACT_CARDS: Record<string, CardFn> = {
         const group = str(body, 'group');
 
         if (group)
-            card.facts.push(rich('In the group ', b.d.ref(group, ['artifacts/feature_groups'])));
+            card.facts.push(rich(tr('In the group '), b.d.ref(group, ['artifacts/feature_groups'])));
 
         settingsSection(b, x);
         b.genericSections(e, body, card, ctx, x.own, new Set(['group', 'weight']));
         const w = blockOf(body, 'weight');
 
         if (w)
-            addSection(card, 'Weight', weightLines(b, kids(w), ctx));
+            addSection(card, tr('Weight'), weightLines(b, kids(w), ctx));
 
         return true;
     },
 
-    // common/artifacts/feature_groups: only names (`key = {}`) — the features in them, the types that use them
+    // common/artifacts/feature_groups: only names (`key = {}`): the features in them, the types that use them
     'artifacts/feature_groups': (b, { e, card }) =>
     {
         const features = [...entries(b, 'artifacts/features')].filter((f) => str(f.body, 'group') === e.name);
-        card.facts.push([`${features.length} features`]);
-        addSection(card, 'Notes in the file', commentLines(b, e));
+        card.facts.push([tr('{length} features', { length: features.length })]);
+        addSection(card, tr('Notes in the file'), commentLines(b, e));
         const types = [...entries(b, 'artifacts/types')];
         const using = (k: string): RichSeg[] => typeLinks(b, types.filter((t) => words(blockOf(t.body, k)).includes(e.name)).map((t) => t.e.name));
-        addSection(card, 'Artifact types', [...listLine('Always on ', using('required_features')), ...listLine('Script can add it to ', using('optional_features'))]);
-        addSection(card, 'Features', linkLines(features.map((f) => b.d.entitySeg(f.e))));
+        addSection(card, tr('Artifact types'), [...listLine(tr('Always on '), using('required_features')), ...listLine(tr('Script can add it to '), using('optional_features'))]);
+        addSection(card, tr('Features'), linkLines(features.map((f) => b.d.entitySeg(f.e))));
         return true;
     }
 };

@@ -1,7 +1,7 @@
 /**
  * The script state the game's start sets up (docs/portraits.md, "Game-start state"). The effects of `on_game_start`
- * and `on_game_start_after_lobby` run — an on_action's `effect`, then its `events` (their `immediate`, when their
- * `trigger` holds), then its `on_actions`; events sent with `trigger_event`; scripted effects with their $PARAM$s —
+ * and `on_game_start_after_lobby` run: an on_action's `effect`, then its `events` (their `immediate`, when their
+ * `trigger` holds), then its `on_actions`; events sent with `trigger_event`; scripted effects with their $PARAM$s,
  * as far as they set up state: global variables and variable lists, variables and variable lists of characters,
  * titles and stories (`create_story` runs its story cycle's `on_setup`; `create_character` its `after_creation`, the
  * new character a blank one), local variables and saved scopes, with `if` / `else_if` / `else`, `while`, `switch`,
@@ -413,6 +413,32 @@ class Runner
             }
             case 'show_as_tooltip':
                 return true;
+            // (a character's flags and inactive traits: mods set historical characters' looks with them: AGOT's
+            // agot_init_<id> effects give hair and beard flags, `make_trait_inactive = is_<id>` for their clothes)
+            case 'add_character_flag':
+            case 'remove_character_flag':
+            case 'make_trait_inactive':
+            case 'make_trait_active':
+            {
+                const key = scope.t === 'char' ? varKey(scope) : undefined;
+                const n = v ?? scalar(field(block ?? [], 'flag'));
+
+                if (!key || !n)
+                    return true;
+
+                const all = k.endsWith('_flag') ? this.state.flags : this.state.inactive;
+                let set = all.get(key);
+
+                if (!set)
+                    all.set(key, set = new Set());
+
+                if (k === 'add_character_flag' || k === 'make_trait_inactive')
+                    set.add(n);
+                else
+                    set.delete(n);
+
+                return true;
+            }
             case 'save_scope_as':
             case 'save_temporary_scope_as':
                 if (v)
@@ -526,7 +552,7 @@ class Runner
             case 'add_to_list':
             case 'add_to_local_variable_list':
             {
-                // (lists of saved scopes — add_to_list, add_to_temporary_list — are not kept; local lists live with the scope's)
+                // (lists of saved scopes, add_to_list and add_to_temporary_list, are not kept; local lists live with the scope's)
                 if (k === 'add_to_list' || k === 'add_to_temporary_list')
                     return true;
 

@@ -1,18 +1,20 @@
 /**
  * The test API (docs/app-architecture.md, "Test API"): `window.__app.goto(target)` goes straight to a section and view
- * and resolves once it has loaded — nothing in flight (pending.ts), the page's pictures in, the 3D camera still — so
+ * and resolves once it has loaded (nothing in flight (pending.ts), the page's pictures in, the 3D camera still), so
  * scripts/drive.mjs runs need no clicking through and no fixed waits (`{ goto }` steps). `__app.here()` is the target
  * of what is shown (look around by hand, then copy it into a test); CRUSADERPOPE_START=<target> opens one at start.
  *
  * Targets (strings; objects with the same fields work too):
  *   events                                a type's page
- *   events:court.8190#source              an entry on a tab (read, refs, source, graph, portrait)
+ *   events:court.8190#source              an entry on a tab (read, refs, source, graph, portrait; none: read)
  *   images:gfx/interface/icons/traits/    a gallery folder (models too); a file: images:gfx/…/brave.dds
  *   @map?dim=3d&mode=culture&date=1066.9.15&style=terrain&camera=1495,1385,12,0,38
  *     dim 2d | 3d; mode an id or label (realm, vassal, k, culture, holdings …); date y.m.d; style terrain | paper |
  *     plain; focus=landed_titles:k_france (as "Show on map"); box=x0,y0,x1,y1 (map pixels in view); select=<province>;
  *     camera=x,z,dist,yaw,pitch (3D: the point looked at in map pixels, the eye's distance, turn and tilt in degrees)
  *   @mods   @mods?list=@all                the Mods page (on a list: @all every mod, none, a list's ref)
+ *   @gui   @gui?open=window:decisiondetail_view   the GUI tab (a window, root, type or template: kind:name; a bare
+ *                                         name is a window's)
  *   @settings                             the settings dialog over what is shown
  */
 import type { IndexStatus } from '../../shared/api';
@@ -21,6 +23,7 @@ import type { Map3D } from './components/map/map3d';
 import type { Style } from './components/map/model';
 import { api } from './api';
 import { pending } from './pending';
+import { closePicker } from './picker/pickStatement';
 
 export interface CameraPose
 {
@@ -53,6 +56,8 @@ export interface Target
     map?: MapTarget;
     /** the Mods page; a string: on that list */
     mods?: string | true;
+    /** the GUI tab; a string: on that definition (kind:name) */
+    gui?: string | true;
     settings?: boolean;
 }
 
@@ -72,7 +77,7 @@ export interface MapState
 export interface AppState
 {
     index: IndexStatus['state'];
-    section: 'explorer' | 'map' | 'mods';
+    section: 'explorer' | 'map' | 'mods' | 'gui' | 'save';
     route: Route;
     tab: Tab;
     settings: boolean;
@@ -90,6 +95,7 @@ interface Hooks
         route(r: Route): void;
         map(focus?: string): void;
         mods(): void;
+        gui(open?: string): void;
         tab(t: Tab): void;
         settings(open: boolean): void;
         state(): Pick<AppState, 'index' | 'section' | 'route' | 'tab' | 'settings'>;
@@ -99,7 +105,7 @@ interface Hooks
         begin(): void;
         /** the map's data for the date asked is in */
         loaded(): boolean;
-        /** date, mode (an id or label), style, 2D / 3D — an error for an unknown mode */
+        /** date, mode (an id or label), style, 2D / 3D; an error for an unknown mode */
         set(t: MapTarget): string | null;
         /** the dimension and mode asked for are shown (3D: its scene may still be coming) */
         shown(): boolean;
@@ -111,6 +117,15 @@ interface Hooks
     mods?: {
         view(ref: string): void;
         state(): string | undefined;
+    };
+    /** the GUI tab: its list and the open definition are in */
+    gui?: {
+        loaded(): boolean;
+    };
+    /** the GUI tab's preview: laid out for the switched-off widgets; select a widget by its id */
+    guiPreview?: {
+        loaded(): boolean;
+        select(id: number): void;
     };
 }
 
@@ -165,8 +180,11 @@ export function parseTarget(s: string): Target
     if (head === '@mods')
         return { mods: p.get('list') ?? true };
 
+    if (head === '@gui')
+        return { gui: p.get('open') ?? true };
+
     if (head !== '@map')
-        throw new Error(`Unknown target: ${s} (@map, @mods, @settings or type:name#tab)`);
+        throw new Error(`Unknown target: ${s} (@map, @mods, @gui, @settings or type:name#tab)`);
 
     const nums = (k: string, n: number): number[] | undefined =>
     {
@@ -237,6 +255,9 @@ function targetOf(s: Omit<AppState, 'target'>): string
 {
     if (s.section === 'mods')
         return s.mods ? `@mods?list=${encodeURIComponent(s.mods).replace(/%40/g, '@')}` : '@mods';
+
+    if (s.section === 'gui')
+        return s.route.name ? `@gui?open=${s.route.name}` : '@gui';
 
     if (s.section === 'map' && s.map)
     {
@@ -316,7 +337,7 @@ function loadingPicture(): boolean
     return false;
 }
 
-/** Nothing in flight, the page's pictures in, the 3D camera still — for `quiet` ms on end. */
+/** Nothing in flight, the page's pictures in, the 3D camera still, for `quiet` ms on end. */
 async function idle(deadline: number, quiet = 300): Promise<void>
 {
     let since = -1;
@@ -341,20 +362,29 @@ async function idle(deadline: number, quiet = 300): Promise<void>
 
 /**
  * Goes to a target (a string as above, or its fields) and resolves with the state once it has loaded; `settle`: ms to
- * wait on top (animations), `timeout`: ms for the whole (default 180 s — the first index or 3D map builds).
+ * wait on top (animations), `timeout`: ms for the whole (default 180 s: the first index or 3D map builds).
  */
 export async function goto(target: string | Target, opts: { settle?: number; timeout?: number; } = {}): Promise<AppState>
 {
+    // (a picker a walk left open would stay over the next page: it resolves null, its edit never happens)
+    closePicker();
     const t = typeof target === 'string' ? parseTarget(target) : target;
     const deadline = performance.now() + (opts.timeout ?? 180_000);
     await until('the app', () => !!hooks.app, deadline);
     const app = hooks.app!;
 
     // (the Mods page works while indexing; the rest waits for the index)
-    if (t.mods === undefined)
+    if (t.mods === undefined && t.gui === undefined)
         await until('the index', () => app.state().index === 'ready', deadline);
 
-    if (t.mods !== undefined)
+    if (t.gui !== undefined)
+    {
+        await until('the index', () => app.state().index === 'ready', deadline);
+        // (the GUI route names `kind:name`, `window:declare_war_window`; a bare name is a window's)
+        app.gui(typeof t.gui === 'string' ? (t.gui.includes(':') ? t.gui : `window:${t.gui}`) : undefined);
+        await until('the GUI tab', () => !!hooks.gui?.loaded(), deadline);
+    }
+    else if (t.mods !== undefined)
     {
         app.mods();
         await until('the Mods page', () => !!hooks.mods, deadline);
@@ -395,8 +425,11 @@ export async function goto(target: string | Target, opts: { settle?: number; tim
     {
         app.route({ type: t.type, name: t.name });
 
+        // (no `#tab`: the entry's Summary / Story, not the tab the page before was on; a gallery folder has none)
         if (t.tab)
             app.tab(t.tab);
+        else if (t.name && !t.name.endsWith('/'))
+            app.tab('read');
     }
 
     // (a page of its own closes the dialog; @settings opens it over the page shown)
@@ -413,7 +446,7 @@ export async function goto(target: string | Target, opts: { settle?: number; tim
     return state();
 }
 
-/** window.__app; the start target (CRUSADERPOPE_START) once the app is up — `__app.started` settles when it is shown. */
+/** window.__app; the start target (CRUSADERPOPE_START) once the app is up; `__app.started` settles when it is shown. */
 export function installTestApi(): void
 {
     const started = api.startTarget().then((t) => (t ? goto(t) : null));

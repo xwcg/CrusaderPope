@@ -1,19 +1,23 @@
 /**
  * IPC of the Mods view (channels `mods:*`, src/preload/index.ts): the manager's operations and editing the active
- * mod (edit.ts), one at a time, and what needs Electron — opening a mod's folder, thumbnails as data URLs.
+ * mod (edit.ts), one at a time, and what needs Electron: opening a mod's folder, thumbnails as data URLs.
  */
 import { ipcMain, nativeImage, shell } from 'electron';
 import { readFile } from 'node:fs/promises';
-import type { DuplicateEntryRequest, DuplicateRequest, EntryCreate, FireRequest, LineSource, DnaSaveRequest, MapEditRequest, NewEntryRequest, OverrideRequest, ScriptEditRequest } from '../../shared/api.ts';
-import { createMod, deleteList, modLocation, modsState, packMod, saveList, selectList, setActive, thumbnailFile, unpackMod, writeList, type ModsHost } from './manager.ts';
+import type { DuplicateEntryRequest, DuplicateRequest, EntryCreate, FireRequest, LineSource, DnaSaveRequest, MapEditRequest, MergeRequest, MigrationOptions, MigrationProgress, NewEntryRequest, OverrideRequest, ScriptEditRequest, GuiEditRequest } from '../../shared/api.ts';
+import { createMod, deleteList, deleteMod, deleteModPlan, fixModLocation, modLocation, modsState, packMod, saveList, selectList, setActive, thumbnailFile, unpackMod, writeList, type ModsHost } from './manager.ts';
 import { applyOverride, planOverride } from './edit.ts';
 import { editLoc, editScript, fireEvent, statementText, unfireEvent } from './scriptEdit.ts';
-import { forgetChange, undoChange } from './undo.ts';
+import { editGui } from './guiEdit.ts';
+import { forgetChange, journalOf, redoChange, undoChange } from './undo.ts';
 import { createEntries, createEntry, duplicateEntry, duplicateEvent, newEntryPlan } from './create.ts';
 import { mapEdit } from '../map/edit.ts';
 import { saveDna } from './dna.ts';
+import { jobsHere, type MigrationJobs } from './migrationThread.ts';
+import { mergeMods, planMerge } from './merge.ts';
 
-export function registerModsIpc(host: ModsHost): void
+/** `jobs`: where "Fix for 1.20…" plans and runs (the app: the migration worker, migrationThread.ts; else this thread). */
+export function registerModsIpc(host: ModsHost, jobs: MigrationJobs = jobsHere(host)): void
 {
     // one operation at a time: each reads the state, may write files and compares what the index loads
     let queue: Promise<unknown> = Promise.resolve();
@@ -36,10 +40,35 @@ export function registerModsIpc(host: ModsHost): void
     handle('mods:create', (req: Parameters<typeof createMod>[1]) => createMod(host, req));
     handle('mods:pack', (id: string, overwrite?: boolean) => packMod(host, id, overwrite));
     handle('mods:unpack', (id: string) => unpackMod(host, id));
+    handle('mods:fixLocation', (id: string) => fixModLocation(host, id));
+    handle('mods:deletePlan', (id: string) => deleteModPlan(host, id));
+    handle('mods:delete', (id: string) => deleteMod(host, id));
+    handle('mods:mergePlan', (ref: string) => planMerge(host, ref));
+    // (long tasks: progress to the window asking; Cancel is not queued behind the task it stops)
+    let cancelled = false;
+    const long = <A extends unknown[]>(channel: string, fn: (run: { progress: (p: MigrationProgress) => void; cancelled: () => boolean; }, ...args: A) => Promise<unknown>): void =>
+    {
+        ipcMain.handle(channel, (e, ...args: unknown[]) =>
+            serial(() =>
+            {
+                cancelled = false;
+                return fn({ progress: (p) => !e.sender.isDestroyed() && e.sender.send('mods:progress', p), cancelled: () => cancelled }, ...(args as A));
+            }));
+    };
+    // (the plan too: the dialog closed while it reads stops it, and the jobs queued behind it go on)
+    long('mods:migrationPlan', (run, id: string) => jobs.plan(id, run));
+    long('mods:migrate', (run, id: string, options?: MigrationOptions) => jobs.run(id, { ...run, restore: options?.restore }));
+    long('mods:merge', (run, req: MergeRequest) => mergeMods(host, req, run));
+    ipcMain.handle('mods:cancelTask', () =>
+    {
+        cancelled = true;
+        jobs.cancel();
+    });
     handle('mods:overridePlan', (type: string, name: string) => planOverride(host, type, name));
     handle('mods:override', (req: OverrideRequest) => applyOverride(host, req));
     handle('mods:createEntries', (creates: EntryCreate[]) => createEntries(host, creates));
     handle('mods:editLoc', (key: string, text: string) => editLoc(host, { key, text }));
+    handle('mods:editGui', (req: GuiEditRequest) => editGui(host, req));
     handle('mods:fireEvent', (req: FireRequest) => fireEvent(host, req));
     handle('mods:unfireEvent', (event: string, onAction: string) => unfireEvent(host, { event, onAction }));
     handle('mods:newEntryPlan', (type: string) => newEntryPlan(host, type));
@@ -55,6 +84,14 @@ export function registerModsIpc(host: ModsHost): void
     // undo (undo.ts): a change by its step, else the active mod's last one
     handle('mods:undo', (step?: number) => undoChange(host, step !== undefined ? { id: step } : { mod: host.settings().activeMod ?? '' }));
     handle('mods:forgetChange', async (step: number) => forgetChange(host, step));
+    handle('mods:redo', (step?: number) => redoChange(host, step !== undefined ? { id: step } : { mod: host.settings().activeMod ?? '' }));
+    // (the change bar's list: every kept step of the active mod (also those from before a restart) and the redoable)
+    handle('mods:changes', async () =>
+    {
+        const mod = host.settings().activeMod ?? undefined;
+        const j = journalOf(host);
+        return { steps: j.list(mod), redos: j.listRedo(mod) };
+    });
     handle('mods:openFolder', async (id: string) =>
     {
         const loc = await modLocation(host, id);

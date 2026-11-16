@@ -1,0 +1,446 @@
+[
+ {
+  "kind": "effect",
+  "key": "join_faction_forced",
+  "label": "Force into faction",
+  "summary": "Forces the character to join a faction, on behalf of another character, for a set time.",
+  "details": "The character joins even though they did not choose to. The one who forced them is named in forced_by. The duration is written in days, months or years; vanilla always uses years.",
+  "fields": [
+    { "name": "faction", "text": "The faction the character is forced into.", "values": "a faction, e.g. scope:joined_faction", "required": true },
+    { "name": "forced_by", "text": "The character who forces them to join.", "values": "a character, e.g. root", "required": true },
+    { "name": "days / months / years", "text": "How long the forced membership lasts.", "values": "a number, written as days, months or years", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "join_faction_skip_check",
+  "label": "Join faction, no checks",
+  "summary": "Makes the character join the given faction without testing whether they are allowed to.",
+  "details": "The normal join rule (the can_character_join trigger) is skipped. Runs on a character; the value is the faction.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "join_organization",
+  "label": "Join organization",
+  "summary": "Makes the character a member of the given organization.",
+  "details": "Runs on the character who joins; the value is the organization.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "learn_court_language_of",
+  "label": "Learn court language of",
+  "summary": "Makes the character learn the court language of another character.",
+  "details": "Runs on the learner; the value is the character whose court language is learned.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "learn_language",
+  "label": "Learn language",
+  "summary": "Makes the character learn the named language.",
+  "details": "The value is a language key, for example language_latin or language_greek as vanilla writes them.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "learn_language_of_culture",
+  "label": "Learn culture's language",
+  "summary": "Makes the character learn the language that the given culture speaks.",
+  "details": "Runs on the learner; the value is a culture, often written as a link such as root.culture.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "lease_out_to_holy_order",
+  "label": "Lease to holy order",
+  "summary": "Leases the title out to the given holy order.",
+  "details": "Runs on a title. Any theocratic lease the title has is removed. Vanilla uses it a lot, with a holy order saved as a scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "leave_era",
+  "label": "Leave culture era",
+  "summary": "Makes the culture leave the given era and every era before it.",
+  "details": "Runs on a culture. The value is a culture era type. The input shows no vanilla use, so the details rest on the game's documentation.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "leave_faction",
+  "label": "Leave faction",
+  "summary": "Makes the character leave the given faction.",
+  "details": "Runs on the character who leaves; the value is the faction.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "leave_organization",
+  "label": "Leave organization",
+  "summary": "Makes the character leave their organization.",
+  "details": "Written as `yes`. The game's documentation names no organization, so it takes none.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "log_natural_disaster",
+  "label": "Log natural disaster",
+  "summary": "Writes a log entry about the natural disaster situation it runs on.",
+  "details": "Only writes anything when 'Logging.NaturalDisasters' was switched on in the console first. Write \"started\" or \"ended\". Run it after the situation's capital province and severity are set, so the entry is accurate.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "lower_domicile_building",
+  "label": "Downgrade domicile building",
+  "summary": "Lowers a building of the domicile by one level, or destroys it if it is already at the lowest level.",
+  "details": "Runs on a domicile; the value is the building key. The game's documentation does not say what happens to the cost. A separate key, lower_domicile_building_no_refund, does the same without refunding.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "lower_domicile_building_no_refund",
+  "label": "Downgrade building, no refund",
+  "summary": "Lowers a building of the domicile by one level, or destroys it if it is already at the lowest level, and pays nothing back.",
+  "details": "Runs on a domicile; the value is the building key. Vanilla writes it with building names built from a template, such as a base name plus _03.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "make_claim_strong",
+  "label": "Strong claim",
+  "summary": "Gives the character a strong claim on the title.",
+  "details": "If the character has no claim on it yet, they get one. The title is the value.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "make_claim_weak",
+  "label": "Weak claim",
+  "summary": "Gives the character a weak claim on the title.",
+  "details": "If the character has no claim on it yet, they get one. The title is the value.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "make_concubine",
+  "label": "Make concubine",
+  "summary": "Makes the target character a concubine of the character the effect runs on.",
+  "details": "It runs on the character who takes the concubine; the value is the new concubine. The target should not be imprisoned.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "make_holy_site_eminent",
+  "label": "Make holy site eminent",
+  "summary": "Makes a holy site of the faith eminent.",
+  "details": "Runs on a faith. The site must not be eminent already. Written either as just the holy site, or as a block that also names the acting character.",
+  "fields": [
+    { "name": "target", "text": "The holy site to make eminent.", "values": "a holy site, e.g. scope:selected_item", "required": true },
+    { "name": "actor", "text": "The character who does it.", "values": "a character, e.g. root" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "make_holy_site_not_eminent",
+  "label": "Remove holy site eminence",
+  "summary": "Makes a holy site of the faith no longer eminent.",
+  "details": "Runs on a faith. The site must be eminent already. Written either as just the holy site, or as a block that also names the acting character.",
+  "fields": [
+    { "name": "target", "text": "The holy site to make not eminent.", "values": "a holy site, e.g. scope:selected_item", "required": true },
+    { "name": "actor", "text": "The character who does it.", "values": "a character, e.g. root" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "make_pregnant",
+  "label": "Pregnant",
+  "summary": "Makes the character pregnant by the given father.",
+  "details": "No chance is involved. Run it on the mother. Vanilla always names a father; the number of children and the known-bastard flag are optional.",
+  "fields": [
+    { "name": "father", "text": "The real father of the child.", "values": "a character, e.g. scope:father or root", "required": true },
+    { "name": "number_of_children", "text": "How many children are born (twins and more).", "values": "a number" },
+    { "name": "known_bastard", "text": "Whether the child is publicly known as a bastard.", "values": "yes or no" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "make_pregnant_no_checks",
+  "label": "Pregnant, no checks",
+  "summary": "Makes the character pregnant, without raising errors on things like celibacy.",
+  "details": "The game's documentation lists the same fields as make_pregnant: the real father, the number of children and whether the child is a known bastard. The input shows no vanilla use of this key.",
+  "fields": [
+    { "name": "father", "text": "The real father of the child.", "values": "a character" },
+    { "name": "number_of_children", "text": "How many children are born.", "values": "a number" },
+    { "name": "known_bastard", "text": "Whether the child is a known bastard.", "values": "yes or no" }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "make_story_owner",
+  "label": "Story owner",
+  "summary": "Makes the given character the new owner of the story.",
+  "details": "Runs on a story. The value is the character who becomes its owner.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "make_trait_active",
+  "label": "Activate trait",
+  "summary": "Turns an inactive trait of the character on.",
+  "details": "No tooltip is shown if the character cannot have the trait. Vanilla uses it for the genetic traits such as possessed_genetic.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "make_trait_active_force_tooltip",
+  "label": "Activate trait, show tooltip",
+  "summary": "Turns an inactive trait of the character on.",
+  "details": "Same as make_trait_active, but the tooltip is shown even if the character cannot have the trait.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "make_trait_inactive",
+  "label": "Deactivate trait",
+  "summary": "Turns a trait the character has off, without removing it.",
+  "details": "No tooltip is shown if the character does not have the trait. Vanilla uses it for genetic traits such as possessed_genetic.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "make_trait_inactive_force_tooltip",
+  "label": "Deactivate trait, show tooltip",
+  "summary": "Turns a trait the character has off, without removing it.",
+  "details": "Same as make_trait_inactive, but the tooltip is shown even if the character does not have the trait.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "make_unprunable",
+  "label": "Keep after death",
+  "summary": "Keeps the character from being pruned (cleaned away by the game) after they die.",
+  "details": "Written as `yes`. Everyone related to them is kept too, so use it with care. Only use it for someone who must stay around for several years after death.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "marry",
+  "label": "Marry",
+  "summary": "Marries the character to the target character.",
+  "details": "Runs on one spouse; the value is the other.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "marry_matrilineal",
+  "label": "Marry, matrilineal",
+  "summary": "Marries the character to the target character in a matrilineal marriage.",
+  "details": "Runs on one spouse; the value is the other. The game's documentation does not explain what matrilineal changes beyond the name, so what differs from a normal marriage is not confirmed here.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "mass_recalculate_participant_groups",
+  "label": "Recalculate participant groups",
+  "summary": "Forces a new group to be worked out for every member of a situation participant group.",
+  "details": "Written as `yes`. Every member's new group is calculated before any change is made. If a change for one person affects others' membership, switch that person's group first with a separate effect.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "move_budget_gold",
+  "label": "Move AI budget gold",
+  "summary": "Moves gold from one of the AI's budget categories to another.",
+  "details": "Never moves more than the source holds or the target has room for. The categories are budget_war_chest, budget_reserved, budget_short_term and budget_long_term.",
+  "fields": [
+    { "name": "gold", "text": "How much gold to move.", "values": "a number or script value", "required": true },
+    { "name": "from", "text": "The budget it is taken from.", "values": "budget_war_chest, budget_reserved, budget_short_term or budget_long_term", "required": true },
+    { "name": "to", "text": "The budget it is put into.", "values": "budget_war_chest, budget_reserved, budget_short_term or budget_long_term", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "move_budget_treasury",
+  "label": "Move AI budget treasury",
+  "summary": "Moves treasury from one of the AI's budget categories to another.",
+  "details": "Never moves more than the source holds or the target has room for. The categories are budget_war_chest, budget_reserved, budget_short_term and budget_long_term.",
+  "fields": [
+    { "name": "treasury", "text": "How much to move.", "values": "a number or script value", "required": true },
+    { "name": "from", "text": "The budget it is taken from.", "values": "budget_war_chest, budget_reserved, budget_short_term or budget_long_term", "required": true },
+    { "name": "to", "text": "The budget it is put into.", "values": "budget_war_chest, budget_reserved, budget_short_term or budget_long_term", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "move_domicile",
+  "label": "Move domicile",
+  "summary": "Moves the domicile to the given province.",
+  "details": "Runs on a domicile. Vanilla mostly gives the capital province of some character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "move_title_name_to",
+  "label": "Move custom title name",
+  "summary": "Moves a custom title name from this title to the target title.",
+  "details": "Runs on the title that has the custom name; the value is the title that receives it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "move_to_pool",
+  "label": "Move to the pool",
+  "summary": "Makes the courtier or guest leave their court and move into the pool.",
+  "details": "Written as `yes`. Vanilla uses it often.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "move_to_pool_at",
+  "label": "Move to pool at province",
+  "summary": "Makes the character leave their court, if they have one, and move into the pool of the given province.",
+  "details": "Works on a courtier, a guest or a character already in the pool. The value is the province.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "multiply_focus_progress",
+  "label": "Multiply focus progress",
+  "summary": "Multiplies focus progress.",
+  "details": "The game documents nothing more: not what a focus is here, the value or the scope it runs on.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "open_appoint_court_position_window",
+  "label": "Open court position window",
+  "summary": "Opens the window to appoint someone to a court position, with the character as the liege.",
+  "details": "The value is the court position type. Vanilla uses it for the court physician and court astrologer.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "open_interaction_window",
+  "label": "Open interaction window",
+  "summary": "Tries to open the window of a character interaction between an actor and a recipient.",
+  "details": "The actor must be the current player. By default the actor and recipients are redirected; that only works when no secondary actor or recipient is set up or they are invalid.",
+  "fields": [
+    { "name": "interaction", "text": "The interaction to open.", "values": "an interaction key", "required": true },
+    { "name": "actor", "text": "The character doing the interaction. Must be the current player.", "values": "a character, e.g. scope:actor or root", "required": true },
+    { "name": "recipient", "text": "The character it is aimed at.", "values": "a character, e.g. scope:recipient", "required": true },
+    { "name": "redirect", "text": "Whether to redirect the actor and recipients.", "values": "yes or no", "default": "yes" },
+    { "name": "secondary_actor", "text": "An extra character on the actor's side.", "values": "a character" },
+    { "name": "secondary_recipient", "text": "An extra character on the recipient's side.", "values": "a character" },
+    { "name": "target_title", "text": "A title the interaction is about.", "values": "a title" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "open_view",
+  "label": "Open window",
+  "summary": "Tries to open the named window of the game's interface, without any scope data.",
+  "details": "If the effect does not run through the interface, set the player, or the window opens for every player who runs it. A short form takes just the view name.",
+  "fields": [
+    { "name": "view", "text": "The window to open.", "values": "a view name, e.g. intrigue_window", "required": true },
+    { "name": "view_message", "text": "A view-specific instruction.", "values": "depends on the view" },
+    { "name": "player", "text": "The player it opens for.", "values": "a character, e.g. root" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "open_view_data",
+  "label": "Open window with data",
+  "summary": "Tries to open the named window of the game's interface, using the thing it runs on as the window's data.",
+  "details": "For example a faith can be opened in the faith conversion window. If the effect does not run through the interface, set the player, or the window opens for every player who runs it. A short form takes just the view name.",
+  "fields": [
+    { "name": "view", "text": "The window to open.", "values": "a view name, e.g. decision_detail or character", "required": true },
+    { "name": "view_message", "text": "A view-specific instruction.", "values": "depends on the view" },
+    { "name": "player", "text": "The player it opens for.", "values": "a character, e.g. root" },
+    { "name": "data", "text": "Extra data for the view. Vanilla gives a decision, a flag or an activity type.", "values": "e.g. decision:key, flag:name, activity_type:key" },
+    { "name": "secondary_actor", "text": "A second character the view is about. Vanilla uses it in some cases.", "values": "a character" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

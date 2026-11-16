@@ -1,0 +1,501 @@
+[
+ {
+  "kind": "effect",
+  "key": "set_merit_level",
+  "label": "Merit level",
+  "summary": "Sets the character's merit level to the given value.",
+  "details": "The game documents nothing more, and vanilla does not use it in the input, so the allowed range and what the level does are not shown here.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_mother",
+  "label": "Mother",
+  "summary": "Makes the given character the mother of the character it runs on.",
+  "details": "If the character had no separate real mother before, the new mother also counts as their real mother. Vanilla gives a character scope such as `root` or a saved scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_name_list",
+  "label": "Name list",
+  "summary": "Replaces all of a culture's name lists with the one given.",
+  "details": "Runs on a culture. Every name list the culture had before is removed first. Vanilla writes a name list key such as `name_list_romansh`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_no_automatic_claims",
+  "label": "No automatic claims",
+  "summary": "Turns off automatic claims on a title, or turns them back on.",
+  "details": "With `yes`, claims on the title only come from script or from pressed claims being inherited. Runs on a title. Vanilla only uses `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_noble_family_title",
+  "label": "Noble family title",
+  "summary": "Changes whether the title is a noble family title, which lets landless characters be playable.",
+  "details": "Runs on a title, which must be at least a duchy. The game's documentation does not say how the yes or no value is written, and the input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_num_pregnancy_children",
+  "label": "Pregnancy children",
+  "summary": "Sets how many children the character's pregnancy will produce.",
+  "details": "Vanilla always writes the number 1.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_order_rite",
+  "label": "Order rite",
+  "summary": "Ties a holy order to the given rite.",
+  "details": "The order changes faith if the rite joins a different faith or splits off into one. Runs on a holy order and takes a rite, for example a saved scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_order_tenet",
+  "label": "Order tenet",
+  "summary": "Sets the main tenet (a core belief of a faith) of a holy order.",
+  "details": "Runs on a holy order. The tenet is written as a saved scope or as `tenet:<key>`, for example `tenet:tenet_communion`. Vanilla mostly uses the `tenet:` form.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_override_designated_winner",
+  "label": "Override designated winner",
+  "summary": "Makes the character put their beneficiary on the throne when they are the top participant, or switches that off.",
+  "details": "`yes` turns it on, `no` turns it off again. The game's documentation spells the key slightly differently in its usage line (`set_override_designate_winner`); vanilla uses the spelling `set_override_designated_winner`. Vanilla uses it once with each value, so the exact situation is not shown.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_owned_legend",
+  "label": "Owned legend",
+  "summary": "Makes the character the owner of the given legend.",
+  "details": "The legend is the value; the character it runs on becomes its owner. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_owner",
+  "label": "Owner",
+  "summary": "Changes who owns the artifact and hands it over to that character.",
+  "details": "Runs on an artifact. Short form: write the new owner directly. Block form adds a history entry, which records how it changed hands, for example stolen instead of given. If none is scripted, the game can create a history entry itself.",
+  "fields": [
+    { "name": "target", "text": "The new owner.", "values": "a character", "required": true },
+    { "name": "history", "text": "A custom history entry for the artifact, such as a conquest or an inheritance.", "values": "a block, in vanilla with type, actor and recipient" },
+    { "name": "generate_history", "text": "Whether the game creates a history entry on its own if none is scripted.", "values": "yes or no" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_parent_faith",
+  "label": "Parent faith",
+  "summary": "Moves a rite to another faith.",
+  "details": "Runs on a rite. The faith of all counties and characters changes to match the new faith. Rites derived from it that are still in the same faith move along, unless you opt out. Short form: just the faith. Block form takes the options below.",
+  "fields": [
+    { "name": "target", "text": "The faith the rite moves to.", "values": "a faith, for example faith:catholic", "required": true },
+    { "name": "main", "text": "Whether the rite becomes the faith's main rite. This also happens if the faith has no followers and no counties.", "values": "yes or no", "default": "no" },
+    { "name": "include_derived", "text": "Whether rites derived from this one that are still under the same faith move too.", "values": "yes or no", "default": "yes" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_personal_tenet",
+  "label": "Personal tenet",
+  "summary": "Changes the personal tenet (a belief picked by the character) of a playable character.",
+  "details": "Does nothing, with no error, if the character has no room for the tenet. Written as a saved scope or `tenet:<key>`, for example `tenet:tenet_communion`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_piety_level",
+  "label": "Piety level",
+  "summary": "Sets the character's piety level to the given value.",
+  "details": "Vanilla uses it once, in the block form `{ value = 0 }`. The game's documentation does not say which levels exist.",
+  "fields": [
+    { "name": "value", "text": "The piety level to set.", "values": "a number", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_player_character",
+  "label": "Player character",
+  "summary": "Makes the player who controls this character play as the given character instead.",
+  "details": "The character it runs on must be player-controlled, and the target must not be. Vanilla gives a saved scope, a link or a character key.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_pregnancy_assumed_father",
+  "label": "Pregnancy assumed father",
+  "summary": "Sets who is assumed to be the father of the character's pregnancy.",
+  "details": "Vanilla uses it once, with a saved scope. The game's documentation does not say how it relates to the real father.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_pregnancy_gender",
+  "label": "Pregnancy gender",
+  "summary": "Sets the gender of the unborn child.",
+  "details": "The value is `female`, `male` or `random`. The input lists no scope for it; it presumably runs on a pregnant character, but the game does not say.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_prestige_level",
+  "label": "Prestige level",
+  "summary": "Sets the character's prestige level to the given value.",
+  "details": "The game's documentation does not say which levels exist, and the input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_primary_spouse",
+  "label": "Primary spouse",
+  "summary": "Makes the given character the primary spouse of the character it runs on.",
+  "details": "Vanilla uses it once, with a saved scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_primary_title_to",
+  "label": "Primary title",
+  "summary": "Sets which title is the character's primary title.",
+  "details": "Written as a title link such as `title:h_india` or a saved scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_promoted_legend",
+  "label": "Promoted legend",
+  "summary": "Adds the character as a promoter of the given legend.",
+  "details": "Vanilla gives a legend through a saved scope or `root.promoted_legend`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_puppet",
+  "label": "Puppet",
+  "summary": "Makes the target character a puppet of the character it runs on, for a given puppet type.",
+  "details": "Fails if the target is already a puppet, or if the puppeteer already has a puppet of that type. The puppet type is a key; vanilla uses external_ruler_puppet and theological_agent_puppet kinds.",
+  "fields": [
+    { "name": "target", "text": "The character who becomes the puppet.", "values": "a character", "required": true },
+    { "name": "type", "text": "The puppet type.", "values": "a puppet type key, e.g. external_ruler_puppet", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_real_father",
+  "label": "Real father",
+  "summary": "Sets the real father of the character it runs on.",
+  "details": "Vanilla gives a saved scope or a link such as `root.father`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_real_mother",
+  "label": "Real mother",
+  "summary": "Sets the real mother of the character it runs on.",
+  "details": "The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_realm_capital",
+  "label": "Realm capital",
+  "summary": "Sets a new capital for the character's realm.",
+  "details": "Written as a title, often a county such as `title:c_roma` or a saved scope. Vanilla also uses `prev`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_regnal_name",
+  "label": "Regnal name",
+  "summary": "Sets the regnal name (the name a ruler reigns under) of the character.",
+  "details": "Give a localization key, which can use any script scope. Or use the block form with `character = <character>` to copy the regnal or first name of that character.",
+  "fields": [
+    { "name": "character", "text": "Character whose regnal or first name is copied (block form).", "values": "a character" }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_relation_activity_recurrer",
+  "label": "Activity recurrer relation",
+  "summary": "Sets a scripted relationship of the type \"activity recurrer\" between the character and a target.",
+  "details": "Needs a localization key for the reason, plus a matching key ending in `_corresponding` for the other side. In the corresponding text, the character and target character swap places. The game does not explain this relation type, and vanilla's one use is in a template.",
+  "fields": [
+    { "name": "target", "text": "The other character in the relationship.", "values": "a character" },
+    { "name": "reason", "text": "Localization key of the reason shown for the relationship.", "values": "a localization key" },
+    { "name": "copy_reason", "text": "Copy the reason from another relation.", "values": "another relation type" },
+    { "name": "province", "text": "A province tied to the reason.", "values": "a province" },
+    { "name": "involved_character", "text": "A further character tied to the reason.", "values": "a character" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_relation_antiquarian",
+  "label": "Antiquarian relation",
+  "summary": "Sets a scripted relationship of the type \"antiquarian\" between the character and a target.",
+  "details": "Needs a localization key for the reason, plus a matching key ending in `_corresponding` for the other side. In the corresponding text, the character and target character swap places. The game does not explain this relation type and vanilla does not use it in the input.",
+  "fields": [
+    { "name": "target", "text": "The other character in the relationship.", "values": "a character" },
+    { "name": "reason", "text": "Localization key of the reason shown for the relationship.", "values": "a localization key" },
+    { "name": "copy_reason", "text": "Copy the reason from another relation.", "values": "another relation type" },
+    { "name": "province", "text": "A province tied to the reason.", "values": "a province" },
+    { "name": "involved_character", "text": "A further character tied to the reason.", "values": "a character" }
+  ],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_relation_best_friend",
+  "label": "Best friend relation",
+  "summary": "Makes the target a best friend of the character, as a scripted relationship with a reason.",
+  "details": "Needs a localization key for the reason, plus a matching key ending in `_corresponding` for the other side. In the corresponding text, the character and target character swap places. Short form: just the target. Vanilla mostly uses the block form, with `copy_reason = friend` often copying the reason from an ordinary friend relation.",
+  "fields": [
+    { "name": "target", "text": "The other character in the relationship.", "values": "a character", "required": true },
+    { "name": "reason", "text": "Localization key of the reason shown for the relationship.", "values": "a localization key, e.g. best_friend_sworn" },
+    { "name": "copy_reason", "text": "Copy the reason from another relation, in vanilla the friend relation.", "values": "a relation type, e.g. friend" },
+    { "name": "province", "text": "A province tied to the reason.", "values": "a province" },
+    { "name": "involved_character", "text": "A further character tied to the reason.", "values": "a character" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_relation_blood_brother",
+  "label": "Blood brother relation",
+  "summary": "Makes the target a blood brother of the character, as a scripted relationship with a reason.",
+  "details": "Needs a localization key for the reason, plus a matching key ending in `_corresponding` for the other side. In the corresponding text, the character and target character swap places. Short form: just the target.",
+  "fields": [
+    { "name": "target", "text": "The other character in the relationship.", "values": "a character", "required": true },
+    { "name": "reason", "text": "Localization key of the reason shown for the relationship.", "values": "a localization key, e.g. sworn_blood_brother" },
+    { "name": "copy_reason", "text": "Copy the reason from another relation.", "values": "another relation type" },
+    { "name": "province", "text": "A province tied to the reason.", "values": "a province" },
+    { "name": "involved_character", "text": "A further character tied to the reason.", "values": "a character" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_relation_bully",
+  "label": "Bully relation",
+  "summary": "Makes the given character the bully of the character this runs on, who becomes their victim.",
+  "details": "Needs a localization key for the reason, plus a matching key ending in `_corresponding` for the other side. In the corresponding text, the character and target character swap places. The game's relation definitions pair bully with victim and add the other side by themselves. Vanilla only uses the short form with a character.",
+  "fields": [
+    { "name": "target", "text": "The other character in the relationship.", "values": "a character" },
+    { "name": "reason", "text": "Localization key of the reason shown for the relationship.", "values": "a localization key" },
+    { "name": "copy_reason", "text": "Copy the reason from another relation.", "values": "another relation type" },
+    { "name": "province", "text": "A province tied to the reason.", "values": "a province" },
+    { "name": "involved_character", "text": "A further character tied to the reason.", "values": "a character" }
+  ],
+  "sources": ["doc", "vanilla", "vanilla: common/scripted_relations/00_scripted_relations.txt:142"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_relation_court_physician",
+  "label": "Court physician relation",
+  "summary": "Sets a scripted relationship of the type \"court physician\" between the character and a target.",
+  "details": "Needs a localization key for the reason, plus a matching key ending in `_corresponding` for the other side. In the corresponding text, the character and target character swap places. The game does not explain this relation type and vanilla does not use it in the input.",
+  "fields": [
+    { "name": "target", "text": "The other character in the relationship.", "values": "a character" },
+    { "name": "reason", "text": "Localization key of the reason shown for the relationship.", "values": "a localization key" },
+    { "name": "copy_reason", "text": "Copy the reason from another relation.", "values": "another relation type" },
+    { "name": "province", "text": "A province tied to the reason.", "values": "a province" },
+    { "name": "involved_character", "text": "A further character tied to the reason.", "values": "a character" }
+  ],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_relation_crush",
+  "label": "Crush relation",
+  "summary": "Makes the target the character's crush, as a scripted relationship.",
+  "details": "Needs a localization key for the reason if you give one, plus a matching key ending in `_corresponding` for the other side. In the corresponding text, the character and target character swap places. Vanilla mostly writes just the target; the block form adds a reason.",
+  "fields": [
+    { "name": "target", "text": "The other character in the relationship.", "values": "a character", "required": true },
+    { "name": "reason", "text": "Localization key of the reason shown for the relationship.", "values": "a localization key, e.g. crush_tumbled_down_hill" },
+    { "name": "copy_reason", "text": "Copy the reason from another relation.", "values": "another relation type" },
+    { "name": "province", "text": "A province tied to the reason.", "values": "a province" },
+    { "name": "involved_character", "text": "A further character tied to the reason.", "values": "a character" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_relation_disciple",
+  "label": "Disciple relation",
+  "summary": "Makes the given character a disciple of the character this runs on, who becomes their elder.",
+  "details": "Needs a localization key for the reason, plus a matching key ending in `_corresponding` for the other side. In the corresponding text, the character and target character swap places. The game's relation definitions pair disciple with elder and add the other side by themselves. Vanilla uses it twice, only in the short form.",
+  "fields": [
+    { "name": "target", "text": "The other character in the relationship.", "values": "a character" },
+    { "name": "reason", "text": "Localization key of the reason shown for the relationship.", "values": "a localization key" },
+    { "name": "copy_reason", "text": "Copy the reason from another relation.", "values": "another relation type" },
+    { "name": "province", "text": "A province tied to the reason.", "values": "a province" },
+    { "name": "involved_character", "text": "A further character tied to the reason.", "values": "a character" }
+  ],
+  "sources": ["doc", "vanilla", "vanilla: common/scripted_relations/00_scripted_relations.txt:331"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_relation_elder",
+  "label": "Elder relation",
+  "summary": "Makes the given character an elder of the character this runs on, who becomes their disciple.",
+  "details": "Needs a localization key for the reason, plus a matching key ending in `_corresponding` for the other side. In the corresponding text, the character and target character swap places. The game's relation definitions pair elder with disciple and add the other side by themselves. Vanilla uses only the short form, with saved scopes named like `scope:new_elder`.",
+  "fields": [
+    { "name": "target", "text": "The other character in the relationship.", "values": "a character" },
+    { "name": "reason", "text": "Localization key of the reason shown for the relationship.", "values": "a localization key" },
+    { "name": "copy_reason", "text": "Copy the reason from another relation.", "values": "another relation type" },
+    { "name": "province", "text": "A province tied to the reason.", "values": "a province" },
+    { "name": "involved_character", "text": "A further character tied to the reason.", "values": "a character" }
+  ],
+  "sources": ["doc", "vanilla", "vanilla: common/scripted_relations/00_scripted_relations.txt:346"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_relation_event_recurrer",
+  "label": "Event recurrer relation",
+  "summary": "Sets a scripted relationship of the type \"event recurrer\" between the character and a target.",
+  "details": "Needs a localization key for the reason, plus a matching key ending in `_corresponding` for the other side. In the corresponding text, the character and target character swap places. The game does not explain this relation type, and vanilla's one use is in a template.",
+  "fields": [
+    { "name": "target", "text": "The other character in the relationship.", "values": "a character" },
+    { "name": "reason", "text": "Localization key of the reason shown for the relationship.", "values": "a localization key" },
+    { "name": "copy_reason", "text": "Copy the reason from another relation.", "values": "another relation type" },
+    { "name": "province", "text": "A province tied to the reason.", "values": "a province" },
+    { "name": "involved_character", "text": "A further character tied to the reason.", "values": "a character" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_relation_favorite_child",
+  "label": "Favorite child relation",
+  "summary": "Sets a scripted \"favorite child\" relationship between the character and a target.",
+  "details": "Needs a localization key for the reason, plus a matching key ending in `_corresponding` for the other side. In the corresponding text, the character and target character swap places. The game does not explain which side is the favorite, and vanilla does not use it in the input.",
+  "fields": [
+    { "name": "target", "text": "The other character in the relationship.", "values": "a character" },
+    { "name": "reason", "text": "Localization key of the reason shown for the relationship.", "values": "a localization key" },
+    { "name": "copy_reason", "text": "Copy the reason from another relation.", "values": "another relation type" },
+    { "name": "province", "text": "A province tied to the reason.", "values": "a province" },
+    { "name": "involved_character", "text": "A further character tied to the reason.", "values": "a character" }
+  ],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_relation_fellow_disciple",
+  "label": "Fellow disciple relation",
+  "summary": "Sets a scripted \"fellow disciple\" relationship between the character and the target.",
+  "details": "Needs a localization key for the reason, plus a matching key ending in `_corresponding` for the other side. In the corresponding text, the character and target character swap places. Vanilla uses it once, in the short form with `root`.",
+  "fields": [
+    { "name": "target", "text": "The other character in the relationship.", "values": "a character" },
+    { "name": "reason", "text": "Localization key of the reason shown for the relationship.", "values": "a localization key" },
+    { "name": "copy_reason", "text": "Copy the reason from another relation.", "values": "another relation type" },
+    { "name": "province", "text": "A province tied to the reason.", "values": "a province" },
+    { "name": "involved_character", "text": "A further character tied to the reason.", "values": "a character" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_relation_friend",
+  "label": "Friend relation",
+  "summary": "Makes the target a friend of the character, as a scripted relationship with a reason.",
+  "details": "Needs a localization key for the reason, plus a matching key ending in `_corresponding` for the other side. In the corresponding text, the character and target character swap places. Short form: just the target. Vanilla mostly uses the block form, in over 230 places.",
+  "fields": [
+    { "name": "target", "text": "The other character in the relationship.", "values": "a character", "required": true },
+    { "name": "reason", "text": "Localization key of the reason shown for the relationship.", "values": "a localization key, e.g. friend_drinking_buddies" },
+    { "name": "copy_reason", "text": "Copy the reason from another relation.", "values": "another relation type" },
+    { "name": "province", "text": "A province tied to the reason.", "values": "a province, e.g. root.location" },
+    { "name": "involved_character", "text": "A further character tied to the reason.", "values": "a character, e.g. liege" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_relation_grudge",
+  "label": "Grudge relation",
+  "summary": "Sets a scripted \"grudge\" relationship between the character and the target.",
+  "details": "Needs a localization key for the reason, plus a matching key ending in `_corresponding` for the other side. In the corresponding text, the character and target character swap places. Short form: just the target. Vanilla mostly uses the block form with a reason; which side holds the grudge is not stated in the input.",
+  "fields": [
+    { "name": "target", "text": "The other character in the relationship.", "values": "a character", "required": true },
+    { "name": "reason", "text": "Localization key of the reason shown for the relationship.", "values": "a localization key, e.g. grudge_too_good" },
+    { "name": "copy_reason", "text": "Copy the reason from another relation.", "values": "another relation type" },
+    { "name": "province", "text": "A province tied to the reason.", "values": "a province" },
+    { "name": "involved_character", "text": "A further character tied to the reason.", "values": "a character" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ }
+]

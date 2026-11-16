@@ -1,0 +1,821 @@
+[
+ {
+  "kind": "effect",
+  "key": "reset_culture_creation_date",
+  "label": "Reset creation date",
+  "summary": "Sets the culture's creation date to today's date.",
+  "details": "Works on a culture. Vanilla only ever writes `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "reset_designated_winner",
+  "label": "Clear designated winner",
+  "summary": "Makes the great holy war (GHW) have no designated winner any more.",
+  "details": "Works on a great holy war. Vanilla only ever writes `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "reset_scheme_progress",
+  "label": "Reset scheme progress",
+  "summary": "Sends a scheme back to the start of its progress.",
+  "details": "Clears the success chance the scheme has gained over time, its opportunities and the progress of its current phase. Works on a scheme. Vanilla uses it once, with `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "reset_title_name",
+  "label": "Reset title name",
+  "summary": "Gives a title its normal name and adjective again, the ones that come from its key.",
+  "details": "The title's prefix does not change; use the prefix reset for that. Works on a title. Vanilla only ever writes `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "reset_title_prefix",
+  "label": "Reset title prefix",
+  "summary": "Gives a title its normal prefix again, the one that comes from its key.",
+  "details": "The title's name and adjective do not change; use the name reset for those. Works on a title. Written as `yes`.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "resolve_title_and_vassal_change",
+  "label": "Carry out title change",
+  "summary": "Carries out a prepared title and vassal change and then discards it.",
+  "details": "The change must have been created earlier and saved as a scope. After this effect it cannot be used again. Vanilla always passes a saved change, for example `resolve_title_and_vassal_change = scope:change`.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The saved title and vassal change to carry out.",
+    "values": "a saved scope such as `scope:change`",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "resume_travel_plan",
+  "label": "Resume journey",
+  "summary": "Continues a travel plan that was paused.",
+  "details": "Works on a travel plan. Vanilla only ever writes `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "resume_travel_plan_mp",
+  "label": "Resume journey (multiplayer pause)",
+  "summary": "Continues a travel plan that was paused for multiplayer reasons by the matching multiplayer pause effect.",
+  "details": "Works on a travel plan. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "retire_accolade",
+  "label": "Retire accolade",
+  "summary": "Retires an accolade, which removes it completely.",
+  "details": "Works on an accolade. Vanilla uses it once, with `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "return_home",
+  "label": "Return home",
+  "summary": "Starts a journey for the character to go back home.",
+  "details": "If the character already has a travel plan, its information is used. Otherwise a new plan is started. For a player character who has to use the travel planner, saving the result as a scope does not work.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "return_hostage",
+  "label": "Return hostage",
+  "summary": "Frees the character from being a hostage and sends them back to their home court.",
+  "details": "Works on the hostage. Vanilla only ever writes `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "return_to_court",
+  "label": "Return to court",
+  "summary": "Sends the character back to the court of their employer.",
+  "details": "Works on a character. Vanilla only ever writes `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "reveal_to",
+  "label": "Reveal secret",
+  "summary": "Lets a character learn a secret.",
+  "details": "Runs on the secret; the value says who is told. Vanilla mostly writes `root` or a saved character.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The character who learns the secret.",
+    "values": "a character, such as `root` or `scope:buyer`",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "reverse_add_opinion",
+  "label": "Opinion of them",
+  "summary": "Adds a temporary opinion modifier to the target's opinion of the character, not the other way round.",
+  "details": "The character in scope is the one being thought of, and the target is the one who holds the opinion. The modifier must be a defined opinion modifier. If no duration is given, the modifier's own default duration is used. Vanilla usually also writes an `opinion` amount; the game's documentation does not describe that field.",
+  "fields": [
+   {
+    "name": "modifier",
+    "text": "Which opinion modifier to add.",
+    "values": "an opinion modifier name",
+    "required": true
+   },
+   {
+    "name": "target",
+    "text": "The character who holds the opinion of the scoped character.",
+    "values": "a character, such as `root` or `scope:target`",
+    "required": true
+   },
+   {
+    "name": "opinion",
+    "text": "An amount that vanilla writes in most uses (for example 20 or -10). The game's documentation does not describe it.",
+    "values": "a number"
+   },
+   {
+    "name": "days / months / years",
+    "text": "How long the modifier lasts.",
+    "values": "a number or a range of two numbers, written as `days = 30`, `months = 6` or `years = 10`"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "revoke_court_position",
+  "label": "Revoke court position",
+  "summary": "Takes a court position away from a character in the scoped character's court.",
+  "details": "The scoped character is the ruler whose court it is. If a recipient is given, only that holder loses the position.",
+  "fields": [
+   {
+    "name": "court_position",
+    "text": "Which court position to take away.",
+    "values": "a court position type",
+    "required": true
+   },
+   {
+    "name": "recipient",
+    "text": "The current holder who loses the position.",
+    "values": "a character"
+   },
+   {
+    "name": "holder",
+    "text": "The same as recipient.",
+    "values": "a character"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "revoke_lease",
+  "label": "Revoke lease",
+  "summary": "Ends the lease of a title.",
+  "details": "Only holy order leases can be revoked this way. Theocratic leases end by themselves when their contract stops being valid, and they are also removed when the barony is leased to a holy order. Works on a title. Vanilla writes `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "round_global_variable",
+  "label": "Round global variable",
+  "summary": "Rounds a global variable to the nearest multiple of a given value.",
+  "details": "The game's documentation only shows the shared usage text of the variable rounding effects, so the exact usage of this one is not confirmed. Vanilla does not use it.",
+  "fields": [
+   {
+    "name": "name",
+    "text": "The name of the variable.",
+    "values": "a variable name"
+   },
+   {
+    "name": "nearest",
+    "text": "The value to round to.",
+    "values": "a number or script value"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "round_local_variable",
+  "label": "Round local variable",
+  "summary": "Rounds a local variable to the nearest multiple of a given value.",
+  "details": "The game's documentation only shows the shared usage text of the variable rounding effects, so the exact usage of this one is not confirmed. Vanilla does not use it.",
+  "fields": [
+   {
+    "name": "name",
+    "text": "The name of the variable.",
+    "values": "a variable name"
+   },
+   {
+    "name": "nearest",
+    "text": "The value to round to.",
+    "values": "a number or script value"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "round_variable",
+  "label": "Round variable",
+  "summary": "Rounds a variable to the nearest multiple of a given value.",
+  "details": "Vanilla does not use it.",
+  "fields": [
+   {
+    "name": "name",
+    "text": "The name of the variable.",
+    "values": "a variable name",
+    "required": true
+   },
+   {
+    "name": "nearest",
+    "text": "The value to round to.",
+    "values": "a number or script value",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "ruin_great_building",
+  "label": "Ruin great building",
+  "summary": "Turns the great building in a province into a ruin.",
+  "details": "Works on a province. Vanilla only ever writes `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "run_interaction",
+  "label": "Run interaction",
+  "summary": "Sends or carries out a character interaction between an actor and a recipient, depending on how the AI would answer.",
+  "details": "The AI's answer decides what happens: the interaction is carried out at once if the answer reaches the execute threshold, and sent to the recipient if it reaches the send threshold. At least one of the two thresholds must be set. Redirecting is on by default and only works when no secondary actor or secondary recipient is set up.",
+  "fields": [
+   {
+    "name": "interaction",
+    "text": "Which interaction to run.",
+    "values": "an interaction key",
+    "required": true
+   },
+   {
+    "name": "actor",
+    "text": "The character doing the interaction.",
+    "values": "a character",
+    "required": true
+   },
+   {
+    "name": "recipient",
+    "text": "The character it is done to.",
+    "values": "a character",
+    "required": true
+   },
+   {
+    "name": "secondary_actor",
+    "text": "An optional second character on the actor's side.",
+    "values": "a character"
+   },
+   {
+    "name": "secondary_recipient",
+    "text": "An optional second character on the recipient's side.",
+    "values": "a character"
+   },
+   {
+    "name": "execute_threshold",
+    "text": "Carry it out at once if the AI's response is at least this good.",
+    "values": "accept, maybe or decline"
+   },
+   {
+    "name": "send_threshold",
+    "text": "Send it to the recipient if the AI's response is at least this good.",
+    "values": "accept, maybe or decline"
+   },
+   {
+    "name": "redirect",
+    "text": "Whether the actor and recipients are redirected.",
+    "values": "yes or no",
+    "default": "yes"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "save_opinion_value_as",
+  "label": "Save opinion value",
+  "summary": "Saves how much the character likes the target, under a name of your choice.",
+  "details": "The saved number can be used later in the same unbroken event chain.",
+  "fields": [
+   {
+    "name": "name",
+    "text": "The name to save it under.",
+    "values": "a name you choose",
+    "required": true
+   },
+   {
+    "name": "target",
+    "text": "The character whose opinion is saved against: the scoped character's opinion of this one.",
+    "values": "a character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "save_scope_as",
+  "label": "Save as a scope",
+  "summary": "Saves the current scope under a name of your choice, so it can be used later as `scope:name`.",
+  "details": "The name stays available later in the unbroken event chain. The documented usage line names the older `save_event_target_as`; vanilla uses `save_scope_as`. For a short-lived name, see the temporary version.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The name to save it under.",
+    "values": "a name you choose",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "save_scope_value_as",
+  "label": "Save value as a scope",
+  "summary": "Saves a number or a yes/no value under a name of your choice, so it can be used later as `scope:name`.",
+  "details": "The name stays available later in the unbroken event chain. Vanilla also saves flags such as `flag:martial` and event ids this way.",
+  "fields": [
+   {
+    "name": "name",
+    "text": "The name to save it under.",
+    "values": "a name you choose",
+    "required": true
+   },
+   {
+    "name": "value",
+    "text": "What to save.",
+    "values": "a number, `yes` or `no`, or a flag",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "save_temporary_opinion_value_as",
+  "label": "Save opinion value (temporary)",
+  "summary": "Saves how much the character likes the target, under a name that is only usable within the same effect.",
+  "details": "Unlike the lasting version, the name does not carry on through the event chain. Vanilla does not use it.",
+  "fields": [
+   {
+    "name": "name",
+    "text": "The name to save it under.",
+    "values": "a name you choose",
+    "required": true
+   },
+   {
+    "name": "target",
+    "text": "The character whose opinion is measured against.",
+    "values": "a character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "save_temporary_scope_as",
+  "label": "Save as a temporary scope",
+  "summary": "Saves the current scope under a name that can be used later within the same effect.",
+  "details": "Unlike the lasting version, the name does not carry on through the event chain. Vanilla uses it for helper names such as `loser` or `new_capital`.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The name to save it under.",
+    "values": "a name you choose",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "save_temporary_scope_value_as",
+  "label": "Save value as a temporary scope",
+  "summary": "Saves a number or a yes/no value under a name that can be used later within the same effect.",
+  "details": "Unlike the lasting version, the name does not carry on through the event chain.",
+  "fields": [
+   {
+    "name": "name",
+    "text": "The name to save it under.",
+    "values": "a name you choose",
+    "required": true
+   },
+   {
+    "name": "value",
+    "text": "What to save.",
+    "values": "a number, `yes` or `no`, or a flag",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "scheme_freeze",
+  "label": "Freeze scheme",
+  "summary": "Pauses a scheme for a set time.",
+  "details": "A duration of 0 freezes it with no end, until it is unfrozen with the unfreeze effect.",
+  "fields": [
+   {
+    "name": "reason",
+    "text": "The localization key of the text that says why the scheme is frozen.",
+    "values": "a localization key",
+    "required": true
+   },
+   {
+    "name": "days / months / years",
+    "text": "How long it stays frozen; 0 means until unfrozen.",
+    "values": "a number, written as `days = 10` or `years = 1`",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "scheme_unfreeze",
+  "label": "Unfreeze scheme",
+  "summary": "Lets a frozen scheme run again.",
+  "details": "Does nothing for a scheme that is not frozen. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "scriptedtests_recalculate_character_modifier",
+  "label": "Recalculate character modifier",
+  "summary": "Recalculates the modifier of the character.",
+  "details": "The name suggests it exists for the game's scripted tests. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "scriptedtests_recalculate_succession",
+  "label": "Recalculate succession",
+  "summary": "Recalculates the character's line of succession.",
+  "details": "The name suggests it exists for the game's scripted tests. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "send_china_tutorial_finished_telemetry",
+  "label": "Telemetry: China tutorial finished",
+  "summary": "Sends a `tutorial_finished` telemetry event to the game, marked with the China version.",
+  "details": "Vanilla uses it once with `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "send_china_tutorial_started_telemetry",
+  "label": "Telemetry: China tutorial started",
+  "summary": "Sends a `tutorial_started` telemetry event to the game, marked with the China version.",
+  "details": "Vanilla uses it once with `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "send_interface_message",
+  "label": "Send message",
+  "summary": "Shows a message to the player of the character, then runs the effects written inside it.",
+  "details": "The message text and its tooltip can use `$EFFECT$` (the effects inside, described in the past tense) and `$DESC$` (the text from `desc`). Anything not given is taken from the message type. Effects written inside the block run after the message is sent.",
+  "fields": [
+   {
+    "name": "type",
+    "text": "The message type, which gives the default title, text, tooltip and look.",
+    "values": "a message type",
+    "default": "send_interface_message"
+   },
+   {
+    "name": "title",
+    "text": "The message's title.",
+    "values": "a localization key"
+   },
+   {
+    "name": "desc",
+    "text": "The message's text.",
+    "values": "a localization key"
+   },
+   {
+    "name": "tooltip",
+    "text": "The tooltip text.",
+    "values": "a localization key"
+   },
+   {
+    "name": "left_icon",
+    "text": "The icon on the left.",
+    "values": "a character, artifact, title, dynasty or house"
+   },
+   {
+    "name": "right_icon",
+    "text": "The icon on the right.",
+    "values": "a character, artifact, title, dynasty or house"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "send_interface_popup",
+  "label": "Send popup",
+  "summary": "Shows a popup to the player of the character, then runs the effects written inside it.",
+  "details": "The text and tooltip can use `$EFFECT$` (the effects inside, in the past tense) and `$DESC$` (the text from `desc`). Anything not given is taken from the message type. Vanilla does not use it.",
+  "fields": [
+   {
+    "name": "type",
+    "text": "The message type, which gives the default title, text, tooltip and look.",
+    "values": "a message type",
+    "default": "send_interface_popup"
+   },
+   {
+    "name": "title",
+    "text": "The popup's title.",
+    "values": "a localization key"
+   },
+   {
+    "name": "desc",
+    "text": "The popup's text.",
+    "values": "a localization key"
+   },
+   {
+    "name": "tooltip",
+    "text": "The tooltip text.",
+    "values": "a localization key"
+   },
+   {
+    "name": "left_icon",
+    "text": "The icon on the left.",
+    "values": "a character, artifact, title, dynasty or house"
+   },
+   {
+    "name": "right_icon",
+    "text": "The icon on the right.",
+    "values": "a character, artifact, title, dynasty or house"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "send_interface_toast",
+  "label": "Send toast",
+  "summary": "Shows a short toast notification to the player of the character, then runs the effects written inside it.",
+  "details": "The text and tooltip can use `$EFFECT$` (the effects inside, in the past tense) and `$DESC$` (the text from `desc`). Anything not given is taken from the message type. Vanilla uses it very often to show what an event changed, with effects such as prestige or opinion written inside.",
+  "fields": [
+   {
+    "name": "type",
+    "text": "The message type, which gives the default title, text, tooltip and look.",
+    "values": "a message type, such as `event_toast_effect_good`",
+    "default": "send_interface_toast"
+   },
+   {
+    "name": "title",
+    "text": "The toast's title.",
+    "values": "a localization key"
+   },
+   {
+    "name": "desc",
+    "text": "The toast's text.",
+    "values": "a localization key"
+   },
+   {
+    "name": "tooltip",
+    "text": "The tooltip text.",
+    "values": "a localization key"
+   },
+   {
+    "name": "left_icon",
+    "text": "The icon on the left.",
+    "values": "a character, artifact, title, dynasty or house"
+   },
+   {
+    "name": "right_icon",
+    "text": "The icon on the right.",
+    "values": "a character, artifact, title, dynasty or house"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "send_long_tutorial_finished_telemetry",
+  "label": "Telemetry: long tutorial finished",
+  "summary": "Sends a `tutorial_finished` telemetry event to the game, marked with the Long version.",
+  "details": "Vanilla uses it 5 times with `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "send_long_tutorial_started_telemetry",
+  "label": "Telemetry: long tutorial started",
+  "summary": "Sends a `tutorial_started` telemetry event to the game, marked with the Long version.",
+  "details": "Vanilla uses it once with `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "send_short_tutorial_finished_telemetry",
+  "label": "Telemetry: short tutorial finished",
+  "summary": "Sends a `tutorial_finished` telemetry event to the game, marked with the Short version.",
+  "details": "Vanilla uses it once with `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "send_short_tutorial_started_telemetry",
+  "label": "Telemetry: short tutorial started",
+  "summary": "Sends a `tutorial_started` telemetry event to the game, marked with the Short version.",
+  "details": "Vanilla uses it once with `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ }
+]

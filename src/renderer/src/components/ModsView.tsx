@@ -1,18 +1,22 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { MigrateChip } from './MigrateDialog';
+import { MergeDialog } from './MergeDialog';
 import { createPortal } from 'react-dom';
 import type { IndexStatus, ModInfo, ModList, ModListEntry, ModsState, NewModRequest } from '../../../shared/api';
 import { api } from '../api';
-import { AddModsDialog, ConfirmDialog, ModThumb, NewModDialog, PromptDialog, SOURCE_LABEL, StatusChip, SupportedChip, errorText, modWarning, type NewModTarget } from './ModDialogs';
+import { AddModsDialog, ConfirmDialog, DeleteModDialog, ModThumb, NewModDialog, PromptDialog, SOURCE_LABEL, StatusChip, SupportedChip, errorText, modWarning, type NewModTarget } from './ModDialogs';
 import { hook } from '../testApi';
 import '../styles/mods.css';
 import { Select } from './Select';
 
-/** Route type of the Mods page (App.tsx) — not an index type. */
+import { tr } from '../../../shared/i18n';
+import { fold, foldHas } from '../../../shared/fold';
+/** Route type of the Mods page (App.tsx), not an index type. */
 export const MODS_ROUTE = '@mods';
 /** the "All mods" page of the view */
 const LIBRARY = '@all';
 
-const KIND_LABEL: Record<ModList['kind'], string> = { playset: 'Launcher playset', game: 'Game list', custom: 'Custom list' };
+const KIND_LABEL: Record<ModList['kind'], string> = { playset: tr('Launcher playset'), game: tr('Game list'), custom: tr('Custom list') };
 
 interface Draft
 {
@@ -41,9 +45,9 @@ const sameEntries = (a: ModListEntry[], b: ModListEntry[]): boolean => a.length 
 function listLabel(state: ModsState, ref: string): string
 {
     if (ref === 'none')
-        return 'None — game only';
+        return tr('None — game only');
 
-    return state.lists.find((l) => l.ref === ref)?.name ?? 'Missing list';
+    return state.lists.find((l) => l.ref === ref)?.name ?? tr('Missing list');
 }
 
 /** Top bar: the list the explorer loads and the active mod; opens the Mods page. */
@@ -53,19 +57,19 @@ export function ModsTab(props: { state: ModsState | null; open: boolean; onClick
     const s = props.state;
     const loaded = s ? enabledMods(s, s.selected) : [];
     const active = s?.activeMod ? s.mods.find((m) => m.id === s.activeMod) : undefined;
-    const name = s ? (s.selected === 'none' ? 'No mods' : listLabel(s, s.selected)) : '…';
+    const name = s ? (s.selected === 'none' ? tr('No mods') : listLabel(s, s.selected)) : '…';
     const tip = s
         ? [
-            `Loaded in the explorer: ${listLabel(s, s.selected)}`,
+            tr('Loaded in the explorer: {listLabel}', { listLabel: listLabel(s, s.selected) }),
             ...loaded.map((m, i) => `  ${i + 1}. ${m.name}`),
-            `Active mod: ${active?.name ?? (s.activeMod ? s.activeMod + ' (not found)' : 'none')}`,
+            tr('Active mod: {mod}', { mod: active?.name ?? (s.activeMod ? s.activeMod + tr(' (not found)') : tr('none')) }),
             '',
-            'Manage mods and mod lists'
+            tr('Manage mods and mod lists')
         ].join('\n')
-        : 'Manage mods and mod lists';
+        : tr('Manage mods and mod lists');
     return (
         <button className={'app-tab mods-tab' + (props.open ? ' on' : '')} onClick={props.onClick} title={tip}>
-            <span className="mi-label">Mods</span>
+            <span className="mi-label">{tr('Mods')}</span>
             <span className="mi-list">{name}</span>
             {loaded.length > 0 && <span className="mi-count">{loaded.length}</span>}
             {active && <span className="mi-active">✎ {active.name}</span>}
@@ -75,7 +79,8 @@ export function ModsTab(props: { state: ModsState | null; open: boolean; onClick
 
 interface Notice
 {
-    kind: 'ok' | 'error';
+    /** warn: nothing done, but no failure either ("Nothing written …") */
+    kind: 'ok' | 'warn' | 'error';
     text: string;
 }
 
@@ -119,7 +124,7 @@ export function ModsView(props: { state: ModsState | null; setState: (s: ModsSta
     );
 
     if (!state)
-        return <div className="mods-page loading">Reading mods…</div>;
+        return <div className="mods-page loading">{tr('Reading mods…')}</div>;
 
     const lists = state.lists;
     const viewRef = view && (view === LIBRARY || view === 'none' || lists.some((l) => l.ref === view)) ? view : defaultView(state);
@@ -133,7 +138,7 @@ export function ModsView(props: { state: ModsState | null; setState: (s: ModsSta
     };
 
     /** Runs an operation: one at a time, its message or error in the notice bar. */
-    const run = async (label: string, fn: () => Promise<string | void>): Promise<boolean> =>
+    const run = async (label: string, fn: () => Promise<string | Notice | void>): Promise<boolean> =>
     {
         setBusy(label);
         setNotice(null);
@@ -143,7 +148,7 @@ export function ModsView(props: { state: ModsState | null; setState: (s: ModsSta
             const msg = await fn();
 
             if (msg)
-                setNotice({ kind: 'ok', text: msg });
+                setNotice(typeof msg === 'string' ? { kind: 'ok', text: msg } : msg);
 
             return true;
         }
@@ -171,16 +176,16 @@ export function ModsView(props: { state: ModsState | null; setState: (s: ModsSta
     const newListRef = (next: ModsState): string | undefined => next.lists.find((l) => l.kind === 'custom' && !lists.some((o) => o.ref === l.ref))?.ref;
 
     const select = (ref: string): void =>
-        void run('Loading into the explorer…', async () =>
+        void run(tr('Loading into the explorer…'), async () =>
         {
             const next = await api.selectModList(ref);
             setState(next);
             // (the returned state: a save just before may have renamed the list)
-            return ref === 'none' ? 'The explorer shows the game without mods.' : `“${listLabel(next, ref)}” is loaded into the explorer.`;
+            return ref === 'none' ? tr('The explorer shows the game without mods.') : tr('“{listLabel}” is loaded into the explorer.', { listLabel: listLabel(next, ref) });
         });
 
     const setActive = (id: string | null): void =>
-        void run('Setting the active mod…', async () =>
+        void run(tr('Setting the active mod…'), async () =>
         {
             setState(await api.setActiveMod(id));
         });
@@ -190,19 +195,18 @@ export function ModsView(props: { state: ModsState | null; setState: (s: ModsSta
         pack: (m) =>
         {
             const pack = (overwrite: boolean): void =>
-                void run(`Packing ${m.name}…`, async () =>
+                void run(tr('Packing {name}…', { name: m.name }), async () =>
                 {
                     const r = await api.packMod(m.id, overwrite);
 
                     if (!r.exists)
-                        return `Packed ${r.files} ${r.files === 1 ? 'file' : 'files'} into ${r.file}.`;
+                        return tr('Packed {files} {plural} into {file}.', { files: r.files, plural: r.files === 1 ? 'file' : 'files', file: r.file });
 
                     // a zip from an earlier pack (or an upload) is there: ask before replacing it
                     setDialog(
-                        <ConfirmDialog title={`Replace the zip of “${m.name}”?`} confirm="Replace" danger onClose={closeDialog} onConfirm={() => pack(true)}>
+                        <ConfirmDialog title={tr('Replace the zip of “{name}”?', { name: m.name })} confirm={tr('Replace')} danger onClose={closeDialog} onConfirm={() => pack(true)}>
                             <p>
-                                <code>{r.file}</code> exists already. Packing again replaces it with the mod folder&apos;s current files.
-                            </p>
+                                <code>{r.file}</code> {' '}{tr('exists already. Packing again replaces it with the mod folder\'s current files.')}</p>
                         </ConfirmDialog>
                     );
                     return undefined;
@@ -212,28 +216,59 @@ export function ModsView(props: { state: ModsState | null; setState: (s: ModsSta
         unpack: (m) =>
             setDialog(
                 <ConfirmDialog
-                    title={`Unpack “${m.name}”?`}
-                    confirm="Unpack"
+                    title={tr('Unpack “{name}”?', { name: m.name })}
+                    confirm={tr('Unpack')}
                     onClose={closeDialog}
                     onConfirm={() =>
-                        void run(`Unpacking ${m.name}…`, async () =>
+                        void run(tr('Unpacking {name}…', { name: m.name }), async () =>
                         {
                             const r = await api.unpackMod(m.id);
                             setState(await api.modsState());
-                            return `Unpacked ${r.files} ${r.files === 1 ? 'file' : 'files'} into ${r.dir}; the mod's descriptor points there now.`;
+                            return tr('Unpacked {files} {plural} into {dir}; the mod\'s descriptor points there now.', { files: r.files, plural: r.files === 1 ? 'file' : 'files', dir: r.dir });
                         })}
                 >
                     <p>
-                        The zip is extracted into a folder in your mod folder ({state.userDir}\mod\…) and the mod&apos;s descriptor is changed to point to that folder (
-                        <code>path=</code> instead of <code>archive=</code>). The zip itself stays where it is.
-                    </p>
+                        {tr('The zip is extracted into a folder in your mod folder ({userDir}\\mod\\…) and the mod\'s descriptor is changed to point to that folder (', { userDir: state.userDir })}<code>path=</code> {' '}{tr('instead of')}{' '}<code>archive=</code>{tr('). The zip itself stays where it is.')}</p>
+                </ConfirmDialog>
+            ),
+        fixLocation: (m) =>
+            setDialog(
+                <ConfirmDialog
+                    title={tr('Point “{name}”’s descriptor to where it is?', { name: m.name })}
+                    confirm={tr('Fix the path')}
+                    onClose={closeDialog}
+                    onConfirm={() =>
+                        void run(tr('Fixing {name}…', { name: m.name }), async () =>
+                        {
+                            const r = await api.fixModLocation(m.id);
+                            setState(await api.modsState());
+                            return tr('{descriptor} points to {location} now. The old one: {backup}', r);
+                        })}
+                >
+                    <p>
+                        {tr('Its descriptor ({descriptorFile}) says the mod is in {stale}, but it was found in {found}. The game and the launcher look where the descriptor says; the launcher can’t register it until it is right.', { descriptorFile: m.descriptorFile, stale: m.staleLocation, found: m.root ?? m.archive })}</p>
+                    <p>{tr('The descriptor is copied to crusaderpope-backups first.')}</p>
                 </ConfirmDialog>
             ),
         openFolder: (m) =>
-            void run('Opening…', async () =>
+            void run(tr('Opening…'), async () =>
             {
                 await api.openModFolder(m.id);
-            })
+            }),
+        remove: (m) =>
+            setDialog(
+                <DeleteModDialog
+                    mod={m}
+                    onClose={closeDialog}
+                    onDelete={() =>
+                        void run(tr('Deleting {name}…', { name: m.name }), async () =>
+                        {
+                            const { state: next, result } = await api.deleteMod(m.id);
+                            setState(next);
+                            return result.trashed ? tr('“{name}” is in the Recycle Bin.', { name: m.name }) : tr('“{name}” is deleted.', { name: m.name });
+                        })}
+                />
+            )
     };
 
     const newMod = (): void =>
@@ -249,7 +284,7 @@ export function ModsView(props: { state: ModsState | null; setState: (s: ModsSta
                 {
                     // (a failure here stays in the dialog)
                     let next = await api.createMod(req);
-                    const created = `Created “${req.name}” in ${next.userDir}\\mod\\${req.folder} — it is the active mod.`;
+                    const created = tr('Created “{name}” in {userDir}\\mod\\{folder} — it is the active mod.', { name: req.name, userDir: next.userDir, folder: req.folder });
                     const entry = { id: `mod/${req.folder}.mod`, enabled: true };
                     let show = LIBRARY;
 
@@ -273,12 +308,12 @@ export function ModsView(props: { state: ModsState | null; setState: (s: ModsSta
                             }
                         }
 
-                        setNotice({ kind: 'ok', text: created + (target && next.selected === show ? ' Its list is loaded: the explorer re-indexes.' : '') });
+                        setNotice({ kind: 'ok', text: created + (target && next.selected === show ? tr(' Its list is loaded: the explorer re-indexes.') : '') });
                     }
                     catch (e)
                     {
                         // the mod exists: report the list error on the page
-                        setNotice({ kind: 'error', text: `${created} Adding it to the list failed: ${errorText(e)}` });
+                        setNotice({ kind: 'error', text: tr('{created} Adding it to the list failed: {errorText}', { created, errorText: errorText(e) }) });
                     }
 
                     setState(next);
@@ -291,13 +326,13 @@ export function ModsView(props: { state: ModsState | null; setState: (s: ModsSta
     const newList = (): void =>
         setDialog(
             <PromptDialog
-                title="New mod list"
-                label="Name"
-                initial="New list"
-                confirm="Create list"
+                title={tr('New mod list')}
+                label={tr('Name')}
+                initial={tr('New list')}
+                confirm={tr('Create list')}
                 onClose={closeDialog}
                 onConfirm={(name) =>
-                    void run('Creating the list…', async () =>
+                    void run(tr('Creating the list…'), async () =>
                     {
                         const next = await api.saveModList({ name, mods: [] });
                         setState(next);
@@ -310,22 +345,22 @@ export function ModsView(props: { state: ModsState | null; setState: (s: ModsSta
         <div className="mods-page">
             <aside className="mods-lists">
                 <div className="ml-head">
-                    <h2>Mods</h2>
-                    {state.gameVersion && <span className="ml-game">game {state.gameVersion}</span>}
+                    <h2>{tr('Mods')}</h2>
+                    {state.gameVersion && <span className="ml-game">{tr('game {gameVersion}', { gameVersion: state.gameVersion })}</span>}
                 </div>
                 <div className="ml-loaded">
-                    <label>Loaded in the explorer</label>
+                    <label>{tr('Loaded in the explorer')}</label>
                     <Select value={state.selected} disabled={!!busy} onChange={(e) => select(e.target.value)}>
-                        <option value="none">None — game only</option>
-                        {!lists.some((l) => l.ref === state.selected) && state.selected !== 'none' && <option value={state.selected}>Missing list</option>}
+                        <option value="none">{tr('None — game only')}</option>
+                        {!lists.some((l) => l.ref === state.selected) && state.selected !== 'none' && <option value={state.selected}>{tr('Missing list')}</option>}
                         {lists.some((l) => l.kind === 'playset') && (
-                            <optgroup label="Launcher playsets">
+                            <optgroup label={tr('Launcher playsets')}>
                                 {lists
                                     .filter((l) => l.kind === 'playset')
                                     .map((l) => (
                                         <option key={l.ref} value={l.ref}>
                                             {l.name}
-                                            {l.active ? ' (launcher’s active playset)' : ''}
+                                            {l.active ? tr(' (launcher’s active playset)') : ''}
                                         </option>
                                     ))}
                             </optgroup>
@@ -338,7 +373,7 @@ export function ModsView(props: { state: ModsState | null; setState: (s: ModsSta
                                 </option>
                             ))}
                         {lists.some((l) => l.kind === 'custom') && (
-                            <optgroup label="Custom lists">
+                            <optgroup label={tr('Custom lists')}>
                                 {lists
                                     .filter((l) => l.kind === 'custom')
                                     .map((l) => (
@@ -352,29 +387,27 @@ export function ModsView(props: { state: ModsState | null; setState: (s: ModsSta
                     <IndexLine status={props.status} />
                 </div>
                 <div className="ml-scroll">
-                    <ListItem label="None — game only" count={null} active={viewRef === 'none'} loaded={state.selected === 'none'} onClick={() => open('none')} />
-                    <div className="ml-section">Launcher playsets</div>
-                    {!state.launcher && <div className="ml-empty">The launcher database (launcher-v2.sqlite) was not found or could not be read.</div>}
+                    <ListItem label={tr('None — game only')} count={null} active={viewRef === 'none'} loaded={state.selected === 'none'} onClick={() => open('none')} />
+                    <div className="ml-section">{tr('Launcher playsets')}</div>
+                    {!state.launcher && <div className="ml-empty">{tr('The launcher database (launcher-v2.sqlite) was not found or could not be read.')}</div>}
                     {lists
                         .filter((l) => l.kind === 'playset')
                         .map((l) => <ListItem key={l.ref} list={l} state={state} dirty={isDirty(l, drafts[l.ref])} active={viewRef === l.ref} onClick={() => open(l.ref)} />)}
-                    <div className="ml-section">Game</div>
+                    <div className="ml-section">{tr('Game')}</div>
                     {lists
                         .filter((l) => l.kind === 'game')
                         .map((l) => <ListItem key={l.ref} list={l} state={state} dirty={isDirty(l, drafts[l.ref])} active={viewRef === l.ref} onClick={() => open(l.ref)} />)}
-                    {!lists.some((l) => l.kind === 'game') && <div className="ml-empty">No dlc_load.json yet (the launcher writes it when you press Play).</div>}
+                    {!lists.some((l) => l.kind === 'game') && <div className="ml-empty">{tr('No dlc_load.json yet (the launcher writes it when you press Play).')}</div>}
                     <div className="ml-section">
-                        Custom lists
-                        <button className="ghost ml-add" onClick={newList} disabled={!!busy} title="A new, empty list kept by this app">
-                            + New
-                        </button>
+                        {tr('Custom lists')}<button className="ghost ml-add" onClick={newList} disabled={!!busy} title={tr('A new, empty list kept by this app')}>
+                            {tr('+ New')}</button>
                     </div>
                     {lists
                         .filter((l) => l.kind === 'custom')
                         .map((l) => <ListItem key={l.ref} list={l} state={state} dirty={isDirty(l, drafts[l.ref])} active={viewRef === l.ref} onClick={() => open(l.ref)} />)}
-                    {!lists.some((l) => l.kind === 'custom') && <div className="ml-empty">Lists kept by this app — e.g. a playset plus the mod you are writing.</div>}
-                    <div className="ml-section">Library</div>
-                    <ListItem label="All mods" count={state.mods.length} active={viewRef === LIBRARY} onClick={() => open(LIBRARY)} />
+                    {!lists.some((l) => l.kind === 'custom') && <div className="ml-empty">{tr('Lists kept by this app — e.g. a playset plus the mod you are writing.')}</div>}
+                    <div className="ml-section">{tr('Library')}</div>
+                    <ListItem label={tr('All mods')} count={state.mods.length} active={viewRef === LIBRARY} onClick={() => open(LIBRARY)} />
                 </div>
                 <ActiveModBox state={state} busy={!!busy} actions={modActions} onNew={newMod} />
             </aside>
@@ -383,7 +416,7 @@ export function ModsView(props: { state: ModsState | null; setState: (s: ModsSta
                 {notice && (
                     <div className={'mods-notice ' + notice.kind}>
                         <span>{notice.text}</span>
-                        <button className="ghost" onClick={() => setNotice(null)} title="Dismiss">
+                        <button className="ghost" onClick={() => setNotice(null)} title={tr('Dismiss')}>
                             ✕
                         </button>
                     </div>
@@ -428,13 +461,13 @@ function isDirty(list: ModList, draft: Draft | undefined): boolean
 function IndexLine({ status }: { status: IndexStatus; }): React.JSX.Element
 {
     if (status.state === 'indexing')
-        return <div className="ml-index busy">Indexing — {status.phase}…</div>;
+        return <div className="ml-index busy">{tr('Indexing — {phase}…', { phase: status.phase })}</div>;
 
     if (status.state === 'error')
-        return <div className="ml-index bad">The index could not be built.</div>;
+        return <div className="ml-index bad">{tr('The index could not be built.')}</div>;
 
     if (status.state === 'ready' && status.stats)
-        return <div className="ml-index">Index ready · {status.stats.files.toLocaleString()} files</div>;
+        return <div className="ml-index">{tr('Index ready · {files} files', { files: status.stats.files.toLocaleString() })}</div>;
 
     return <div className="ml-index" />;
 }
@@ -445,22 +478,20 @@ function ListItem(props: { list?: ModList; state?: ModsState; label?: string; co
     const loaded = props.loaded ?? (!!list && state?.selected === list.ref);
     const enabled = list ? list.mods.filter((e) => e.enabled).length : props.count;
     return (
-        <div className={'ml-item' + (props.active ? ' active' : '')} onClick={props.onClick} title={list ? `${KIND_LABEL[list.kind]}: ${list.mods.length} mods, ${list.mods.filter((e) => e.enabled).length} enabled` : undefined}>
+        <div className={'ml-item' + (props.active ? ' active' : '')} onClick={props.onClick} title={list ? tr('{KIND_LABEL}: {modsCount} mods, {modsCount2} enabled', { KIND_LABEL: KIND_LABEL[list.kind], modsCount: list.mods.length, modsCount2: list.mods.filter((e) => e.enabled).length }) : undefined}>
             <span className="ml-name">{list?.name ?? props.label}</span>
             {props.dirty && (
-                <span className="ml-dirty" title="Unsaved changes">
+                <span className="ml-dirty" title={tr('Unsaved changes')}>
                     ●
                 </span>
             )}
             {list?.active && (
-                <span className="ml-badge launcher" title="The Paradox Launcher's active playset">
-                    launcher
-                </span>
+                <span className="ml-badge launcher" title={tr('The Paradox Launcher\'s active playset')}>
+                    {tr('launcher')}</span>
             )}
             {loaded && (
-                <span className="ml-badge loaded" title="Loaded in the explorer">
-                    loaded
-                </span>
+                <span className="ml-badge loaded" title={tr('Loaded in the explorer')}>
+                    {tr('loaded')}</span>
             )}
             {enabled !== null && enabled !== undefined && <span className="ml-count">{enabled}</span>}
         </div>
@@ -472,7 +503,9 @@ interface ModActions
     setActive: (id: string | null) => void;
     pack: (m: ModInfo) => void;
     unpack: (m: ModInfo) => void;
+    fixLocation: (m: ModInfo) => void;
     openFolder: (m: ModInfo) => void;
+    remove: (m: ModInfo) => void;
 }
 
 function ActiveModBox(props: { state: ModsState; busy: boolean; actions: ModActions; onNew: () => void; }): React.JSX.Element
@@ -481,7 +514,7 @@ function ActiveModBox(props: { state: ModsState; busy: boolean; actions: ModActi
     const active = state.activeMod ? state.mods.find((m) => m.id === state.activeMod) : undefined;
     return (
         <div className="ml-foot">
-            <label>Active mod — the one you edit</label>
+            <label>{tr('Active mod — the one you edit')}</label>
             {active ?
                 (
                     <div className="ml-active">
@@ -492,24 +525,21 @@ function ActiveModBox(props: { state: ModsState; busy: boolean; actions: ModActi
                         </div>
                     </div>
                 ) :
-                <div className="ml-active none">{state.activeMod ? `${state.activeMod} (not found)` : 'None'}</div>}
+                <div className="ml-active none">{state.activeMod ? tr('{activeMod} (not found)', { activeMod: state.activeMod }) : tr('None')}</div>}
             <div className="ml-foot-actions">
                 <button className="primary" onClick={props.onNew} disabled={props.busy || !state.userDirFound}>
-                    New mod…
-                </button>
+                    {tr('New mod…')}</button>
                 {active && (
                     <button onClick={() => props.actions.openFolder(active)} disabled={props.busy}>
-                        Open folder
-                    </button>
+                        {tr('Open folder')}</button>
                 )}
                 {state.activeMod && (
-                    <button className="ghost" onClick={() => props.actions.setActive(null)} disabled={props.busy} title="No active mod">
-                        Clear
-                    </button>
+                    <button className="ghost" onClick={() => props.actions.setActive(null)} disabled={props.busy} title={tr('No active mod')}>
+                        {tr('Clear')}</button>
                 )}
             </div>
-            <div className={'ml-userdir' + (state.userDirFound ? '' : ' bad')} title="The CK3 user folder (settings.json: userDir)">
-                {state.userDirFound ? state.userDir : `User folder not found: ${state.userDir}`}
+            <div className={'ml-userdir' + (state.userDirFound ? '' : ' bad')} title={tr('The CK3 user folder (settings.json: userDir)')}>
+                {state.userDirFound ? state.userDir : tr('User folder not found: {userDir}', { userDir: state.userDir })}
             </div>
         </div>
     );
@@ -522,14 +552,14 @@ function NonePage(props: { state: ModsState; busy: boolean; onLoad: () => void; 
         <div className="me">
             <header className="me-head">
                 <div className="me-kicker">
-                    <span className="chip">No mod list</span>
-                    {loaded && <span className="chip ok">Loaded in the explorer</span>}
+                    <span className="chip">{tr('No mod list')}</span>
+                    {loaded && <span className="chip ok">{tr('Loaded in the explorer')}</span>}
                 </div>
-                <h1>None — game only</h1>
-                <div className="me-sub">The explorer indexes the game without any mods.</div>
+                <h1>{tr('None — game only')}</h1>
+                <div className="me-sub">{tr('The explorer indexes the game without any mods.')}</div>
                 <div className="me-actions">
                     <button className="primary" disabled={loaded || props.busy} onClick={props.onLoad}>
-                        {loaded ? 'Loaded in the explorer' : 'Load into explorer'}
+                        {loaded ? tr('Loaded in the explorer') : tr('Load into explorer')}
                     </button>
                 </div>
             </header>
@@ -543,9 +573,9 @@ function LibraryPage(props: { state: ModsState; actions: ModActions; busy: boole
     const [q, setQ] = useState('');
     const mods = useMemo(() =>
     {
-        const f = q.trim().toLowerCase();
+        const f = fold(q.trim());
         return state.mods
-            .filter((m) => !f || [m.name, m.id, m.version ?? '', SOURCE_LABEL[m.source], ...m.tags].some((s) => s.toLowerCase().includes(f)))
+            .filter((m) => !f || [m.name, m.id, m.version ?? '', SOURCE_LABEL[m.source], ...m.tags].some((s) => foldHas(s, f)))
             .sort((a, b) => a.name.localeCompare(b.name));
     }, [state.mods, q]);
     const inLists = (m: ModInfo): string[] => state.lists.filter((l) => l.mods.some((e) => e.id.toLowerCase() === m.id.toLowerCase())).map((l) => l.name);
@@ -553,22 +583,20 @@ function LibraryPage(props: { state: ModsState; actions: ModActions; busy: boole
         <div className="me">
             <header className="me-head">
                 <div className="me-kicker">
-                    <span className="chip">Library</span>
+                    <span className="chip">{tr('Library')}</span>
                 </div>
-                <h1>All mods</h1>
+                <h1>{tr('All mods')}</h1>
                 <div className="me-sub">
-                    {state.mods.length} mods: descriptors in your mod folder, the launcher&apos;s mods and Steam Workshop folders. {state.mods.filter((m) => m.editable).length} can be edited here (unpacked in your mod folder).
-                </div>
+                    {tr('{modsCount} mods: descriptors in your mod folder, the launcher\'s mods and Steam Workshop folders. {modsCount2} can be edited here (unpacked in your mod folder).', { modsCount: state.mods.length, modsCount2: state.mods.filter((m) => m.editable).length })}</div>
                 <div className="me-actions">
-                    <input className="mods-search" placeholder="Filter by name, tag, source…" value={q} onChange={(e) => setQ(e.target.value)} spellCheck={false} />
+                    <input className="mods-search" placeholder={tr('Filter by name, tag, source…')} value={q} onChange={(e) => setQ(e.target.value)} spellCheck={false} />
                     <span style={{ flex: 1 }} />
                     <button className="primary" onClick={props.onNew} disabled={props.busy || !state.userDirFound}>
-                        New mod…
-                    </button>
+                        {tr('New mod…')}</button>
                 </div>
             </header>
             <div className="me-rows">
-                {mods.map((m) => <ModRow key={m.id} entry={{ id: m.id, enabled: true }} mod={m} state={state} actions={props.actions} busy={props.busy} note={inLists(m).length ? 'in ' + inLists(m).join(', ') : 'in no list'} />)}
+                {mods.map((m) => <ModRow key={m.id} entry={{ id: m.id, enabled: true }} mod={m} state={state} actions={props.actions} busy={props.busy} note={inLists(m).length ? tr('in ') + inLists(m).join(', ') : tr('in no list')} />)}
             </div>
         </div>
     );
@@ -582,7 +610,7 @@ function ListEditor(props: {
     actions: ModActions;
     setDraft: (d: Draft) => void;
     dropDraft: () => void;
-    run: (label: string, fn: () => Promise<string | void>) => Promise<boolean>;
+    run: (label: string, fn: () => Promise<string | Notice | void>) => Promise<boolean>;
     setState: (s: ModsState) => void;
     setView: (ref: string | undefined) => void;
     setDialog: (d: ReactNode) => void;
@@ -625,11 +653,11 @@ function ListEditor(props: {
     const dropAt = drag && drag.over !== null && drag.over !== drag.from && drag.over !== drag.from + 1 ? drag.over : null;
 
     const save = (): Promise<boolean> =>
-        run('Saving…', async () =>
+        run(tr('Saving…'), async () =>
         {
             setState(await api.saveModList({ ref: list.ref, name: current.name, mods: current.mods }));
             props.dropDraft();
-            return `Saved “${current.name.trim() || 'Unnamed list'}”.${loaded ? ' It is loaded: the explorer re-indexes when its mods changed.' : ''}`;
+            return tr('Saved “{name}”.{loadedNote}', { name: current.name.trim() || 'Unnamed list', loadedNote: loaded ? tr(' It is loaded: the explorer re-indexes when its mods changed.') : '' });
         });
 
     const load = (): void =>
@@ -643,19 +671,19 @@ function ListEditor(props: {
     const saveAs = (): void =>
         setDialog(
             <PromptDialog
-                title="Save as a new list"
-                label="Name of the new custom list"
-                initial={`${current.name} (copy)`}
-                confirm="Save list"
+                title={tr('Save as a new list')}
+                label={tr('Name of the new custom list')}
+                initial={tr('{name} (copy)', { name: current.name })}
+                confirm={tr('Save list')}
                 onClose={closeDialog}
                 onConfirm={(name) =>
-                    void run('Saving…', async () =>
+                    void run(tr('Saving…'), async () =>
                     {
                         const next = await api.saveModList({ name, mods: current.mods });
                         setState(next);
                         props.dropDraft();
                         props.setView(props.newListRef(next));
-                        return `Saved as “${name}”.`;
+                        return tr('Saved as “{name}”.', { name });
                     })}
             />
         );
@@ -663,74 +691,76 @@ function ListEditor(props: {
     const remove = (): void =>
         setDialog(
             <ConfirmDialog
-                title={`Delete “${list.name}”?`}
-                confirm="Delete list"
+                title={tr('Delete “{name}”?', { name: list.name })}
+                confirm={tr('Delete list')}
                 danger
                 onClose={closeDialog}
                 onConfirm={() =>
-                    void run('Deleting…', async () =>
+                    void run(tr('Deleting…'), async () =>
                     {
                         setState(await api.deleteModList(list.ref));
                         props.dropDraft();
                         props.setView(undefined);
-                        return `Deleted “${list.name}”.${loaded ? ' The explorer shows the game without mods now.' : ''}`;
+                        return tr('Deleted “{name}”.{loadedNote}', { name: list.name, loadedNote: loaded ? tr(' The explorer shows the game without mods now.') : '' });
                     })}
             >
-                <p>This removes the app&apos;s own list. No mod files, playsets or game files are touched.</p>
+                <p>{tr('This removes the app\'s own list. No mod files, playsets or game files are touched.')}</p>
             </ConfirmDialog>
         );
 
-    const backups = `${state.userDir}\\crusaderpope-backups`;
+    const sep = state.userDir?.includes('\\') ? '\\' : '/';
+    const backups = `${(state.userDir ?? '').replace(/[\\/]+$/, '')}${sep}crusaderpope-backups`;
     // (as manager.ts `registrable`: local mods of the user's mod folder the launcher has not registered)
     const unregistered = current.mods.map((e) => byId.get(e.id.toLowerCase())).filter((m) => m && !m.launcherId && m.source === 'local' && m.status === 'ok' && m.descriptorFile && /^mod\/[^/\\]+\.mod$/i.test(m.id));
     const toLauncher = (launcherClosed: boolean): Promise<boolean> =>
-        run('Writing the launcher playset…', async () =>
+        run(tr('Writing the launcher playset…'), async () =>
         {
             const r = await api.writeModList(list.ref, 'launcher', current.mods, launcherClosed ? { launcherClosed } : undefined);
 
-            // nothing written: the process list could not be read — the user may say the launcher is closed
+            // nothing written: the process list could not be read; the user may say the launcher is closed
             if (r.unchecked)
             {
                 setDialog(
-                    <ConfirmDialog title="Is the Paradox Launcher closed?" confirm="It is closed — write" danger onClose={closeDialog} onConfirm={() => void toLauncher(true)}>
+                    <ConfirmDialog title={tr('Is the Paradox Launcher closed?')} confirm={tr('It is closed — write')} danger onClose={closeDialog} onConfirm={() => void toLauncher(true)}>
                         <p>{r.unchecked}</p>
-                        <p>Write only when the Paradox Launcher is not running: it keeps its playsets in memory and would overwrite the change (or be confused by it). The database is backed up first either way.</p>
+                        <p>{tr('Write only when the Paradox Launcher is not running: it keeps its playsets in memory and would overwrite the change (or be confused by it). The database is backed up first either way.')}</p>
                     </ConfirmDialog>
                 );
-                return 'Nothing written — the app could not check whether the Paradox Launcher is running.';
+                return { kind: 'warn' as const, text: tr('Nothing written — the app could not check whether the Paradox Launcher is running.') };
             }
 
             setState(await api.modsState());
             props.dropDraft();
-            const reg = r.registered?.length ? ` Registered in the launcher: ${r.registered.join(', ')}.` : '';
-            return `Written to the launcher playset “${list.name}”.${reg} Backup of the launcher database: ${r.backup}`;
+            const reg = r.registered?.length ? tr(' Registered in the launcher: {registered}.', { registered: r.registered.join(', ') }) : '';
+            return tr('Written to the launcher playset “{name}”.{reg} Backup of the launcher database: {backup}', { name: list.name, reg, backup: r.backup });
         });
 
     const writeLauncher = (): void =>
         setDialog(
-            <ConfirmDialog title={`Write “${list.name}” to the Paradox Launcher?`} confirm="Write to launcher" onClose={closeDialog} onConfirm={() => void toLauncher(false)}>
+            <ConfirmDialog title={tr('Write “{name}” to the Paradox Launcher?', { name: list.name })} confirm={tr('Write to launcher')} onClose={closeDialog} onConfirm={() => void toLauncher(false)}>
                 <p>
-                    The playset&apos;s mods, their order and enabled flags are replaced with this list ({current.mods.length} mods, {enabled.length} enabled).
-                </p>
+                    {tr('The playset\'s mods, their order and enabled flags are replaced with this list ({modsCount} mods, {enabledCount} enabled).', { modsCount: current.mods.length, enabledCount: enabled.length })}</p>
                 {unregistered.length > 0 && (
                     <p>
-                        The launcher has not registered {unregistered.map((m) => `“${m!.name}”`).join(', ')} yet: the app adds {unregistered.length === 1 ? 'it' : 'them'} to its mod list, as the launcher does when it finds a new mod.
-                    </p>
+                        {tr('The launcher has not registered {unregistered} yet: the app adds', { unregistered: unregistered.map((m) => `“${m!.name}”`).join(', ') })}{' '}{unregistered.length === 1 ? 'it' : 'them'} {' '}{tr('to its mod list, as the launcher does when it finds a new mod.')}</p>
                 )}
                 <p>
-                    The launcher database is copied first to <code>{backups}</code> (the last 10 copies are kept). Close the Paradox Launcher before writing — it keeps its playsets in memory.
-                </p>
+                    {tr('The launcher database is copied first to')}{' '}<code>{backups}</code> {' '}{tr('(the last 10 copies are kept). Close the Paradox Launcher before writing — it keeps its playsets in memory.')}</p>
+                {list.sync && (
+                    <p className="wizard-warn">
+                        {tr('This playset is synced with your Paradox account ({state}{when}). The launcher may replace the change with the copy in the cloud the next time it syncs — the app does not change the sync data. To keep the change for sure: turn off syncing for this playset in the launcher first, or write to a playset that is not synced.', { state: list.sync.state ?? tr('cloud id {id}', { id: list.sync.pdxId ?? '?' }), when: list.sync.syncedOn ? tr(', last synced {date}', { date: list.sync.syncedOn }) : '' })}</p>
+                )}
             </ConfirmDialog>
         );
 
     const writeGame = (): void =>
         setDialog(
             <ConfirmDialog
-                title="Write to the game list (dlc_load.json)?"
-                confirm="Write game list"
+                title={tr('Write to the game list (dlc_load.json)?')}
+                confirm={tr('Write game list')}
                 onClose={closeDialog}
                 onConfirm={() =>
-                    void run('Writing dlc_load.json…', async () =>
+                    void run(tr('Writing dlc_load.json…'), async () =>
                     {
                         const r = await api.writeModList(list.ref, 'game', current.mods);
                         setState(await api.modsState());
@@ -738,88 +768,89 @@ function ListEditor(props: {
                         if (list.kind === 'game')
                             props.dropDraft();
 
-                        return `Written ${enabled.length} mods to dlc_load.json.${r.backup ? ' Backup: ' + r.backup : ''}`;
+                        return tr('Written {enabledCount} mods to dlc_load.json.{backup}', { enabledCount: enabled.length, backup: r.backup ? ' Backup: ' + r.backup : '' });
                     })}
             >
                 <p>
-                    The {enabled.length} enabled mods of “{current.name}” become the mods the game loads when started without the launcher, in this order. The launcher replaces this list with its playset when you press Play.
-                </p>
+                    {tr('The {enabledCount} enabled mods of “{name}” become the mods the game loads when started without the launcher, in this order. The launcher replaces this list with its playset when you press Play.', { enabledCount: enabled.length, name: current.name })}</p>
                 <p>
-                    The current file is copied first to <code>{backups}</code> (the last 10 copies are kept).
-                </p>
+                    {tr('The current file is copied first to')}{' '}<code>{backups}</code> {' '}{tr('(the last 10 copies are kept).')}</p>
             </ConfirmDialog>
         );
 
     const dirtyText = custom
-        ? 'Save to keep them.'
+        ? tr('Save to keep them.')
         : list.kind === 'playset'
-        ? 'Write them to the launcher playset, or save them as a new list.'
-        : 'Write them to the game list, or save them as a new list.';
+        ? tr('Write them to the launcher playset, or save them as a new list.')
+        : tr('Write them to the game list, or save them as a new list.');
 
     return (
         <div className="me">
             <header className="me-head">
                 <div className="me-kicker">
                     <span className="chip">{KIND_LABEL[list.kind]}</span>
-                    {list.active && <span className="chip accent">Active in the launcher</span>}
-                    {loaded && <span className="chip ok">Loaded in the explorer</span>}
+                    {list.sync && (
+                        <span className="chip" title={tr('Synced with your Paradox account ({state}) — the launcher may bring back the cloud copy after a change written here', { state: list.sync.state ?? list.sync.pdxId ?? '?' })}>
+                            {tr('☁ synced')}
+                        </span>
+                    )}
+                    {list.active && <span className="chip accent">{tr('Active in the launcher')}</span>}
+                    {loaded && <span className="chip ok">{tr('Loaded in the explorer')}</span>}
                     {list.kind === 'game' && <span className="chip">dlc_load.json</span>}
                 </div>
                 <h1>
-                    {custom ? <input className="me-name" value={current.name} disabled={props.busy} onChange={(e) => edit(current.mods, e.target.value)} spellCheck={false} title="Rename the list" /> : (
+                    {custom ? <input className="me-name" value={current.name} disabled={props.busy} onChange={(e) => edit(current.mods, e.target.value)} spellCheck={false} title={tr('Rename the list')} /> : (
                         list.name
                     )}
                     {dirty && (
-                        <span className="me-dirty-mark" title="Unsaved changes">
+                        <span className="me-dirty-mark" title={tr('Unsaved changes')}>
                             ●
                         </span>
                     )}
                 </h1>
                 <div className="me-sub">
-                    {current.mods.length} {current.mods.length === 1 ? 'mod' : 'mods'} · {enabled.length} enabled
-                    {warnings > 0 && <span className="warn-text">· {warnings} with warnings</span>} · load order top to bottom, later mods win
-                </div>
+                    {current.mods.length} {current.mods.length === 1 ? 'mod' : 'mods'} {' '}{tr('· {enabledCount} enabled', { enabledCount: enabled.length })}{warnings > 0 && <span className="warn-text">{' '}{tr('· {warnings} with warnings', { warnings })}</span>} {' '}{tr('· load order top to bottom, later mods win')}</div>
                 <div className="me-actions">
-                    <button className="primary" disabled={props.busy || (loaded && !dirty)} onClick={load} title={loaded && dirty && !custom ? 'The saved list is loaded' : undefined}>
-                        {loaded && !dirty ? 'Loaded in the explorer' : custom && dirty ? 'Save & load into explorer' : dirty ? 'Load saved version' : 'Load into explorer'}
+                    <button className="primary" disabled={props.busy || (loaded && !dirty)} onClick={load} title={loaded && dirty && !custom ? tr('The saved list is loaded') : undefined}>
+                        {loaded && !dirty ? tr('Loaded in the explorer') : custom && dirty ? tr('Save & load into explorer') : dirty ? tr('Load saved version') : tr('Load into explorer')}
                     </button>
                     {custom && (
                         <button disabled={props.busy || !dirty} onClick={() => void save()}>
-                            Save
-                        </button>
+                            {tr('Save')}</button>
                     )}
                     <button disabled={props.busy} onClick={saveAs}>
-                        Save as new list…
-                    </button>
+                        {tr('Save as new list…')}</button>
                     {list.kind === 'playset' && (
                         <button disabled={props.busy || !state.launcher} onClick={writeLauncher}>
-                            Write to launcher playset…
-                        </button>
+                            {tr('Write to launcher playset…')}</button>
                     )}
-                    <button disabled={props.busy} onClick={writeGame} title="Make these the mods the game loads when started directly">
-                        Write to game list (dlc_load.json)…
-                    </button>
+                    <button disabled={props.busy} onClick={writeGame} title={tr('Make these the mods the game loads when started directly')}>
+                        {tr('Write to game list (dlc_load.json)…')}</button>
+                    {current.mods.filter((m) => m.enabled).length >= 2 && (
+                        <button
+                            disabled={props.busy || dirty}
+                            onClick={() => setDialog(<MergeDialog state={state} listRef={list.ref} onDone={setState} onClose={closeDialog} />)}
+                            title={dirty ? tr('Save the list first') : tr('Its enabled mods, in this order, copied into one new mod')}>
+                            {tr('Merge into one mod…')}</button>
+                    )}
                     {custom && (
                         <button className="danger" disabled={props.busy} onClick={remove}>
-                            Delete list
-                        </button>
+                            {tr('Delete list')}</button>
                     )}
                     <span style={{ flex: 1 }} />
                     <button disabled={props.busy} onClick={() => setAdding(true)}>
-                        + Add mods
-                    </button>
+                        {tr('+ Add mods')}</button>
                 </div>
             </header>
             {dirty && (
                 <div className="me-dirty">
-                    <span>● Unsaved changes. {dirtyText}</span>
+                    <span>{tr('● Unsaved changes. {dirtyText}', { dirtyText })}</span>
                     <button onClick={props.dropDraft} disabled={props.busy}>
-                        Discard changes
-                    </button>
+                        {tr('Discard changes')}</button>
                 </div>
             )}
             <div className="me-rows">
-                {current.mods.length === 0 && <div className="list-empty">No mods in this list yet — “+ Add mods” picks from every mod found.</div>}
+                {current.mods.length === 0 && <div className="list-empty">{tr('No mods in this list yet — “+ Add mods” picks from every mod found.')}</div>}
                 {current.mods.map((e, i) => (
                     <ModRow
                         key={keys[i]}
@@ -905,7 +936,7 @@ function ModRow(props: {
         >
             {inList && (
                 <>
-                    <span className="mr-grip" title="Drag to reorder">
+                    <span className="mr-grip" title={tr('Drag to reorder')}>
                         ⋮⋮
                     </span>
                     <span className="mr-pos">{i + 1}</span>
@@ -914,7 +945,7 @@ function ModRow(props: {
                         checked={entry.enabled}
                         disabled={props.busy}
                         onChange={props.onToggle}
-                        title={entry.enabled ? 'Enabled — click to disable' : 'Disabled — click to enable'}
+                        title={entry.enabled ? tr('Enabled — click to disable') : tr('Disabled — click to enable')}
                     />
                 </>
             )}
@@ -923,7 +954,7 @@ function ModRow(props: {
                 <div className="mr-line1">
                     <span className="mr-name">{mod?.name ?? entry.id}</span>
                     {mod?.version && <span className="mr-version">v{mod.version}</span>}
-                    {active && <span className="chip accent">✎ active mod</span>}
+                    {active && <span className="chip accent">{tr('✎ active mod')}</span>}
                 </div>
                 {mod ?
                     (
@@ -931,24 +962,38 @@ function ModRow(props: {
                             <span className="chip">{SOURCE_LABEL[mod.source]}</span>
                             <StatusChip mod={mod} />
                             <SupportedChip mod={mod} game={state.gameVersion} />
-                            {mod.editable && <span className="chip ok" title="Unpacked in your mod folder: can be edited, packed, be the active mod">editable</span>}
+                            <MigrateChip mod={mod} game={state.gameVersion} disabled={props.busy} />
+                            {mod.patchFor?.obsolete && (
+                                <span className="chip bad" title={tr('{name} now says it supports the game’s version: its own files are for it, and this patch mod’s older copies on top of them override them. Take the patch mod out of the list (✕) or delete it.', { name: mod.patchFor.name })}>
+                                    {tr('patch not needed any more')}</span>
+                            )}
+                            {mod.editable && <span className="chip ok" title={tr('Unpacked in your mod folder: can be edited, packed, be the active mod')}>{tr('editable')}</span>}
                             {mod.replacePaths.length > 0 && (
-                                <span className="chip" title={'replace_path — the game’s and earlier mods’ files directly in these folders are ignored:\n' + mod.replacePaths.join('\n')}>
-                                    replaces {mod.replacePaths.length} {mod.replacePaths.length === 1 ? 'folder' : 'folders'}
+                                <span className="chip" title={tr('replace_path — the game’s and earlier mods’ files directly in these folders are ignored:\n') + mod.replacePaths.join('\n')}>
+                                    {tr('replaces {replacePathsCount}', { replacePathsCount: mod.replacePaths.length })} {mod.replacePaths.length === 1 ? 'folder' : 'folders'}
                                 </span>
+                            )}
+                            {mod.staleLocation && (
+                                <button
+                                    className="chip bad"
+                                    disabled={props.busy}
+                                    onClick={() => props.actions.fixLocation(mod)}
+                                    title={tr('Its descriptor points to {stale}, but the mod is in {found} — click to fix the path (the launcher can’t register it until then)', { stale: mod.staleLocation, found: mod.root ?? mod.archive })}
+                                >
+                                    {tr('path outdated — fix')}
+                                </button>
                             )}
                             {!mod.launcherId && mod.descriptorFile && (
                                 <span
                                     className="chip"
-                                    title={mod.source === 'local' ? 'The Paradox Launcher has not registered this mod yet — writing a launcher playset with it registers it' : 'The Paradox Launcher has not registered this mod yet (it cannot be in a launcher playset until the launcher has started once)'}>
-                                    not in launcher
-                                </span>
+                                    title={mod.source === 'local' ? tr('The Paradox Launcher has not registered this mod yet — writing a launcher playset with it registers it') : tr('The Paradox Launcher has not registered this mod yet (it cannot be in a launcher playset until the launcher has started once)')}>
+                                    {tr('not in launcher')}</span>
                             )}
                         </div>
                     ) :
                     (
                         <div className="mr-chips">
-                            <span className="chip bad" title="No descriptor, launcher entry or Workshop folder has this id">Not found</span>
+                            <span className="chip bad" title={tr('No descriptor, launcher entry or Workshop folder has this id')}>{tr('Not found')}</span>
                         </div>
                     )}
                 <div className="mr-path" title={mod?.root ?? mod?.archive ?? entry.id}>
@@ -960,13 +1005,13 @@ function ModRow(props: {
             <div className="mr-actions">
                 {inList && (
                     <>
-                        <button className="ghost" disabled={props.busy || i === 0} onClick={() => props.onMove?.(i - 1)} title="Load earlier">
+                        <button className="ghost" disabled={props.busy || i === 0} onClick={() => props.onMove?.(i - 1)} title={tr('Load earlier')}>
                             ↑
                         </button>
-                        <button className="ghost" disabled={props.busy || i === (props.count ?? 1) - 1} onClick={() => props.onMove?.(i + 2)} title="Load later">
+                        <button className="ghost" disabled={props.busy || i === (props.count ?? 1) - 1} onClick={() => props.onMove?.(i + 2)} title={tr('Load later')}>
                             ↓
                         </button>
-                        <button className="ghost" disabled={props.busy} onClick={props.onRemove} title="Remove from the list">
+                        <button className="ghost" disabled={props.busy} onClick={props.onRemove} title={tr('Remove from the list')}>
                             ✕
                         </button>
                     </>
@@ -974,7 +1019,7 @@ function ModRow(props: {
                 {mod && (
                     <button
                         className="ghost"
-                        title="Mod actions"
+                        title={tr('Mod actions')}
                         onClick={(e) =>
                         {
                             const r = e.currentTarget.getBoundingClientRect();
@@ -1019,30 +1064,36 @@ function ModMenu(props: { mod: ModInfo; state: ModsState; x: number; y: number; 
     const packed = !!mod.archive && !mod.root;
     const items: { label: string; hint: string; disabled?: string; run: () => void; }[] = [
         active
-            ? { label: 'Clear the active mod', hint: 'No mod is being edited', run: () => props.actions.setActive(null) }
+            ? { label: tr('Clear the active mod'), hint: tr('No mod is being edited'), run: () => props.actions.setActive(null) }
             : {
-                label: 'Set as active mod',
-                hint: 'The mod you are editing',
-                disabled: mod.editable ? undefined : 'Only unpacked mods in your mod folder can be edited here',
+                label: tr('Set as active mod'),
+                hint: tr('The mod you are editing'),
+                disabled: mod.editable ? undefined : tr('Only unpacked mods in your mod folder can be edited here'),
                 run: () => props.actions.setActive(mod.id)
             },
         {
-            label: 'Pack into a zip',
-            hint: mod.root ? `${mod.root}.zip` : '',
-            disabled: mod.editable ? undefined : 'Only unpacked mods in your mod folder can be packed',
+            label: tr('Pack into a zip'),
+            hint: mod.root ? tr('{root}.zip', { root: mod.root }) : '',
+            disabled: mod.editable ? undefined : tr('Only unpacked mods in your mod folder can be packed'),
             run: () => props.actions.pack(mod)
         },
         {
-            label: 'Unpack into the mod folder',
-            hint: 'Extract the zip and point the descriptor to the folder',
-            disabled: !packed ? 'Not a packed mod' : !mod.descriptorFile ? 'No descriptor in your mod folder' : undefined,
+            label: tr('Unpack into the mod folder'),
+            hint: tr('Extract the zip and point the descriptor to the folder'),
+            disabled: !packed ? tr('Not a packed mod') : !mod.descriptorFile ? tr('No descriptor in your mod folder') : undefined,
             run: () => props.actions.unpack(mod)
         },
         {
-            label: packed ? 'Show the zip' : 'Open folder',
+            label: packed ? tr('Show the zip') : tr('Open folder'),
             hint: mod.root ?? mod.archive ?? '',
-            disabled: mod.status === 'missing' ? 'The mod’s files were not found' : undefined,
+            disabled: mod.status === 'missing' ? tr('The mod’s files were not found') : undefined,
             run: () => props.actions.openFolder(mod)
+        },
+        {
+            label: tr('Delete mod…'),
+            hint: tr('Its folder and descriptor to the Recycle Bin'),
+            disabled: mod.editable ? undefined : tr('Only mods of your own — unpacked in your mod folder — can be deleted here'),
+            run: () => props.actions.remove(mod)
         }
     ];
     const left = Math.max(8, Math.min(props.x - 280, window.innerWidth - 300));

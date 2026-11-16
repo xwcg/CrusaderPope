@@ -9,7 +9,7 @@ export function defaultInstall(): string
     const dir = process.env.CK3_DIR ?? process.env.GAME ?? findInstalls(homedir())[0];
 
     if (!dir)
-        throw new Error('No Crusader Kings III install found — set CK3_DIR to the folder that holds game/.');
+        throw new Error('No Crusader Kings III install found: set CK3_DIR to the folder that holds game/.');
 
     return dir;
 }

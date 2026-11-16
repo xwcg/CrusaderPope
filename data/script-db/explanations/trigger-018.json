@@ -1,0 +1,423 @@
+[
+ {
+  "kind": "trigger",
+  "key": "has_trait_category",
+  "label": "Trait category",
+  "summary": "Whether the trait belongs to the given trait category.",
+  "details": "It runs on a trait, not on a character. The game's categories are personality, education, childhood, commander, winter_commander, lifestyle, court_type, fame and health. Vanilla uses commander and personality most.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_trait_flag",
+  "label": "Trait has flag",
+  "summary": "Whether the trait carries the given flag.",
+  "details": "It runs on a trait itself, not on a character. Flags are labels set in the trait's definition, such as illness or can_not_marry. To ask the same about a character's traits, use has_trait_with_flag.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_trait_rank",
+  "label": "Trait rank",
+  "summary": "Compares the rank of a trait the character has to a number, or to the rank of the same trait on another character.",
+  "details": "Use either rank or character, one of them is enough. Not having the trait counts as rank 0, so a check like rank < 1 is also true for a character without the trait. Vanilla uses it mostly with wounded and the education traits.",
+  "fields": [
+    { "name": "trait", "text": "The trait (or trait group) whose rank is compared.", "values": "a trait key", "required": true },
+    { "name": "rank", "text": "The rank to compare against.", "values": "a comparison with a number or script value, such as >= 2 or = 3" },
+    { "name": "character", "text": "Another character whose rank in the same trait is compared against.", "values": "a comparison with a character, such as > scope:heir" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_trait_with_flag",
+  "label": "Has trait with flag",
+  "summary": "Whether the character has at least one trait that carries the given flag.",
+  "details": "Flags are labels set in a trait's definition, such as can_not_marry, is_immortal or commander_trait_flag. It saves listing every trait that has the flag. To check a single trait's own flag, use has_trait_flag.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_trait_xp",
+  "label": "Trait experience",
+  "summary": "Compares how much experience (XP) the character has in a trait's level track to a value.",
+  "details": "Some traits have several tracks; vanilla names the track for tourney_participant (for example foot or horse). For those you must name the track. For traits with a single track, leave it out. The comparison can be <, <=, =, !=, > or >=.",
+  "fields": [
+    { "name": "trait", "text": "The trait whose experience is checked.", "values": "a trait key", "required": true },
+    { "name": "track", "text": "Which experience track of the trait, only for traits that have more than one.", "values": "a track key, such as foot or horse" },
+    { "name": "value", "text": "The experience amount to compare against.", "values": "a comparison with a number or script value, such as >= 50", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_travel_option",
+  "label": "Travel option",
+  "summary": "Whether the travel plan has the given travel option active.",
+  "details": "It runs on a travel plan (a character's journey). Vanilla uses it with options such as cultural_ambassador_option and leisurely_option.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_travel_plan_modifier",
+  "label": "Journey modifier",
+  "summary": "Whether the travel plan currently has the given modifier.",
+  "details": "It runs on a travel plan (a character's journey). Vanilla uses it with modifiers such as travel_guide_modifier and the pilgrimage modifiers.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_travel_plan_modifier_duration_remaining",
+  "label": "Journey modifier time left",
+  "summary": "Checks the time remaining on a modifier of the travel plan.",
+  "details": "The game's documentation line is garbled (it quotes a county modifier example) and gives no usage, and vanilla does not use it, so the exact form is not known. It runs on a travel plan.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_travel_point_of_interest",
+  "label": "Has point of interest",
+  "summary": "Whether the province has a travel point of interest of the given type.",
+  "details": "The value is the key of a travel point of interest type, such as poi_buried_saint or poi_battles_historical.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_treasury",
+  "label": "Uses treasury",
+  "summary": "Whether the character uses a treasury.",
+  "details": "Write yes or no. The game's documentation does not say which characters have one; vanilla checks it in both directions.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_triggered_legend_seed",
+  "label": "Qualifies for legend seed",
+  "summary": "Whether the character qualifies for the given triggered legend seed.",
+  "details": "The value is the key of a triggered legend seed, such as king_arthur in the game's example. Vanilla uses it only with holy_warrior.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_truce",
+  "label": "Has truce with",
+  "summary": "Whether the character cannot attack the given character because of a truce.",
+  "details": "Truces work in one direction: the check is about the scoped character being unable to attack the target, not the other way round. The target is another character, written as a scope or link.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_unit_gfx",
+  "label": "Unit graphics",
+  "summary": "Whether the culture uses the given set of unit graphics.",
+  "details": "It runs on a culture. The value is a unit graphics key such as western_unit_gfx or mena_unit_gfx.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_usable_hook",
+  "label": "Has usable hook",
+  "summary": "Whether the character has a hook on the given character that is not on cooldown.",
+  "details": "A hook is leverage over someone. A hook that is on cooldown does not count. The value is the character the hook would be used on.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_user_set_coa",
+  "label": "Custom coat of arms",
+  "summary": "Whether the player has set a specific coat of arms for the title.",
+  "details": "Write yes or no. It runs on a landed title. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_valid_casus_belli",
+  "label": "Has valid casus belli",
+  "summary": "Whether the war still has a valid casus belli (reason for war).",
+  "details": "Write yes or no. The game says invalid casus belli are removed on the daily update, but one can still exist for a tick.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_variable",
+  "label": "Has variable",
+  "summary": "Whether the current scope has any of the named variables set.",
+  "details": "A plain name checks one variable. A block with several name entries is true if at least one of those variables is set. The check runs on whatever the current scope is.",
+  "fields": [
+    { "name": "name", "text": "A variable to look for. Repeat the line to list several.", "values": "a variable name", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_variable_list",
+  "label": "Has variable list",
+  "summary": "Whether the current scope has the named variable list set.",
+  "details": "The value is the name of the list. The check runs on whatever the current scope is.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_vassal_stance",
+  "label": "Vassal stance",
+  "summary": "Whether the vassal has the given vassal stance.",
+  "details": "Vanilla uses stances such as courtly, zealot, parochial, belligerent and glory_hound. The game's documentation does not list the scope it runs on, but it speaks of the scoped vassal, so use it on a vassal character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_war_result_message_with_outcome",
+  "label": "War result message",
+  "summary": "Whether there is a war result message with the given outcome.",
+  "details": "The outcome is victory, defeat, white_peace, invalidated or any. This is an interface trigger: it only works in certain places in the game's interface, not in ordinary script.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_weak_claim_on",
+  "label": "Has weak claim",
+  "summary": "Whether the character has an explicit unpressed (weak) claim on the given title.",
+  "details": "The game calls this an explicit claim; the counterpart for implicit claims is has_weak_implicit_claim_on. The value is a title.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_weak_hook",
+  "label": "Has weak hook",
+  "summary": "Whether the character has a weak hook on the given character.",
+  "details": "A strong hook does not count, only a weak one. The value is the character the hook would be used on.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_weak_implicit_claim_on",
+  "label": "Has implicit weak claim",
+  "summary": "Whether the character has an implicit unpressed (weak) claim on the given title.",
+  "details": "The game calls this an implicit claim; the counterpart for explicit claims is has_weak_claim_on. The game does not say how an implicit claim comes about. The value is a title. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_wrong_holding_type",
+  "label": "Wrong holding type",
+  "summary": "Whether the title is linked to a holding that its current holder or lessee cannot govern.",
+  "details": "Write yes or no. It runs on a landed title.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "health",
+  "label": "Health",
+  "summary": "Compares the character's health to a value.",
+  "details": "The comparison can be <, <=, =, !=, > or >=. Vanilla compares against named values such as poor_health, fine_health, good_health and death_chance_dying_health, or against plain numbers such as 2.5.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "heir_resigns_realm_on_inheriting",
+  "label": "Heir resigns realm",
+  "summary": "Whether the given character would give up their current realm titles back to their liege, instead of keeping them, when they inherit the title.",
+  "details": "The example in the game is a cardinal who abdicates when elected Pope. It runs on a title, and the value is the character. A character who is not a ruler makes it fail. The character does not have to be in line for the title right now.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "herd",
+  "label": "Herd",
+  "summary": "Compares the herd of the domicile to a value.",
+  "details": "The comparison can be <, <=, =, !=, > or >=. Vanilla compares against named values such as max_herd and minor_herd_value. It also writes a block with value and multiply, for example { value = max_herd multiply = 0.9 }. The game does not document the block; it presumably scales the value (here, 90 percent of the maximum herd).",
+  "fields": [
+    { "name": "value", "text": "The base value to compare against, in the block form.", "values": "a number, script value or named value such as max_herd" },
+    { "name": "multiply", "text": "A factor that presumably scales that value in the block form.", "values": "a number, such as 0.9" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "heresy_threshold",
+  "label": "Heresy threshold",
+  "summary": "Compares the faith's heresy threshold to a value.",
+  "details": "The threshold starts from a game default and doctrines can change it. The comparison can be <, <=, =, !=, > or >=. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "highest_held_title_tier",
+  "label": "Highest title tier",
+  "summary": "Compares the tier of the highest title the character holds to a tier.",
+  "details": "Vanilla compares against tier_county, tier_duchy, tier_kingdom and tier_empire. The comparison can be <, <=, =, !=, > or >=. Vanilla also writes a block where value takes another character's tier and add or subtract shifts it by a number of tiers.",
+  "fields": [
+    { "name": "value", "text": "A tier taken from somewhere else, in the block form.", "values": "a script value such as root.highest_held_title_tier" },
+    { "name": "add", "text": "Tiers added to that value.", "values": "a number" },
+    { "name": "subtract", "text": "Tiers taken off that value.", "values": "a number" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "highest_skill",
+  "label": "Highest skill",
+  "summary": "Whether the given skill is the character's highest skill, not counting prowess.",
+  "details": "It is also true when other skills have the same top value. Use martial, stewardship, diplomacy, intrigue or learning. To include prowess, use highest_skill_including_prowess.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "highest_skill_including_prowess",
+  "label": "Highest skill (with prowess)",
+  "summary": "Whether the given skill is the character's highest skill, counting prowess too.",
+  "details": "It is also true when other skills have the same top value. Vanilla uses it only with prowess.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "holds_landed_title",
+  "label": "Is landed",
+  "summary": "Whether the character is landed, meaning they hold a county or barony.",
+  "details": "Write yes or no. Vanilla uses it once.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "holy_site_artifact_count",
+  "label": "Holy site artifact count",
+  "summary": "Compares the number of artifacts in the holy site's inventory to a number.",
+  "details": "The comparison can be <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "holy_site_has_artifact",
+  "label": "Has an enshrined artifact",
+  "summary": "Whether the holy site has any artifact in its inventory.",
+  "details": "Write yes or no.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "holy_site_has_artifact_in_slot",
+  "label": "Artifact in slot",
+  "summary": "Whether the holy site has an artifact equipped in the named slot.",
+  "details": "The value is the key of an artifact slot. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "holy_sites_controlled",
+  "label": "Holy sites controlled",
+  "summary": "Compares how many holy sites the faith controls to a number.",
+  "details": "The comparison can be <, <=, =, !=, > or >=. Vanilla also writes a plain number, which means equals.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "holy_sites_max",
+  "label": "Max holy sites",
+  "summary": "Compares the maximum number of regular holy sites that faiths of the religion can have to a number.",
+  "details": "It runs on a religion. The comparison can be <, <=, =, !=, > or >=. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "holy_sites_min",
+  "label": "Min holy sites",
+  "summary": "Compares the minimum number of regular holy sites that faiths of the religion have to a number.",
+  "details": "It runs on a religion. The comparison can be <, <=, =, !=, > or >=. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "horde",
+  "label": "Horde size",
+  "summary": "Compares the size of the domicile's horde to a value.",
+  "details": "If a horde is currently raised, it counts that one. If none is raised, it counts the horde that could be raised. The comparison can be <, <=, =, !=, > or >=. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "hostage_duration",
+  "label": "Time as hostage",
+  "summary": "Checks how long the character has been a hostage.",
+  "details": "Write a block with days, months or years and a comparison, such as { years >= 4 }. Vanilla uses years only.",
+  "fields": [
+    { "name": "days", "text": "How long in days.", "values": "a comparison with a number, such as >= 30" },
+    { "name": "months", "text": "How long in months.", "values": "a comparison with a number, such as >= 6" },
+    { "name": "years", "text": "How long in years.", "values": "a comparison with a number, such as >= 4" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

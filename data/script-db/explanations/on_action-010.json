@@ -1,0 +1,402 @@
+[
+ {
+  "kind": "on_action",
+  "key": "on_action_mandala_realm_contract_0034",
+  "label": "Mandala contract: Game of Wit",
+  "summary": "Script-fired on_action that creates the \"Game of Wit\" task contract at a province picked for a Mandala ruler.",
+  "details": "Vanilla's spawn_mandala_realm_contract_on_action picks it from a weighted list. It can only run when some province with a holding in the ruler's realm or a tributary's realm is unoccupied, has a barony holder who is an available adult, is not the ruler's capital province and carries neither the requested-ritual nor the ritual-cooldown variable. Without the Trickery house aspiration its weight is multiplied by 0.25, so it is picked less often. The province is picked at random from the valid ones, weighted up if a vassal or tributary who is an available AI adult holds the barony and strongly down if the ruler holds the county. The contract is then created there with a tier set by the game's own effect, followed by the shared set-up effect for new Mandala contracts.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/on_action/dlc/tgp/tgp_mandala_on_actions.txt:5", "vanilla: common/on_action/dlc/tgp/tgp_mandala_on_actions.txt:1628"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_action_mandala_realm_contract_0035",
+  "label": "Mandala contract: Divine Thief",
+  "summary": "Script-fired on_action that creates the \"Divine Thief\" task contract at a province picked for a Mandala ruler.",
+  "details": "It runs only if there is a valid contract spot and the ruler's house has the Trickery aspiration. The province is picked at random from the valid ones, strongly weighted down for counties with the omnipresent authority modifier. The contract is then created there with a tier set by the game's own effect, followed by the shared set-up effect for new Mandala contracts.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_action_mandala_realm_contract_0036",
+  "label": "Mandala contract: Trickster's Trial",
+  "summary": "Script-fired on_action that creates the \"Trickster's Trial\" task contract at a province picked for a Mandala ruler.",
+  "details": "It runs only if there is a valid contract spot and the ruler's house has the Trickery aspiration. A province gets +100 weight when its county holder's top liege is someone other than the ruler's top liege. A second +100 compares the holder's top liege with itself, so it is always true as written (vanilla's comment calls it \"an independent tributary\"). The contract is then created there with a tier set by the game's own effect, followed by the shared set-up effect for new Mandala contracts.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_action_mandala_realm_contract_0037",
+  "label": "Mandala contract: Festival of Reversal",
+  "summary": "Script-fired on_action that creates the \"Festival of Reversal\" task contract at a random valid province.",
+  "details": "It runs only if there is a valid contract spot and the ruler's house has the Trickery aspiration. Every valid province has the same weight. The contract is then created there with a tier set by the game's own effect, followed by the shared set-up effect for new Mandala contracts.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_action_mandala_realm_contract_0038",
+  "label": "Mandala contract: Goat's Sermon",
+  "summary": "Script-fired on_action that creates the \"Goat's Sermon\" task contract at a province picked for a Mandala ruler.",
+  "details": "It needs only a valid contract spot. Without the Trickery house aspiration its weight is multiplied by 0.4, so it is picked less often. The province is picked at random from the valid ones, strongly weighted down if it has the goat oracle modifier or its county has the punished charlatan modifier. The contract is then created there with a tier set by the game's own effect, followed by the shared set-up effect for new Mandala contracts.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_action_mandala_realm_contract_0039",
+  "label": "Beasts in the Jungle contract",
+  "summary": "Script-fired on_action that creates the \"Beasts in the Jungle\" task contract at a province picked for a Mandala ruler.",
+  "details": "It runs only if there is a valid contract spot and the ruler's house has the Trickery aspiration. The province is picked at random from the valid ones, strongly weighted down for counties with the beast-free or brimming-with-beasts modifier. The contract is then created there with a tier set by the game's own effect, followed by the shared set-up effect for new Mandala contracts.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_action_mandala_realm_contract_0040",
+  "label": "Mandala contract: River Naga",
+  "summary": "Script-fired on_action that creates the \"River Naga\" task contract at a province picked for a Mandala ruler.",
+  "details": "It runs only if there is a valid contract spot and the ruler's house has the Trickery aspiration. Riverside provinces get +100 weight, coastal or lakeside ones +10, and provinces with the river crocodile god modifier -200. The contract is then created there with a tier set by the game's own effect, followed by the shared set-up effect for new Mandala contracts.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_action_mandala_realm_contract_0041",
+  "label": "Mandala contract: Promised Land",
+  "summary": "Script-fired on_action that creates the \"Promised Land\" task contract at a province that has no holding.",
+  "details": "It needs a valid contract spot without a holding and collects such provinces with its own effect instead of the usual one. Without the Trickery house aspiration its weight is multiplied by 0.35. Provinces whose county holder has the same top liege as the ruler get +125 weight. The contract is then created there with a tier set by the game's own effect, followed by the shared set-up effect for new Mandala contracts.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_action_orthodox_pentarchy_pulse",
+  "label": "Orthodox Pentarchy pulse",
+  "summary": "Script-fired on_action, run on a character, that can fire the Roman restoration events about Byzantines restoring the Pentarchy.",
+  "details": "It does nothing when the Roads to Power DLC is active (vanilla's has_ep3_dlc_trigger checks that DLC feature). Otherwise it offers four events, roman_restoration.0104 to 0107.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/scripted_triggers/00_has_dlc_scripted_triggers.txt:114"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_action_roman_restoration_pulse",
+  "label": "Roman restoration pulse",
+  "summary": "Script-fired on_action, run on a character, that can fire the events about restored Roman provinces.",
+  "details": "It needs a valid Roman empire according to vanilla's check, and does nothing when the Roads to Power DLC is active. Otherwise it offers fifteen events, roman_restoration.0010 to 0024.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/scripted_triggers/00_has_dlc_scripted_triggers.txt:114"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_adoptee_arrive_at_adopter",
+  "label": "Adoptee arrives at adopter",
+  "summary": "Script-fired on_action for when an adoptee arrives at their adopter.",
+  "details": "Vanilla uses it so that, if scope:adopter exists and the adoptee is not yet in the adopter's court, the adopter gets a message and the adoptee is added to their court. It also removes the adoptee_travelling_to_adopter variable from the adopter.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_adoptee_depart_for_adopter",
+  "label": "Adoptee departs for adopter",
+  "summary": "Script-fired on_action for when an adoptee sets off towards their adopter.",
+  "details": "Vanilla uses it to show the adopter a toast message that the adoptee is departing. It reads the adopter and adoptee from saved scopes.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_adoptee_depart_travel_planner_exit",
+  "label": "Adoptee leaves travel planner",
+  "summary": "Script-fired on_action that vanilla leaves empty; going by its name it concerns an adoptee leaving the travel planner.",
+  "details": "Vanilla's travel planner effects name it as their on_travel_planner_cancel_on_action, so it runs when such a travel plan is cancelled. Vanilla defines nothing in it, so it is only a hook for mods.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/scripted_effects/05_dlc_bp2_effects.txt:1351"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "on_adventurer_ai_new_employer_arrival",
+  "label": "AI adventurer reaches new employer",
+  "summary": "Script-fired on_action that vanilla leaves empty; going by its name it concerns an AI adventurer arriving at a new employer.",
+  "details": "It only runs when the game's adventurer AI logic is valid for the character. Vanilla's travel effect names it as an arrival on_action. Its effect is empty, so it is only a hook for mods.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/scripted_effects/07_dlc_ep3_story_cycle_adventurer_ai_scripted_effects.txt:145"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "on_adventurer_ai_new_kingdom_arrival",
+  "label": "AI adventurer enters new kingdom",
+  "summary": "Script-fired on_action for an AI adventurer arriving in a new kingdom; it clears old contracts the AI left far behind.",
+  "details": "It only runs when the game's adventurer AI logic is valid. It invalidates the character's task contracts whose location is farther from the character than the adventurer distance limit (a define) and that are not among the character's active contracts.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_adventurer_ai_war_target_arrival",
+  "label": "AI adventurer reaches war target",
+  "summary": "Script-fired on_action for an AI adventurer reaching its war target; it declares war or keeps travelling towards the target, or gives up for a while.",
+  "details": "It only runs when the game's adventurer AI logic is valid. It reads the target realm and the attempt count from the character's adventurer story. While the count is 3 or less and the target is still a valid war target, it adds one attempt and then either declares war (if the adventurer's county is outside the target's realm but borders it) or travels towards the target. Otherwise it clears the story's target and attempt count and sets a one-year war target cooldown.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_alliance_added",
+  "label": "Alliance added",
+  "summary": "Fired by the game when two characters form an alliance.",
+  "details": "It runs once, with the two allies in scope:first and scope:second. Vanilla refreshes both characters' embassy bonuses, sends both a new-alliance message unless one is the other's liege or vassal, and, when both are playable, sets a one-month delay on calling the new ally into a war the other is already in. It also gives piety to a character involved in a struggle whose phase rewards new alliances. The end of the effect is cut off in the input.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_alliance_broken",
+  "label": "Alliance broken",
+  "summary": "Fired by the game when an alliance is broken.",
+  "details": "It runs once, with the two characters in scope:first and scope:second, and two lists (first and second) holding the characters of the alliance reasons in matching order. Vanilla refreshes embassy bonuses, removes the opinion modifier from proposing the alliance through the perk and ends any blood brotherhood. It then goes through each reason pair and breaks the betrothal between the two when they are betrothed to each other.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_alliance_removed",
+  "label": "Alliance removed",
+  "summary": "Fired by the game when an alliance is removed.",
+  "details": "It runs once, with the two characters in scope:first and scope:second. Vanilla refreshes both characters' embassy bonuses, removes the opinion modifier from proposing the alliance through the perk and ends any blood brotherhood between them. The input does not say how it differs from broken.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_apply_inherited_confederation",
+  "label": "Inherited confederation applied",
+  "summary": "Fired by the game when an inherited confederation is applied; root is the vassal changing their status.",
+  "details": "Vanilla runs its liege-change bloc management effect with root as the vassal. The input does not explain what that effect does.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_army_combat_finished",
+  "label": "Army combat finished",
+  "summary": "On_action that vanilla leaves empty; its comment says it is called for each army owner when a combat ends.",
+  "details": "The game's documentation says the game's code does not fire it, which does not fit that comment, so who fires it is unclear. Per the comment, root is the army's owner, scope:combat_side is the side the commander is on, scope:victory says whether that side won, and the lists commanders and knights hold everyone in the combat.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "on_army_enter_province",
+  "label": "Army enters province",
+  "summary": "Fired by the game when an army enters a province; root is the army's owner.",
+  "details": "The army is in scope:army. Vanilla offers three events (including the crusader trait on reaching the holy land) and a random list in which 97 percent means no event, otherwise mostly a winter province event and rarely the corpse catapult event. It also gives trait experience to a commander who has the logistician or organizer trait.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/on_action/army_on_actions.txt:716"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_army_monthly",
+  "label": "Army monthly",
+  "summary": "Fired by the game about every 30 days for each army; root is the army's owner.",
+  "details": "The army is in scope:army. Vanilla uses it so that an army with a commander fires the commander death events pulse on the commander at most once a year (tracked with a 365-day variable on the army).",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/on_action/army_on_actions.txt:3"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_artifact_broken_through_decay",
+  "label": "Artifact broken by decay",
+  "summary": "Fired by the game when an artifact's durability falls to 0 through decay; root is the artifact.",
+  "details": "The owner is in scope:owner. Vanilla fires the event artifact.1000.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_artifact_broken_through_effect",
+  "label": "Artifact broken by effect",
+  "summary": "Fired by the game when an artifact's durability falls to 0 through an effect such as damage; root is the artifact.",
+  "details": "The owner is in scope:owner. Vanilla fires the event artifact.0021.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_artifact_changed_holy_site_owner",
+  "label": "Artifact holy site owner changed",
+  "summary": "Fired by the game when a holy site starts or stops owning an artifact; root is the artifact.",
+  "details": "scope:holy_site is the new holy site owner, if any, scope:old_holy_site the former one and scope:old_owner the former character owner. Any of the old ones may be missing. Vanilla leaves the effect empty.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_artifact_changed_owner",
+  "label": "Artifact changed owner",
+  "summary": "Fired by the game when an artifact gets a new owner; root is the artifact.",
+  "details": "scope:owner is the new holder and scope:old_owner the previous one. scope:old_holy_site is set only when the artifact left a holy site's ownership. Vanilla fires two events and, if there was an old owner, grants the banner house claim and fires the claim-gained on_action for each claimant of the artifact.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_artifact_claim_gained",
+  "label": "Artifact claim gained",
+  "summary": "Fired by the game when a character gains a claim on an artifact; root is that character.",
+  "details": "scope:artifact is the claimed artifact and scope:owner its current owner. Vanilla sends the character an interface message about the new claim. The game's documentation lists the expected scope as none while vanilla's comment says root is the character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_artifact_claim_lost",
+  "label": "Artifact claim lost",
+  "summary": "Fired by the game when a character loses a claim on an artifact; root is that character.",
+  "details": "scope:artifact is the artifact and scope:owner its current owner. Vanilla sends the character a message about the lost claim, but only when they are not the owner themselves. The game's documentation lists the expected scope as none while vanilla's comment says root is the character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_artifact_durability_low",
+  "label": "Artifact durability low",
+  "summary": "Fired by the game when an artifact's durability drops to the low-durability limit; root is the artifact's owner.",
+  "details": "The limit is a define (ARTIFACT_LOW_DURABILITY in 00_defines.txt). Vanilla's random event list first has a 50 percent chance of being evaluated at all. It then picks by weight among artifact.3000, 3010, 3020, 3030 and 3040 (50 each) and a \"nothing\" entry (1000), so an event is the less likely outcome.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_artifact_durability_very_low",
+  "label": "Artifact durability very low",
+  "summary": "Fired by the game when a high-quality artifact's durability drops to the very-low limit; root is the artifact.",
+  "details": "The limit is a define (ARTIFACT_VERY_LOW_DURABILITY in 00_defines.txt). The owner is in scope:owner. Vanilla fires the event artifact.3050.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_artifact_succession",
+  "label": "Artifact inherited",
+  "summary": "Fired by the game when an artifact is about to change hands through succession; root is the artifact.",
+  "details": "It runs just before the artifact changes hands. If you destroy it or change its owner here, it does not pass on. scope:owner is the new holder, scope:old_owner the previous one and scope:old_primary the heir's primary before the succession. The changed-owner on_action fires as usual when it does change hands. Vanilla fires artifact.0031.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_baron_found_or_created_for_title",
+  "label": "Baron found or created",
+  "summary": "Fired by the game when a baron is found or created for a barony, for example by the Give to Low Noble action; root is the baron.",
+  "details": "It is always a grant, with no transfer type. scope:liege is the person who wanted the baron and scope:title is the barony. Vanilla gives the baron an opinion of the liege (received_title_barony).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_barter_action_completion",
+  "label": "Barter action completed",
+  "summary": "Fired by the game when an army's barter action finishes; root is the bartering army.",
+  "details": "scope:barterer owns the army, scope:barony is the barony bartered with, scope:county its county and scope:value the loot gained. Vanilla sends messages to the barterer and the county holder. In the barterer's message the loot gain and the five-year recently-bartered modifier are only shown as a tooltip, and the county holder gets an opinion of the barterer when they are different people. In the county holder's message the barony's province actually gets the recently-bartered modifier for five years.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_barter_action_start",
+  "label": "Barter action started",
+  "summary": "Fired by the game when an army starts a barter action; root is the bartering army.",
+  "details": "scope:barterer, scope:barony and scope:county are set as in the completion on_action. Vanilla leaves the effect empty.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_barter_action_weekly",
+  "label": "Barter action weekly",
+  "summary": "Fired by the game every week while an army is bartering; root is the bartering army.",
+  "details": "scope:barterer, scope:barony and scope:county are set as in the completion on_action. Vanilla leaves the effect empty.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_barter_loot_delivered",
+  "label": "Barter loot delivered",
+  "summary": "Fired by the game when a bartering army returns to its own territory and deposits its loot; root is the army.",
+  "details": "scope:barterer owns the army and scope:barter_loot is the loot gained. The comment says the loot is already applied to the barterer before this fires. Vanilla sends the barterer a message and, inside it, adds the loot as gold; the input does not show whether that is a second payment or only for display.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "on_action",
+  "key": "on_became_dynasty_head",
+  "label": "Became dynasty head",
+  "summary": "Fired by the game when a character becomes the head of a dynasty; root is the new head.",
+  "details": "scope:dynasty is the dynasty. Vanilla removes the denounced and disinherited traits from the new head.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_became_house_head",
+  "label": "Became house head",
+  "summary": "Fired by the game when a character becomes the head of a house; root is the new head.",
+  "details": "scope:house is the house. Vanilla removes the decadent and extolled traits from the new head. If the new head's government is Mandala and the house has the Serenity aspiration, it also resets the head's increments-of-peace variable and modifier and schedules the event tgp_east_asia_mandala_events.0200 for 1, 3 or 5 years later, depending on the house's peaceful rule. The end of the effect is cut off in the input.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "on_action",
+  "key": "on_become_independent_after_grant_title_at_vassal_limit",
+  "label": "Independent after grant at limit",
+  "summary": "Fired by the game when a character becomes independent after a title grant that pushed them over the vassal limit.",
+  "details": "Vanilla starts a tributary relationship with scope:puppet_or_actor as the suzerain and scope:recipient as the tributary. The input does not say exactly when the game fires this beyond the name.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ }
+]

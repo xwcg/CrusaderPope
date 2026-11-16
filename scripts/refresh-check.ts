@@ -1,24 +1,34 @@
 // Checks incremental index updates (GameIndex.refreshFiles, docs/indexer.md "Incremental updates") against full builds:
 // the vanilla game plus a temp mod in a TEMP folder (never the real user folder). Each case changes the mod's files,
-// takes them in with refreshFiles and compares the index with a fresh full build of the same files — definitions,
+// takes them in with refreshFiles and compares the index with a fresh full build of the same files (definitions,
 // references (with their list order), localization, mod touches, types, lists, searches, details, cards, stories,
-// graphs, galleries — and, for a few cases, the rewritten cache (cacheSnapshot) loaded into a fresh scan.
+// graphs, galleries, the picker's modifier list) and, for a few cases, the rewritten cache (cacheSnapshot) loaded into a
+// fresh scan. The modifier list is made before each update and timed after it (its per-definition scans are kept).
 // Usage: node --experimental-strip-types --no-warnings --max-old-space-size=12000 scripts/refresh-check.ts [keep]
-// CASES=12,13 runs only those cases (0-based numbers as printed).
-// AGOT=1: the mod layered over A Game of Thrones (Workshop 2962333032, read only) — timings only; COMPARE=1 also the
-// full comparisons (a build with AGOT takes ~40 s: the run ~15 min).
+// Every index it builds is a fresh build on parse threads (scripts/fast-index.ts buildIndex; THREADS=0: one thread), never from a cache.
+// CASES=12,13 runs only those cases (0-based numbers as printed); `relayer` the replace_path changes.
+// AGOT=1: the mod layered over A Game of Thrones (Workshop 2962333032, read only): timings only; COMPARE=1 also the
+// full comparisons (a build with AGOT takes ~40 s; all cases with COMPARE=1 took ~73 min in round 13's final verification). Expectation lines that assume the game as the only
+// layer below the test mod (a copy "same as the game", a flag only the game uses, a key nobody else defines) that do not
+// hold are printed as "n/a with AGOT: <why>" when another mod also defines or uses that entry and the observed state is
+// the one that layering gives (any other state is a FAIL); a line that passes is printed ok. "identical to a full build"
+// and the timings are all kept. A line that shows an app imprecision stays visible as "KNOWN" (counted; only in the one
+// state the imprecision gives, any other state is a FAIL).
 import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import type { ModInfo } from '../src/shared/api.ts';
 import { resolveGameDir } from '../src/main/gameDir.ts';
-import { GameIndex, type Entity, type FileInfo, type RefreshResult } from '../src/main/indexer/gameIndex.ts';
+import { GameIndex, type Def, type Entity, type FileInfo, type RefreshResult } from '../src/main/indexer/gameIndex.ts';
 import { GameFiles } from '../src/main/mods/gamefiles.ts';
 import { parseDescriptor } from '../src/main/mods/descriptor.ts';
 import { StoryBuilder } from '../src/main/describe/stories.ts';
+import { riteHistory } from '../src/main/indexer/layouts.ts';
+import { MapData } from '../src/main/map/mapData.ts';
 import { T_FLAG, T_VARIABLE } from '../src/main/indexer/schema.ts';
 import { defaultInstall, workshopFolder } from './ck3-install.ts';
+import { parseIndex } from './fast-index.ts';
 
 const install = defaultInstall();
 const gameDir = resolveGameDir(install);
@@ -65,6 +75,9 @@ const remove = (rel: string): string =>
 };
 
 let failures = 0;
+/** lines not applicable with another mod below the test mod, and known app imprecisions (both printed in the last line) */
+let notApplicable = 0;
+let known = 0;
 const check = (ok: unknown, what: string): void =>
 {
     console.log(`${ok ? 'ok  ' : 'FAIL'} ${what}`);
@@ -99,13 +112,13 @@ interface Internals
 const I = (x: GameIndex): Internals => x as unknown as Internals;
 
 const code = 'refresh-check';
-function build(): GameIndex
+async function build(): Promise<GameIndex>
 {
     const idx = new GameIndex(new GameFiles(gameDir!, mods), 'english');
     idx.scan();
     // (records each file's size and time: an update skips files that did not change)
     idx.fingerprint(code);
-    idx.parseAll();
+    await parseIndex(idx);
     return idx;
 }
 
@@ -290,11 +303,25 @@ function compare(a: GameIndex, b: GameIndex, focus: Focus[], full = true): strin
         same('search ' + q, a.search(q, { text: true, limit: 400 }), b.search(q, { text: true, limit: 400 }));
 
     same('search modOnly', a.search('a', { modOnly: true, limit: 2000 }), b.search('a', { modOnly: true, limit: 2000 }));
+    // the file layer's listings (an update patches the cached ones: map_data, fonts, data_binding and gui are not the index's files)
+    const listing = (x: GameIndex, dir: string): string[] => x.vfs.list(dir, { engine: true }).map((f) => `${f.source}:${f.rel}`);
+
+    for (const dir of ['map_data', 'map_data/geographical_regions', 'fonts', 'data_binding', 'gui'])
+        same('listing ' + dir, listing(a, dir), listing(b, dir));
+
+    // what other modules keep per index state: the rites' faiths (history/faiths), the map's regions
+    const rites = (x: GameIndex): (string | undefined)[] => b.names('religion/rite_types').map((r) => riteHistory(x).faithOf(r, 14500101));
+    same('rite history', rites(a), rites(b));
+    same('map regions', new MapData(a).texts('map_data/geographical_regions'), new MapData(b).texts('map_data/geographical_regions'));
     same('image folders', a.fileFolders('images'), b.fileFolders('images'));
     same('model folders', a.fileFolders('models'), b.fileFolders('models'));
     same('mod images', a.filesIn('images', 'gfx/interface/icons/traits'), b.filesIn('images', 'gfx/interface/icons/traits'));
     const sa = new StoryBuilder(a);
     const sb = new StoryBuilder(b);
+    // (every caller of a scripted effect / trigger read on both: a time budget could cut the two cards at other places)
+    sa.callerBudget = sb.callerBudget = Infinity;
+    // (the picker's modifier list: the updated index's builder reads the per-Def scans kept from before the update)
+    same('modifier keys', sa.modifierKeys(), sb.modifierKeys());
     const graph = (x: GameIndex, f: Focus): unknown =>
     {
         const g = x.graph(f.type, f.name, 2, ['localization'], null, 400);
@@ -379,6 +406,29 @@ const LOC = `\uFEFFl_english:
  trait_rt_trait_a:0 "Tester"
 `;
 
+/**
+ * An expectation that assumes the game as the only layer below the test mod: with AGOT=1 a miss is "n/a" when another
+ * mod also defines (or, `uses`: references) the entry `type` `name` and the observed state is one `accept` takes (the
+ * state that layering gives); any other state is a FAIL.
+ */
+interface Layered
+{
+    type: string;
+    name: string;
+    /** the mods' use of the entry counts (flags, variables), not their definitions */
+    uses?: boolean;
+    /** what the updated index says (printed with the n/a) */
+    seen: string;
+    /** the observed states the layering explains (the others fail), and how to say it */
+    accept: (seen: string) => boolean;
+    expected: string;
+    /** why the other mod changes the expectation */
+    why: string;
+    /** the line shows an app imprecision, not a different expectation: a miss in an accepted state is reported as KNOWN */
+    known?: string;
+}
+type Line = [what: string, ok: boolean, layered?: Layered];
+
 interface Case
 {
     name: string;
@@ -390,12 +440,27 @@ interface Case
     /** also check the rewritten cache */
     cache?: boolean;
     /** what the updated index must say besides matching a full build: [what, is it so] */
-    expect?: (x: GameIndex) => [string, boolean][];
+    expect?: (x: GameIndex) => Line[];
     /** expected: this many shader files named, the index unchanged */
     shaders?: number;
     /** expected: exactly these gfx files taken in (folder events: the unchanged files below stay out) */
     gfx?: string[];
+    /** expected: the index unchanged (no revision), nothing taken in (editor leftovers, sources) */
+    quiet?: boolean;
+    /** expected: exactly these map files (map_data/) named, the index unchanged */
+    map?: string[];
+    /** expected: exactly these interface files (gui/, fonts/, data_binding/) named, the index unchanged */
+    gui?: string[];
+    /** expected: the first update leaves exactly these files (paths in the mod) for the next one */
+    rest?: string[];
 }
+
+/** The names a scripted trigger refers to (its outgoing references). */
+const refsOf = (x: GameIndex, trigger: string): string[] =>
+{
+    const e = x.get('scripted_triggers', trigger);
+    return e ? (I(x).outgoing.get(e.id) ?? []).map((r) => I(x).entities[I(x).rTo[r]].name) : [];
+};
 
 /** How the mods touch an entry, as "state" / "state+uses" ('-' untouched). */
 const stateOf = (x: GameIndex, type: string, name: string): string =>
@@ -403,6 +468,88 @@ const stateOf = (x: GameIndex, type: string, name: string): string =>
     const t = x.detail(type, name)?.mod;
     return t ? t.state + (t.uses ? '+uses' : '') + (t.duplicate ? '+dup' : '') : '-';
 };
+
+/**
+ * The mods other than the test mod (and not the game) whose files define the entry (or, `uses`, reference it); a
+ * definition the test mod's file replaced does not count. Empty when the game is the only layer below the test mod.
+ */
+const otherMods = (x: GameIndex, type: string, name: string, uses = false): string[] =>
+{
+    const e = x.get(type, name);
+
+    if (!e)
+        return [];
+
+    const X = I(x);
+    const mine = x.vfs.sources.findIndex((s) => s.modId === mod.id);
+    const found = new Set<number>();
+    const add = (file: number): void =>
+    {
+        const f = X.files[file];
+
+        if (f && !f.hidden && f.source > 0 && f.source !== mine)
+            found.add(f.source);
+    };
+
+    if (uses)
+        for (const r of X.incoming.get(e.id) ?? [])
+            add(X.rFile[r]);
+    else
+        for (const d of e.defs)
+            add(d.file);
+
+    return [...found].sort((a, b) => a - b).map((s) => x.vfs.sources[s].name);
+};
+
+/** Prints one expectation: a check, or (AGOT=1, another mod below the test mod) "n/a with AGOT: <why>" / KNOWN. */
+function expectation(x: GameIndex, [what, ok, layered]: Line): void
+{
+    const others = withAgot && layered ? otherMods(x, layered.type, layered.name, layered.uses) : [];
+
+    if (!layered || !others.length)
+    {
+        check(ok, what);
+        return;
+    }
+
+    if (ok)
+    {
+        check(ok, what);
+        return;
+    }
+
+    if (!layered.accept(layered.seen))
+    {
+        check(false, `${what}: seen ${layered.seen}, but with ${others.join(', ')} below the test mod ${layered.expected} is expected`);
+        return;
+    }
+
+    const why = `${others.join(', ')} also ${layered.uses ? 'uses' : 'defines'} ${layered.type} ${layered.name}: ${layered.why}`;
+
+    if (layered.known)
+    {
+        known++;
+        console.log(`KNOWN ${what}: seen ${layered.seen}; ${why}; ${layered.known}`);
+    }
+    else
+    {
+        notApplicable++;
+        console.log(`n/a with AGOT: ${what}: seen ${layered.seen}; ${why}`);
+    }
+}
+
+/** the accepted observed states: exactly these */
+const onlyStates = (...states: string[]): Pick<Layered, 'accept' | 'expected'> => ({ accept: (seen) => states.includes(seen), expected: states.map((s) => `"${s}"`).join(' or ') });
+
+/** The modifier-list label cases (40, 41): the test mod's text in localization/<lang>/replace/ for MOD_MONTHLY_PRESTIGE. */
+const labelLayer = (seen: string | undefined, testText: string): Layered => ({
+    type: 'localization',
+    name: 'MOD_MONTHLY_PRESTIGE',
+    seen: String(seen),
+    accept: (s) => !!seen && s !== testText,
+    expected: `a label other than the test mod's "${testText}"`,
+    why: 'a text in localization/replace/<lang>/ beats the test mod\'s in localization/<lang>/replace/ (docs/mods.md "Which definition wins")'
+});
 
 /** files of the chunked case (more than one update takes) and the updates' size */
 const CHUNK_FILES = 1200;
@@ -415,8 +562,10 @@ put('localization/english/rt_l_english.yml', LOC);
 put('common/scripted_effects/rt_effects.txt', 'rt_other_effect = {\n\tadd_gold = 5\n}\n');
 
 const traitsGame = readFileSync(game('common/traits/00_traits.txt'), 'utf8');
-// (its @constants: a copy of brave is the same as the game only with them — docs/mods.md "Same as the game")
+// (its @constants: a copy of brave is the same as the game only with them, docs/mods.md "Same as the game")
 const traitsConsts = [...traitsGame.matchAll(/^@\w+[ \t]*=[^\r\n]*/gm)].map((m) => m[0]).join('\n') + '\n\n';
+/** the mod modifier's definition after the case that writes it (the next case checks it survives) */
+let rtModDef: Def | undefined;
 const cases: Case[] = [
     {
         name: 'edit inside a definition (offsets below it shift)',
@@ -458,7 +607,7 @@ const cases: Case[] = [
         ],
         cache: true,
         expect: (x) => [
-            ['brave, copied as the game has it: same as the game', stateOf(x, 'traits', 'brave') === 'same'],
+            ['brave, copied as the game has it: same as the game', stateOf(x, 'traits', 'brave') === 'same', { type: 'traits', name: 'brave', seen: stateOf(x, 'traits', 'brave'), ...onlyStates('overridden'), why: 'the other mod\'s brave (its 00_traits.txt replaces the game file) differs from the game\'s, and every mod definition must match the game\'s for "same"' }],
             ['the changed scripted effect: overridden', stateOf(x, 'scripted_effects', 'add_achievement_flag_effect') === 'overridden']
         ]
     },
@@ -476,7 +625,7 @@ const cases: Case[] = [
             )];
         },
         focus: [{ type: 'traits', name: 'brave' }],
-        expect: (x) => [['brave re-spaced with comments: same as the game', stateOf(x, 'traits', 'brave') === 'same']]
+        expect: (x) => [['brave re-spaced with comments: same as the game', stateOf(x, 'traits', 'brave') === 'same', { type: 'traits', name: 'brave', seen: stateOf(x, 'traits', 'brave'), ...onlyStates('overridden'), why: 'the other mod\'s brave (its 00_traits.txt replaces the game file) differs from the game\'s, and every mod definition must match the game\'s for "same"' }]]
     },
     {
         name: "the copy of brave with the game's text, but one @constant it uses of another value in its file",
@@ -518,7 +667,7 @@ const cases: Case[] = [
         focus: [],
         expect: (x) => [
             ['the mod’s own flag is gone', !x.detail('flag', 'rt_new_flag')],
-            [`the game's flag is untouched again (${stateOf(x, 'flag', 'wear_armor')})`, stateOf(x, 'flag', 'wear_armor') === '-']
+            [`the game's flag is untouched again (${stateOf(x, 'flag', 'wear_armor')})`, stateOf(x, 'flag', 'wear_armor') === '-', { type: 'flag', name: 'wear_armor', uses: true, seen: stateOf(x, 'flag', 'wear_armor'), ...onlyStates('merged+uses'), why: 'a flag is touched by every mod whose files use it, not by the test mod alone' }]
         ]
     },
     {
@@ -548,6 +697,7 @@ const cases: Case[] = [
         ],
         expect: (x) => [
             [`an event defined again in another file: a duplicate (${stateOf(x, 'events', 'court.8190')})`, stateOf(x, 'events', 'court.8190') === 'overridden+dup'],
+            // (also with AGOT, whose replace/ text of it wins: the game and the test mod still define it twice outside replace/)
             [`a localization key defined again outside replace/: a duplicate (${stateOf(x, 'localization', 'trait_craven')})`, stateOf(x, 'localization', 'trait_craven') === 'overridden+dup'],
             ['counted as duplicates', (x.types().find((t) => t.id === 'events')?.modStates?.duplicates ?? 0) >= 1]
         ]
@@ -556,7 +706,7 @@ const cases: Case[] = [
         name: 'the duplicates removed again',
         apply: () => [remove('events/zz_rt_dup_events.txt'), remove('localization/english/rt_dup_l_english.yml')],
         focus: [{ type: 'events', name: 'court.8190' }],
-        expect: (x) => [[`the event is the game's alone again (${stateOf(x, 'events', 'court.8190')})`, stateOf(x, 'events', 'court.8190') === '-']]
+        expect: (x) => [[`the event is the game's alone again (${stateOf(x, 'events', 'court.8190')})`, stateOf(x, 'events', 'court.8190') === '-', { type: 'events', name: 'court.8190', seen: stateOf(x, 'events', 'court.8190'), ...onlyStates('same'), why: 'the other mod ships a court.8190 too (its file replaces the game file of the same path), so the entry stays touched' }]]
     },
     {
         name: 'localization: the replace text edited, a key removed from the other file',
@@ -640,7 +790,7 @@ const cases: Case[] = [
         ]
     },
     {
-        name: 'a shader file (gfx/FX): not the index’s — named for the shader store, the listing takes it',
+        name: 'a shader file (gfx/FX): not the index’s; named for the shader store, the listing takes it',
         apply: () => [put('gfx/FX/rt_test.fxh', '# a shader include\n'), put('gfx/FX/jomini/rt_other.fxh', '# another\n')],
         focus: [],
         shaders: 2
@@ -696,19 +846,230 @@ const cases: Case[] = [
         },
         focus: [{ type: 'images', name: 'gfx/interface/icons/traits/rt_trait_b.dds' }],
         gfx: ['gfx/interface/icons/rt_new/rt_new_icon.dds']
+    },
+    {
+        name: 'a trigger names a trait group nobody is in (no member yet)',
+        apply: () => [put('common/scripted_triggers/rt_group.txt', 'rt_has_group = {\n\thas_trait = rt_test_group\n}\n')],
+        focus: [{ type: 'scripted_triggers', name: 'rt_has_group' }]
+    },
+    {
+        name: 'two traits join the group (the trigger file is unchanged: its reference follows the group)',
+        apply: () => [put('common/traits/zz_rt_group.txt', 'rt_g1 = {\n\tcategory = personality\n\tgroup = rt_test_group\n}\n\nrt_g2 = {\n\tcategory = personality\n\tgroup_equivalence = rt_test_group\n}\n')],
+        focus: [
+            { type: 'scripted_triggers', name: 'rt_has_group' },
+            { type: 'traits', name: 'rt_g1' }
+        ],
+        expect: (x) => [[`the trigger refers to both traits of the group (${refsOf(x, 'rt_has_group')})`, ['rt_g1', 'rt_g2'].every((t) => refsOf(x, 'rt_has_group').includes(t))]]
+    },
+    {
+        name: 'one trait leaves the group (a group = edit alone: no entry is born or dies)',
+        apply: () => [put('common/traits/zz_rt_group.txt', 'rt_g1 = {\n\tcategory = personality\n\tgroup = rt_other_group\n}\n\nrt_g2 = {\n\tcategory = personality\n\tgroup_equivalence = rt_test_group\n}\n')],
+        focus: [
+            { type: 'scripted_triggers', name: 'rt_has_group' },
+            { type: 'traits', name: 'rt_g1' }
+        ],
+        expect: (x) => [[`the trigger no longer refers to the trait that left (${refsOf(x, 'rt_has_group')})`, refsOf(x, 'rt_has_group').join() === 'rt_g2']]
+    },
+    {
+        name: 'the traits file deleted (the group is empty again)',
+        apply: () => [remove('common/traits/zz_rt_group.txt')],
+        focus: [{ type: 'scripted_triggers', name: 'rt_has_group' }]
+    },
+    {
+        name: 'a later mod file adds a trait (at its start) to a game group: the group lists it last, as a full build does (ids, not file offsets)',
+        apply: () => [
+            put('common/scripted_triggers/rt_group_vanilla.txt', 'rt_has_vanilla_group = {\n\thas_trait = education_intrigue\n}\n'),
+            put('common/traits/zz_aa_rt_group.txt', 'rt_first_of_group = {\n\tcategory = education\n\tgroup = education_intrigue\n}\n')
+        ],
+        focus: [
+            { type: 'scripted_triggers', name: 'rt_has_vanilla_group' },
+            { type: 'traits', name: 'rt_first_of_group' }
+        ],
+        expect: (x) => [[`the new trait comes after the game’s (${refsOf(x, 'rt_has_vanilla_group')})`, refsOf(x, 'rt_has_vanilla_group').at(-1) === 'rt_first_of_group']]
+    },
+    {
+        name: 'those two files deleted',
+        apply: () => [remove('common/scripted_triggers/rt_group_vanilla.txt'), remove('common/traits/zz_aa_rt_group.txt')],
+        focus: [{ type: 'scripted_triggers', name: 'rt_has_group' }]
+    },
+    {
+        name: 'a faith history file (history/faiths): the rites’ faiths follow it, not the first reading',
+        apply: () => [put('history/faiths/zz_rt_faiths.txt', 'rt_faith = {\n\t1400.1.1 = {\n\t\tmain_rite = roman_rite\n\t}\n}\n')],
+        focus: [],
+        expect: (x) => [[`roman_rite belongs to rt_faith in 1450 (${riteHistory(x).faithOf('roman_rite', 14500101)})`, riteHistory(x).faithOf('roman_rite', 14500101) === 'rt_faith']]
+    },
+    {
+        name: 'that file deleted (the rite is the faith type’s again)',
+        apply: () => [remove('history/faiths/zz_rt_faiths.txt')],
+        focus: [],
+        expect: (x) => [[`roman_rite is not rt_faith’s any more (${riteHistory(x).faithOf('roman_rite', 14500101)})`, riteHistory(x).faithOf('roman_rite', 14500101) !== 'rt_faith']]
+    },
+    {
+        name: 'a geographical region and a province definition file of the mod (map_data): not the index’s; named, the listing and MapData follow',
+        apply: () => [put('map_data/geographical_regions/rt_regions.txt', 'rt_zz_marker_region = {\n\tcounties = { c_rt }\n}\n')],
+        focus: [],
+        map: ['map_data/geographical_regions/rt_regions.txt'],
+        expect: (x) => [['the map’s region texts hold the file', new MapData(x).texts('map_data/geographical_regions').some((t) => t.includes('rt_zz_marker_region'))]]
+    },
+    {
+        name: 'a font and a data binding file (fonts/, data_binding/): the listings follow, the GUI library is read again',
+        apply: () => [put('fonts/rt_test.font', '# a font\n'), put('data_binding/rt_binding.txt', '# a binding\n')],
+        focus: [],
+        gui: ['fonts/rt_test.font', 'data_binding/rt_binding.txt'],
+        expect: (x) => [
+            ['the font is listed', x.vfs.list('fonts', { engine: true }).some((f) => f.rel === 'fonts/rt_test.font')],
+            ['the data binding is listed', x.vfs.list('data_binding', { engine: true }).some((f) => f.rel === 'data_binding/rt_binding.txt')]
+        ]
+    },
+    {
+        name: 'the map files deleted again (the listing loses them)',
+        apply: () => [remove('map_data'), remove('fonts'), remove('data_binding')],
+        focus: [],
+        map: ['map_data/geographical_regions/rt_regions.txt'],
+        expect: (x) => [['the region file is gone from the map’s texts', !new MapData(x).texts('map_data/geographical_regions').some((t) => t.includes('rt_zz_marker_region'))]]
+    },
+    {
+        name: 'file B calls a scripted effect nobody defines yet (taken in: B has a stamp now)',
+        apply: () => [put('common/scripted_effects/rt_stale_b.txt', 'rt_stale_b = {\n\trt_stale_new = yes\n}\n')],
+        focus: [{ type: 'scripted_effects', name: 'rt_stale_b' }]
+    },
+    {
+        name: 'B changed on disk without an event, A defines the effect B calls: B is not resolved from its new text but goes to `rest`, the next update takes it in',
+        apply: () =>
+        {
+            put('common/scripted_effects/rt_stale_b.txt', 'rt_stale_b = {\n\tadd_prestige = 7\n\trt_stale_new = yes\n\tadd_trait = brave\n}\n');
+            return [put('common/scripted_effects/rt_stale_a.txt', 'rt_stale_new = {\n\tadd_gold = 1\n}\n')];
+        },
+        focus: [
+            { type: 'scripted_effects', name: 'rt_stale_b' },
+            { type: 'scripted_effects', name: 'rt_stale_new' },
+            { type: 'traits', name: 'brave' }
+        ],
+        rest: ['common/scripted_effects/rt_stale_b.txt'],
+        expect: (x) => [['nothing stale left after the chain', x.staleFiles().length === 0]]
+    },
+    {
+        name: 'a mod effect whose parameter stands where a trait goes, and a call passing a name: the call links the trait only',
+        apply: () => [
+            put('common/scripted_effects/rt_param_effect.txt', 'rt_param_effect = {\n\tadd_trait = $WHO$\n}\n'),
+            put('common/scripted_effects/rt_param_call.txt', 'rt_param_call = {\n\trt_param_effect = { WHO = brave }\n}\n')
+        ],
+        focus: [{ type: 'scripted_effects', name: 'rt_param_call' }, { type: 'traits', name: 'brave' }],
+        expect: (x) => [['the call links the trait brave (the parameter stands where a trait goes)', x.resolveToken('brave', 'WHO', 'rt_param_effect', false, false, 'scripted_effects').map((e) => e.type).join() === 'traits']]
+    },
+    {
+        name: 'the effect changed (the parameter now an amount): its caller in the unchanged file is resolved again',
+        apply: () => [put('common/scripted_effects/rt_param_effect.txt', 'rt_param_effect = {\n\tadd_gold = $WHO$\n}\n')],
+        focus: [{ type: 'scripted_effects', name: 'rt_param_call' }, { type: 'traits', name: 'brave' }],
+        expect: (x) => [['the call no longer links the trait (the parameter an amount: script values only)', !x.resolveToken('brave', 'WHO', 'rt_param_effect', false, false, 'scripted_effects').some((e) => e.type === 'traits')]]
+    },
+    {
+        name: 'a .txt directly in common/ (no type: the scan skips it, the picker’s key scan lists it): a change',
+        apply: () => [put('common/rt_direct_top.txt', 'rt_top_x = { }\n')],
+        focus: []
+    },
+    {
+        name: 'sources, notes and backups beside the game files (.psd, .blend, .md, .bak, dot files): no change of the index',
+        apply: () => [
+            put('events/rt_readme.md', '# notes\n'),
+            put('common/traits/zz_rt_traits.txt.bak', 'rt_trait_a = { }\n'),
+            put('gfx/interface/icons/traits/rt_source.psd', 'not a picture'),
+            put('gfx/models/rt/rt_banner.blend', 'not a model'),
+            put('localization/english/.gitkeep', ''),
+            // (other kinds nothing reads: stray data files)
+            put('events/rt_data.json', '{}'),
+            put('history/rt_stray/notes.csv', 'nothing'),
+            // (.txt / .yml no scan and no listing reader takes: a history folder nobody reads, texts beside the
+            // localization, a .yml in events/, another language's localization)
+            put('history/rt_stray/notes.txt', 'nothing'),
+            put('localization/rt_notes.txt', 'nothing'),
+            put('events/rt_notes.yml', 'nothing'),
+            put('localization/german/rt_x_l_german.yml', '﻿l_german:\n rt_name:0 "der Tester"\n')
+        ],
+        focus: [],
+        quiet: true
+    },
+    {
+        // (the picker's modifier list, StoryBuilder.modifierKeys: its per-Def scans are kept from the list made before
+        // the update; `compare` checks it against the fresh build's)
+        name: 'a mod modifier given by add_county_modifier, with a stat label of its own (MOD_ text in replace/)',
+        apply: () => [
+            put('common/modifiers/rt_modifiers.txt', 'rt_county_mod = {\n\tmonthly_prestige = 1\n\tdevelopment_growth_factor = 0.1\n}\n'),
+            put('events/rt_mod_events.txt', 'namespace = rt_mod\n\nrt_mod.1 = {\n\ttype = character_event\n\timmediate = {\n\t\tcapital_county = {\n\t\t\tadd_county_modifier = { modifier = rt_county_mod years = 5 }\n\t\t}\n\t}\n}\n'),
+            put('localization/english/replace/rt_mod_l_english.yml', '﻿l_english:\n MOD_MONTHLY_PRESTIGE:0 "RT prestige"\n')
+        ],
+        focus: [
+            { type: 'modifiers', name: 'rt_county_mod' },
+            { type: 'events', name: 'rt_mod.1' }
+        ],
+        expect: (x) =>
+        {
+            const keys = new StoryBuilder(x).modifierKeys();
+            const mp = keys.find((k) => k.key === 'monthly_prestige');
+            rtModDef = x.get('modifiers', 'rt_county_mod')?.defs[0];
+            return [[`modifier list: monthly_prestige reads the mod's label (${mp?.label})`, mp?.label === 'RT prestige', labelLayer(mp?.label, 'RT prestige')]];
+        }
+    },
+    {
+        name: 'that modifier now given by add_character_modifier, its label changed (the modifiers file unchanged)',
+        apply: () => [
+            put('events/rt_mod_events.txt', 'namespace = rt_mod\n\nrt_mod.1 = {\n\ttype = character_event\n\timmediate = {\n\t\tadd_character_modifier = { modifier = rt_county_mod years = 5 }\n\t}\n}\n'),
+            put('localization/english/replace/rt_mod_l_english.yml', '﻿l_english:\n MOD_MONTHLY_PRESTIGE:0 "RT prestige, again"\n')
+        ],
+        focus: [
+            { type: 'modifiers', name: 'rt_county_mod' },
+            { type: 'events', name: 'rt_mod.1' }
+        ],
+        expect: (x) =>
+        {
+            const keys = new StoryBuilder(x).modifierKeys();
+            const mp = keys.find((k) => k.key === 'monthly_prestige');
+            const def = x.get('modifiers', 'rt_county_mod')?.defs[0];
+            return [
+                [`modifier list: the new label (${mp?.label})`, mp?.label === 'RT prestige, again', labelLayer(mp?.label, 'RT prestige, again')],
+                ['the modifier entry kept its Def object through the update (its scan is a kept one)', !!def && def === rtModDef]
+            ];
+        }
+    },
+    {
+        name: 'a mod effect using its parameter only after `flag:`: the call links the flag of that name, not the trait',
+        apply: () => [
+            put('common/scripted_effects/rt_param_effect.txt', 'rt_param_effect = {\n\tset_variable = {\n\t\tname = rt_kind\n\t\tvalue = flag:$WHO$\n\t}\n}\n'),
+            put('common/scripted_effects/rt_param_call.txt', 'rt_param_call = {\n\trt_param_effect = { WHO = brave }\n}\n')
+        ],
+        focus: [{ type: 'scripted_effects', name: 'rt_param_call' }, { type: 'traits', name: 'brave' }],
+        expect: (x) => [['the call links the flag brave only (the parameter is used only as flag:$WHO$)', x.resolveToken('brave', 'WHO', 'rt_param_effect', false, false, 'scripted_effects').map((e) => `${e.type}:${e.name}`).join() === 'flag:brave']]
+    },
+    {
+        name: 'a text naming a variable nothing uses yet (`[ROOT.Var(\'rt_born_var\').GetValue]`)',
+        apply: () => [put('localization/english/rt_var_l_english.yml', '﻿l_english:\n rt_var_text:0 "Value: [ROOT.Var(\'rt_born_var\').GetValue]"\n')],
+        focus: [{ type: 'localization', name: 'rt_var_text' }],
+        expect: (x) => [['no variable of that name yet', !x.get('variable', 'rt_born_var')]]
+    },
+    {
+        name: 'a script uses the variable first: the text that names it links it (as a build reads every text after the script)',
+        apply: () => [put('common/scripted_effects/rt_var_effect.txt', 'rt_var_effect = {\n\tset_variable = { name = rt_born_var value = 1 }\n}\n')],
+        focus: [{ type: 'localization', name: 'rt_var_text' }, { type: 'scripted_effects', name: 'rt_var_effect' }],
+        expect: (x) =>
+        {
+            const v = x.get('variable', 'rt_born_var');
+            const t = x.get('localization', 'rt_var_text');
+            const from = v ? x.incomingSources(v).map((s) => `${s.entity.type}:${s.entity.name}`).sort().join(' ') : 'no variable';
+            return [[`the variable is linked from the text and the effect (${from})`, !!t && from === 'localization:rt_var_text scripted_effects:rt_var_effect']];
+        }
     }
 ];
 
 console.log(`building the index (vanilla${withAgot ? ' + AGOT' : ''} + the test mod) …`);
 let t = performance.now();
-const idx = build();
+const idx = await build();
 console.log(`  ${((performance.now() - t) / 1000).toFixed(1)} s, ${idx.stats.files} files, ${idx.stats.entities} entries, ${idx.stats.refs} references`);
 // warm the caches views keep (touches, mod counts, lists)
 idx.types();
-// every update compacts the reference columns (in the app: once tombstones are a tenth of them) — the comparisons
+// every update compacts the reference columns (in the app: once tombstones are a tenth of them); the comparisons
 // then cover the renumbered references
 idx.compactShare = 0;
-/** display names computed so far (the top bar search matches those): an update keeps them — recomputing what changed */
+/** display names computed so far (the top bar search matches those): an update keeps them, recomputing what changed */
 const computed = (x: GameIndex): number => I(x).entities.filter((e) => !e.dead && e.display !== undefined).length;
 
 try
@@ -720,7 +1081,7 @@ try
     check(!outside.changed && !outside.fallback, 'a game file: not a mod file, ignored');
     // (main compares the layering of the mods: a descriptor that changes it re-indexes, docs/mods.md)
     const desc = idx.refreshFiles([join(root, 'descriptor.mod')]);
-    check(!desc.changed && !desc.fallback, 'descriptor.mod: not the index’s file — nothing to do');
+    check(!desc.changed && !desc.fallback, 'descriptor.mod: not the index’s file, nothing to do');
     // more changed files than half the index's: a full build is faster
     const many = Math.ceil(idx.files.length * 0.5) + 10;
     const manyPaths: string[] = [];
@@ -729,7 +1090,7 @@ try
         manyPaths.push(put(`common/scripted_effects/rt_many/rt_many_${i}.txt`, `rt_many_${i} = { add_gold = 1 }\n`));
 
     const big = idx.refreshFiles(manyPaths);
-    check(!big.changed && !!big.fallback && !big.rest, `${many} files: a full build — ${big.fallback} (${big.ms} ms)`);
+    check(!big.changed && !!big.fallback && !big.rest, `${many} files: a full build, ${big.fallback} (${big.ms} ms)`);
     remove('common/scripted_effects/rt_many');
 
     const times: number[] = [];
@@ -741,14 +1102,22 @@ try
         if (only && !only.has(i))
             continue;
 
-        console.log(`\n— ${i}. ${c.name}`);
+        console.log(`\n-- ${i}. ${c.name}`);
+        // (the modifier list made before the update, as the app's picker does: its per-Def scans are kept)
+        new StoryBuilder(idx).modifierKeys();
         const paths = c.apply();
         const namesBefore = computed(idx);
         t = performance.now();
         let r: RefreshResult = idx.refreshFiles(paths, CHUNK);
         let updates = 1;
         const shaders = [...(r.shaders ?? [])];
+        const mapFiles = [...(r.map ?? [])];
+        const guiFiles = [...(r.gui ?? [])];
         const files = [...r.files];
+        const firstRest = (r.rest ?? []).map((p) => p.slice(root.length + 1).replace(/\\/g, '/'));
+
+        if (c.rest)
+            check(JSON.stringify(firstRest) === JSON.stringify(c.rest), `the first update leaves for the next: ${firstRest.join(', ') || 'nothing'}`);
 
         // (the rest of a big change: one update after another, like the worker)
         while (r.rest && !r.fallback)
@@ -769,7 +1138,7 @@ try
 
         if (c.shaders !== undefined)
         {
-            check(!r.changed && !r.fallback && shaders.length === c.shaders, `shader files: ${shaders.join(', ')} — the index unchanged (${ms.toFixed(0)} ms)`);
+            check(!r.changed && !r.fallback && shaders.length === c.shaders, `shader files: ${shaders.join(', ')}; the index unchanged (${ms.toFixed(0)} ms)`);
             const fresh = new GameFiles(gameDir!, mods);
             const listed = (v: GameFiles): string =>
                 v.list('gfx/FX', { engine: true })
@@ -777,10 +1146,21 @@ try
                     .join('\n');
             check(listed(idx.vfs) === listed(fresh), 'the gfx/FX listing (the shader store’s fingerprint) is the fresh one');
         }
+        else if (c.quiet || c.map || c.gui)
+        {
+            // (not the index's files: nothing is taken in, no revision from the index; the worker acts on `map` and `gui`)
+            check(!r.changed && !r.fallback && !r.files.length === !(c.map || c.gui), `${c.quiet ? 'nothing' : 'only listed files'} taken in, the index unchanged (${ms.toFixed(0)} ms)`);
+
+            if (c.map)
+                check(JSON.stringify(mapFiles) === JSON.stringify(c.map), `map files named: ${mapFiles.join(', ') || 'none'}`);
+
+            if (c.gui)
+                check(JSON.stringify(guiFiles) === JSON.stringify(c.gui), `interface files named: ${guiFiles.join(', ') || 'none'}`);
+        }
         else
         {
             times.push(ms);
-            check(r.changed && !r.fallback, `refreshed in ${ms.toFixed(0)} ms (${updates} ${updates === 1 ? 'update' : 'updates'}): ${files.length} files, ${r.parsed} parsed, ${r.resolved} resolved again${r.fallback ? ' — FALLBACK ' + r.fallback : ''}`);
+            check(r.changed && !r.fallback, `refreshed in ${ms.toFixed(0)} ms (${updates} ${updates === 1 ? 'update' : 'updates'}): ${files.length} files, ${r.parsed} parsed, ${r.resolved} resolved again${r.fallback ? ', FALLBACK ' + r.fallback : ''}`);
 
             if (c.gfx)
                 check(JSON.stringify(r.gfx) === JSON.stringify(c.gfx), `gfx files taken in: ${r.gfx.join(', ') || 'none'}`);
@@ -791,18 +1171,26 @@ try
             check(I(idx).rFrom.every((x) => x >= 0), 'no removed references left in the columns (compacted)');
         }
 
-        for (const [what, ok] of c.expect?.(idx) ?? [])
-            check(ok, what);
+        if (!c.quiet && !c.map && !c.gui && c.shaders === undefined)
+        {
+            // (a new builder after the update: only the changed files' definitions are scanned again)
+            t = performance.now();
+            const n = new StoryBuilder(idx).modifierKeys().length;
+            check(n > 0, `the modifier list after the update, warm: ${(performance.now() - t).toFixed(0)} ms (${n} keys)`);
+        }
+
+        for (const line of c.expect?.(idx) ?? [])
+            expectation(idx, line);
 
         if (withAgot && !process.env.COMPARE)
             continue;
 
         t = performance.now();
-        const fresh = build();
+        const fresh = await build();
         const buildMs = performance.now() - t;
         const diffs = compare(idx, fresh, c.focus);
         check(!diffs.length, `identical to a full build (${(buildMs / 1000).toFixed(1)} s)${diffs.length ? ':\n     ' + diffs.slice(0, 30).join('\n     ') : ''}`);
-        // every display name the updated index holds — kept through the updates or computed again — is the one a full
+        // every display name the updated index holds (kept through the updates or computed again) is the one a full
         // build computes (the top bar search matches them)
         let wrong = 0;
         let held = 0;
@@ -826,7 +1214,7 @@ try
                 samples.push(`${e.type}|${e.name}: “${e.display}” ≠ “${want}”`);
         }
 
-        check(!wrong, `${held} display names as a full build computes them${wrong ? `: ${wrong} differ — ${samples.join('; ')}` : ''}`);
+        check(!wrong, `${held} display names as a full build computes them${wrong ? `: ${wrong} differ (${samples.join('; ')})` : ''}`);
 
         if (c.cache)
         {
@@ -845,11 +1233,48 @@ try
         }
     }
 
+    // the files read are kept least recently used first: a file read again stays, the one not read for longest goes
+    {
+        const X = idx as unknown as { fileCache: Map<number, string>; };
+        const small = I(idx).files.map((f, i) => ({ f, i })).filter((x) => !x.f.gone && !x.f.hidden && x.f.area === 'common' && idx.vfs.stat(x.f.gf).size < 50000).slice(0, 45).map((x) => x.i);
+        X.fileCache.clear();
+
+        for (const i of small.slice(0, 40))
+            idx.readFile(i);
+
+        idx.readFile(small[0]);
+        idx.readFile(small[40]);
+        check(small.length === 45 && X.fileCache.size === 40 && X.fileCache.has(small[0]) && !X.fileCache.has(small[1]), 'the file cache drops the least recently used file, not the first read');
+    }
+
+    // the test mod's replace_path changes (its descriptor; main sees only the replace paths differ): the index takes the
+    // new layering as an update (GameIndex.relayer), game files hidden, then uncovered again, like a full build
+    // (CASES=relayer: only these)
+    if (!only || process.env.CASES!.split(',').includes('relayer'))
+    {
+        for (const paths of [['common/traits', 'gfx/models/pets/elephants'], []])
+        {
+            console.log(`\n-- replace_path ${paths.length ? paths.join(', ') : 'removed again'}`);
+            mod.replacePaths = paths;
+            t = performance.now();
+            const r = idx.relayer([{ id: mod.id, replacePaths: paths }]);
+            const ms = performance.now() - t;
+            check(r.changed && !r.fallback, `taken in as an update in ${ms.toFixed(0)} ms: ${r.parsed} parsed, ${r.resolved} resolved again${r.fallback ? ', FALLBACK ' + r.fallback : ''}`);
+            // (the views and the image workers hear of it: the folders and the pictures whose file is another, the script files hidden or uncovered)
+            check(r.gfx.includes('gfx/models/pets/elephants') && r.gfx.every((f) => r.files.includes(f)), `the relayered gfx folder is reported (${r.gfx.length} gfx paths)`);
+            check(r.files.some((f) => /^common\/traits\//i.test(f)), `the trait files the replace_path hid or uncovered are reported (${r.files.filter((f) => /^common\/traits\//i.test(f)).length})`);
+            const fresh = await build();
+            const diffs = compare(idx, fresh, []);
+            check(!diffs.length, `identical to a full build${diffs.length ? ':\n     ' + diffs.slice(0, 30).join('\n     ') : ''}`);
+        }
+    }
+
     console.log(`\nrefresh times (ms): ${times.map((x) => x.toFixed(0)).join(' ')}; max ${Math.max(...times).toFixed(0)}`);
 }
 finally
 {
-    console.log(failures ? `\n${failures} FAILED` : '\nall ok', '— temp folder', tmp);
+    const notes = [notApplicable ? `${notApplicable} expectation(s) n/a with AGOT` : '', known ? `${known} KNOWN app imprecision(s), see the KNOWN lines` : ''].filter(Boolean).join(', ');
+    console.log(failures ? `\n${failures} FAILED` : '\nall ok', ...(notes ? [`(${notes})`] : []), `(temp folder ${tmp})`);
 
     if (process.argv[2] !== 'keep')
         rmSync(tmp, { recursive: true, force: true });

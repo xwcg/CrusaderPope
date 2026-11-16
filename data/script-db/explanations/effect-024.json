@@ -1,0 +1,1000 @@
+[
+ {
+  "kind": "effect",
+  "key": "set_subject_contract_modification_blocked",
+  "label": "Block subject contract changes",
+  "summary": "Blocks the character's subject contract from being modified, or lifts that block with `no`.",
+  "details": "This does not change the contract itself. It only sets the flag that the trigger `subject_contract_is_blocked_from_modification` reads, so scripts that check that trigger can refuse changes. Vanilla uses `yes` far more often than `no`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_task_contract_target",
+  "label": "Task contract target",
+  "summary": "Sets the target character of a task contract.",
+  "details": "Runs on a task contract and takes a character. Vanilla passes the employer's councillor of some type, the employer's liege, or a saved character such as `scope:escapee`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_tenet_status",
+  "label": "Tenet status",
+  "summary": "Changes how a faith treats one tenet (a core belief rule of the faith).",
+  "details": "Runs on a faith. The status is one of unknown, known, prohibited, permitted or core. Vanilla mostly uses it with a tenet saved in a scope (for example one picked in an event or activity), and sets permitted or prohibited most often.",
+  "fields": [
+   {
+    "name": "tenet",
+    "text": "The tenet whose status changes.",
+    "values": "a tenet, such as `tenet:tenet_communion`, or a saved scope holding one",
+    "required": true
+   },
+   {
+    "name": "status",
+    "text": "The new status of that tenet for the faith.",
+    "values": "`unknown`, `known`, `prohibited`, `permitted` or `core`",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_title_color",
+  "label": "Title map color",
+  "summary": "Changes the color a title has on the map.",
+  "details": "Runs on a title. The color is written as three numbers for red, green and blue, or as a named color (the game's documentation says both work). Vanilla uses the numbers form, for example `{ 255 0 0 }` for red.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_title_name",
+  "label": "Title name",
+  "summary": "Renames a title using a localization key.",
+  "details": "Runs on a title. The adjective is the same key with `_adj` added. The title's prefix (such as \"the\") is not changed. Vanilla uses it with title keys such as `e_rhomaion`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_title_name_dynamic",
+  "label": "Title name (dynamic)",
+  "summary": "Renames a title from a localization key that is evaluated first, so the result can be another key or custom text.",
+  "details": "Runs on a title. The game parses the given key once with the current top scope, and the outcome becomes the name. The adjective is built by adding `_adj` to the key when that key exists. The prefix is not changed. Vanilla uses it with keys such as `capital_duchy_name` and `peasant_leader_title_name`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_title_prefix",
+  "label": "Title prefix",
+  "summary": "Sets the prefix of a title, for example the word \"the\" before its name.",
+  "details": "Runs on a title. The title's name and adjective stay as they are. The documented example is `PREFIX_THE`, a localization key.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_to_lowborn",
+  "label": "Make lowborn",
+  "summary": "Makes the character lowborn.",
+  "details": "Runs on a character. The game's documentation says no more than this. Vanilla always writes `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_trait_rank",
+  "label": "Trait rank",
+  "summary": "Sets the rank (level) of a trait on the character.",
+  "details": "Runs on a character. Vanilla uses it for the education traits (education_learning, education_stewardship and so on, ranks 1 to 5) and for `kinslayer` (ranks 2 and 3 appear in the examples). The game's documentation calls the first field a trait group.",
+  "fields": [
+   {
+    "name": "trait",
+    "text": "The trait (or trait track) whose rank is set.",
+    "values": "a trait key, such as `education_learning`",
+    "required": true
+   },
+   {
+    "name": "rank",
+    "text": "The new rank.",
+    "values": "a number, such as 1 to 5 in vanilla",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_travel_leader",
+  "label": "Travel leader",
+  "summary": "Makes a character the leader of a travel plan.",
+  "details": "Runs on a travel plan. The previous leader stays on the trip as a regular companion in the entourage.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_travel_plan_owner",
+  "label": "Travel plan owner",
+  "summary": "Makes a character the owner of a travel plan.",
+  "details": "Runs on a travel plan. If the new owner was the leader or an entourage member, they are taken out of that position. The previous owner becomes a regular companion in the entourage.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_treasury_budget_base_rate_cardinal",
+  "label": "Cardinal budget rate",
+  "summary": "Sets the base rate of the cardinal budget category.",
+  "details": "Runs on a character and takes a value X. The game documents only \"set budget base-rate for category\", and vanilla does not use it. Going by its name it belongs to the character's treasury budget, but what the number means exactly is not known.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_treasury_budget_base_rate_military",
+  "label": "Military budget rate",
+  "summary": "Sets the base rate of the military budget category.",
+  "details": "Runs on a character and takes a value X. The game documents only \"set budget base-rate for category\", and vanilla does not use it. Going by its name it belongs to the character's treasury budget, but what the number means exactly is not known.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_treasury_budget_base_rate_ministries",
+  "label": "Ministries budget rate",
+  "summary": "Sets the base rate of the ministries budget category.",
+  "details": "Runs on a character and takes a value X. The game documents only \"set budget base-rate for category\", and vanilla does not use it. Going by its name it belongs to the character's treasury budget, but what the number means exactly is not known.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_treasury_budget_base_rate_salaries",
+  "label": "Salaries budget rate",
+  "summary": "Sets the base rate of the salaries budget category.",
+  "details": "Runs on a character and takes a value X. The game documents only \"set budget base-rate for category\", and vanilla does not use it. Going by its name it belongs to the character's treasury budget, but what the number means exactly is not known.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "set_variable",
+  "label": "Variable",
+  "summary": "Stores a value in a named variable on the current scope, optionally for a limited time.",
+  "details": "Read it back later with `var:name` on the same thing (for example `var:my_variable`). The value can be a number, `yes`/`no`, a saved scope, a script value or a flag (`flag:male`). The short form `set_variable = name` is the same as setting the value to `yes`. With a duration, the variable is meant to expire after that time (the game's documentation names `days`; vanilla also uses months, years and weeks). The game's documentation says it works in any scope object or in the top scope.",
+  "fields": [
+   {
+    "name": "name",
+    "text": "The name of the variable, used later to read it.",
+    "values": "a name you choose",
+    "required": true
+   },
+   {
+    "name": "value",
+    "text": "What to store.",
+    "values": "a number, a script value, `yes`/`no`, a scope, or a flag such as `flag:male`"
+   },
+   {
+    "name": "days",
+    "text": "How many days the variable lasts before it is removed.",
+    "values": "a number or script value"
+   },
+   {
+    "name": "months",
+    "text": "How many months the variable lasts.",
+    "values": "a number or script value"
+   },
+   {
+    "name": "years",
+    "text": "How many years the variable lasts.",
+    "values": "a number or script value"
+   },
+   {
+    "name": "weeks",
+    "text": "How many weeks the variable lasts.",
+    "values": "a number or script value"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_vassal_contract_modification_blocked",
+  "label": "Block vassal contract changes",
+  "summary": "Blocks the character's vassal contract from being modified, or lifts that block with `no`.",
+  "details": "This does not change the contract itself. It only sets the flag that the trigger `vassal_contract_is_blocked_from_modification` reads, so scripts that check that trigger can refuse changes.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_war_declarer",
+  "label": "War declarer",
+  "summary": "Makes the given character the one who declares war for the great holy war, instead of the religious head.",
+  "details": "Runs on a great holy war. Vanilla passes the war's sponsor (`scope:ghw_sponsor`).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "set_winner",
+  "label": "Set combat winner",
+  "summary": "Makes one side of a battle the winner, no matter how many soldiers are left.",
+  "details": "Runs on a combat side. The battle moves on to the pursuit phase on the next tick. Within the same tick, `set_winner = no` undoes it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "setup_claim_cb",
+  "label": "Set up claim war",
+  "summary": "Sets up the title transfers of a claim-style war and saves how much prestige that is worth.",
+  "details": "Saves a value as `scope:cb_prestige_factor` based on what is being taken. It does not take land from people who are not vassalized. With `civil_war = yes` people are vassalized by where their capital is, not by being fully inside the taken titles. Vanilla calls it to transfer the titles to the attacker. It always also passes `titles`, which the game's documentation does not list.",
+  "fields": [
+   {
+    "name": "titles",
+    "text": "The titles that are taken.",
+    "values": "titles saved in a scope, such as `target_titles` (the game's documentation does not describe this field)",
+    "required": true
+   },
+   {
+    "name": "attacker",
+    "text": "The attacker of the war.",
+    "values": "a character, such as `scope:attacker`",
+    "required": true
+   },
+   {
+    "name": "defender",
+    "text": "The defender of the war.",
+    "values": "a character, such as `scope:defender`",
+    "required": true
+   },
+   {
+    "name": "claimant",
+    "text": "The claimant of the war.",
+    "values": "a character, such as `scope:claimant`",
+    "required": true
+   },
+   {
+    "name": "change",
+    "text": "A saved title change. Vanilla creates it just before, with `type = conquest` and `save_scope_as = change`.",
+    "values": "a saved title change, such as `scope:change`"
+   },
+   {
+    "name": "victory",
+    "text": "The game's documentation lists `yes/no`. Vanilla passes `no` in its attacker-loses case.",
+    "values": "`yes` or `no`"
+   },
+   {
+    "name": "take_occupied",
+    "text": "Whether occupied land is taken too, going by its name.",
+    "values": "`yes` or `no`"
+   },
+   {
+    "name": "civil_war",
+    "text": "Vassalize people by their capital location instead of full containment.",
+    "values": "`yes`"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/casus_belli_types/00_event_war.txt:91"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "setup_de_jure_cb",
+  "label": "Set up de jure war",
+  "summary": "Sets up the title transfers of a de jure war and saves how much prestige that is worth.",
+  "details": "Saves a value as `scope:cb_prestige_factor` based on what is being taken. Without `title`, it covers everything that is de jure (the legal, historical borders) part of the attacker's titles. With `title`, it aims at that one title only.",
+  "fields": [
+   {
+    "name": "attacker",
+    "text": "The attacker of the war.",
+    "values": "a character, such as `scope:attacker`",
+    "required": true
+   },
+   {
+    "name": "defender",
+    "text": "The defender of the war.",
+    "values": "a character, such as `scope:defender`",
+    "required": true
+   },
+   {
+    "name": "change",
+    "text": "A saved title change, such as `scope:change`.",
+    "values": "a saved title change, such as `scope:change`"
+   },
+   {
+    "name": "victory",
+    "text": "The game's documentation lists `yes/no`. Vanilla passes `no` in its attacker-loses case.",
+    "values": "`yes` or `no`"
+   },
+   {
+    "name": "title",
+    "text": "Limits it to one de jure title instead of everything de jure the attacker's.",
+    "values": "a title, such as `scope:target`"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "setup_invasion_cb",
+  "label": "Set up invasion war",
+  "summary": "Sets up the title transfers of an invasion war and saves how much prestige that is worth.",
+  "details": "Saves a value as `scope:cb_prestige_factor` based on what is being taken. Vanilla always also passes `titles`, which the game's documentation does not list.",
+  "fields": [
+   {
+    "name": "titles",
+    "text": "The titles that are taken.",
+    "values": "titles saved in a scope, such as `target_titles` (the game's documentation does not describe this field)",
+    "required": true
+   },
+   {
+    "name": "attacker",
+    "text": "The attacker of the war.",
+    "values": "a character, such as `scope:attacker`",
+    "required": true
+   },
+   {
+    "name": "defender",
+    "text": "The defender of the war.",
+    "values": "a character, such as `scope:defender`",
+    "required": true
+   },
+   {
+    "name": "change",
+    "text": "A saved title change, such as `scope:change`.",
+    "values": "a saved title change, such as `scope:change`"
+   },
+   {
+    "name": "victory",
+    "text": "The game's documentation lists `yes/no`. Vanilla passes `no` when it is set.",
+    "values": "`yes` or `no`"
+   },
+   {
+    "name": "take_occupied",
+    "text": "Whether occupied land is taken too, going by its name.",
+    "values": "`yes` or `no`"
+   },
+   {
+    "name": "claimant",
+    "text": "The claimant, if any (vanilla passes it in 8 of 18 calls).",
+    "values": "a character, such as `scope:claimant`"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "show_as_tooltip",
+  "label": "Show as tooltip only",
+  "summary": "Shows the effects inside it in the tooltip, but does not run them.",
+  "details": "Use it when the real changes happen somewhere else and the player should still see them listed. Vanilla puts any effects in it, such as `add_trait`, `depose` or `add_prestige`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "skip_activity_phase",
+  "label": "Skip activity phase",
+  "summary": "Fast-forwards the current phase of an activity, either to the next phase or to the end.",
+  "details": "Runs on an activity. The game's documentation says it goes to the next phase or to completion but not which one applies when. Vanilla uses it once, with `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "spawn_army",
+  "label": "Spawn army",
+  "summary": "Creates an army for the character, from levies and/or men-at-arms, at a chosen province.",
+  "details": "If the character is not at war, the regiments are created but the army itself is not spawned. You need levies or men-at-arms (or both). With `war` set, the army disbands when that war ends, by default also when the attacker wins unless `war_keep_on_attacker_victory = yes`. Saving the army with `save_scope_as` may not work if the army was not spawned.",
+  "fields": [
+   {
+    "name": "location",
+    "text": "The province where the army appears.",
+    "values": "a province, such as `capital_province`",
+    "required": true
+   },
+   {
+    "name": "levies",
+    "text": "How many levy soldiers.",
+    "values": "a number or script value"
+   },
+   {
+    "name": "men_at_arms",
+    "text": "A men-at-arms regiment. Can be repeated. Holds a `type` and `men` (or `stacks`).",
+    "values": "a block such as `{ type = key men = 100 }`"
+   },
+   {
+    "name": "origin",
+    "text": "The province used as the base for bonuses and similar.",
+    "values": "a province",
+    "default": "the location"
+   },
+   {
+    "name": "war",
+    "text": "Ties the army to a war; it disbands after the war ends.",
+    "values": "a war, such as `scope:war`"
+   },
+   {
+    "name": "war_keep_on_attacker_victory",
+    "text": "Keeps the army when the attacker wins the war it is tied to.",
+    "values": "`yes` or `no`",
+    "default": "no"
+   },
+   {
+    "name": "inheritable",
+    "text": "Whether the army passes on to the heir.",
+    "values": "`yes` or `no`",
+    "default": "yes"
+   },
+   {
+    "name": "uses_supply",
+    "text": "Whether the army uses supply.",
+    "values": "`yes` or `no`",
+    "default": "yes"
+   },
+   {
+    "name": "army",
+    "text": "An existing army the new troops merge into.",
+    "values": "an army"
+   },
+   {
+    "name": "save_scope_as",
+    "text": "Saves the new army under a scope name. `save_temporary_scope_as` also works.",
+    "values": "a name you choose"
+   },
+   {
+    "name": "name",
+    "text": "The name the troops show in the interface.",
+    "values": "a localization key"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "spend_by",
+  "label": "Spend secret",
+  "summary": "Marks a secret as spent by the given character.",
+  "details": "Runs on a secret. The game's documentation says only this, and vanilla does not use it, so what spending a secret changes beyond that is not known.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "split_clerical_region",
+  "label": "Split clerical region",
+  "summary": "Creates a new clerical region (a religious region title) from the realm of the character.",
+  "details": "The new region tries to include the whole part of the character's realm that was in the old clerical region, centered on the character's capital province. The new title is saved as `scope:new_title`, and you can then run effects on it. Vanilla only passes `name` and `save_scope_as`.",
+  "fields": [
+   {
+    "name": "name",
+    "text": "The name of the new region.",
+    "values": "a localization key or dynamic description",
+    "required": true
+   },
+   {
+    "name": "adj",
+    "text": "The adjective of the name.",
+    "values": "a localization key or dynamic description",
+    "default": "the name"
+   },
+   {
+    "name": "pre",
+    "text": "The prefix of the name.",
+    "values": "a localization key or dynamic description"
+   },
+   {
+    "name": "article",
+    "text": "The article of the name.",
+    "values": "a localization key or dynamic description"
+   },
+   {
+    "name": "domicile_type",
+    "text": "An optional domicile type (the game's documentation gives no more).",
+    "values": "a domicile type"
+   },
+   {
+    "name": "save_scope_as",
+    "text": "Saves the new title under a scope name.",
+    "values": "a name, such as `new_title`"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "sponsor_inspiration",
+  "label": "Sponsor inspiration",
+  "summary": "Makes the character the sponsor of the given inspiration.",
+  "details": "Runs on the character who becomes the sponsor. The inspiration can be a saved scope or a character's `.inspiration` link.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "sponsor_new_religious_head_challenger",
+  "label": "Sponsor head challenger",
+  "summary": "Creates a challenger to the religious head, using the given title as the antipope's title.",
+  "details": "Runs on the title that sponsors the challenge. The antipope is valid for the faith of whoever holds the antipope title.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "start_default_task",
+  "label": "Start default task",
+  "summary": "Forces a councillor back to their default task.",
+  "details": "Any progress in percent on the current task is lost, even if the councillor was already doing the default task.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "start_ghw_war",
+  "label": "Start holy war",
+  "summary": "Starts the war of a great holy war.",
+  "details": "Runs on a great holy war. The game's documentation and vanilla show only the value `undirected_great_holy_war`, so other values are not documented.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "start_great_holy_war",
+  "label": "Start great holy war",
+  "summary": "Starts a great holy war for the faith against a target character and title.",
+  "details": "Runs on a faith. With `war` set, the holy war is directed and tied to that war. Without it, the holy war is undirected. `delay` is the time before the war starts (a number of days, or a range as in `{ 365 545 }`).",
+  "fields": [
+   {
+    "name": "target_character",
+    "text": "The character the holy war is aimed at.",
+    "values": "a character",
+    "required": true
+   },
+   {
+    "name": "target_title",
+    "text": "The title the holy war is aimed at.",
+    "values": "a title",
+    "required": true
+   },
+   {
+    "name": "delay",
+    "text": "Days until the war starts.",
+    "values": "a number, a script value or a range"
+   },
+   {
+    "name": "war",
+    "text": "An existing war this holy war is tied to, which makes it directed.",
+    "values": "a war, such as `root.war`"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "start_scheme",
+  "label": "Start scheme",
+  "summary": "Makes the character start a new scheme of the given type.",
+  "details": "A scheme takes one target at most: a character, a title, a culture or a faith. Use `targets_nothing = yes` for no target. Vanilla targets a character in nearly all calls.",
+  "fields": [
+   {
+    "name": "type",
+    "text": "The scheme type.",
+    "values": "a scheme type, such as `murder` or `seduce`",
+    "required": true
+   },
+   {
+    "name": "target_character",
+    "text": "The character the scheme is against.",
+    "values": "a character, such as `root`"
+   },
+   {
+    "name": "target_title",
+    "text": "A title as the target.",
+    "values": "a title"
+   },
+   {
+    "name": "target_culture",
+    "text": "A culture as the target.",
+    "values": "a culture"
+   },
+   {
+    "name": "target_faith",
+    "text": "A faith as the target.",
+    "values": "a faith"
+   },
+   {
+    "name": "targets_nothing",
+    "text": "The scheme has no target.",
+    "values": "`yes` or `no`",
+    "default": "no"
+   },
+   {
+    "name": "contract",
+    "text": "A contract tied to the scheme (optional).",
+    "values": "a task contract, such as `root`"
+   },
+   {
+    "name": "save_scope_as",
+    "text": "Saves the new scheme under a scope name.",
+    "values": "a name you choose"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "start_situation",
+  "label": "Start situation",
+  "summary": "Starts a situation of the given type, optionally in a chosen starting phase.",
+  "details": "You can also override named sub-regions of the situation with your own data (key, starting phase, geographical regions, map color). Vanilla mostly passes the type and a start phase, and sometimes saves the situation as a scope.",
+  "fields": [
+   {
+    "name": "type",
+    "text": "The situation type.",
+    "values": "a situation type, such as `dynastic_cycle`",
+    "required": true
+   },
+   {
+    "name": "start_phase",
+    "text": "The phase the situation begins in.",
+    "values": "a phase key"
+   },
+   {
+    "name": "save_scope_as",
+    "text": "Saves the new situation under a scope name. `save_temporary_scope_as` also works.",
+    "values": "a name you choose"
+   },
+   {
+    "name": "sub_region",
+    "text": "Overrides one named sub-region. Can be repeated. Holds `key` and may hold `start_phase`, `geographical_regions` and `map_color`.",
+    "values": "a block"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "start_struggle",
+  "label": "Start struggle",
+  "summary": "Starts a struggle of the given type, in the given phase.",
+  "details": "Vanilla uses it once, for the Persian struggle.",
+  "fields": [
+   {
+    "name": "struggle_type",
+    "text": "The struggle to start.",
+    "values": "a struggle type, such as `persian_struggle`",
+    "required": true
+   },
+   {
+    "name": "start_phase",
+    "text": "The phase it starts in.",
+    "values": "a phase key",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "start_travel_plan",
+  "label": "Start travel plan",
+  "summary": "Starts a trip for the character through one or more destinations.",
+  "details": "A player may have to use the planner, and then saving the plan as a scope does not work. Events and on_actions can fire on arrival, on start and when the planner is cancelled; in them the root is the plan's owner. `on_arrival_destinations` chooses where the arrival event fires, by default `all_but_last`.",
+  "fields": [
+   {
+    "name": "destination",
+    "text": "A province to travel to. Can be repeated.",
+    "values": "a province",
+    "required": true
+   },
+   {
+    "name": "travel_leader",
+    "text": "The leader of the trip.",
+    "values": "a character"
+   },
+   {
+    "name": "companion",
+    "text": "A companion on the trip. Can be repeated.",
+    "values": "a character"
+   },
+   {
+    "name": "travel_with_domicile",
+    "text": "Whether the domicile moves with the travel.",
+    "values": "`yes` or `no`"
+   },
+   {
+    "name": "players_use_planner",
+    "text": "Whether a player gets the planner window.",
+    "values": "`yes` or `no`"
+   },
+   {
+    "name": "return_trip",
+    "text": "Adds a last destination back at the starting place.",
+    "values": "`yes` or `no`"
+   },
+   {
+    "name": "can_cancel_planning",
+    "text": "With `no`, a player cannot close the planner without starting.",
+    "values": "`yes` or `no`"
+   },
+   {
+    "name": "on_arrival_event",
+    "text": "An event fired on arrival.",
+    "values": "an event id"
+   },
+   {
+    "name": "on_arrival_on_action",
+    "text": "An on_action fired on arrival.",
+    "values": "an on_action"
+   },
+   {
+    "name": "on_start_event",
+    "text": "An event fired when the travel starts.",
+    "values": "an event id"
+   },
+   {
+    "name": "on_start_on_action",
+    "text": "An on_action fired when the travel starts.",
+    "values": "an on_action"
+   },
+   {
+    "name": "on_travel_planner_cancel_event",
+    "text": "An event fired if a player leaves the planner without starting.",
+    "values": "an event id"
+   },
+   {
+    "name": "on_travel_planner_cancel_on_action",
+    "text": "An on_action fired if a player leaves the planner without starting.",
+    "values": "an on_action"
+   },
+   {
+    "name": "on_arrival_destinations",
+    "text": "Which destinations fire the arrival event.",
+    "values": "`all_but_last`, `all`, `first` or `last`",
+    "default": "all_but_last"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "start_tributary",
+  "label": "Start tributary",
+  "summary": "Starts a tributary relationship for the character under the given suzerain.",
+  "details": "Vanilla uses it once, with the `tributary_celestial` group and the new Son of Heaven as suzerain.",
+  "fields": [
+   {
+    "name": "contract_group",
+    "text": "The subject contract group of the tributary relationship.",
+    "values": "a subject contract group, such as `tributary_celestial`",
+    "required": true
+   },
+   {
+    "name": "suzerain",
+    "text": "The suzerain (overlord) of the tributary relationship.",
+    "values": "a character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "start_tutorial_lesson",
+  "label": "Start tutorial lesson",
+  "summary": "Starts the tutorial lesson with the given key.",
+  "details": "Does nothing if the tutorial is not running, the lesson is already done or running, or the lesson's own trigger fails. Vanilla uses keys such as `reactive_advice_tutorial_war`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "start_war",
+  "label": "Start war",
+  "summary": "Makes the character start a war against a target character.",
+  "details": "If no target titles are given, the game picks one of the possible titles. The casus belli (reason for war) can be written as `cb` or `casus_belli`. `claimant` is optional.",
+  "fields": [
+   {
+    "name": "cb",
+    "text": "The casus belli type. `casus_belli` means the same; give one of them.",
+    "values": "a casus belli type, such as `claim_cb`",
+    "required": true
+   },
+   {
+    "name": "target",
+    "text": "The character the war is against.",
+    "values": "a character, such as `scope:target`",
+    "required": true
+   },
+   {
+    "name": "claimant",
+    "text": "The claimant of the war (optional).",
+    "values": "a character, such as `root`"
+   },
+   {
+    "name": "target_title",
+    "text": "A title the war aims at. Can be repeated.",
+    "values": "a title"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "stats_log",
+  "label": "Statistics log",
+  "summary": "Writes key and value pairs to a category in the game's statistics logging.",
+  "details": "Besides the category, you write pairs of a name and a localization key, which can use ROOT, SCOPE, THIS and PREV. Vanilla does not use it, and the game's documentation gives only its usage line.",
+  "fields": [
+   {
+    "name": "category",
+    "text": "The log category.",
+    "values": "a string",
+    "required": true
+   },
+   {
+    "name": "<name>",
+    "text": "A log entry: any name you choose, set to a localization key.",
+    "values": "a localization key"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ }
+]

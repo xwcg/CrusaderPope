@@ -12,18 +12,19 @@ import type { CardFn } from './types.ts';
 import { formatNumber, rich } from '../text.ts';
 import { constant, firstValidLines, kids, pictureSeg, soundSeg, str, words } from './presentation-util.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 /** A picture or a video (`.bk2`), how long it shows. */
 function shown(b: StoryBuilder, e: Entity, list: PNode[]): Rich
 {
     const ref = str(list, 'reference');
 
     if (!ref)
-        return ['(nothing set)'];
+        return [tr('(nothing set)')];
 
     const video = /\.bk2$/i.test(ref) || str(list, 'video') === 'yes';
     const d = str(list, 'duration');
     const dur = d === undefined ? undefined : Number(d);
-    return rich(video ? 'Video: ' : '', pictureSeg(b, constant(b, e, ref), 'event_backgrounds', /^event_effect_/), dur === undefined || !Number.isFinite(dur) ? '' : dur > 0 ? ` for ${formatNumber(dur)} seconds` : ', without end');
+    return rich(video ? tr('Video: ') : '', pictureSeg(b, constant(b, e, ref), 'event_backgrounds', /^event_effect_/), dur === undefined || !Number.isFinite(dur) ? '' : dur > 0 ? tr(' for {formatNumber} seconds', { formatNumber: formatNumber(dur) }) : tr(', without end'));
 }
 
 /** The other fields of an entry: lighting, ambient sound, masks. */
@@ -33,19 +34,19 @@ function details(list: PNode[]): Line[]
     const env = str(list, 'environment');
 
     if (env)
-        out.push({ text: rich('Portrait lighting: ', { text: words(env, /^environment_/), kind: 'code', tip: env }), tip: `environment = ${env}` });
+        out.push({ text: rich(tr('Portrait lighting: '), { text: words(env, /^environment_/), kind: 'code', tip: env }), tip: `environment = ${env}` });
 
     const amb = str(list, 'ambience');
 
     if (amb)
-        out.push({ text: rich('Ambient sound: ', soundSeg(amb)), tip: `ambience = ${amb}` });
+        out.push({ text: rich(tr('Ambient sound: '), soundSeg(amb)), tip: `ambience = ${amb}` });
 
     for (const k of ['video_mask', 'mask'])
     {
         const m = str(list, k);
 
         if (m)
-            out.push({ text: rich(str(list, 'mask_type') === 'video' || /\.bk2$/i.test(m) ? 'Faded in through the video ' : 'Faded in through the mask ', { text: words(m), kind: 'code', tip: m }), tip: `${k} = ${m}` });
+            out.push({ text: rich(str(list, 'mask_type') === 'video' || /\.bk2$/i.test(m) ? tr('Faded in through the video ') : tr('Faded in through the mask '), { text: words(m), kind: 'code', tip: m }), tip: `${k} = ${m}` });
     }
 
     return out;
@@ -67,14 +68,14 @@ function scenes(b: StoryBuilder, e: Entity, body: PNode[], ctx: Ctx, key: string
 /** A theme's parts, what they are called, the entry type they name (else a picture or a sound). */
 const THEME_PARTS: [string, string, string?][] = [
     ['background', 'Scene', 'event_backgrounds'],
-    ['icon', 'Icon'],
-    ['header_background', 'Header'],
-    ['sound', 'Sound'],
+    ['icon', tr('Icon')],
+    ['header_background', tr('Header')],
+    ['sound', tr('Sound')],
     ['transition', 'Transition', 'event_transitions'],
-    ['effect_2d', '2D effect', 'event_2d_effects']
+    ['effect_2d', tr('2D effect'), 'event_2d_effects']
 ];
 
-// (none has a text of its own: `<key>_desc` is another entry's — activity_feast_desc is the feast activity's)
+// (none has a text of its own: `<key>_desc` is another entry's: activity_feast_desc is the feast activity's)
 export const SCENE_CARDS: Record<string, CardFn> = {
     // `background = { trigger reference environment ambience video video_mask }`, the first that fits
     event_backgrounds: (b, { e, body, card, ctx, own }) =>
@@ -84,29 +85,29 @@ export const SCENE_CARDS: Record<string, CardFn> = {
 
         if (lines.length > 1)
         {
-            card.facts.push([`${lines.length} scenes`]);
+            card.facts.push([tr('{length} scenes', { length: lines.length })]);
             const fallback = body.find((c) => c.k === 'background' && !kids(c).some((x) => x.k === 'trigger'));
             const ref = fallback && str(kids(fallback), 'reference');
 
             if (ref)
-                card.facts.push(rich('Usually ', pictureSeg(b, ref, e.type)));
+                card.facts.push(rich(tr('Usually '), pictureSeg(b, ref, e.type)));
         }
 
-        card.sections.push({ title: lines.length > 1 ? 'Scene — the first that fits' : 'Scene', lines, src: own('other') });
+        card.sections.push({ title: lines.length > 1 ? tr('Scene — the first that fits') : tr('Scene'), lines, src: own('other') });
         return true;
     },
     // `transition = { trigger reference duration video ambience video_mask }`: over the whole window, then fades
     event_transitions: (b, { e, body, card, ctx, own }) =>
     {
         card.description = undefined;
-        card.sections.push({ title: 'Transition', lines: scenes(b, e, body, ctx, 'transition'), src: own('other') });
+        card.sections.push({ title: tr('Transition'), lines: scenes(b, e, body, ctx, 'transition'), src: own('other') });
         return true;
     },
     // `effect_2d = { trigger reference mask mask_type duration }`: a video over the scene (duration 0: no end)
     event_2d_effects: (b, { e, body, card, ctx, own }) =>
     {
         card.description = undefined;
-        card.sections.push({ title: '2D effect', lines: scenes(b, e, body, ctx, 'effect_2d'), src: own('other') });
+        card.sections.push({ title: tr('2D effect'), lines: scenes(b, e, body, ctx, 'effect_2d'), src: own('other') });
         return true;
     },
     // background / icon / header_background / sound / transition / effect_2d: each a list of which the first that fits is used
@@ -123,23 +124,23 @@ export const SCENE_CARDS: Record<string, CardFn> = {
             {
                 const ref = str(list, 'reference');
                 const v = ref && constant(b, e, ref);
-                return { text: !v ? ['(nothing set)'] : [type ? b.d.ref(v, [type]) : key === 'sound' ? soundSeg(v) : pictureSeg(b, v, e.type, /^type_/)] };
+                return { text: !v ? [tr('(nothing set)')] : [type ? b.d.ref(v, [type]) : key === 'sound' ? soundSeg(v) : pictureSeg(b, v, e.type, /^type_/)] };
             });
 
-            // one entry without conditions: "Scene: X"; else a line per entry under "Scene — the first that fits:"
+            // one entry without conditions: "Scene: X"; else a line per entry under the label's "the first that fits:" line
             if (found.length === 1 && !found[0].conditions)
                 lines.push({ ...found[0], text: rich(label + ': ', found[0].text) });
             else if (found.length)
-                lines.push({ text: [`${label} — the first that fits:`], children: found });
+                lines.push({ text: [tr('{label} — the first that fits:', { label })], children: found });
         }
 
         const bg = body.find((c) => c.k === 'background' && !kids(c).some((x) => x.k === 'trigger'));
         const ref = bg && str(kids(bg), 'reference');
 
         if (ref)
-            card.facts.push(rich('Scene: ', b.d.ref(ref, ['event_backgrounds'])));
+            card.facts.push(rich(tr('Scene: '), b.d.ref(ref, ['event_backgrounds'])));
 
-        card.sections.push({ title: 'Look and sound', lines, src: own('other') });
+        card.sections.push({ title: tr('Look and sound'), lines, src: own('other') });
         return true;
     }
 };

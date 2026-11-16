@@ -1,6 +1,6 @@
 /**
  * Zip archives of packed mods (docs/mods.md): read entries on demand (central directory, stored/deflate, ZIP64
- * sizes), and write archives (deflate, streamed, ZIP64 when needed). Plain node:zlib — no dependency.
+ * sizes), and write archives (deflate, streamed, ZIP64 when needed). Plain node:zlib, no dependency.
  */
 import { closeSync, createReadStream, createWriteStream, openSync, readSync, fstatSync, readdirSync, statSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 import { once } from 'node:events';
@@ -8,8 +8,9 @@ import { open } from 'node:fs/promises';
 import { basename, dirname, join, relative, sep } from 'node:path';
 import { pipeline, Readable } from 'node:stream';
 import { pipeline as pipe } from 'node:stream/promises';
-import { crc32, createDeflateRaw, createInflateRaw, deflateRawSync, inflateRawSync } from 'node:zlib';
+import { constants as zlib, crc32, createDeflateRaw, createInflateRaw, deflateRawSync, inflateRawSync } from 'node:zlib';
 
+import { tr } from '../../shared/i18n.ts';
 export interface ZipEntry
 {
     /** path inside the archive, forward slashes */
@@ -29,7 +30,7 @@ export interface ZipEntry
 }
 
 /** Compression methods of zips the reader can't decode (stored 0 and deflate 8 it can), for messages. */
-const METHODS: Record<number, string> = { 1: 'Shrink', 6: 'Implode', 9: 'Deflate64', 12: 'BZIP2', 14: 'LZMA', 93: 'Zstandard', 95: 'XZ', 98: 'PPMd', 99: 'AES encryption' };
+const METHODS: Record<number, string> = { 1: 'Shrink', 6: 'Implode', 9: 'Deflate64', 12: 'BZIP2', 14: 'LZMA', 93: 'Zstandard', 95: 'XZ', 98: 'PPMd', 99: tr('AES encryption') };
 
 const EOCD = 0x06054b50;
 const EOCD64_LOCATOR = 0x07064b50;
@@ -59,11 +60,17 @@ export class ZipArchive
     incomplete = false;
     /** names listed again (case aside): only the last of each is in `entries` */
     readonly duplicates: string[] = [];
+    /**
+     * where the archive starts in the file: its offsets count from there (a game save (docs/saves.md) is a text
+     * header and metadata with the zip after them)
+     */
+    readonly base: number;
     private fd: number | null;
 
-    constructor(file: string)
+    constructor(file: string, base = 0)
     {
         this.file = file;
+        this.base = base;
         this.fd = openSync(file, 'r');
 
         try
@@ -112,22 +119,22 @@ export class ZipArchive
         }
 
         if (at < 0)
-            throw new Error('Not a zip archive: ' + this.file);
+            throw new Error(tr('Not a zip archive: ') + this.file);
 
         let count = tail.readUInt16LE(at + 10);
         let cdSize = tail.readUInt32LE(at + 12);
-        let cdOffset = tail.readUInt32LE(at + 16);
+        let cdOffset = tail.readUInt32LE(at + 16) + this.base;
 
         // ZIP64: the locator sits right before the classic record
         if (at >= 20 && tail.readUInt32LE(at - 20) === EOCD64_LOCATOR)
         {
-            const rec = this.read(Number(tail.readBigUInt64LE(at - 12)), 56);
+            const rec = this.read(Number(tail.readBigUInt64LE(at - 12)) + this.base, 56);
 
             if (rec.readUInt32LE(0) === EOCD64)
             {
                 count = Number(rec.readBigUInt64LE(32));
                 cdSize = Number(rec.readBigUInt64LE(40));
-                cdOffset = Number(rec.readBigUInt64LE(48));
+                cdOffset = Number(rec.readBigUInt64LE(48)) + this.base;
             }
         }
 
@@ -185,7 +192,7 @@ export class ZipArchive
                 e += 4 + len;
             }
 
-            const entry: ZipEntry = { name, method, compressedSize, size: usize, offset, crc: cd.readUInt32LE(p + 16), mtime: dosTime(date, time), dir: name.endsWith('/') };
+            const entry: ZipEntry = { name, method, compressedSize, size: usize, offset: offset + this.base, crc: cd.readUInt32LE(p + 16), mtime: dosTime(date, time), dir: name.endsWith('/') };
 
             if (flags & 1)
                 entry.encrypted = true;
@@ -223,19 +230,19 @@ export class ZipArchive
     }
 
     /**
-     * Why an entry's bytes can't be read — encrypted, a compression method other than stored / deflate, no local header
-     * where the directory says —, or undefined.
+     * Why an entry's bytes can't be read (encrypted, a compression method other than stored / deflate, no local header
+     * where the directory says), or undefined.
      */
     entryProblem(e: ZipEntry): string | undefined
     {
         if (e.encrypted)
-            return 'it is encrypted';
+            return tr('it is encrypted');
 
         if (e.method !== 0 && e.method !== 8)
-            return `it is compressed with a method the app can't read (${METHODS[e.method] ?? 'method ' + e.method})`;
+            return tr('it is compressed with a method the app can\'t read ({value})', { value: METHODS[e.method] ?? 'method ' + e.method });
 
         if (this.dataStart(e) === undefined)
-            return 'the zip is damaged there (no file header where its list says)';
+            return tr('the zip is damaged there (no file header where its list says)');
 
         return undefined;
     }
@@ -267,6 +274,40 @@ export class ZipArchive
         return undefined;
     }
 
+    /**
+     * The first `n` bytes of the entry (a copy: nothing of the inflated entry stays alive), or undefined as readEntry. Reads
+     * and inflates only as much of the entry as that takes: a texture of 20 MB is asked for its 148-byte header.
+     */
+    readHead(entry: ZipEntry | string, n: number): Buffer | undefined
+    {
+        const e = typeof entry === 'string' ? this.get(entry) : entry;
+
+        if (!e || e.dir || e.encrypted || this.fd === null || n <= 0)
+            return undefined;
+
+        const at = this.dataStart(e);
+
+        if (at === undefined)
+            return undefined;
+
+        const want = Math.min(n, e.size);
+
+        if (e.method === 0)
+            return Buffer.from(this.read(at, Math.min(want, e.compressedSize)));
+
+        if (e.method !== 8)
+            return undefined;
+
+        // (a prefix of the deflate stream inflates up to where it was cut; the prefix grows until it holds enough)
+        for (let take = Math.min(e.compressedSize, 1 << 14); ; take = Math.min(e.compressedSize, take * 4))
+        {
+            const out = inflateRawSync(this.read(at, take), { finishFlush: zlib.Z_SYNC_FLUSH, maxOutputLength: Math.max(1, e.size) });
+
+            if (out.length >= want || take >= e.compressedSize)
+                return Buffer.from(out.subarray(0, want));
+        }
+    }
+
     /** The entry's bytes as a stream (entries too big for memory), or undefined as readEntry. */
     stream(e: ZipEntry): Readable | undefined
     {
@@ -293,6 +334,64 @@ export class ZipArchive
             closeSync(this.fd);
 
         this.fd = null;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Archives kept open while a job reads many entries (a migration plans a mod file by file: opening the archive per
+// file parses its whole central directory again, 16 ms at 12,000 entries, 86 s for a plan of 6,000 files)
+// ---------------------------------------------------------------------------
+
+const held = new Map<string, ZipArchive>();
+let holds = 0;
+
+/** Runs `work` with the archives `withZip` opens kept open until the last such job ends (jobs may nest and overlap). */
+export async function holdingZips<T>(work: () => Promise<T>): Promise<T>
+{
+    holds++;
+
+    try
+    {
+        return await work();
+    }
+    finally
+    {
+        if (--holds === 0)
+        {
+            for (const z of held.values())
+                z.close();
+
+            held.clear();
+        }
+    }
+}
+
+/**
+ * Uses the archive `file`: the one kept open when a job holds archives (`holdingZips`; the archive must not change in the
+ * meantime), else opened for this call alone.
+ */
+export function withZip<T>(file: string, use: (zip: ZipArchive) => T): T
+{
+    if (holds > 0)
+    {
+        const key = process.platform === 'win32' ? file.toLowerCase() : file;
+        let z = held.get(key);
+
+        if (!z)
+            held.set(key, z = new ZipArchive(file));
+
+        return use(z);
+    }
+
+    const z = new ZipArchive(file);
+
+    try
+    {
+        return use(z);
+    }
+    finally
+    {
+        z.close();
     }
 }
 
@@ -475,13 +574,13 @@ function chunksOf(src: ZipSource): AsyncIterable<Buffer> | Iterable<Buffer>
     if (src.open)
         return src.open();
 
-    throw new Error('No data for ' + src.name);
+    throw new Error(tr('No data for ') + src.name);
 }
 
 /**
  * Writes a zip: each entry deflated (stored when that is not smaller, or when its format is compressed already).
  * Small files are read whole and written complete, gathered into ~1 MB writes; larger ones are streamed in 1 MB
- * chunks — their local header is written first and completed after the data (CRC, sizes) — so memory stays flat for
+ * chunks (their local header is written first and completed after the data: CRC, sizes), so memory stays flat for
  * any size. ZIP64 fields for entries of 4 GB or more, offsets past 4 GB and more than 65,534 entries. Names with
  * forward slashes, UTF-8.
  */
@@ -617,7 +716,7 @@ export async function writeZip(outFile: string, sources: ZipSource[]): Promise<{
             const csize = pos - dataAt;
 
             if (usize >= MAX32 && !zip64)
-                throw new Error(`${src.name} grew while it was packed.`);
+                throw new Error(tr('{name} grew while it was packed.', { name: src.name }));
 
             await writeAt(localHeader(name, method, time, date, crc >>> 0, csize, usize, zip64), localAt);
             central.push(centralHeader(name, method, time, date, crc >>> 0, csize, usize, localAt));
@@ -683,28 +782,28 @@ const DEVICE = /^(con|prn|aux|nul|com\d|lpt\d)(\.|$)/i;
 export function entryNameProblem(name: string): string | undefined
 {
     if (name.startsWith('/') || /^[A-Za-z]:/.test(name))
-        return 'an absolute path';
+        return tr('an absolute path');
 
     const parts = name.split('/').filter((p) => p !== '' && p !== '.');
 
     if (parts.includes('..'))
-        return 'a path that leads out of the folder (..)';
+        return tr('a path that leads out of the folder (..)');
 
     if (name.includes(':'))
-        return 'a colon in its name';
+        return tr('a colon in its name');
 
     if (/[<>"|?*\u0000-\u001f]/.test(name))
-        return 'characters Windows does not allow in file names';
+        return tr('characters Windows does not allow in file names');
 
     if (parts.some((p) => DEVICE.test(p) || /[. ]$/.test(p)))
-        return 'a name Windows does not allow';
+        return tr('a name Windows does not allow');
 
-    return parts.length ? undefined : 'no file name';
+    return parts.length ? undefined : tr('no file name');
 }
 
 /**
- * Unpacks a zip into a folder (created if needed), entry by entry — large ones streamed. All or nothing: every entry
- * must be read and written — one it can't (a name that would leave the folder or Windows can't hold, encryption, a
+ * Unpacks a zip into a folder (created if needed), entry by entry, large ones streamed. All or nothing: every entry
+ * must be read and written; one it can't (a name that would leave the folder or Windows can't hold, encryption, a
  * compression method other than stored / deflate, no local header, more or fewer bytes than declared, a checksum
  * that does not match, an incomplete directory, a name listed twice) fails the unpack with the reason; the caller
  * removes what was written (manager.ts unpackMod).
@@ -712,16 +811,16 @@ export function entryNameProblem(name: string): string | undefined
 export async function unpackZip(file: string, dir: string): Promise<{ files: number; }>
 {
     const zip = new ZipArchive(file);
-    const where = (e: ZipEntry): string => `${e.name} in ${basename(file)}`;
+    const where = (e: ZipEntry): string => tr('{name} in {basename}', { name: e.name, basename: basename(file) });
     let n = 0;
 
     try
     {
         if (zip.incomplete)
-            throw new Error(`${basename(file)} is damaged: its list of files is incomplete.`);
+            throw new Error(tr('{basename} is damaged: its list of files is incomplete.', { basename: basename(file) }));
 
         if (zip.duplicates.length)
-            throw new Error(`${basename(file)} lists ${zip.duplicates[0]} twice (letter case aside): one would overwrite the other.`);
+            throw new Error(tr('{basename} lists {value} twice (letter case aside): one would overwrite the other.', { basename: basename(file), value: zip.duplicates[0] }));
 
         const entries = zip.files();
 
@@ -731,12 +830,12 @@ export async function unpackZip(file: string, dir: string): Promise<{ files: num
             const bad = entryNameProblem(e.name);
 
             if (bad)
-                throw new Error(`${where(e)} can't be unpacked: ${bad}.`);
+                throw new Error(tr('{where} can\'t be unpacked: {bad}.', { where: where(e), bad }));
 
             const unreadable = zip.entryProblem(e);
 
             if (unreadable)
-                throw new Error(`${where(e)} can't be unpacked: ${unreadable}.`);
+                throw new Error(tr('{where} can\'t be unpacked: {unreadable}.', { where: where(e), unreadable }));
         }
 
         for (const e of entries)
@@ -757,11 +856,11 @@ export async function unpackZip(file: string, dir: string): Promise<{ files: num
                 catch (x)
                 {
                     const over = (x as NodeJS.ErrnoException).code === 'ERR_BUFFER_TOO_LARGE';
-                    throw new Error(`${where(e)} is damaged (${over ? 'more bytes than its size' : (x as Error).message}).`);
+                    throw new Error(tr('{where} is damaged ({value}).', { where: where(e), value: over ? 'more bytes than its size' : (x as Error).message }));
                 }
 
                 if (!data)
-                    throw new Error(`${where(e)} can't be read.`);
+                    throw new Error(tr('{where} can\'t be read.', { where: where(e) }));
 
                 crc = crc32(data);
                 size = data.length;
@@ -772,7 +871,7 @@ export async function unpackZip(file: string, dir: string): Promise<{ files: num
                 const s = zip.stream(e);
 
                 if (!s)
-                    throw new Error(`${where(e)} can't be read.`);
+                    throw new Error(tr('{where} can\'t be read.', { where: where(e) }));
 
                 await pipe(
                     s,
@@ -784,7 +883,7 @@ export async function unpackZip(file: string, dir: string): Promise<{ files: num
 
                             // (a damaged or crafted entry inflating past its size stops here)
                             if (size > e.size)
-                                throw new Error(`${where(e)} is damaged (more bytes than its size).`);
+                                throw new Error(tr('{where} is damaged (more bytes than its size).', { where: where(e) }));
 
                             crc = crc32(c, crc);
                             yield c;
@@ -795,10 +894,10 @@ export async function unpackZip(file: string, dir: string): Promise<{ files: num
             }
 
             if (size !== e.size)
-                throw new Error(`${where(e)} is damaged (${size} bytes instead of ${e.size}).`);
+                throw new Error(tr('{where} is damaged ({size} bytes instead of {size2}).', { where: where(e), size, size2: e.size }));
 
             if (crc >>> 0 !== e.crc >>> 0)
-                throw new Error(`${where(e)} is damaged (its checksum does not match).`);
+                throw new Error(tr('{where} is damaged (its checksum does not match).', { where: where(e) }));
 
             n++;
         }

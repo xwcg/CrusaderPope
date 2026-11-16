@@ -1,0 +1,1943 @@
+[
+ {
+  "kind": "data_function",
+  "key": "TimedModifierScaledSingleItem.GetEffectItems",
+  "label": "Modifier effect lines",
+  "summary": "The list of effect lines shown in the tooltip of a scaled single modifier (the game's tag scaled_single_modifier).",
+  "details": "Vanilla uses it as the list (datamodel) of the effects part of that tooltip, in the character window and the shared modifier components. The game does not explain what scaled means here, and documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/misc_components.gui:526"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TimedModifierScaledSingleItem.GetExpirationDate",
+  "label": "Expiration date",
+  "summary": "The expiration date of a scaled single modifier, as text.",
+  "details": "Vanilla shows it as the expiration date text in the tooltip of such a modifier icon, in the character window and the shared modifier components.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/misc_components.gui:532"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TimedModifierScaledSingleItem.Self",
+  "label": "Scaled modifier itself",
+  "summary": "A function on a scaled timed modifier entry that, going by its name, hands back the entry itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types (for example Character.Self passed as an argument); those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TimedModifierSingleItem.AccessSelf",
+  "label": "Access modifier entry",
+  "summary": "A function on a timed modifier entry that, going by its name, hands back the entry itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TimedModifierSingleItem.GetDesc",
+  "label": "Modifier description",
+  "summary": "The description text of a single timed modifier, for its tooltip.",
+  "details": "Vanilla shows it as the description text in the tooltip of a single modifier icon, in the character window and the shared modifier components.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/misc_components.gui:498"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "TimedModifierSingleItem.Self",
+  "label": "Modifier entry itself",
+  "summary": "A function on a timed modifier entry that, going by its name, hands back the entry itself.",
+  "details": "Vanilla never names it on this type. Self appears often after other types; those lines are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TimelineKeyframe.AccessSelf",
+  "label": "Access keyframe",
+  "summary": "A function on a keyframe of an engine timeline widget that, going by its name, hands back the keyframe itself.",
+  "details": "It belongs to the engine's internal interface parts. Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TimelineKeyframe.IsHovered",
+  "label": "Keyframe is hovered",
+  "summary": "Going by its name, whether the mouse is over this keyframe of an engine timeline widget (yes or no).",
+  "details": "It belongs to the engine's internal interface parts and vanilla never names it on this type. IsHovered on other types (such as Title.IsHovered in the outliner) is only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TimelineKeyframe.IsSelected",
+  "label": "Keyframe is selected",
+  "summary": "Going by its name, whether this keyframe of an engine timeline widget is selected (yes or no).",
+  "details": "It belongs to the engine's internal interface parts and vanilla never names it on this type. IsSelected on other types (a save game entry, a bookmark entry) shows a button as pressed; that is only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TimelineKeyframe.KeyframeColor",
+  "label": "Keyframe color",
+  "summary": "Going by its name, the color of a keyframe on an engine timeline widget, as four numbers (red, green, blue, alpha).",
+  "details": "It belongs to the engine's internal interface parts. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TimelineKeyframe.Label",
+  "label": "Keyframe label",
+  "summary": "Going by its name, the label text of a keyframe on an engine timeline widget.",
+  "details": "It belongs to the engine's internal interface parts. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TimelineKeyframe.Self",
+  "label": "Keyframe itself",
+  "summary": "A function on a keyframe of an engine timeline widget that, going by its name, hands back the keyframe itself.",
+  "details": "It belongs to the engine's internal interface parts. Vanilla never names it on this type; Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TimelineKeyframe.SetHovered",
+  "label": "Set keyframe hovered",
+  "summary": "Going by its name, marks a keyframe of an engine timeline widget as hovered or not.",
+  "details": "It takes one argument, presumably yes or no; the game does not say. It belongs to the engine's internal interface parts and vanilla never uses it. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TimelineKeyframe.SetSelected",
+  "label": "Select keyframe",
+  "summary": "Going by its name, marks a keyframe of an engine timeline widget as selected or not.",
+  "details": "It takes one argument the game does not describe and returns nothing. It belongs to the engine's internal interface parts and vanilla never names it on this type; GuiLaw.SetSelected as a button's click action is only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TimelineKeyframe.TimePoint",
+  "label": "Keyframe time",
+  "summary": "Going by its name, the point in time of a keyframe on an engine timeline widget, as a decimal number.",
+  "details": "It belongs to the engine's internal interface parts. Vanilla never uses it, and the unit is not documented.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TimelineWidget.AccessSelf",
+  "label": "Access timeline widget",
+  "summary": "A function on the timeline widget that, going by its name, hands back the widget itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TimelineWidget.Self",
+  "label": "Timeline widget itself",
+  "summary": "A function on the timeline widget that, going by its name, hands back the widget itself.",
+  "details": "Vanilla never names it on this type. Self after other types is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "TimelineWidget.ShouldBeVisible",
+  "label": "Time controls shown",
+  "summary": "Whether the game wants the timeline widget (the Time Controls part of the hud, anchored at the bottom right) to be shown.",
+  "details": "Vanilla combines it with other checks to show the Time Controls: they stay hidden in the barbershop view, while the pause menu is open, while a variable named royal_court_screenshot_window exists, or when the player's hide_ui_timeline variable is above 0.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/hud.gui:930"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.AccessSelf",
+  "label": "Access title",
+  "summary": "A function on a title that, going by its name, hands back the title itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type. Vanilla's interface usually writes Title.Self when it passes a title on.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.CanCharacterControlVote",
+  "label": "Can control vote",
+  "summary": "Going by its name, whether the given character's vote in this title's election can be controlled (yes or no).",
+  "details": "It takes one argument, a character; vanilla passes the elector shown in the election window. Together with whether the player is an elector, vanilla's title election window uses it to show a button to influence the papal vote (theocratic elections) or one to force the vote (other kinds).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.CanHaveClaim",
+  "label": "Can be claimed",
+  "summary": "Going by its name, whether claims on this title are possible at all (yes or no).",
+  "details": "Vanilla's title window shows the claimants button and a no-claim text when it is true, and a no-claimants text when it is false. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.CanHaveTroops",
+  "label": "Can have troops",
+  "summary": "Going by its name, whether this title can have troops of its own (yes or no).",
+  "details": "Vanilla uses it only on the map icon layer to show or hide two icons. Which troops are meant (title men-at-arms, for example) the input does not show.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.CanPlayerCustomizeTitle",
+  "label": "Player can customize",
+  "summary": "Going by its name, whether the player may customize this title (yes or no).",
+  "details": "Vanilla never names it on Title itself, but the county view and the title window call it on a title they reach through another path (for example TitleViewWindow.GetTitle.CanPlayerCustomizeTitle) to show a control. What can be customized the game does not document.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.CanReturnTitleMaaToOwner",
+  "label": "Can return troops",
+  "summary": "Going by its name, whether this title's men-at-arms (professional troops) can be handed back to their owner (yes or no).",
+  "details": "Vanilla calls it once in the hired troops window, on the title of a hired troop entry, to show a control. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.CanTransferTitleMaaControlToLocalPlayer",
+  "label": "Can take troop control",
+  "summary": "Going by its name, whether control over this title's men-at-arms can be passed to the player on this computer (yes or no).",
+  "details": "Vanilla never uses it. Going by the name it is about control, as opposed to ownership in the similar ownership function.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.CanTransferTitleMaaOwnershipToLocalPlayer",
+  "label": "Can take troop ownership",
+  "summary": "Going by its name, whether ownership of this title's men-at-arms can be passed to the player on this computer (yes or no).",
+  "details": "Vanilla never uses it. Going by the name it is about ownership, as opposed to control in the similar control function.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.CanUseFindVassal",
+  "label": "Can find vassal",
+  "summary": "Going by its name, whether the given character can use the find vassal feature on this title (yes or no).",
+  "details": "It takes one argument, a character. Vanilla's county view shows the find vassal button (it opens the find vassal list window) only when the character is the title's holder, this returns true and the title is not leased out.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.CreateHerderForTitle",
+  "label": "Create herder",
+  "summary": "The command to create a herder for this title, run for the given character.",
+  "details": "It takes one argument, the character acting (vanilla passes the player). Vanilla's county view uses it on a button: clicking opens a confirmation popup, the button is enabled only while the command is valid, and its tooltip is the command's description. What a herder is in game terms the input does not say.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.CreateHolderForTitle",
+  "label": "Create holder",
+  "summary": "Going by its name, creates a new character to hold this title.",
+  "details": "It returns nothing. Vanilla calls it only on a title reached through the find vassal window (FindVassalListWindow.GetTitle.CreateHolderForTitle), as a button's click action. Who the new holder is the game does not document.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.CreateLocalHolderForTitle",
+  "label": "Create local holder",
+  "summary": "Going by its name, creates a new local character to hold this title.",
+  "details": "It returns nothing. Vanilla calls it only on a title reached through the find vassal window, as a button's click action, next to the plain create holder action. Going by the name and the grant to local culture noble texts, the holder is a local noble; the game does not document it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.Custom",
+  "label": "Custom text",
+  "summary": "The text a custom localization (a scripted text that picks its wording by conditions) produces for the title.",
+  "details": "It takes one value: the custom localization's key in quotes, one made for titles (`type = landed_title`). Vanilla writes `GetTitleByKey('d_sunni').Custom('GetIncumbentOrNone')`, which gives the title's holder, or a fallback text when nobody holds it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the custom localization.",
+    "values": "a custom localization key in quotes",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_title_custom_loc.txt:462"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetActiveHolySite",
+  "label": "Active holy site",
+  "summary": "The holy site (a place sacred to a faith) that is active in this title.",
+  "details": "It leads on to the holy site, so its functions can follow. Vanilla's county view reaches it through the holding's province title and opens the holy site view with it. Which holy site counts as active the game does not document.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetAdjective",
+  "label": "Title adjective",
+  "summary": "Going by its name, the adjective form of the title's name, as text (for example English for England).",
+  "details": "Vanilla uses it in war memory texts, as in pressing a liege's de jure dominion. By its name, GetAdjectiveNoTooltip is the variant without the hover tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetAdjectiveNoTooltip",
+  "label": "Adjective, no tooltip",
+  "summary": "The adjective form of the title's name, as text without the hover tooltip.",
+  "details": "Vanilla uses it in event and message texts, as in \"Recall, You Are (adjective)!\" for the Byzantine empire title, or \"(adjective) Army Reassigned\". Going by its name, it differs from the plain adjective in that hovering it shows no tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetAdministrativeArmyStatus",
+  "label": "Army status",
+  "summary": "A text describing the army status of this title.",
+  "details": "Vanilla shows it as a tooltip in the military window and after the word Status in the title troops map mode tooltip. The name mentions administrative, but the input does not show what that covers.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetAutoGrantCountyToLocalRulerEffectDesc",
+  "label": "Grant to local effects",
+  "summary": "Going by its name, a text listing the effects of granting this county to a local ruler automatically.",
+  "details": "It takes one argument the game does not describe. Vanilla never names it on Title itself; it appears once in the Effects part of the tooltip of the grant to local culture noble button in the holding view's county texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetAutoGrantTitleToLocalRulerDesc",
+  "label": "Grant to local text",
+  "summary": "Going by its name, a description of granting this title to a local ruler automatically.",
+  "details": "Vanilla never names it on Title itself; the find vassal window shows it as a tooltip on a title it reaches through FindVassalListWindow.GetTitle.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetAverageControl",
+  "label": "Average control",
+  "summary": "Going by its name, the average county control (how firmly the holder controls a county) across this title, as a number.",
+  "details": "Vanilla shows it as a whole number in the ledger. Which counties are averaged the game does not say.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetAverageDevelopment",
+  "label": "Average development",
+  "summary": "Going by its name, the average development of this title's counties, as a number.",
+  "details": "Vanilla shows it as a whole number in the ledger.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetAverageFertility",
+  "label": "Average fertility",
+  "summary": "Going by its name, the average county fertility across this title, as a number.",
+  "details": "Vanilla's migration window shows it as a percentage after the title's name, in its county fertility line.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetAverageOpinion",
+  "label": "Average opinion",
+  "summary": "Going by its name, the average opinion across this title, as a number.",
+  "details": "Vanilla shows it in the ledger as a whole number with a plus or minus sign, so it can be negative. Whose opinion of whom is averaged the game does not document.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetAverageOpinionFor",
+  "label": "Average opinion of",
+  "summary": "Going by its name, the average opinion across this title of the one given, as a number.",
+  "details": "It takes one argument the game does not describe, presumably a character. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetBaseName",
+  "label": "Base name",
+  "summary": "Going by its name, the base form of the title's name.",
+  "details": "Vanilla writes the word the before it in war memory texts, as in pressing a claim to the title held by another character. How it differs from GetName the game does not document. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetBaseNameNoTier",
+  "label": "Base name without tier",
+  "summary": "Going by its name, the title's base name without the tier word (England instead of Kingdom of England).",
+  "details": "Vanilla uses it in crusade memory texts about a lost war for a title. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetBaseNameNoTierNoTooltip",
+  "label": "Base name, no tier",
+  "summary": "The title's base name without the tier word (such as \"Kingdom of\") and without the hover tooltip.",
+  "details": "Vanilla uses it where only the bare name fits, as in a movement named \"Pro-(China)\" or \"A new age dawns upon (Japan)\". The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetBaseNameNoTierPossessive",
+  "label": "Possessive base name, no tier",
+  "summary": "Going by its name, the possessive form of the title's base name without the tier word (England's).",
+  "details": "Vanilla never names it on Title itself; contract event texts use it on a destination, such as running a county's main market square. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetBaseNameNoTierPossessiveNoTooltip",
+  "label": "Plain possessive, no tier",
+  "summary": "Going by its name, the possessive form of the title's base name without the tier word and without the hover tooltip.",
+  "details": "Vanilla never names it on Title itself; event titles use it on a character's primary title, such as the title's Second Capital. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetBaseNameNoTooltip",
+  "label": "Plain base name",
+  "summary": "Going by its name, the title's base name without the hover tooltip.",
+  "details": "Vanilla uses it in legend chapter texts, such as the countryside of a title fallen to brigands. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetBaseNamePossessive",
+  "label": "Possessive base name",
+  "summary": "Going by its name, the possessive form of the title's base name.",
+  "details": "Vanilla never uses it. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetBaseNamePossessiveNoTooltip",
+  "label": "Plain possessive base name",
+  "summary": "Going by its name, the possessive form of the title's base name, without the hover tooltip.",
+  "details": "Vanilla never uses it. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetCOADeJureTooltip",
+  "label": "Coat of arms de jure tooltip",
+  "summary": "Going by its name, a tooltip text about the de jure side of this title's coat of arms.",
+  "details": "Vanilla's title window uses it as a tooltip in three places. What exactly it lists the input does not show.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetCOADefaultTooltip",
+  "label": "Coat of arms tooltip",
+  "summary": "Going by its name, the default tooltip text for this title's coat of arms.",
+  "details": "Vanilla shows it as a text in the shared tooltip layout (cooltip.gui). What it lists the input does not show.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetCanCharacterControlVoteReason",
+  "label": "Vote control reason",
+  "summary": "Going by its name, a text giving the reason behind the CanCharacterControlVote result for the given character.",
+  "details": "It takes one argument, a character (vanilla passes the player). Vanilla puts it at the start of the nominate candidate tooltip in the succession election window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetClaimStateFor",
+  "label": "Claim state",
+  "summary": "Going by its name, a text describing the claim state of the given character on this title.",
+  "details": "It takes one argument, a character (vanilla passes the player). Vanilla's title window shows it as a text. Which wordings it can give the input does not show.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetClickInfo",
+  "label": "Click hint",
+  "summary": "A text telling what clicking this title (its coat of arms or flag) does.",
+  "details": "Vanilla adds it at the end of the character window's realm tooltip and in the shared tooltip layout. Going by its name and these uses.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetControlledMAA",
+  "label": "Controlled men-at-arms",
+  "summary": "Going by its name, the men-at-arms (professional troops) controlled through this title.",
+  "details": "Vanilla never uses it. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetCountyData",
+  "label": "County",
+  "summary": "The county data behind this title: the county's own information, such as its culture.",
+  "details": "It leads on to the county, so its functions can follow. Vanilla uses it to show a county's language (Title.GetCountyData.GetCulture.GetLanguage.GetName) and as the context of a ledger row.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetDeFactoLiege",
+  "label": "De facto liege title",
+  "summary": "Going by its name, the title this title is actually under right now (de facto: as things are, not as the law says).",
+  "details": "Vanilla never names it on Title itself; the confederations map mode reaches it through a province's title and goes on to the holder. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetDeFactoTopLiege",
+  "label": "De facto top liege title",
+  "summary": "The highest title this title is actually under right now (de facto).",
+  "details": "Vanilla uses it in a hold court text, going on to the top title's name. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetDeJureDriftTooltip",
+  "label": "De jure drift tooltip",
+  "summary": "A tooltip text about this title's de jure drift.",
+  "details": "Vanilla shows it under the title's name in the de jure hegemonies map mode tooltip. The input does not explain what de jure drift means.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetDeJureLiege",
+  "label": "De jure liege title",
+  "summary": "The title this title lawfully belongs under (de jure: by law), for example the duchy of a county.",
+  "details": "Vanilla uses it in the holy site creation window, both for the name in a warning that the county of that title already has a holy site and to reach the faith of that title's holder. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetDeJureLiegeOfTier",
+  "label": "De jure liege of tier",
+  "summary": "Going by its name, the title of the given tier that this title lawfully belongs under.",
+  "details": "It takes one argument, a tier in quotes such as 'kingdom'. Vanilla never names it on Title itself, but holy order names use it on a province's title, as in GetDeJureLiegeOfTier( 'kingdom' ), to name the order after its kingdom.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetDefinitiveName",
+  "label": "Definitive name",
+  "summary": "Going by its name, the definitive form of the title's name.",
+  "details": "Vanilla writes no article before it, such as pressing a claim to the title in a house feud memory, which hints that it brings its own the where needed. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetDefinitiveNameNoTooltip",
+  "label": "Definitive name, no tooltip",
+  "summary": "The title's name in its definite form, without the hover tooltip.",
+  "details": "Vanilla uses it for the names of neighbouring hegemonies (China, the Roman Empire, the Eastern Roman Empire) in tribute mission texts. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetDefinitiveNamePossessive",
+  "label": "Definitive name possessive",
+  "summary": "The possessive form of the title's definite-form name.",
+  "details": "Vanilla uses it before a noun, as in \"Access to (China's) bustling markets\", \"(China's) ruling dynasty\" or \"attacks (China's) lands\". The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetDefinitiveNamePossessiveNoTooltip",
+  "label": "Plain possessive definitive name",
+  "summary": "Going by its name, the possessive form of the title's definite-form name, without the hover tooltip.",
+  "details": "Vanilla never names it on Title itself; event texts use it on a character's primary title, such as the title's ports. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetDominantCulture",
+  "label": "Dominant culture",
+  "summary": "The culture most common in this title's counties.",
+  "details": "Vanilla uses it as the context of a ledger row, and the ledger text then names it as the dominant culture in the title. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetDominantCulturePercent",
+  "label": "Dominant culture share",
+  "summary": "The share of this title's counties that follow its dominant culture, as a number.",
+  "details": "Vanilla's ledger shows it as a percentage of counties, under the line naming the dominant culture.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetDominantFaith",
+  "label": "Dominant faith",
+  "summary": "The faith most common in this title's counties.",
+  "details": "Vanilla uses it as the context of a ledger row, and the ledger text then names it as the dominant faith in the title. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetDominantFaithPercent",
+  "label": "Dominant faith share",
+  "summary": "The share of this title's counties that follow its dominant faith, as a number.",
+  "details": "Vanilla's ledger shows it as a percentage of counties, under the line naming the dominant faith.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetFaction",
+  "label": "Faction",
+  "summary": "Going by its name, the faction tied to this title.",
+  "details": "Vanilla's title window uses it as a context and also checks HasFaction first. Which tie is meant (for example a faction aiming at this title) the game does not document. No return type is documented.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetHegemonyMapModeTooltip",
+  "label": "Hegemony map tooltip",
+  "summary": "Going by its name, the tooltip text for this title in the de jure hegemonies map mode.",
+  "details": "Vanilla never names it on Title itself; the de jure hegemonies map mode tooltip calls it on a province's title.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetHeir",
+  "label": "Heir",
+  "summary": "The character who will inherit this title next.",
+  "details": "Vanilla's realm window uses it as a context (a data source) for a part of the window. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetHistory",
+  "label": "Title history",
+  "summary": "Going by its name, the history of this title.",
+  "details": "Vanilla never names it on Title itself; GetHistory on other types (an accolade, a house relation) gives a list of entries, which is only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetHolder",
+  "label": "Holder",
+  "summary": "The character who holds this title.",
+  "details": "Vanilla uses it very often to go on to the holder's names and other details, for example in greeting texts for a ceremonial liege title. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetHolderOrCountyHolder",
+  "label": "Holder or county holder",
+  "summary": "Going by its name, the title's holder, or else the holder of its county.",
+  "details": "Vanilla never uses it. When the county holder is used instead the game does not document. No return type is documented.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetHolyOrder",
+  "label": "Holy order",
+  "summary": "The holy order (a religious military order) tied to this title.",
+  "details": "It leads on to the holy order, so its functions can follow. Vanilla's title window uses it as a context in three places. The game does not say how the order is tied to the title.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetHouseMapModeTitleHolder",
+  "label": "House map mode holder",
+  "summary": "Going by its name, the character whose house is shown for this title in the houses map mode.",
+  "details": "Vanilla never names it on Title itself; the houses map mode tooltip calls it on a province's title and goes on to a name for the House of line. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetID",
+  "label": "Title ID",
+  "summary": "The title's internal number, used to point at it.",
+  "details": "Vanilla passes it to actions such as clicking or right-clicking a coat of arms and opening the title view window for that title.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetKey",
+  "label": "Title key",
+  "summary": "The title's script key as text (such as k_england).",
+  "details": "Vanilla passes it to preselect a decision option in the silk road and situation sub-region windows.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetLaws",
+  "label": "Title laws",
+  "summary": "Going by its name, the laws that apply to this title.",
+  "details": "Vanilla never names it on Title itself; GuiLawGroup.GetLaws in the realm window is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetLeaseContractType",
+  "label": "Lease contract type",
+  "summary": "The kind of lease contract under which this title is leased out (for example as church property).",
+  "details": "It leads on to the contract type. Vanilla shows it in the church property tooltip of the holding view, after the lessee and the holder.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetLeaseInfo",
+  "label": "Lease info",
+  "summary": "A text about this title's lease, if it is leased out.",
+  "details": "Vanilla puts it in the coat of arms holder tooltip, before the holder's name. Going by its name and this use.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetLeasedOutVassalList",
+  "label": "Leased out holdings",
+  "summary": "A text listing the leased out holdings that come along with this title.",
+  "details": "Vanilla shows it in the grant title tooltip under a heading saying the grant includes leased out holdings.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetLessee",
+  "label": "Lessee",
+  "summary": "The character who leases this title (holds it under a lease from its holder).",
+  "details": "Vanilla names the lessee in the church property tooltip, next to the holder. Two more uses in the map icon layer are commented out.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetLesseeOrHolder",
+  "label": "Lessee or holder",
+  "summary": "Going by its name, the character leasing this title, or else its holder when it is not leased out.",
+  "details": "Vanilla never names it on Title itself; a debug map tooltip calls it on a holding, which is a different type and only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetLineOfSuccession",
+  "label": "Line of succession",
+  "summary": "The line of succession of this title: the characters next in line to inherit it.",
+  "details": "Vanilla's coat of arms tooltip checks whether this list has any entries before adding the line of succession heading. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetLineOfSuccessionDesc",
+  "label": "Line of succession text",
+  "summary": "A text describing this title's line of succession.",
+  "details": "Vanilla adds it to the coat of arms holder tooltip after the line of succession heading.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetLogName",
+  "label": "Log name",
+  "summary": "Going by its name, a name for the title as written into the game's logs.",
+  "details": "Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetMercenaryCompany",
+  "label": "Mercenary company",
+  "summary": "The mercenary company tied to this title.",
+  "details": "Vanilla's title window uses it as a context. The game does not say how the company is tied to the title, and documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetName",
+  "label": "Title name",
+  "summary": "The title's name, as shown in the game's texts.",
+  "details": "It is one of the most used text functions: vanilla uses it in law, realm and activity texts, for example to say a title cannot have a law. Variants drop the tier word (NoTier), the tooltip (NoTooltip), or give the possessive form (Possessive). The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNameAtDate",
+  "label": "Name at date",
+  "summary": "Going by its name, the title's name as it was at the given date.",
+  "details": "It takes one argument, a date. Vanilla never uses it. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNameAtDateNoTooltip",
+  "label": "Plain name at date",
+  "summary": "Going by its name, the title's name as it was at the given date, without the hover tooltip.",
+  "details": "It takes one argument, a date. Vanilla passes a character's death date, so the title shows under the name it had when that character died.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNameAtDatePossessive",
+  "label": "Possessive name at date",
+  "summary": "Going by its name, the possessive form of the title's name as it was at the given date.",
+  "details": "It takes one argument, a date. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNameAtDatePossessiveNoTooltip",
+  "label": "Plain possessive at date",
+  "summary": "Going by its name, the possessive form of the title's name at the given date, without the hover tooltip.",
+  "details": "It takes one argument, a date. Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNameNoTier",
+  "label": "Name without tier",
+  "summary": "Going by its name, the title's name without the tier word (England instead of Kingdom of England).",
+  "details": "Vanilla uses it in board game event texts about a county lost as a stake. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNameNoTierNoTooltip",
+  "label": "Plain name without tier",
+  "summary": "Going by its name, the title's name without the tier word and without the hover tooltip.",
+  "details": "Vanilla uses it in oath texts (the borders of the title) and to name a situation, such as an earthquake named after its epicenter county.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNameNoTierPossessive",
+  "label": "Possessive name, no tier",
+  "summary": "Going by its name, the possessive form of the title's name without the tier word (England's).",
+  "details": "Vanilla uses it in a hold court text about pilgrims flocking to a holy site's county.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNameNoTierPossessiveNoTooltip",
+  "label": "Possessive name, no tier",
+  "summary": "The possessive form of the title's name without the tier word and without the hover tooltip.",
+  "details": "Vanilla uses it to name China's grand campaigns, as in \"(China's) Grand Campaign\" in a casus belli and a great project. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNameNoTooltip",
+  "label": "Plain title name",
+  "summary": "Going by its name, the title's name without the hover tooltip.",
+  "details": "Vanilla uses it as the heading of the nomad tooltip about dominating a title to create a higher tier title. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNamePossessive",
+  "label": "Possessive name",
+  "summary": "The possessive form of the title's name.",
+  "details": "Vanilla uses it before a noun, as in \"it is (Byzantium's) duty\" or \"All of (the target title's) …\" in a scheme description. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNamePossessiveNoTooltip",
+  "label": "Plain possessive name",
+  "summary": "Going by its name, the possessive form of the title's name, without the hover tooltip.",
+  "details": "Vanilla never names it on Title itself; an interaction option uses it on a character's primary title, as in recognizing that title's sovereignty. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNameWithUnderlying",
+  "label": "Name with underlying",
+  "summary": "Going by its name, the title's name together with an underlying title's name.",
+  "details": "Vanilla never names it on Title itself; the artifact tooltip uses it on an artifact's associated title, as in inherited along with that title. What the underlying title is the game does not document.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNameWithUnderlyingNoTooltip",
+  "label": "Plain name with underlying",
+  "summary": "Going by its name, the title's name together with an underlying title's name, without the hover tooltip.",
+  "details": "Vanilla shows it in capitals as a title's name on the map icon layer and in the shared tooltip layout. What the underlying title is the game does not document.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNameWithUnderlyingPossessive",
+  "label": "Possessive with underlying",
+  "summary": "Going by its name, the possessive form of the title's name together with an underlying title's name.",
+  "details": "Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNameWithUnderlyingPossessiveNoTooltip",
+  "label": "Plain possessive with underlying",
+  "summary": "Going by its name, the possessive form of the title's name with an underlying title's name, without the hover tooltip.",
+  "details": "Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNumberOfBuildingSlots",
+  "label": "Building slots",
+  "summary": "Going by its name, how many building slots this title has, as a whole number.",
+  "details": "Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNumberOfBuildings",
+  "label": "Number of buildings",
+  "summary": "How many buildings there are in this title, as a whole number.",
+  "details": "Vanilla shows it in the ledger and dims the number when it is zero.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNumberOfClaimants",
+  "label": "Number of claimants",
+  "summary": "How many characters have a claim on this title, as a whole number.",
+  "details": "Vanilla shows it in the ledger and dims the number when it is zero.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNumberOfCounties",
+  "label": "Number of counties",
+  "summary": "Going by its name, how many counties belong to this title, as a whole number.",
+  "details": "Vanilla never names it on Title itself; the ledger uses the same name on houses and dynasties. Separate functions count de jure and de facto counties.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNumberOfDeFactoCounties",
+  "label": "De facto counties",
+  "summary": "How many counties are actually under this title right now (de facto), as a whole number.",
+  "details": "Vanilla's ledger shows it next to the de jure count, and treats a title as empty when it is zero.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNumberOfDeJureCounties",
+  "label": "De jure counties",
+  "summary": "How many counties lawfully belong to this title (de jure), as a whole number.",
+  "details": "Vanilla's ledger shows it as the total of de jure counties, next to the de facto count.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNumberOfHoldings",
+  "label": "Number of holdings",
+  "summary": "How many holdings (castles, cities, temples and the like) this title has, as a whole number.",
+  "details": "Vanilla shows it in the ledger.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNumberOfSpecialBuildingSlots",
+  "label": "Special building slots",
+  "summary": "Going by its name, how many special building slots (for unique buildings) this title has, as a whole number.",
+  "details": "Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetNumberOfSpecialBuildings",
+  "label": "Special buildings",
+  "summary": "How many special buildings (unique buildings) there are in this title, as a whole number.",
+  "details": "Vanilla shows it in the ledger and dims the number when it is zero.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetPlayerNominee",
+  "label": "Player's nominee",
+  "summary": "The character the player has nominated in this title's election.",
+  "details": "Vanilla's cardinals window compares it with a listed character to mark which one the player nominated, when the player is an elector. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetPreferredCapital",
+  "label": "Preferred capital",
+  "summary": "The title this title prefers as its capital.",
+  "details": "It leads on to that title. Vanilla's migration and title windows go on from it to its county data and the county's count, for example to the count's court chaplain.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetPrefix",
+  "label": "Name prefix",
+  "summary": "Going by its name, a prefix form of the title's name for compound words, as text.",
+  "details": "Vanilla's war names put it before a hyphen and another title's adjective, on a character's primary title. Those lines are counted under other types, so this rests on the name and a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetPrefixNoTooltip",
+  "label": "Name prefix",
+  "summary": "A prefix form of the title's name for building compound words, as text without the hover tooltip.",
+  "details": "Vanilla's culture divergence window uses it to suggest names for a new culture, such as \"(prefix)-(collective noun)\" or \"Neo-(prefix)\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetProvince",
+  "label": "Province",
+  "summary": "The province (map area) of this title.",
+  "details": "Vanilla goes on from it to the province's holding, for example to name the holding where a holy site is created or to check its holding type. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetRankConcept",
+  "label": "Tier name",
+  "summary": "The name of the title's tier (such as county or kingdom), as a game concept text.",
+  "details": "Vanilla puts it before the word title in the title view, and before tier and province in the administrative vassal details.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetRealmLabel",
+  "label": "Realm label",
+  "summary": "Going by its name, a label for the realm of this title.",
+  "details": "Vanilla never uses it. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetSpecialDescription",
+  "label": "Special description",
+  "summary": "A special description text of this title, which can be empty.",
+  "details": "Vanilla's title window shows it when it is not empty and shows something else when it is.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetStateRite",
+  "label": "State rite",
+  "summary": "The state rite tied to this title, as shown in the administration window.",
+  "details": "Vanilla's government administration window uses it as a context and shows its icon. What a state rite is the input does not explain. No return type is documented.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetSuccessionDescription",
+  "label": "Succession text",
+  "summary": "A text describing how this title is inherited.",
+  "details": "Vanilla's title window shows it in two places.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetSuccessionResultType",
+  "label": "Heir type",
+  "summary": "Going by its name, the kind of outcome the title's succession will have.",
+  "details": "Vanilla never uses it; it shows the name, description and icon of the same thing instead. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetSuccessionResultTypeDesc",
+  "label": "Heir type description",
+  "summary": "A text describing the heir type of this title's succession.",
+  "details": "Vanilla shows it in the heir type tooltip, under the heading with the heir type's name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetSuccessionResultTypeIcon",
+  "label": "Heir type icon",
+  "summary": "The icon for the heir type of this title's succession.",
+  "details": "Vanilla's character window uses it as a picture's texture. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetSuccessionResultTypeName",
+  "label": "Heir type name",
+  "summary": "The name of the heir type of this title's succession, as text.",
+  "details": "Vanilla shows it as the heading of the heir type tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetTierAsName",
+  "label": "Tier as name",
+  "summary": "The title's tier written as a word, such as Kingdom.",
+  "details": "Vanilla uses it in the administrative vassal details, as in Income from the tier and the tier's Succession. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetTierAsNameNoTooltip",
+  "label": "Plain tier as name",
+  "summary": "The title's tier written as a word, without the hover tooltip.",
+  "details": "Vanilla uses it in the reconquest oath text, as in consolidate the kingdom.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetTierAsNamePossessive",
+  "label": "Possessive tier name",
+  "summary": "Going by its name, the possessive form of the title's tier word (the kingdom's).",
+  "details": "Vanilla never names it on Title itself, but uses it on a character's primary title, for example for a top liege's border wars law. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetTierAsNamePossessiveNoTooltip",
+  "label": "Plain possessive tier name",
+  "summary": "Going by its name, the possessive form of the title's tier word, without the hover tooltip.",
+  "details": "Vanilla never names it on Title itself, but uses it on a character's primary title in the change state faith decision text. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetTierFrame",
+  "label": "Tier number",
+  "summary": "Going by its name, the title's tier as a whole number (a frame of the tier icon).",
+  "details": "Vanilla's outliner compares the player's primary title's number with this title's for nomad players, which hints that a higher number means a higher tier.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetTitleCoA",
+  "label": "Coat of arms",
+  "summary": "The coat of arms of this title.",
+  "details": "It leads on to the coat of arms. Vanilla's administration window goes on to its texture and slot, passing 256 and 256 as the size values, to draw it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetTitleLawsTooltip",
+  "label": "Title laws tooltip",
+  "summary": "A tooltip text about the laws on this title.",
+  "details": "Vanilla's realm window shows it as a text in two places.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetTotalIncome",
+  "label": "Total income",
+  "summary": "The total income from this title, as a number.",
+  "details": "Vanilla's ledger shows it as a whole number with a plus or minus sign, so it can be negative.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetTotalLevies",
+  "label": "Total levies",
+  "summary": "The total levies (soldiers raised from the land) of this title, as a whole number.",
+  "details": "Vanilla's ledger shows it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetTotalLoot",
+  "label": "Total loot",
+  "summary": "Going by its name, the total loot gained from this title, as a number.",
+  "details": "Vanilla's ledger shows it. How the loot is counted the game does not document.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.GetTotalTitleMAATroopsDesc",
+  "label": "Title army size",
+  "summary": "A text with the army size of this title's men-at-arms (professional troops).",
+  "details": "Vanilla shows it after Army Size in the title troops map mode tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.HasClericalElector",
+  "label": "Has clerical elector",
+  "summary": "Going by its name, whether this title has a clerical elector (a clergy member who votes) (yes or no).",
+  "details": "Vanilla uses it only on the map icon layer to show icons, together with HasClericalRegion.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.HasClericalRegion",
+  "label": "Has clerical region",
+  "summary": "Going by its name, whether this title lies in a clerical region (yes or no).",
+  "details": "Vanilla's interaction confirmation shows a different text for a title without a holder depending on it, and the map icon layer uses it with HasClericalElector.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.HasDeJureCounties",
+  "label": "Has de jure counties",
+  "summary": "Whether any counties lawfully belong to this title (de jure) (yes or no).",
+  "details": "Vanilla's ledger shows a title's rows when it has de jure counties or a de facto county count above zero.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.HasDiscountedTitleMaa",
+  "label": "Discounted troops",
+  "summary": "Going by its name, whether this title's men-at-arms are offered at a discount to the given character (yes or no).",
+  "details": "It takes one argument, a character (vanilla passes the player). Vanilla shows icons on the map icon layer with it, one only when the title's holder is not the player.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.HasDomicile",
+  "label": "Has domicile",
+  "summary": "Going by its name, whether this title has a domicile (yes or no).",
+  "details": "Vanilla's title window shows a part when the title has a holder and a domicile but no vassal groups. The input does not explain what a domicile is.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.HasElectionType",
+  "label": "Has election type",
+  "summary": "Whether this title's election is of the given kind (yes or no).",
+  "details": "It takes one argument, the election type's key in quotes, such as 'theocratic_elective'. Vanilla's title election window shows different controls for theocratic elections and for others.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.HasEnoughPiety",
+  "label": "Enough piety",
+  "summary": "Whether the given character has enough piety to pay this title's piety cost (yes or no).",
+  "details": "It takes one argument, a character (vanilla passes the player). Vanilla shows a check or a cross before the piety cost of creating the title.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.HasFaction",
+  "label": "Has faction",
+  "summary": "Going by its name, whether a faction is tied to this title (yes or no).",
+  "details": "Vanilla's title window shows the faction part when it is true and other parts when it is not (one only for titles above barony). Which tie is meant the game does not document.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.HasHolder",
+  "label": "Has holder",
+  "summary": "Whether someone holds this title (yes or no).",
+  "details": "Vanilla uses it to show parts for titles without a holder, for example in the interaction confirmation and the outliner.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Title.HasHoldingRegnalNames",
+  "label": "Has regnal names",
+  "summary": "Going by its name, whether holders of this title take regnal names (a ruling name, like a pope's) (yes or no).",
+  "details": "It takes one argument; the single vanilla use, on a character's primary title in the pope name event widget, passes whether the character is female. That line is counted under another type and is only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ }
+]

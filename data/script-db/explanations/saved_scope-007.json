@@ -1,0 +1,292 @@
+[
+ {
+  "kind": "saved_scope",
+  "key": "tradition",
+  "label": "Tradition",
+  "summary": "A culture tradition that was added to or removed from a culture.",
+  "details": "Vanilla's culture on_actions note that it is the tradition added or removed (the file comments call it a flag for the tradition). Compare it with a tradition key to react to a specific one.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/on_action/culture_on_actions.txt:81",
+   "vanilla: common/on_action/culture_on_actions.txt:98"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "trait",
+  "label": "Trait",
+  "summary": "The trait a character just gained or lost.",
+  "details": "Vanilla's trait on_actions provide it in both cases: one fires when a trait is gained, the other when it is lost. It is also read in the rich presence text of the game's status display.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/on_action/traits_on_actions.txt:5",
+   "vanilla: common/on_action/traits_on_actions.txt:66"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "traits",
+  "label": "Traits",
+  "summary": "A saved name the game's script uses for traits; the game documents nothing more.",
+  "details": "Vanilla does not use it anywhere, so what it holds and when it is set is not known. Mods can save their own value under this name.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "transfer_type",
+  "label": "Transfer type",
+  "summary": "A flag saying how a title changed hands.",
+  "details": "The title on_actions provide it, except the one for a destroyed title. Values are flags such as `flag:inheritance`, `flag:conquest`, `flag:conquest_holy_war`, `flag:abdication`, `flag:usurped`, `flag:granted`, `flag:revoked`, `flag:election` and `flag:created`; the file lists more. Test it with `scope:transfer_type = flag:inheritance`.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/on_action/title_on_actions.txt:3"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "travel_options",
+  "label": "Travel options",
+  "summary": "A saved name connected to travel; the game documents nothing more.",
+  "details": "Vanilla does not use it anywhere, so what it holds is not known.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "travel_plan",
+  "label": "Travel plan",
+  "summary": "The travel plan an event or on_action is about.",
+  "details": "Vanilla's travel on_actions list it as the travel plan (the journey of a character and their entourage).",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/on_action/travel_on_actions.txt:2076"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "travel_plan_owner",
+  "label": "Travel plan owner",
+  "summary": "A saved name connected to travel plans; the game documents nothing more.",
+  "details": "Vanilla does not use it anywhere, so what it holds is not known. Vanilla's travel on_actions do call the root the owner of the travel plan, but that is a different name.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "travel_safety",
+  "label": "Travel safety",
+  "summary": "A number the game gives while it builds a travel option's tooltip: the travel safety.",
+  "details": "The game's notes for travel options give it to `on_applied_effect` and `on_travel_end_effect`, but only when the tooltip is built, not when the effect really runs: use it for the tooltip, not for the outcome. Vanilla's own script does not read it.",
+  "fields": [],
+  "sources": ["vanilla: common/travel/travel_options/_travel_options.info:31"],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "travel_speed",
+  "label": "Travel speed",
+  "summary": "A number the game gives while it builds a travel option's tooltip: the travel speed, in percentage points above 100%.",
+  "details": "The game's notes for travel options give it to `on_applied_effect` and `on_travel_end_effect`, but only when the tooltip is built, not when the effect really runs: use it for the tooltip, not for the outcome. Vanilla's own script does not read it.",
+  "fields": [],
+  "sources": ["vanilla: common/travel/travel_options/_travel_options.info:30"],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "travel_time",
+  "label": "Travel time",
+  "summary": "A saved name connected to travel; the game documents nothing more.",
+  "details": "Vanilla does not use it anywhere, so what it holds is not known.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "tributary",
+  "label": "Tributary",
+  "summary": "The tributary (the lesser ruler who pays tribute) that a government or tribute action is about.",
+  "details": "Vanilla's government types read it when working out the opinion bonus a tributary gets, and the tribute actions use it too. Who exactly it is depends on where it is used.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/governments/00_government_types.txt:1015"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "usurped",
+  "label": "Usurped",
+  "summary": "A saved name about usurping; the game documents nothing more.",
+  "details": "Vanilla does not use it anywhere. The title transfer type `flag:usurped` is a different thing.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "value",
+  "label": "Value",
+  "summary": "A number an on_action passes along, whose meaning depends on the on_action.",
+  "details": "Vanilla comments show two uses: the amount of loot an army gained, and the months since a character last visited their royal court. Check the on_action's comment to see what it means there.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/on_action/barter_on_actions.txt:27",
+   "vanilla: common/on_action/court_events.txt:119"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "vassal",
+  "label": "Vassal",
+  "summary": "A vassal the script is about; in contracts and tax slots, the vassal under the liege.",
+  "details": "In subject contracts it is the subject, the same as `scope:subject` (kept for old scripts). In tax slots it is the vassal in the slot, or the one being put in or taken out. Vanilla's own script also saves vassals under it in government types, important actions and more (796 uses), so check where it is set.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/subject_contracts/contracts/_subject_contracts.info:33",
+   "vanilla: common/tax_slots/obligations/_tax_obligation.info:18",
+   "vanilla: common/tax_slots/types/_tax_slot_type.info:80"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "victory",
+  "label": "Victory",
+  "summary": "Whether the commander's side won the battle.",
+  "details": "A yes/no value. Vanilla's knight on_actions describe it that way; test it with `scope:victory = no`.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/on_action/knight_on_actions.txt:6"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "war",
+  "label": "War",
+  "summary": "The war that the script is about.",
+  "details": "In casus belli groups the game gives the war under this name, next to `scope:attacker` and `scope:defender` (the primary attacker and defender). Vanilla reads it 591 times, for example in event wars and religious wars.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/casus_belli_groups/_casus_belli_groups.info:36"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "warden",
+  "label": "Warden",
+  "summary": "The character who keeps a hostage.",
+  "details": "Vanilla's hostage on_action describes it as the warden of the hostage being taken. A prison interaction saves it from the hostage's warden, and the child birth on_action uses the warden of a child born as a hostage.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/on_action/dlc/bp2/bp2_hostage_on_actions.txt:7",
+   "vanilla: common/on_action/child_birth_on_actions.txt:1146"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "was_kurultai",
+  "label": "Was Kurultai",
+  "summary": "Whether the new heir was part of the previous ruler's Kurultai council.",
+  "details": "A yes/no value. Vanilla's comment says so for the succession on_actions of the mobile (steppe) ruler content.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/on_action/dlc/mpo/mpo_on_actions_2.txt:307"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "wealth",
+  "label": "Wealth",
+  "summary": "A number used when choosing features of an artifact.",
+  "details": "Vanilla's artifact feature rules compare it with limits such as at least 60 or between 40 and 80, and artifact creation effects save a value under this name. The game gives it to the cost of repairing an artifact, as the artifact's wealth.",
+  "fields": [],
+  "sources": ["vanilla", "vanilla: common/artifacts/features/00_features.txt:128", "vanilla: common/scripted_effects/00_artifact_badge_scripted_effects.txt:141", "vanilla: common/scripted_costs/_scripted_costs.info:103"],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "weight_for_portrait",
+  "label": "Weight for portrait",
+  "summary": "A number the game gives to the ruler designer's portrait rules; going by its name, a weight value used for portraits.",
+  "details": "The rules' notes list it among the values a portrait change's `weight` can read, next to `scope:current_weight` and `scope:prowess`, and say no more. Vanilla's own script does not read it.",
+  "fields": [],
+  "sources": [
+   "vanilla: gfx/portraits/customization_rules/_customization_rules.info:30"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "will_override_government",
+  "label": "Will override government",
+  "summary": "Whether a rule will replace the government.",
+  "details": "A yes/no value. Vanilla reads it once in the scripted rules, as `scope:will_override_government = no`, inside the check for whether a character may be a player. What exactly sets it is not shown.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/scripted_rules/00_rules.txt:173"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "wipe",
+  "label": "Wipe",
+  "summary": "Whether a combat was a wipe.",
+  "details": "Vanilla's combat on_action for the winning side describes it as the answer to \"was this a wipe?\", and combat events test it with `scope:wipe = yes`. The game does not say here what counts as a wipe.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/on_action/combat_on_actions.txt:13"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "year_of_birth",
+  "label": "Year of birth",
+  "summary": "The year a character was born, as a number.",
+  "details": "Vanilla's clothing triggers compare it with years such as 975, 1000 and 1125 to pick an era's clothing style.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/scripted_triggers/00_clothing_triggers.txt:1558"
+  ],
+  "uncertain": false
+ }
+]

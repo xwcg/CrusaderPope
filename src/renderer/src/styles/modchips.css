@@ -50,7 +50,7 @@
 .mod-banner.duplicate b {
   color: var(--danger);
 }
-/* a mod defines it again, as the game does: no change — quiet */
+/* a mod defines it again, as the game does: no change, quiet */
 .mod-chip.same,
 .mod-badge.same {
   border-style: dotted;
@@ -159,12 +159,17 @@
 .mod-toggle {
   white-space: nowrap;
 }
-.mod-toggle.on {
+/* the DLC filter (entry lists): narrow, marked while it picks one */
+.dd-btn.dlc-filter {
+  max-width: 9em;
+}
+.mod-toggle.on,
+.dd-btn.dlc-filter.on {
   color: var(--accent);
   border-color: var(--accent-dim);
   background: var(--bg-active);
 }
-/* entries the loaded mods removed: listed (struck through) or hidden — at the right of the list's title line */
+/* entries the loaded mods removed: listed (struck through) or hidden; at the right of the list's title line */
 .hide-removed {
   margin-left: auto;
   align-self: center;

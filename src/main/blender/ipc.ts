@@ -2,11 +2,11 @@
  * The model page's Blender round trip (docs/blender.md), main process side: native file dialogs, the index worker's
  * export plan (what the model is made of), one Blender worker thread per job (conversion off the main process), and
  * writing an import into the active mod (docs/mods.md, "Editing the active mod"). Also an asset's ⋯ menu (textures,
- * meshes): export the file as it is (or a texture as PNG), and replace it in the active mod with a file of the user's —
+ * meshes): export the file as it is (or a texture as PNG), and replace it in the active mod with a file of the user's,
  * converted to the asset's format and saved under its path and name.
  *
- * Test hook: CRUSADERPOPE_DIALOG_PATHS=<json file> answers the dialogs without opening them — `{ "save": path,
- * "open": path }` (a list is used in order, its last entry repeats; "" or null = cancelled). The file is read at
+ * Test hook: CRUSADERPOPE_DIALOG_PATHS=<json file> answers the dialogs without opening them: `{ "save": path,
+ * "open": path, "folder": path }` (folder: the settings' and first-run wizard's Browse…) (a list is used in order, its last entry repeats; "" or null = cancelled). The file is read at
  * every dialog, so a test can change it between steps.
  */
 import { BrowserWindow, app, dialog, ipcMain, shell } from 'electron';
@@ -21,6 +21,7 @@ import { activeMod, fileTag, modPath, write as writeModFile, type Active } from 
 import { change, recordRemove } from '../mods/undo.ts';
 import type { ImportOutcome, ModelExportPlan } from './types.ts';
 
+import { tr } from '../../shared/i18n.ts';
 export interface BlenderHost
 {
     mods: ModsHost;
@@ -35,7 +36,7 @@ export interface BlenderHost
 const dialogUses: Record<string, number> = {};
 
 /** The test hook's answer: a path, null (cancelled), undefined (no hook: show the dialog). */
-function testDialog(kind: 'save' | 'open'): string | null | undefined
+export function testDialog(kind: 'save' | 'open' | 'folder'): string | null | undefined
 {
     const file = process.env.CRUSADERPOPE_DIALOG_PATHS;
 
@@ -91,7 +92,7 @@ function runJob<T>(host: BlenderHost, job: Record<string, unknown>): Promise<T>
         w.once('exit', (code) =>
         {
             if (!done)
-                reject(new Error(`The conversion stopped (exit code ${code}).`));
+                reject(new Error(tr('The conversion stopped (exit code {code}).', { code })));
         });
     });
 }
@@ -101,7 +102,7 @@ async function plan(host: BlenderHost, path: string, pdxmesh?: string): Promise<
     const p = await host.query<ModelExportPlan | null>('modelExportPlan', path, pdxmesh);
 
     if (!p)
-        throw new Error(`${path}: no mesh to convert (the index is not ready, or the model has no .mesh file).`);
+        throw new Error(tr('{path}: no mesh to convert (the index is not ready, or the model has no .mesh file).', { path }));
 
     return p;
 }
@@ -111,7 +112,7 @@ const gameDirOf = (host: BlenderHost): string =>
     const d = host.mods.gameDir();
 
     if (!d)
-        throw new Error('No Crusader Kings III folder configured.');
+        throw new Error(tr('No Crusader Kings III folder configured.'));
 
     return d;
 };
@@ -136,7 +137,7 @@ async function importPlan(host: BlenderHost, path: string, pdxmesh?: string): Pr
     }
 
     if (!modPath(a, model.mesh))
-        return { plan: { mod, problem: `${model.mesh} is not a path inside the mod folder.` } };
+        return { plan: { mod, problem: tr('{mesh} is not a path inside the mod folder.', { mesh: model.mesh }) } };
 
     return { plan: { mod, mesh: model.mesh }, active: a, model };
 }
@@ -154,7 +155,7 @@ export function registerBlenderIpc(host: BlenderHost): void
         {
             const win = BrowserWindow.fromWebContents(e.sender)!;
             const r = await dialog.showSaveDialog(win, {
-                title: 'Export for Blender — the .gltf, its .bin, the textures as PNG and a manifest go into this folder',
+                title: tr('Export for Blender — the .gltf, its .bin, the textures as PNG and a manifest go into this folder'),
                 defaultPath: join(lastExportDir || app.getPath('documents'), name + '.gltf'),
                 filters: [{ name: 'glTF 2.0 (separate files)', extensions: ['gltf'] }],
                 properties: ['createDirectory', 'showOverwriteConfirmation']
@@ -182,7 +183,7 @@ export function registerBlenderIpc(host: BlenderHost): void
             const abs = modPath(a, w.rel);
 
             if (!abs)
-                throw new Error(`${w.rel} is not a path inside the mod folder.`);
+                throw new Error(tr('{rel} is not a path inside the mod folder.', { rel: w.rel }));
 
             files.push({ rel: w.rel, abs, what: w.what });
         }
@@ -210,7 +211,7 @@ export function registerBlenderIpc(host: BlenderHost): void
         const { plan: p, active: a, model } = await importPlan(host, path, pdxmesh);
 
         if (p.problem || !a || !model)
-            throw new Error(p.problem ?? 'Nothing to import into.');
+            throw new Error(p.problem ?? tr('Nothing to import into.'));
 
         let file = given ?? testDialog('open');
 
@@ -218,7 +219,7 @@ export function registerBlenderIpc(host: BlenderHost): void
         {
             const win = BrowserWindow.fromWebContents(e.sender)!;
             const r = await dialog.showOpenDialog(win, {
-                title: `Import from Blender into ${a.mod.name} — ${model.mesh}`,
+                title: tr('Import from Blender into {name} — {mesh}', { name: a.mod.name, mesh: model.mesh }),
                 defaultPath: lastImportDir || lastExportDir || app.getPath('documents'),
                 filters: [{ name: 'glTF 2.0', extensions: ['glb', 'gltf'] }],
                 properties: ['openFile']
@@ -236,8 +237,8 @@ export function registerBlenderIpc(host: BlenderHost): void
 
     ipcMain.handle('model:export', (e, path: string, pdxmesh?: string) => exportGltf(e, path, pdxmesh));
     ipcMain.handle('model:importPlan', async (_e, path: string, pdxmesh?: string) => (await importPlan(host, path, pdxmesh)).plan);
-    // (what an import writes is one undo step — mods/undo.ts)
-    ipcMain.handle('model:import', (e, path: string, pdxmesh?: string) => change(host.mods, `Import into ${basename(path)}`, 'import', () => importGltf(e, path, pdxmesh)));
+    // (what an import writes is one undo step, mods/undo.ts)
+    ipcMain.handle('model:import', (e, path: string, pdxmesh?: string) => change(host.mods, tr('Import into {basename}', { basename: basename(path) }), 'import', () => importGltf(e, path, pdxmesh)));
 
     // ---------------------------------------------------------------------------
     // an asset's ⋯ menu (textures, meshes): export it, replace it with a file
@@ -263,7 +264,7 @@ export function registerBlenderIpc(host: BlenderHost): void
             const win = BrowserWindow.fromWebContents(e.sender)!;
             const ext = as === 'png' ? 'png' : (extname(rel).slice(1) || '*');
             const r = await dialog.showSaveDialog(win, {
-                title: as === 'png' ? `Export ${basename(rel)} as PNG` : `Export ${basename(rel)}`,
+                title: as === 'png' ? tr('Export {basename} as PNG', { basename: basename(rel) }) : tr('Export {basename}', { basename: basename(rel) }),
                 defaultPath: join(lastExportDir || app.getPath('documents'), name),
                 filters: [{ name: as === 'png' ? 'PNG image' : ext.toUpperCase() + ' file', extensions: [ext] }],
                 properties: ['createDirectory', 'showOverwriteConfirmation']
@@ -292,9 +293,9 @@ export function registerBlenderIpc(host: BlenderHost): void
         return { rel, mod: a.mod.name, file: abs && existsSync(abs) ? abs : undefined };
     });
 
-    /** Removes the active mod's file for the asset (to the recycle bin): the game's — or an earlier mod's — file counts again. */
+    /** Removes the active mod's file for the asset (to the recycle bin): the game's (or an earlier mod's) file counts again. */
     ipcMain.handle('asset:removeOverride', (_e, path: string, pdxmesh?: string): Promise<AssetOverride & { loaded: boolean; step?: number; }> =>
-        change(host.mods, `Removed ${basename(path)}`, 'asset', async () =>
+        change(host.mods, tr('Removed {basename}', { basename: basename(path) }), 'asset', async () =>
         {
             const a = await activeMod(host.mods);
 
@@ -305,7 +306,7 @@ export function registerBlenderIpc(host: BlenderHost): void
             const abs = modPath(a, rel);
 
             if (!abs || !existsSync(abs))
-                throw new Error(`${a.mod.name} has no file ${rel}.`);
+                throw new Error(tr('{name} has no file {rel}.', { name: a.mod.name, rel }));
 
             // (the folder watcher: the app's own change; the undo step brings it back)
             host.mods.wrote?.([abs]);
@@ -328,7 +329,7 @@ export function registerBlenderIpc(host: BlenderHost): void
         }));
 
     /**
-     * An image of the user's for the crop & rotate dialog (a new event scene, a replaced texture — docs/mods.md "Crop
+     * An image of the user's for the crop & rotate dialog (a new event scene, a replaced texture; docs/mods.md "Crop
      * and rotate"): chosen in an open dialog, a DDS decoded to PNG (the renderer shows it), PNG / JPEG / WebP as they are.
      */
     ipcMain.handle('asset:pickImage', async (e, title?: string): Promise<PickedImage | null> =>
@@ -339,7 +340,7 @@ export function registerBlenderIpc(host: BlenderHost): void
         {
             const win = BrowserWindow.fromWebContents(e.sender)!;
             const r = await dialog.showOpenDialog(win, {
-                title: title ?? 'An image',
+                title: title ?? tr('An image'),
                 defaultPath: lastImportDir || app.getPath('pictures'),
                 filters: [{ name: 'Images (PNG, DDS, JPEG, WebP)', extensions: ['png', 'dds', 'jpg', 'jpeg', 'webp'] }],
                 properties: ['openFile']
@@ -374,7 +375,7 @@ export function registerBlenderIpc(host: BlenderHost): void
         return file;
     };
 
-    ipcMain.handle('asset:replace', (e, path: string, pdxmesh?: string, source?: ImageSource): Promise<ModelImportResult | null> => change(host.mods, `Replaced ${basename(path)}`, 'asset', () => replaceAsset(e, path, pdxmesh, source)));
+    ipcMain.handle('asset:replace', (e, path: string, pdxmesh?: string, source?: ImageSource): Promise<ModelImportResult | null> => change(host.mods, tr('Replaced {basename}', { basename: basename(path) }), 'asset', () => replaceAsset(e, path, pdxmesh, source)));
 
     /** An asset replaced by a file of the user's (asset:replace). */
     const replaceAsset = async (e: Electron.IpcMainInvokeEvent, path: string, pdxmesh?: string, source?: ImageSource): Promise<ModelImportResult | null> =>
@@ -387,7 +388,7 @@ export function registerBlenderIpc(host: BlenderHost): void
         const rel = await fileOf(path, pdxmesh);
 
         if (!modPath(a, rel))
-            throw new Error(`${rel} is not a path inside the mod folder.`);
+            throw new Error(tr('{rel} is not a path inside the mod folder.', { rel }));
 
         const mesh = /\.mesh$/i.test(rel);
         // (from the crop dialog: its PNG, or the picked file as it is)
@@ -397,7 +398,7 @@ export function registerBlenderIpc(host: BlenderHost): void
         {
             const win = BrowserWindow.fromWebContents(e.sender)!;
             const r = await dialog.showOpenDialog(win, {
-                title: `Replace ${rel} in ${a.mod.name} — saved under that name, converted where needed`,
+                title: tr('Replace {rel} in {name} — saved under that name, converted where needed', { rel, name: a.mod.name }),
                 defaultPath: lastImportDir || lastExportDir || app.getPath('documents'),
                 filters: mesh ? [{ name: 'Meshes (.mesh, glTF 2.0)', extensions: ['mesh', 'gltf', 'glb'] }] : [{ name: 'Images (PNG, DDS)', extensions: ['png', 'dds'] }],
                 properties: ['openFile']
@@ -422,9 +423,43 @@ export function registerBlenderIpc(host: BlenderHost): void
      * encoded like the game's scenes (DDS BC1 without mips; a DDS as it is) into
      * `gfx/interface/illustrations/event_scenes/<mod>_<event>.dds` of the active mod, registered as an event background
      * `<mod>_<event>` in `common/event_backgrounds/<mod>_event_backgrounds.txt` (the event's current background's
-     * environment — the portraits' lighting — else a courtyard's). The caller points the event at it.
+     * environment, the portraits' lighting, else a courtyard's). The caller points the event at it.
      */
-    ipcMain.handle('asset:eventScene', (e, eventType: string, eventName: string, source?: ImageSource): Promise<{ reference: string; files: string[]; notes: string[]; } | null> => change(host.mods, `New scene for ${eventName}`, 'asset', () => eventScene(e, eventType, eventName, source)));
+    ipcMain.handle('asset:eventScene', (e, eventType: string, eventName: string, source?: ImageSource): Promise<{ reference: string; files: string[]; notes: string[]; } | null> => change(host.mods, tr('New scene for {eventName}', { eventName }), 'asset', () => eventScene(e, eventType, eventName, source)));
+
+    /**
+     * A card's picture from an image file of the user's (PictureChooser, a decision's `reference = "gfx/…"`): encoded like
+     * the game's illustrations (DDS BC1 without mips, the job of the event scenes; a DDS as it is) into
+     * `<folder>/<mod>_<name>.dds` of the active mod (`folder` the current picture's, under gfx/). The caller writes the path.
+     */
+    ipcMain.handle('asset:picture', (_e, folder: string, name: string, source?: ImageSource): Promise<{ path: string; files: string[]; notes: string[]; } | null> => change(host.mods, tr('New picture for {name}', { name }), 'asset', () => picture(folder, name, source)));
+
+    /** asset:picture */
+    const picture = async (folder: string, name: string, source?: ImageSource): Promise<{ path: string; files: string[]; notes: string[]; } | null> =>
+    {
+        const a = await activeMod(host.mods);
+
+        if (typeof a === 'string')
+            throw new Error(a);
+
+        const file = source?.png ? croppedFile(source) : source?.file;
+
+        if (!file)
+            return null;
+
+        const dir = folder.replace(/\\/g, '/').replace(/^\/+|\/+$/g, '');
+
+        if (!/^gfx\//i.test(dir) || dir.split('/').includes('..'))
+            throw new Error(tr('{folder} is no picture folder of the game (gfx/…).', { folder }));
+
+        lastImportDir = dirname(file);
+        const tag = fileTag(a);
+        const base = name.replace(/[^A-Za-z0-9_]+/g, '_').toLowerCase();
+        const path = `${dir}/${base.startsWith(tag.toLowerCase() + '_') ? base : `${tag}_${base}`.toLowerCase()}.dds`;
+        const out = await runJob<ImportOutcome>(host, { op: 'encodeScene', gameDir: gameDirOf(host), mods: [], rel: path, file });
+        const res = await writeIntoMod(a, file, out);
+        return { path, files: res.files.map((f) => f.abs), notes: res.notes };
+    };
 
     /** asset:eventScene */
     const eventScene = async (e: Electron.IpcMainInvokeEvent, eventType: string, eventName: string, source?: ImageSource): Promise<{ reference: string; files: string[]; notes: string[]; } | null> =>
@@ -441,7 +476,7 @@ export function registerBlenderIpc(host: BlenderHost): void
         {
             const win = BrowserWindow.fromWebContents(e.sender)!;
             const r = await dialog.showOpenDialog(win, {
-                title: `A scene image for ${eventName} (the game's are 1592×848)`,
+                title: tr('A scene image for {eventName} (the game\'s are 1592×848)', { eventName }),
                 defaultPath: lastImportDir || app.getPath('pictures'),
                 filters: [{ name: 'Images (PNG, DDS)', extensions: ['png', 'dds'] }],
                 properties: ['openFile']
@@ -476,6 +511,6 @@ export function registerBlenderIpc(host: BlenderHost): void
                 await host.mods.refreshFiles?.([bgFile]);
         }
 
-        return { reference, files: [...res.files.map((f) => f.abs), bgFile], notes: [...res.notes, `Registered as the event background “${reference}” (${bgRel}).`] };
+        return { reference, files: [...res.files.map((f) => f.abs), bgFile], notes: [...res.notes, tr('Registered as the event background “{reference}” ({bgRel}).', { reference, bgRel })] };
     };
 }

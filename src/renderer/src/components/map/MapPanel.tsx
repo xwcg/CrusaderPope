@@ -1,5 +1,5 @@
 /**
- * The map's hover tooltip and side panel (docs/map.md): a province, its titles, realm and layers, with links — and ✎
+ * The map's hover tooltip and side panel (docs/map.md): a province, its titles, realm and layers, with links, and ✎
  * on the rows the map can change in the active mod (MapEdit.tsx).
  */
 import { Fragment, useEffect, useMemo, useState } from 'react';
@@ -10,6 +10,7 @@ import { CoatOfArms } from '../CoatOfArms';
 import { EDITABLE_LAYERS, MapEditHint, MapLayerEdit, useMapEditing } from './MapEdit';
 import { MapTitleEdit } from './MapEditTitle';
 
+import { tr } from '../../../../shared/i18n';
 export function MapTooltip(props: { info: MapInfo; groups: Groups; mode: Mode; p: number; x: number; y: number; }): React.JSX.Element
 {
     const { info, groups, p } = props;
@@ -24,12 +25,12 @@ export function MapTooltip(props: { info: MapInfo; groups: Groups; mode: Mode; p
             {kind !== 'land' && <span className="map-tip-kind">· {kind.replace('_', ' ')}</span>}
             {county >= 0 && county !== P.barony[p] && <div>{info.titles[county].name}</div>}
             {g >= 0 && props.mode !== 'c' && props.mode !== 'b' && <div className="map-tip-group">{groups.name(g)}</div>}
-            {props.mode !== 'realm' && realm >= 0 && <div className="map-tip-dim">Realm: {info.titles[realm].name}</div>}
+            {props.mode !== 'realm' && realm >= 0 && <div className="map-tip-dim">{tr('Realm: {name}', { name: info.titles[realm].name })}</div>}
         </div>
     );
 }
 
-/** A row of the panel; `edit`: what its ✎ changes — a title (index) or a layer of the province. */
+/** A row of the panel; `edit`: what its ✎ changes, a title (index) or a layer of the province. */
 interface Row
 {
     /** the label (unique: it names the open editor) */
@@ -40,7 +41,7 @@ interface Row
 
 /**
  * The selected province: its group in the mode (with a link and "Zoom to it"), then its titles, realm and holder and
- * every layer's value. `onChanged`: the map's data changed (an edit) — read it again.
+ * every layer's value. `onChanged`: the map's data changed (an edit); read it again.
  */
 export function MapPanel(props: { info: MapInfo; groups: Groups; mode: Mode; sel: number; navigate: Navigate; onClose: () => void; onZoom: () => void; onChanged: () => void; }): React.JSX.Element
 {
@@ -68,7 +69,7 @@ export function MapPanel(props: { info: MapInfo; groups: Groups; mode: Mode; sel
                 </>
             ) :
             (
-                '—'
+                tr('none')
             );
     // a holder: name and house, age, culture and faith at the date
     const holderOf = (h: NonNullable<MapInfo['titles'][number]['holder']>): React.ReactNode => (
@@ -117,7 +118,7 @@ export function MapPanel(props: { info: MapInfo; groups: Groups; mode: Mode; sel
                     </>
                 ) :
                 (
-                    '—'
+                    tr('none')
                 ),
             edit: realm >= 0 ? { title: realm } : undefined
         },
@@ -127,14 +128,14 @@ export function MapPanel(props: { info: MapInfo; groups: Groups; mode: Mode; sel
             const edit = layerEditable(l.id) ? { layer: l.id } : undefined;
 
             if (l.things)
-                return { k: l.row, v: v >= 0 ? link(l.things[v].type, l.things[v].key, l.things[v].name) : '—', edit };
+                return { k: l.row, v: v >= 0 ? link(l.things[v].type, l.things[v].key, l.things[v].name) : tr('none'), edit };
 
-            return { k: l.row, v: Number.isFinite(v) ? `${Math.round(v * 10) / 10}${l.scale?.unit ? ' ' + l.scale.unit : ''}` : '—', edit };
+            return { k: l.row, v: Number.isFinite(v) ? `${Math.round(v * 10) / 10}${l.scale?.unit ? ' ' + l.scale.unit : ''}` : tr('none'), edit };
         })
     ];
     return (
         <aside className="map-panel">
-            <button className="map-close ghost" onClick={props.onClose} title="Close">
+            <button className="map-close ghost" onClick={props.onClose} title={tr('Close')}>
                 ×
             </button>
             {g >= 0 && (
@@ -147,17 +148,16 @@ export function MapPanel(props: { info: MapInfo; groups: Groups; mode: Mode; sel
                     <div className="map-dim">
                         {counties} {counties === 1 ? 'county' : 'counties'}
                         {(props.mode === 'realm' || props.mode === 'vassal') && info.titles[g].holder && <>· {holderOf(info.titles[g].holder!)}</>}
-                        {props.mode === 'vassal' && info.titles[g].liege !== undefined && <>· under {title(info.titles[g].liege!)}</>}
+                        {props.mode === 'vassal' && info.titles[g].liege !== undefined && <>{tr('· under')}{' '}{title(info.titles[g].liege!)}</>}
                     </div>
                     <button className="map-zoom" onClick={props.onZoom}>
-                        Zoom to it
-                    </button>
+                        {tr('Zoom to it')}</button>
                 </div>
             )}
             <h3>{provinceName(info, p)}</h3>
             <div className="map-dim">
-                Province {p}
-                {P.name[p] ? ` · ${P.name[p]}` : ''} · {info.kinds[P.kind[p]].replace('_', ' ')}
+                {tr('Province {p}', { p })}
+                {P.name[p] ? ` · ${P.name[p]}` : ''} · {tr(info.kinds[P.kind[p]].replace('_', ' '))}
             </div>
             <table className="map-rows">
                 <tbody>
@@ -179,7 +179,7 @@ export function MapPanel(props: { info: MapInfo; groups: Groups; mode: Mode; sel
                                             <button
                                                 className={'map-edit-btn ghost' + (on ? ' on' : '')}
                                                 disabled={!editing.mod}
-                                                title={editing.mod ? `Change it in ${editing.mod}` : editing.why}
+                                                title={editing.mod ? tr('Change it in {mod}', { mod: editing.mod }) : editing.why}
                                                 onClick={() => setOpen(on ? null : r.k)}
                                             >
                                                 ✎

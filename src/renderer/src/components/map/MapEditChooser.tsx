@@ -1,7 +1,8 @@
 /** The list the map panel's editors choose from (MapEdit.tsx): cultures, faiths, holdings, characters, titles. */
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-/** One entry to choose: a culture, faith, holding, character, title — or "none". */
+import { tr } from '../../../../shared/i18n';
+/** One entry to choose: a culture, faith, holding, character, title, or "none". */
 export interface Choice
 {
     key: string;
@@ -85,7 +86,8 @@ export function MapEditChooser(props: {
     const shown = useMemo(() =>
     {
         const fixed = filterChoices(props.fixed ?? [], q);
-        const rest = search ? (found ?? []) : filterChoices(props.choices ?? [], q);
+        // (searching: what was found, and before anything is typed, `choices`: suggestions)
+        const rest = search ? (q.trim() ? (found ?? []) : (props.choices ?? [])) : filterChoices(props.choices ?? [], q);
         return [...fixed, ...rest].slice(0, MAX_SHOWN);
     }, [props.fixed, props.choices, search, found, q]);
 
@@ -134,13 +136,13 @@ export function MapEditChooser(props: {
                             <span className="map-edit-line">
                                 <span className="map-edit-name">{c.name}</span>
                                 {c.hint && <span className="map-edit-hint">{c.hint}</span>}
-                                {c.key === props.current && <span className="map-edit-now">now</span>}
+                                {c.key === props.current && <span className="map-edit-now">{tr('now')}</span>}
                             </span>
                             {c.sub && <span className="map-edit-sub">{c.sub}</span>}
                         </span>
                     </button>
                 ))}
-                {!shown.length && <div className="map-edit-empty">{search && !q.trim() ? 'Type a name, house or id to search' : search && found === null ? 'Searching…' : 'Nothing matches'}</div>}
+                {!shown.length && <div className="map-edit-empty">{search && !q.trim() ? tr('Type a name, house or id to search') : search && found === null ? tr('Searching…') : tr('Nothing matches')}</div>}
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-/** Province kinds of the map (map_data/default.map lists — docs/map.md). */
+/** Province kinds of the map (map_data/default.map lists, docs/map.md). */
 import { parse } from '../indexer/parser.ts';
 import type { MapKind } from '../../shared/api.ts';
 
@@ -14,7 +14,7 @@ const KIND_LISTS: Record<string, MapKind> = {
 };
 
 /**
- * Per province: an index into MAP_KINDS — land when definition.csv names it, then what default.map's lists say
+ * Per province: an index into MAP_KINDS: land when definition.csv names it, then what default.map's lists say
  * (`= RANGE { from to }` or `= LIST { ids }`).
  */
 export function readKinds(defaultMap: string, defined: boolean[]): number[]

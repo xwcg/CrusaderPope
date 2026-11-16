@@ -1,6 +1,6 @@
 /**
  * The index's revision (IndexStatus.revision): bumped by every build and every incremental update (files of a loaded
- * mod written by the app or changed on disk — docs/indexer.md, "Incremental updates"). Views showing index data
+ * mod written by the app or changed on disk; docs/indexer.md, "Incremental updates"). Views showing index data
  * reload on it and keep what they show until the new data is there. `gfx`: only builds and updates that changed
  * files below gfx/ (3D models, textures). Image URLs of files an update changed carry that revision (`fileVersion`),
  * so they load again instead of coming from the renderer's cache.
@@ -13,6 +13,20 @@ let current = { all: 0, gfx: 0, shaders: 0 };
 const listeners = new Set<() => void>();
 /** lower case game path → the revision that last changed the file */
 const changedAt = new Map<string, number>();
+
+/** the size at which the indexer cuts the list of changed files short (indexWorker.ts) */
+const INDEX_CHANGE_SAMPLE = 500;
+const changeCallbacks = new Set<(files: string[] | undefined) => void>();
+
+/**
+ * Calls `cb` after every new index revision (a build or an update): for module-level caches of index data to clear.
+ * `files`: the game paths an update changed; undefined when everything may be new (a build, or an update with a list
+ * cut short); a cache of other files keeps what it holds on an update that left them alone.
+ */
+export function onIndexChange(cb: (files: string[] | undefined) => void): void
+{
+    changeCallbacks.add(cb);
+}
 
 function onStatus(s: IndexStatus): void
 {
@@ -28,9 +42,15 @@ function onStatus(s: IndexStatus): void
     current = {
         all: s.revision,
         gfx: !files || files.some((f) => /^gfx\//i.test(f)) ? s.revision : current.gfx,
-        // (shader files of a loaded mod: the compiled programs are new — docs/shaders.md)
+        // (shader files of a loaded mod: the compiled programs are new; docs/shaders.md)
         shaders: !files || files.some((f) => /^gfx\/fx\//i.test(f)) ? s.revision : current.shaders
     };
+
+    // (the caches first: the views that reload on the revision must not find the old data there)
+    const all = !files || files.length >= INDEX_CHANGE_SAMPLE ? undefined : files;
+
+    for (const cb of changeCallbacks)
+        cb(all);
 
     for (const l of listeners)
         l();
@@ -69,8 +89,8 @@ export function fileVersion(path: string): number | undefined
 }
 
 /**
- * A digest of loaded data — typed arrays (geometry, textures) hashed by content, paths of files an update changed
- * with that revision (a texture the data names), the shader revision (the same data draws with other programs): a view
+ * A digest of loaded data: typed arrays (geometry, textures) hashed by content, paths of files an update changed
+ * with that revision (a texture the data names), the shader revision (the same data draws with other programs); a view
  * reloaded after an index update keeps what it shows (and its 3D scene) when the new data is the same.
  */
 export function digest(data: unknown): string

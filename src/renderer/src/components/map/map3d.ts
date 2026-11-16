@@ -15,10 +15,13 @@ import { detailSupported, loadDetail, tileVectors } from './map3d-detail';
 import { RIVER_REGION, groupField } from './map3d-field';
 import { loadCube, loadLut, loadTiling, lookUniforms, mapFile, objectSun } from './map3d-look';
 import { MapObjects } from './map3d-objects';
+import { FogMask } from './map3d-fog';
+import type { FogDraw } from './fog';
 import { overlaysOf, riverWidth, type Overlays } from './overlay-data';
 import { anisotropy, graphics, mapPixelRatio } from '../../graphics';
 
-/** The terrain shader draws the rivers raster's lines — off: map3dOverlays.ts draws the rivers as smooth lines of their own. */
+import { tr } from '../../../../shared/i18n';
+/** The terrain shader draws the rivers raster's lines (off: map3dOverlays.ts draws the rivers as smooth lines of their own). */
 export const RASTER_RIVERS = false;
 
 /** palette texture width (province id → texel) */
@@ -29,7 +32,7 @@ const GRID = 64;
 const SPLIT = 2.2;
 const MAX_PATCHES = 4096;
 /**
- * The horizon's colour — the fog far away and around the map, the sky at the horizon, the canvas behind — and the
+ * The horizon's colour (the fog far away and around the map, the sky at the horizon, the canvas behind) and the
  * sky's above (display values: the shaders write them as they are).
  */
 const HORIZON: [number, number, number] = [0.2, 0.24, 0.29];
@@ -45,8 +48,15 @@ export interface Overlay
 {
     object: THREE.Object3D;
     update?: (camera: THREE.PerspectiveCamera) => void;
+    /** it moves at this zoom step (the rivers' flow when they show): Map3D keeps drawing (uTime) while one does */
+    animated?: (zoom: number) => boolean;
     dispose: () => void;
 }
+
+/** how often a moving overlay is drawn again (ms): ~30 frames a second */
+const ANIMATION_STEP = 33;
+/** the water's waves move closer than this zoom step (far out the motion is not seen; the frames stop) */
+const WAVES_ZOOM = 14;
 
 /** The terrain's rasters (ck3://map/<key>-height.bin, -rivers.bin) with their settings. */
 export interface Terrain
@@ -282,6 +292,10 @@ export class Map3D
     private last = 0;
     private overlays: Overlay[] = [];
     private alive = true;
+    /** the fog of war's mask pass, and what the mask was made from */
+    private fogMask: FogMask | null = null;
+    private fogBuilt: FogDraw | null = null;
+    private fogNoise: { path: string; tex: Promise<THREE.Texture | null>; } | null = null;
 
     /** Throws with a message for the user (no WebGL2, the map larger than the GPU's textures). */
     constructor(canvas: HTMLCanvasElement, info: MapInfo, ids: Uint16Array, t: Terrain)
@@ -294,7 +308,7 @@ export class Map3D
         if (info.width > max || info.height > max || t.info.width > max)
         {
             renderer.dispose();
-            throw new Error(`The map (${info.width} × ${info.height}) is larger than this GPU's textures (${max})`);
+            throw new Error(tr('The map ({width} × {height}) is larger than this GPU\'s textures ({max})', { width: info.width, height: info.height, max }));
         }
 
         this.renderer = renderer;
@@ -331,9 +345,17 @@ export class Map3D
             uWaterLevel: { value: t.info.waterLevel },
             uHover: { value: 0 },
             uSel: { value: 0 },
+            uSelId: { value: 0 },
             uFog: { value: new THREE.Vector3(...HORIZON) },
             uFogRange: { value: new THREE.Vector2(1e9, 2e9) },
             uZoom: { value: 0 },
+            // the fog of war (setFog): the mask, on / ALPHA_MIN / fade step / pattern strength, contrast / brightness / tiling / fade length
+            uFow: { value: this.stand.pattern },
+            uFowSet: { value: new THREE.Vector4(0, 0.5, 9, 0.6) },
+            uFowAdj: { value: new THREE.Vector4(-0.8, 0, 10, 1) },
+            // (seconds: the rivers' flow and the water's waves; set while the map animates)
+            uTime: { value: 0 },
+            uWaveSpeed: { value: new THREE.Vector3(...(t.info.waveSpeeds ?? [0.01, 0.016, 0.005])) },
             uPxScale: { value: 1 },
             uRiversOn: { value: RASTER_RIVERS ? 1 : 0 },
             uGrid: { value: GRID },
@@ -482,6 +504,11 @@ export class Map3D
             return;
 
         this.objects = new MapObjects(o, bin, this.size[1], this.uniforms, this.objectUniforms, anisotropy(this.renderer.capabilities.getMaxAnisotropy()), () => this.invalidate());
+
+        // (the holdings asked for before the objects were in)
+        if (this.holdings)
+            this.objects.setHoldings(this.holdings);
+
         this.objects.object.visible = this.style === 'terrain';
         this.scene.add(this.objects.object);
         // no tree in the water: on water provinces, where the ground is below the water level (water is drawn there), on the
@@ -578,6 +605,17 @@ export class Map3D
         return x >= 0 && z >= 0 && x < this.size[0] && z < this.size[1] ? [x, z] : null;
     }
 
+    /** the holdings at the map's date (api.mapHoldings), kept for the objects when they come */
+    private holdings?: Record<string, number[]>;
+
+    /** The holdings at the map's date (castles, cities, temples at their provinces' locators). */
+    setHoldings(byMesh: Record<string, number[]>): void
+    {
+        this.holdings = byMesh;
+        this.objects?.setHoldings(byMesh);
+        this.invalidate();
+    }
+
     /** Adds an overlay (drawn with the scene, updated before each frame, disposed with the map). */
     addOverlay(o: Overlay): void
     {
@@ -601,7 +639,7 @@ export class Map3D
     }
 
     /**
-     * The mode's palettes: colour + kind (alpha: bit 0 water, bit 1 coloured, bit 2 inland water — lakes and rivers)
+     * The mode's palettes: colour + kind (alpha: bit 0 water, bit 1 coloured, bit 2 inland water (lakes and rivers))
      * and the group + 1 per province; the field of the mode's borders.
      */
     setGroups(info: MapInfo, groups: Groups): void
@@ -684,14 +722,60 @@ export class Map3D
         this.invalidate();
     }
 
-    /** @param hover the hovered group + 1 (0: none), `sel` the selected one */
-    setHighlight(hover: number, sel: number): void
+    /**
+     * The fog of war (components/map/fog.ts): the game's mask made from the table of alphas (again only when it is
+     * another table), applied by the terrain, water, objects and ribbons; null: off.
+     */
+    setFog(fog: FogDraw | null): void
     {
-        if (this.uniforms.uHover.value === hover && this.uniforms.uSel.value === sel)
+        const on = this.uniforms.uFowSet.value as THREE.Vector4;
+
+        if (!fog)
+        {
+            if (on.x !== 0)
+            {
+                on.x = 0;
+                this.invalidate();
+            }
+
+            return;
+        }
+
+        const def = fog.def;
+        const ready = this.fogBuilt === fog || this.fogBuilt?.key === fog.key;
+        // the flag waits for the mask when it is not built yet (no stand-in texture shown as fog)
+        on.set(ready || on.x !== 0 ? 1 : 0, def.alphaMin, def.fadeOutZoomStep, def.patternStrength);
+        (this.uniforms.uFowAdj.value as THREE.Vector4).set(def.contrast, def.brightness, def.patternTiling, 2 / def.fadeOutSpeed);
+
+        if (this.fogBuilt === fog || this.fogBuilt?.key === fog.key)
+        {
+            this.invalidate();
+            return;
+        }
+
+        this.fogBuilt = fog;
+        const noise = def.noiseTexture ? (this.fogNoise?.path === def.noiseTexture ? this.fogNoise : (this.fogNoise = { path: def.noiseTexture, tex: loadTiling(def.noiseTexture, 1024).then((t) => (this.alive ? (this.owned.push(t), t) : null)).catch(() => null) })).tex : Promise.resolve(null);
+        void noise.then((n) =>
+        {
+            if (!this.alive || this.fogBuilt !== fog)
+                return;
+
+            this.fogMask ??= new FogMask(this.renderer, this.tex.ids, this.size);
+            this.uniforms.uFow.value = this.fogMask.build(fog.table, def, n);
+            (this.uniforms.uFowSet.value as THREE.Vector4).x = 1;
+            this.invalidate();
+        });
+    }
+
+    /** @param hover the hovered group + 1 (0: none), `sel` the selected one, `selId` the selected province when it has no group (0: none) */
+    setHighlight(hover: number, sel: number, selId = 0): void
+    {
+        if (this.uniforms.uHover.value === hover && this.uniforms.uSel.value === sel && this.uniforms.uSelId.value === selId)
             return;
 
         this.uniforms.uHover.value = hover;
         this.uniforms.uSel.value = sel;
+        this.uniforms.uSelId.value = selId;
         this.invalidate();
     }
 
@@ -723,11 +807,19 @@ export class Map3D
         const dt = this.last ? Math.min(0.1, (now - this.last) / 1000) : 1 / 60;
         const moving = this.cam.step(dt);
         this.last = moving ? now : 0;
+        // (a moving overlay (the rivers' flow when they show) keeps the frames coming, ~30 a second)
+        const animating = (this.style === 'terrain' && this.cam.zoom < WAVES_ZOOM) || this.overlays.some((o) => o.object.visible && o.animated?.(this.cam.zoom));
+
+        if (animating)
+            this.uniforms.uTime.value = now / 1000;
+
         this.draw();
         this.onFrame?.();
 
         if (moving)
             this.invalidate();
+        else if (animating)
+            setTimeout(() => this.alive && this.invalidate(), ANIMATION_STEP);
     };
 
     /** The patches for the view: split while near the eye, down to about a height pixel per quad; those in view only. */
@@ -832,6 +924,7 @@ export class Map3D
             o.dispose();
 
         this.objects?.dispose();
+        this.fogMask?.dispose();
         this.patches.dispose();
         this.water.geometry.dispose();
         this.sky.geometry.dispose();

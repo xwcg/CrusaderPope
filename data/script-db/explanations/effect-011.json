@@ -1,0 +1,431 @@
+[
+ {
+  "kind": "effect",
+  "key": "finish_council_task",
+  "label": "Finish council task",
+  "summary": "Makes the councillor complete the task they are currently working on, successfully.",
+  "details": "Runs on the councillor (a character).",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "fire_councillor",
+  "label": "Fire councillor",
+  "summary": "Makes the character remove the target character from their council.",
+  "details": "The character the effect runs on is the one whose council it is, the value is the councillor who is removed. Vanilla often gives a councillor by a saved scope or by a council position link such as `cp:councillor_chancellor`. The variant `fire_councillor_skip_effects` does the same without running on_actions.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "fire_councillor_skip_effects",
+  "label": "Fire councillor quietly",
+  "summary": "Makes the character remove the target character from their council without running any on_actions.",
+  "details": "Like `fire_councillor`, but no on_actions run. Vanilla uses it only once.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "fire_tax_collector",
+  "label": "Fire tax collector",
+  "summary": "Makes the character fire the target character.",
+  "details": "The character the effect runs on is the one who dismisses, the value is the person dismissed. Vanilla always gives a tax collector as a saved scope, such as `scope:tax_collector`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "forbid_from_scheme",
+  "label": "Forbid from scheme",
+  "summary": "Bans the character from joining the given scheme as an agent.",
+  "details": "If the character is already an agent in that scheme, they are thrown out of it. Vanilla gives the scheme as a saved scope, `scope:scheme`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "force_add_to_agent_slot",
+  "label": "Force into agent slot",
+  "summary": "Puts the character into an agent slot of a scheme and makes them stay there for a set time.",
+  "details": "The duration is given in days, months or years. Vanilla always uses years (1 to 10) and gives the slot as a saved scope, such as `scope:eunuch_slot` or `scope:seducer_slot`.",
+  "fields": [
+   { "name": "agent_slot", "text": "The scheme's agent slot the character is placed into.", "values": "a saved scope holding an agent slot, such as `scope:agent_slot`" },
+   { "name": "days / months / years", "text": "How long the character is forced to stay in the slot.", "values": "a number; write it as `days`, `months` or `years`" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "force_character_skill_recalculation",
+  "label": "Recalculate skills now",
+  "summary": "Recomputes the character's skills immediately instead of waiting for the daily update.",
+  "details": "The game warns to use it only when really needed, because overusing it hurts performance. Vanilla uses it with `yes` only.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "force_next_councillor",
+  "label": "Force next councillor",
+  "summary": "Makes the given character the next councillor for an active council task.",
+  "details": "Runs on the active council task (for example `scope:active_council_task`), the value is the character. Vanilla uses it once.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "force_refresh_head_of_rite",
+  "label": "Refresh head of rite",
+  "summary": "Makes the game work out again who is the best head of the rite.",
+  "details": "Runs on a rite. Vanilla uses it with `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "force_set_personal_tenet",
+  "label": "Set personal tenet",
+  "summary": "Gives a playable character the given tenet as their personal tenet.",
+  "details": "If the character has no free room for it, the game removes their worst personal tenet, judged by spiritual fulfillment. Works on playable characters. The value is a tenet, for example `tenet:tenet_communion`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "force_step_down_landed_titles",
+  "label": "Step down from titles",
+  "summary": "Makes a ruler step down, in a milder way than abdicating or being deposed.",
+  "details": "If the ruler holds a title that lets them stay playable without land, their landed titles pass to their heirs: counties and any higher title with de jure land. They keep all titular titles. If they hold no such title, the effect works exactly like deposing them.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "force_vote_as",
+  "label": "Force vote",
+  "summary": "Makes the character vote the same way as the target, for a set time.",
+  "details": "Vanilla always uses it for 20 years with `target = root`.",
+  "fields": [
+   { "name": "target", "text": "The character whose vote is copied.", "values": "a character", "required": true },
+   { "name": "days / months / years", "text": "How long the forced vote lasts.", "values": "a number; write it as `days`, `months` or `years`" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "force_win",
+  "label": "Force combat result",
+  "summary": "Makes this side of the combat win at once, or lose when set to `no`.",
+  "details": "It ignores how many soldiers are left. Runs on one side of a combat.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "fund_great_project_contribution",
+  "label": "Fund project contribution",
+  "summary": "Makes the character pay for one contribution to a great project.",
+  "details": "It fails if the character cannot fund the contribution. A funded contribution cannot be taken back or refunded. The contribution must be given as the object itself, its key alone is not enough.",
+  "fields": [
+   { "name": "contribution", "text": "The contribution to fund.", "values": "a contribution object, such as a saved scope", "required": true },
+   { "name": "cost", "text": "Whether the contribution's cost is taken from the character.", "values": "`yes` or `no`", "default": "yes" },
+   { "name": "check_can_contribute", "text": "Whether the game first checks that the character is allowed to fund the contribution.", "values": "`yes` or `no`", "default": "yes" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "generate_building",
+  "label": "Generate building",
+  "summary": "Adds a random building to the province, chosen with the same logic the AI uses to construct.",
+  "details": "Runs on a province. Vanilla uses it with `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "generate_coa",
+  "label": "Generate coat of arms",
+  "summary": "Creates a new coat of arms for a title, dynasty, house, organization or confederation.",
+  "details": "Write `yes` to generate one, or the name of a coat of arms template list to draw only from that subset. Vanilla uses lists such as `factions` and `religious_title`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "get_all_innovations_from",
+  "label": "Get all innovations",
+  "summary": "Makes the culture discover every innovation the target culture has.",
+  "details": "The culture it runs on receives, the value is the culture it copies from. Vanilla gives the source as a culture such as `culture:french` or a saved scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "get_random_innovation_from",
+  "label": "Get random innovation",
+  "summary": "Makes the culture get one random available innovation from another culture.",
+  "details": "The culture it runs on receives, the value is the other culture. Vanilla gives it as a saved scope, `prev` or a culture link such as `culture:persian`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "get_title",
+  "label": "Get title",
+  "summary": "Gives a title to the character.",
+  "details": "The character it runs on receives the title. Vanilla mostly passes `prev` (the previous scope), a saved scope, or a named title such as `title:h_dar_al_islam`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "give_domain_to_herders",
+  "label": "Give domain to herders",
+  "summary": "Hands every county of the character's domain to herders and destroys all duchy titles and above they hold.",
+  "details": "The game's usage line spells it `give_domain_to_herds`, but vanilla writes `give_domain_to_herders = yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "give_nickname",
+  "label": "Nickname",
+  "summary": "Gives the character a nickname.",
+  "details": "The value is the key of a nickname, for example `nick_the_great`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "give_noble_family_title",
+  "label": "Give noble family title",
+  "summary": "Gives a noble family title to the character.",
+  "details": "Vanilla uses it mostly with `tier = county`, and with a government such as `steppe_admin_government`.",
+  "fields": [
+   { "name": "name", "text": "The name of the title.", "values": "a localization key or dynamic description" },
+   { "name": "tier", "text": "The rank of the title.", "values": "`county` or `duchy`", "default": "duchy" },
+   { "name": "article", "text": "The article placed before the title's name.", "values": "a title name article key, such as `DEFAULT_TITLE_NAME_ARTICLE`" },
+   { "name": "government", "text": "The government type of the title.", "values": "a government type", "default": "administrative_government" },
+   { "name": "save_scope_as", "text": "Saves the title under this name for later script.", "values": "a scope name, such as `new_title`" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "grow_clerical_region_from",
+  "label": "Grow clerical region",
+  "summary": "Makes the clerical region of the title grow by taking all counties from a neighbouring clerical region.",
+  "details": "Runs on the title of the growing region, the value is the title of the adjacent region it takes from.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "hidden_effect",
+  "label": "Hidden effect",
+  "summary": "Runs the effects inside it without listing them in the tooltip.",
+  "details": "The effects still happen, the player just does not see them described. It can hold any effects, and vanilla uses it very often, for example around conditions, random lists, events and opinions.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "hidden_effect_new_object",
+  "label": "Hidden effect (new object)",
+  "summary": "Runs the effects inside it without any tooltip, and hides errors about objects that do not exist yet.",
+  "details": "Meant for effects that use objects created just before, such as artifacts or characters. Nothing inside is described in the tooltip at all. Vanilla uses it mostly around newly created artifacts.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "if",
+  "label": "If",
+  "summary": "Runs the effects inside only when the conditions in its limit are met.",
+  "details": "Put the conditions in `limit = { ... }` and the effects next to it. Vanilla gives a limit in almost every use.",
+  "fields": [
+   { "name": "limit", "text": "The conditions that must be true for the effects to run.", "values": "a block of triggers" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "impact_house_relation",
+  "label": "Change house relation",
+  "summary": "Sets or changes the relation between this house and another house.",
+  "details": "Runs on a dynasty house. A step count can be whole or fractional. The relation can optionally be saved for later script.",
+  "fields": [
+   { "name": "target", "text": "The other house.", "values": "a dynasty house", "required": true },
+   { "name": "type", "text": "The kind of relation.", "values": "a house relation type" },
+   { "name": "steps", "text": "How far the relation moves.", "values": "a number, whole or fractional, or a script value", "required": true },
+   { "name": "description", "text": "What caused the relation to start or change.", "values": "a localization key or dynamic description" },
+   { "name": "notification", "text": "Whether a message is shown when a player's house is involved.", "values": "`yes` or `no`", "default": "yes" },
+   { "name": "save_scope_as", "text": "Saves the created relation under this name for later script.", "values": "a scope name" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "imprison",
+  "label": "Imprison",
+  "summary": "Makes the target a prisoner of the character.",
+  "details": "The character the effect runs on becomes the jailer. Vanilla always gives a type, either `dungeon` or `house_arrest`.",
+  "fields": [
+   { "name": "target", "text": "The character who is imprisoned.", "values": "a character", "required": true },
+   { "name": "type", "text": "How the prisoner is held.", "values": "a static modifier key; vanilla uses `dungeon` or `house_arrest`" },
+   { "name": "reason", "text": "The reason for the imprisonment.", "values": "a flag" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "infect_with_epidemic",
+  "label": "Infect with epidemic",
+  "summary": "Makes the character catch the given epidemic.",
+  "details": "Vanilla uses it once, with an epidemic saved as a scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "info_log",
+  "label": "Log message",
+  "summary": "Writes a message to the game's info log when the effect runs.",
+  "details": "The message can be a localization string; in it, ROOT, SCOPE and PREV are available.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "info_log_scopes",
+  "label": "Log current scope",
+  "summary": "Writes the current scope to the game's info log when the effect runs.",
+  "details": "With `yes` the log gets full scope information, with `no` only the current scope.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "info_log_stack_trace",
+  "label": "Log with stack trace",
+  "summary": "Writes a message to the game's info log, followed by a stack trace.",
+  "details": "The message can be a localization string; in it, ROOT, SCOPE and PREV are available.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "invalidate_activity",
+  "label": "Invalidate activity",
+  "summary": "Ends and destroys the given activity, after running its on_invalidate effects.",
+  "details": "The value is the activity, for example `scope:activity` or a character's involved activity.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "invalidate_contract",
+  "label": "Invalidate contract",
+  "summary": "Cancels the task contract it runs on.",
+  "details": "Vanilla always writes `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "invalidate_diarch_if_needed",
+  "label": "Check diarch now",
+  "summary": "Checks at once whether the diarch should be replaced, and replaces them if so.",
+  "details": "If needed, the current diarch is removed and the next one in the line of succession takes over. Runs on the diarch (a character).",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "invalidate_scheme",
+  "label": "Invalidate scheme",
+  "summary": "Ends the scheme and removes it, running its on_invalidate effects.",
+  "details": "The on_invalidate effects of a possible contract run as well.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "invest_gold",
+  "label": "Invest gold",
+  "summary": "Moves gold from the sponsor of the inspiration into the inspiration.",
+  "details": "The gold is taken from the sponsor automatically. The amount must be positive. Runs on an inspiration. Vanilla gives a number or a script value.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "invite_to_activity",
+  "label": "Invite to activity",
+  "summary": "Invites the character to the given activity.",
+  "details": "The character it runs on is the guest, the value is the activity.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "join_era",
+  "label": "Join era",
+  "summary": "Makes the culture join the given culture era and every era before it.",
+  "details": "The value is a culture era type.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "join_faction",
+  "label": "Join faction",
+  "summary": "Makes the character join the given faction.",
+  "details": "Vanilla mostly gives the faction as a saved scope, for example `scope:faction`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

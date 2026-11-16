@@ -1,0 +1,2119 @@
+[
+ {
+  "kind": "data_function",
+  "key": "Province.GetLegends",
+  "label": "Legends",
+  "summary": "A function on a province (one piece of the map) that, going by its name, gives the legends tied to it; the game documents nothing more.",
+  "details": "Vanilla never uses it, and the game documents no return type. Whether it gives legends that started here or ones that reached here is not shown.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetLoot",
+  "label": "Loot",
+  "summary": "The amount of gold a raid on this province brings in.",
+  "details": "Vanilla shows it as the loot of a province in the raid window, with the note that the loot goes to the raiding realm when the raid finishes. Barter texts also show it as what the army receives. It is a decimal number.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetLootTime",
+  "label": "Raid time",
+  "summary": "About how many days a given army takes to raid or barter in the province, as a whole number.",
+  "details": "The army view texts use it with the army as the argument: \"Will take about ... days\" for raiding and \"Bartering will take about ... days\" for bartering.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The army that raids or barters.",
+    "values": "an army"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetLootTooltip",
+  "label": "Loot tooltip",
+  "summary": "A ready-made tooltip text about the loot of this province.",
+  "details": "Vanilla uses it as the tooltip of the loot shown in the raid window, the siege window, the ledger and the county view.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_raid.gui:483",
+   "vanilla: gui/window_county_view.gui:1503"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetMaaOriginHere",
+  "label": "Stationed regiment",
+  "summary": "The men-at-arms regiment stationed in this province's holding.",
+  "details": "Vanilla's texts show its name, and the base name of its men-at-arms type, in lines like \"… has stationed a regiment of … in this holding\" and \"Replace the stationed … in …\". The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/regiment_l_english.yml:81"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetName",
+  "label": "Name",
+  "summary": "The name of the province.",
+  "details": "Vanilla uses it a lot in game texts, often on a province saved in a variable (for example the place of a famous battle or a holy site). A separate function, GetNameNoTooltip, gives the name without a tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetNameNoTooltip",
+  "label": "Name without tooltip",
+  "summary": "The name of the province as plain text, without a tooltip attached.",
+  "details": "Vanilla uses it where the name becomes part of other text, for example in pet names built from a city's name (\"Pride of …\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetRaid",
+  "label": "Raid",
+  "summary": "Going by its name, the raid going on in this province.",
+  "details": "It leads to a raid, so the raid's own functions can follow it. Vanilla never names it on this type; the outliner calls GetRaid on a holding's province, which is only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetSiege",
+  "label": "Siege",
+  "summary": "The siege going on in the province.",
+  "details": "A message text uses it when a siege starts to name the character whose realm is besieging the province. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetSiegeStrength",
+  "label": "Siege strength",
+  "summary": "Going by its name, a whole number for siege strength at this province; the game documents nothing more.",
+  "details": "Vanilla never uses it, so it is not shown whose siege strength it is or how it is counted.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetSupplyLimitDescFor",
+  "label": "Supply limit breakdown",
+  "summary": "Going by its name, a text that explains the supply limit of this province for someone; it takes one argument.",
+  "details": "The game's own concept text says the supply limit is how many soldiers you may have in a barony before the army starts losing supply. Vanilla never names this function on this type; the holding tooltip calls it on a holding's province with the player as the argument, which is only a hint that the argument is a character.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Going by the hint line, the character the supply limit is worked out for.",
+    "values": "a character"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1176"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetSupplyLimitFor",
+  "label": "Supply limit",
+  "summary": "The province's supply limit for a given character, as a whole number.",
+  "details": "The supply limit is how many soldiers can stay in a barony before the army starts losing supply. The map tooltip shows it for the player. Why it depends on a character is not documented.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The character the supply limit is worked out for; vanilla passes the player.",
+    "values": "a character"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1176"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetTag",
+  "label": "Tag",
+  "summary": "A text that identifies this province.",
+  "details": "Vanilla stores it in an interface variable to remember which province's list of domiciles (the homes of landless characters) is expanded on the map.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetTerrain",
+  "label": "Terrain",
+  "summary": "The terrain of this province.",
+  "details": "The terrain's own functions can follow it: vanilla shows the terrain's name, its icon and its county fertility value. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/event_windows/character_event.gui:556"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetTerrainKey",
+  "label": "Terrain key",
+  "summary": "The script key of the province's terrain, as text.",
+  "details": "The map tooltip builds the name of the terrain's icon from it (the key followed by _big) and shows the terrain's name beside it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetTerrainTooltipFor",
+  "label": "Terrain tooltip",
+  "summary": "A tooltip text about this province's terrain, worked out for a given character.",
+  "details": "Vanilla shows it under the terrain name in the holding view, with the player as the argument.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The character the tooltip is made for; vanilla passes the player.",
+    "values": "a character"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetTitle",
+  "label": "Title",
+  "summary": "The title that belongs to this province.",
+  "details": "Vanilla follows it to the title's holder, for example to name who has a regiment stationed in the province's holding. Which tier of title it is is not shown. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetTravelDangerTooltip",
+  "label": "Travel danger tooltip",
+  "summary": "A tooltip text about the danger of travelling through this province on a given travel plan.",
+  "details": "Vanilla shows it in the event window, with the travel plan (a character's planned journey) as the argument.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The travel plan the danger is shown for.",
+    "values": "a travel plan"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/event_windows/character_event.gui:604"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetTravelPointsOfInterest",
+  "label": "Travel points of interest",
+  "summary": "Going by its name, the points of interest for travellers in this province; the game documents nothing more.",
+  "details": "Vanilla never uses it, and the game documents no return type, so what a point of interest is here is not shown.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetTributarizationChanceTooltip",
+  "label": "Tributary chance tooltip",
+  "summary": "Going by its name, a tooltip text about the chance of making this province's ruler a tributary.",
+  "details": "Vanilla never names it on this type. The tributary map mode tooltip calls it on a province, which is only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetWinterEffectsDesc",
+  "label": "Winter effects",
+  "summary": "A text that lists what the current winter does in this province.",
+  "details": "Vanilla shows it in the winter tooltip on the map, below the winter's severity.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.GetWinterSeverityName",
+  "label": "Winter severity",
+  "summary": "The name of how harsh the winter is in this province right now.",
+  "details": "Vanilla shows it as \"Severity: …\" in the winter tooltip on the map.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.HasActiveRaid",
+  "label": "Has active raid",
+  "summary": "Going by its name, whether a raid is going on in this province.",
+  "details": "Vanilla never names it on this type; the outliner and the county view call it on a holding's province to show raid information, which is only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.HasActiveSiege",
+  "label": "Has active siege",
+  "summary": "Going by its name, whether a siege is going on in this province.",
+  "details": "The game documents no return type. Vanilla never names it on this type; the county view calls it on a province to show siege information, which is only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.HasFort",
+  "label": "Has fort",
+  "summary": "Whether this province has a fort.",
+  "details": "Vanilla uses it to show the fort icon on the map and in the county view.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:3107",
+   "vanilla: gui/window_county_view.gui:1909"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.HasSiege",
+  "label": "Has siege",
+  "summary": "Going by its name, whether this province is under siege.",
+  "details": "Vanilla never names it on this type; the outliner calls it on a holding's province, which is only a hint. Province.HasActiveSiege has a similar name; the input shows no difference between them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.HasTerrain",
+  "label": "Has terrain",
+  "summary": "Whether this province has a terrain.",
+  "details": "Vanilla checks it before showing the terrain icon of a province in the event window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/event_windows/character_event.gui:555"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.HasWinter",
+  "label": "Has winter",
+  "summary": "Going by its name, whether it is winter in this province; the game documents nothing more.",
+  "details": "Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.HasWinterLevel",
+  "label": "Has winter level",
+  "summary": "Whether the winter in this province has a given severity level.",
+  "details": "Vanilla uses it in the siege window with the levels 1, 2 and 3, each showing a different picture.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The winter level to check for.",
+    "values": "a whole number; vanilla uses 1, 2 and 3"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.IsBeingConvertedByClericalRegion",
+  "label": "Converted by clerical region",
+  "summary": "Going by its name, whether this province is being converted by a clerical region; the game documents nothing more.",
+  "details": "Vanilla never uses it, so what a clerical region is here is not shown.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.IsOccupied",
+  "label": "Is occupied",
+  "summary": "Going by its name, whether this province is occupied.",
+  "details": "Vanilla never names it on this type; the county view calls it on a province, which is only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.IsPinned",
+  "label": "Is pinned",
+  "summary": "Whether the player has pinned this province's holding in the outliner.",
+  "details": "The outliner is the list on the right side of the screen. Vanilla uses it to switch between the pin and unpin buttons in the county view and the \"Pin\"/\"Unpin\" tooltip. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_county_view.gui:1131"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.IsRealmCapital",
+  "label": "Is realm capital",
+  "summary": "Whether this province is the capital of its realm.",
+  "details": "Vanilla uses it to show a capital mark on the map and in the epidemics window. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:1285",
+   "vanilla: gui/window_epidemics.gui:483"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.IsRecentlyLooted",
+  "label": "Recently looted",
+  "summary": "Going by its name, whether this province was raided not long ago.",
+  "details": "Vanilla never names it on this type; the county view and the ledger call it on a holding's province, which is only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.IsValid",
+  "label": "Is valid",
+  "summary": "Whether there really is a province here.",
+  "details": "Vanilla uses it to show parts of a window only when a province is set, for example a saint's location in the faith window, or the opposite case in the men-at-arms window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.MakeScope",
+  "label": "As script scope",
+  "summary": "Turns the province into a script scope, so its variables and script data can be read.",
+  "details": "Vanilla uses it to read variables stored on a province, for example the faith of a standalone holy site in the travel planner.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.PanCameraTo",
+  "label": "Move camera to",
+  "summary": "Going by its name, moves the map camera to this province.",
+  "details": "Vanilla never names it on this type; buttons use PanCameraTo on a character and on an activity's location, which is only a hint. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.RazeHolding",
+  "label": "Raze holding",
+  "summary": "The command to raze (tear down) the holding in this province, for a given character.",
+  "details": "Vanilla's raze button asks the player to confirm this command, enables the button only when the command is possible, and shows its description as the tooltip. The player is passed as the argument.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The character who razes the holding; vanilla passes the player.",
+    "values": "a character"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/buttons.gui:1724"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.RebuildGreatBuilding",
+  "label": "Rebuild great building",
+  "summary": "Going by its name, the command to rebuild a great building in this province, for a given character.",
+  "details": "Vanilla never names it on this type; the county view's button calls it on the holding's province with the player, asks to confirm it and checks that it is possible, which is only a hint.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Going by the hint lines, the character who rebuilds.",
+    "values": "a character"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.Self",
+  "label": "Province itself",
+  "summary": "The province itself.",
+  "details": "Vanilla passes it as an argument, for example to work out a men-at-arms regiment's damage and toughness in a given province. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.ToggleProvincePinned",
+  "label": "Pin or unpin",
+  "summary": "Pins this province's holding in the outliner, or unpins it when it is already pinned.",
+  "details": "Vanilla uses it for both the pin and the unpin button in the county view. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_county_view.gui:1131"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Province.ZoomCameraTo",
+  "label": "Zoom camera to",
+  "summary": "Moves the map camera to this province and zooms in on it.",
+  "details": "Vanilla uses it when a province is clicked in the epidemics window. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_epidemics.gui:466"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.AccessSelf",
+  "label": "Access province icon itself",
+  "summary": "A function on a province icon (the group of icons drawn over a province on the map) that, going by its name, hands back the icon itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf, which passes a widget along, is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetActivities",
+  "label": "Activities",
+  "summary": "The activities shown at this province on the map.",
+  "details": "Vanilla fills a row of activity pins over the province from this list. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:191"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetArmyIgnoreClick",
+  "label": "Ignored click buttons",
+  "summary": "Which mouse clicks the realm flag over this province ignores, going by vanilla's use.",
+  "details": "Vanilla passes it to the button_ignore setting of the coat of arms button at a realm capital on the map. The game documents no return type, and the input does not show when clicks are ignored.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:308"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetBarter",
+  "label": "Barter",
+  "summary": "The barter going on at this province, shown as a map icon.",
+  "details": "Bartering is when an army trades with a province instead of raiding it. Vanilla shows a barter button over the province with this data. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:4417"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetCapitalIcon",
+  "label": "Capital icon",
+  "summary": "The data of the capital marker drawn at this province on the map.",
+  "details": "Vanilla uses it for the realm flag at a capital, and checks on it whether the province is a realm capital. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:300",
+   "vanilla: gui/map_icon_layer.gui:2906"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetCombatIcon",
+  "label": "Battle icon",
+  "summary": "The data of the battle icon drawn at this province on the map.",
+  "details": "Vanilla's battle widget starts from it and leads on to the battle itself. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:4447"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetCouncilTasks",
+  "label": "Council tasks",
+  "summary": "The council tasks active at this province, shown as icons on the map.",
+  "details": "A council task is a job a councillor does somewhere in the realm. Vanilla fills a row of task icons from this list; clicking one calls OnActiveTaskClick. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:445"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetFocusCharacter",
+  "label": "Pinned character",
+  "summary": "The character whose pin is shown at this province on the map.",
+  "details": "Vanilla shows a character pin with this character when the province has a character and no domicile. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:152"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetHolding",
+  "label": "Holding",
+  "summary": "The holding shown at this province on the map.",
+  "details": "Vanilla's holding icon on the map starts from it. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:2839"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetLatestDepartureDate",
+  "label": "Latest departure date",
+  "summary": "The last date someone can leave and still reach an activity at this province in time, going by vanilla's use.",
+  "details": "Vanilla shows a warning on an activity pin once the current date is past this date, with the tooltip that the player may not arrive in time. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:4350"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetOwner",
+  "label": "Owner",
+  "summary": "The character who owns this province, as shown on its map icon.",
+  "details": "Vanilla uses it for the realm flag at a capital and for unit icons. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:299"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetProvince",
+  "label": "Province",
+  "summary": "The province this map icon belongs to.",
+  "details": "Vanilla uses it for the recently raided and recently bartered marks and the fort icon. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:4423"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetRaid",
+  "label": "Raid",
+  "summary": "The raid going on at this province, shown as a map icon.",
+  "details": "Vanilla shows a raid button over the province with this data, unless the detailed raid icons are on. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:4411"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetRallyPoint",
+  "label": "Rally point",
+  "summary": "The rally point at this province, where raised armies gather.",
+  "details": "Vanilla shows a rally point button over the province with this data, hidden when the player lets the game raise armies for them. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:4382"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetSiege",
+  "label": "Siege",
+  "summary": "The siege going on at this province, shown as a map icon.",
+  "details": "Vanilla shows a siege button over the province with this data. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:4405"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetTaskContracts",
+  "label": "Task contracts",
+  "summary": "The task contracts located at this province, shown as icons on the map.",
+  "details": "Task contracts are jobs landless adventurers can take on. Vanilla fills a row of contract icons from this list when the province has one. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:203"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetTitle",
+  "label": "Title",
+  "summary": "The title whose name is shown on this province's map icon.",
+  "details": "Vanilla shows the title's name without its tier (such as \"County of\") on the holding icon. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:2895"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.GetUnitIcon",
+  "label": "Unit icon",
+  "summary": "The data of the army icons drawn at this province on the map.",
+  "details": "Vanilla's list of unit items over the province starts from it. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:4787"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasActivity",
+  "label": "Has activity",
+  "summary": "Whether an activity is shown at this province on the map.",
+  "details": "Vanilla uses it to show the row of activity pins.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasBarter",
+  "label": "Has barter",
+  "summary": "Whether a barter is going on at this province.",
+  "details": "Vanilla uses it to show the barter button on the map, unless the detailed barter icons are on.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasBeenBartered",
+  "label": "Recently bartered",
+  "summary": "Whether this province was bartered with recently.",
+  "details": "Vanilla uses it to show the recently bartered mark over the province.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:4434"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasBeenRaided",
+  "label": "Recently raided",
+  "summary": "Whether this province was raided recently.",
+  "details": "Vanilla uses it to show the recently raided mark over the province.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:4424"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasCharacter",
+  "label": "Has character",
+  "summary": "Whether a character pin belongs at this province on the map.",
+  "details": "Vanilla shows the character pin only when this is true and the province has no domicile.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:153"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasCoa",
+  "label": "Has coat of arms",
+  "summary": "Whether a coat of arms is shown at this province on the map.",
+  "details": "Vanilla uses it to show the realm flag at a capital, and to decide where other icons go around it. One use combines it with the map's zoom level.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:300"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasCombat",
+  "label": "Has battle",
+  "summary": "Whether a battle is going on at this province.",
+  "details": "Vanilla uses it to show the battle icon, with one look when both sides are neutral to the player and another otherwise.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasCouncilTasks",
+  "label": "Has council tasks",
+  "summary": "Whether council tasks are active at this province.",
+  "details": "Vanilla uses it to show the row of council task icons.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:444"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasDomicile",
+  "label": "Has domicile",
+  "summary": "Whether a domicile (the home of a landless character) is at this province.",
+  "details": "Vanilla uses it to show the domicile pin, and hides the plain character pin when there is a domicile.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasHolding",
+  "label": "Has holding",
+  "summary": "Whether a holding is shown at this province on the map.",
+  "details": "Vanilla uses it to show the holding information icons.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:438"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasHoldingDetails",
+  "label": "Has holding details",
+  "summary": "Whether the holding details are shown at this province on the map.",
+  "details": "Vanilla shows one version of the details when the holder is at war and another when not. The details include small icons such as a building being available, low county control and the county's fertility.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:2929"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasLocationIcons",
+  "label": "Has location icons",
+  "summary": "Whether the location icons, such as the holding information, are shown at this province.",
+  "details": "Vanilla uses it to show the holding icons when zoomed out far enough, and to place the battle icon depending on it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:428"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasRaid",
+  "label": "Has raid",
+  "summary": "Whether a raid is going on at this province.",
+  "details": "Vanilla uses it to show the raid button on the map, unless the detailed raid icons are on.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasRallyPoint",
+  "label": "Has rally point",
+  "summary": "Whether this province has a rally point.",
+  "details": "Vanilla shows the rally point button when this is true and the player does not let the game raise armies for them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:4384"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasSiege",
+  "label": "Has siege",
+  "summary": "Whether a siege is going on at this province.",
+  "details": "Vanilla uses it to show the siege button on the map.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:4406"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasSiegeGroup",
+  "label": "Has siege group",
+  "summary": "Whether the group of siege, raid and barter icons is shown at this province.",
+  "details": "Vanilla uses it to show the group that holds the siege, raid and barter buttons and the recently raided and bartered marks.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:4398"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasTaskContract",
+  "label": "Has task contract",
+  "summary": "Whether a task contract is located at this province.",
+  "details": "Vanilla uses it to show the row of task contract icons.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:199"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasUnits",
+  "label": "Has armies",
+  "summary": "Whether armies are shown at this province on the map.",
+  "details": "Vanilla uses it to show the unit icons and to place the coat of arms differently when there are armies.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.HasWarfareIcons",
+  "label": "Has warfare icons",
+  "summary": "Whether warfare icons, such as the rally point, sieges and raids, are shown at this province.",
+  "details": "Vanilla uses it to show the warfare status row over the province.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:317"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.OnActiveTaskClick",
+  "label": "Council task click",
+  "summary": "Handles a click on a council task icon at this province.",
+  "details": "Vanilla calls it when a council task icon over a province is clicked, with that task as the argument. It returns nothing; what the click opens is not shown.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The council task whose icon was clicked.",
+    "values": "an active council task"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:3266"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.OnRallyPointClick",
+  "label": "Rally point click",
+  "summary": "Handles a click on the rally point button at this province.",
+  "details": "Vanilla calls it from the rally point button on the map. It returns nothing; what the click opens is not shown.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:4388"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceIcon.Self",
+  "label": "Province icon itself",
+  "summary": "A function on a province icon that hands back the icon itself; the game documents no return type.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceMovementAttritionIcon.AccessSelf",
+  "label": "Access attrition icon itself",
+  "summary": "A function on a movement attrition icon (the map icon warning that armies lose men moving through a province) that, going by its name, hands back the icon itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf, which passes a widget along, is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceMovementAttritionIcon.GetTooltip",
+  "label": "Tooltip",
+  "summary": "The tooltip text of a movement attrition icon on the map.",
+  "details": "Vanilla uses it as the icon's tooltip. Attrition is the loss of soldiers an army suffers in hard places.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ProvinceMovementAttritionIcon.Self",
+  "label": "Attrition icon itself",
+  "summary": "A function on a movement attrition icon that hands back the icon itself; the game documents no return type.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionItem.AccessSelf",
+  "label": "Access puppet action itself",
+  "summary": "A function on a puppet action (something a puppeteer can make their puppet do, shown in the intrigue window) that, going by its name, hands back the action itself.",
+  "details": "A puppet is a character another ruler, the puppeteer, controls from behind the scenes. Vanilla never names AccessSelf on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionItem.GetActionInactiveReason",
+  "label": "Why not possible",
+  "summary": "The text that says why this puppet action cannot be done right now.",
+  "details": "Vanilla shows it in the tooltip \"Cannot perform this action:\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/schemewindow_l_english.yml:522"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionItem.GetDecision",
+  "label": "Decision",
+  "summary": "The decision behind this puppet action.",
+  "details": "Vanilla shows the decision as a button in the puppet part of the intrigue window; clicking it calls OpenPuppetDecision. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_intrigue.gui:2899"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionItem.GetGreatProject",
+  "label": "Great project",
+  "summary": "The great project (a large construction project) behind this puppet action.",
+  "details": "Vanilla shows it in the puppet part of the intrigue window. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_intrigue.gui:2960"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionItem.GetInteraction",
+  "label": "Interaction",
+  "summary": "Going by its name, the character interaction behind this puppet action.",
+  "details": "Vanilla never names it on this type; the lines that use GetInteraction belong to the interaction confirmation window and are only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionItem.GetPuppet",
+  "label": "Puppet",
+  "summary": "The puppet this action is about.",
+  "details": "Vanilla passes it to a great project's illustration and description in the intrigue window. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionItem.GetText",
+  "label": "Text",
+  "summary": "The text shown for this puppet action.",
+  "details": "Vanilla shows it on the action's row in the intrigue window and as a bullet point in the list of other actions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/schemewindow_l_english.yml:552"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionItem.IsEnabled",
+  "label": "Is enabled",
+  "summary": "Whether this puppet action can be done right now.",
+  "details": "Vanilla enables the action's button only when this is true, and otherwise shows the tooltip with the reason.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_intrigue.gui:2898"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionItem.OpenPuppetDecision",
+  "label": "Open decision",
+  "summary": "Opens the decision behind this puppet action.",
+  "details": "Vanilla calls it when the decision button of a puppet action is clicked. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_intrigue.gui:2900"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionItem.Self",
+  "label": "Puppet action itself",
+  "summary": "A function on a puppet action that hands back the action itself; the game documents no return type.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionType.AccessSelf",
+  "label": "Access action type itself",
+  "summary": "A function on a puppet action type (a kind of puppet action, defined in common/puppets/actions) that, going by its name, hands back the type itself.",
+  "details": "Vanilla never names it on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/puppets/actions/puppet_actions.txt"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionType.GetIndex",
+  "label": "Index",
+  "summary": "Going by its name, a whole number that marks this puppet action type's place in the game's list of them.",
+  "details": "Vanilla never names it on this type; GetIndex lines on other types are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionType.GetKey",
+  "label": "Key",
+  "summary": "Going by its name, the script key of this puppet action type.",
+  "details": "Vanilla never names it on this type; GetKey on other types (such as buildings) gives their key, which is only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionType.GetName",
+  "label": "Puppet action name",
+  "summary": "The name of a puppet action type, for a given character.",
+  "details": "Vanilla's puppet texts use it to say what a puppet (a character under someone's hold) allows: \"You have a puppet that allows: ...\". They pass the character the text is about, or the player. Why the name depends on a character is not documented.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The character the text is about; vanilla passes the character or the player.",
+    "values": "a character"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionType.IsValid",
+  "label": "Is valid",
+  "summary": "Going by its name, whether there really is a puppet action type here.",
+  "details": "Vanilla never names it on this type; IsValid lines on other types are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionType.Localize",
+  "label": "Localized text",
+  "summary": "Going by its name, a translated text belonging to this puppet action type; it takes one argument.",
+  "details": "Vanilla never names it on this type. PuppetType.Localize is given a text key ending such as 'concept_desc', a hint that the argument here works the same way.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Going by the hint, which text of the type to give.",
+    "values": "a text key"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetActionType.Self",
+  "label": "Action type itself",
+  "summary": "A function on a puppet action type that hands back the type itself; the game documents no return type.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetEntry.AccessSelf",
+  "label": "Access puppet entry itself",
+  "summary": "A function on a puppet entry (one puppet slot in the intrigue window) that, going by its name, hands back the entry itself.",
+  "details": "Vanilla never names AccessSelf on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetEntry.GetDecisions",
+  "label": "Decisions",
+  "summary": "The decisions listed for this puppet entry.",
+  "details": "Vanilla fills a list in the intrigue window from it and shows that part only when the list has items. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_intrigue.gui:3173"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetEntry.GetGreatProjects",
+  "label": "Great projects",
+  "summary": "The great projects listed for this puppet entry.",
+  "details": "Vanilla fills a list in the intrigue window from it and shows that part only when the list has items. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_intrigue.gui:3185"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetEntry.GetInteractions",
+  "label": "Interactions",
+  "summary": "The character interactions listed for this puppet entry.",
+  "details": "Vanilla fills a list in the intrigue window from it, with another look when the list is empty. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_intrigue.gui:2838"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetEntry.GetName",
+  "label": "Name",
+  "summary": "Going by its name, the name text of this puppet entry.",
+  "details": "Vanilla never names it on this type; GetName lines on other types are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetEntry.GetOtherActions",
+  "label": "Other actions",
+  "summary": "The other actions listed for this puppet entry, besides its decisions and great projects.",
+  "details": "Vanilla fills a list in the intrigue window from it and shows that part only when the list has items. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_intrigue.gui:3197"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetEntry.GetPotentialPuppets",
+  "label": "Possible puppets",
+  "summary": "Going by its name, the characters who could be chosen as the puppet for this entry; the game documents nothing more.",
+  "details": "Vanilla never uses it, and the game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetEntry.GetPuppet",
+  "label": "Puppet",
+  "summary": "The character who is the puppet in this entry.",
+  "details": "Vanilla shows the puppet's name under the entry's title and in the tooltip for cancelling the puppet's scheme. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/schemewindow_l_english.yml:559"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetEntry.GetPuppetType",
+  "label": "Puppet type",
+  "summary": "The kind of puppet this entry is for.",
+  "details": "Vanilla shows the type's name as the entry's title and in the headers of its interaction and action lists. The game's puppet types are defined in common/puppets/types (for example a theological agent or an external ruler puppet). The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/puppets/types/pam_puppet_types.txt:3"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetEntry.GetSchemes",
+  "label": "Schemes",
+  "summary": "The schemes shown for this puppet entry.",
+  "details": "Vanilla fills a list in the intrigue window from it. A separate text says the puppeteer can order a puppet to stop a scheme. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_intrigue.gui:2756"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetEntry.OpenPuppetSelectionList",
+  "label": "Choose puppet",
+  "summary": "Opens the list for choosing a puppet for this entry.",
+  "details": "Vanilla calls it when the puppet portrait slot in the intrigue window is clicked. It returns nothing.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_intrigue.gui:2565"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetEntry.Self",
+  "label": "Puppet entry itself",
+  "summary": "A function on a puppet entry that hands back the entry itself; the game documents no return type.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetInteractionGroup.AccessSelf",
+  "label": "Access interaction group itself",
+  "summary": "A function on a puppet interaction group (the interactions of one category for a puppet type) that, going by its name, hands back the group itself.",
+  "details": "Vanilla never names AccessSelf on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetInteractionGroup.GetCategory",
+  "label": "Category",
+  "summary": "The interaction category of this group.",
+  "details": "Vanilla shows the category's icon in the intrigue window and its name in the group's tooltip (\"… Interactions\"). The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/schemewindow_l_english.yml:539"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetInteractionGroup.GetGenericInteractionList",
+  "label": "Generic interaction list",
+  "summary": "A text listing the general interactions in this group, those not special to the puppet type.",
+  "details": "Vanilla shows it in the group's tooltip, under \"Other Interactions\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/schemewindow_l_english.yml:542"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetInteractionGroup.GetGenericInteractions",
+  "label": "Generic interactions",
+  "summary": "The general interactions in this group, those not special to the puppet type.",
+  "details": "Vanilla shows how many there are in the intrigue window, only when there are any. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetInteractionGroup.GetPuppetType",
+  "label": "Puppet type",
+  "summary": "The kind of puppet this interaction group belongs to.",
+  "details": "Vanilla names it in the group's tooltip: \"A … can take the following Special interactions in the … category\". The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/schemewindow_l_english.yml:540"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetInteractionGroup.GetSpecialInteractionList",
+  "label": "Special interaction list",
+  "summary": "A text listing the interactions in this group that are special to the puppet type.",
+  "details": "Vanilla shows it in the group's tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/schemewindow_l_english.yml:541"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetInteractionGroup.GetSpecialInteractions",
+  "label": "Special interactions",
+  "summary": "The interactions in this group that are special to the puppet type.",
+  "details": "Vanilla shows how many there are in the intrigue window, only when there are any. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetInteractionGroup.Self",
+  "label": "Interaction group itself",
+  "summary": "A function on a puppet interaction group that hands back the group itself; the game documents no return type.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetInteractionsFilter.AccessSelf",
+  "label": "Access puppet filter itself",
+  "summary": "A function on a puppet interactions filter (a button in the interaction menu that shows only one puppet's interactions) that, going by its name, hands back the filter itself.",
+  "details": "Vanilla never names AccessSelf on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetInteractionsFilter.GetPuppet",
+  "label": "Puppet",
+  "summary": "The puppet this filter in the interaction menu stands for.",
+  "details": "Vanilla shows the puppet's name in the filter's tooltip and passes the puppet to the puppet type's icon. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/puppet_window_l_english.yml:3"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetInteractionsFilter.GetPuppetType",
+  "label": "Puppet type",
+  "summary": "The kind of puppet this filter in the interaction menu stands for.",
+  "details": "Vanilla compares it with the puppet type selected in the interaction menu to show the filter as pressed, and uses its icon and colour. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetInteractionsFilter.GetPuppetTypeTooltip",
+  "label": "Puppet type tooltip",
+  "summary": "The tooltip text of this puppet filter in the interaction menu.",
+  "details": "Vanilla uses it as the whole text of the filter's tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/puppet_window_l_english.yml:2"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetInteractionsFilter.Self",
+  "label": "Puppet filter itself",
+  "summary": "A function on a puppet interactions filter that hands back the filter itself; the game documents no return type.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetType.AccessSelf",
+  "label": "Access puppet type itself",
+  "summary": "A function on a puppet type (a kind of puppet, defined in common/puppets/types) that, going by its name, hands back the type itself.",
+  "details": "Vanilla never names AccessSelf on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetType.GetAnimation",
+  "label": "Portrait animation",
+  "summary": "Going by its name, the portrait animation used for this kind of puppet; it takes one argument.",
+  "details": "Vanilla never names it on PuppetType directly, but the intrigue window calls GetAnimation on a puppet entry's type for the puppet's animated portrait, with a character as the argument.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Going by that use, the character whose portrait is animated.",
+    "values": "a character"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_intrigue.gui:2553"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetType.GetBackground",
+  "label": "Background",
+  "summary": "Going by its name, a background picture for this kind of puppet; it takes one argument.",
+  "details": "Vanilla never names it on this type; GetBackground lines on other types (bookmarks, the main menu) are only a hint. The game documents no return type, and what the argument is is not shown.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Not shown by vanilla.",
+    "values": "unknown"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetType.GetColor",
+  "label": "Colour",
+  "summary": "Going by its name, the colour of this kind of puppet.",
+  "details": "Vanilla never names it on this type. The interaction menu colours a puppet filter with GetColor on the filter's puppet type, which is a strong hint but not a direct use.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetType.GetDescription",
+  "label": "Description",
+  "summary": "Going by its name, the description text of this kind of puppet.",
+  "details": "Vanilla never names it on this type; GetDescription lines on other types are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetType.GetIcon",
+  "label": "Icon",
+  "summary": "The icon of this kind of puppet, for a given character.",
+  "details": "Vanilla shows it in tooltips with no character, and in the interaction menu with the puppet as the argument. The game documents no return type.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The character the icon is shown for; vanilla passes the puppet or no character.",
+    "values": "a character"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetType.GetIndex",
+  "label": "Index",
+  "summary": "Going by its name, a whole number that marks this puppet type's place in the game's list of them.",
+  "details": "Vanilla never names it on this type; GetIndex lines on other types are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetType.GetInteractionsAndActionsList",
+  "label": "Interactions and actions list",
+  "summary": "Going by its name, a text listing the interactions and actions this kind of puppet allows; it takes one argument. The game documents nothing more.",
+  "details": "Vanilla never uses it, so what the argument is is not shown.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Not shown by vanilla.",
+    "values": "unknown"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetType.GetKey",
+  "label": "Key",
+  "summary": "Going by its name, the script key of this puppet type, such as external_ruler_puppet.",
+  "details": "Vanilla never names it on this type; GetKey on other types gives their key, which is only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/puppets/types/pam_puppet_types.txt:245"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetType.GetName",
+  "label": "Name",
+  "summary": "The display name of this kind of puppet.",
+  "details": "Vanilla uses it in effect texts such as \"… becomes your …\" when a character is made a puppet.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetType.GetNameNoTooltip",
+  "label": "Name without tooltip",
+  "summary": "The display name of this kind of puppet as plain text, without a tooltip.",
+  "details": "Vanilla uses it in texts such as \"A … will be available to rulers if:\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetType.IsPuppetForPlayer",
+  "label": "Is player's puppet",
+  "summary": "Going by its name, whether a character is the player's puppet of this kind; it takes one argument. The game documents nothing more.",
+  "details": "Vanilla never uses it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Going by the name, the character to check.",
+    "values": "unknown"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetType.IsValid",
+  "label": "Is valid",
+  "summary": "Going by its name, whether there really is a puppet type here.",
+  "details": "Vanilla never names it on this type; IsValid lines on other types are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetType.Localize",
+  "label": "Localized text",
+  "summary": "A translated text of this puppet type, picked by a key ending.",
+  "details": "Vanilla passes 'concept_desc' to get the puppet type's description for the game concept text.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Which of the type's texts to give.",
+    "values": "a text key ending, such as 'concept_desc'"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/schemewindow_l_english.yml:560"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "PuppetType.Self",
+  "label": "Puppet type itself",
+  "summary": "A function on a puppet type that hands back the type itself; the game documents no return type.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RadianceValueMapIcon.AccessSelf",
+  "label": "Access radiance icon itself",
+  "summary": "A function on a radiance value map icon (a map icon that shows a radiance value) that, going by its name, hands back the icon itself.",
+  "details": "Vanilla never names AccessSelf on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The input does not explain what radiance is. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RadianceValueMapIcon.GetCharacter",
+  "label": "Character",
+  "summary": "The character this radiance value map icon belongs to.",
+  "details": "Vanilla's map icon starts from this character. The input does not explain what the radiance value is. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RadianceValueMapIcon.Self",
+  "label": "Radiance icon itself",
+  "summary": "A function on a radiance value map icon that hands back the icon itself; the game documents no return type.",
+  "details": "Vanilla never names it on this type. In game texts Self follows other things, for example Character.Self passed as an argument; those lines belong to other types and are only a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Raid.AccessSelf",
+  "label": "Access raid itself",
+  "summary": "A function on a raid (an army looting a province) that, going by its name, hands back the raid itself.",
+  "details": "Vanilla never names AccessSelf on this type; PdxGuiWidget.AccessSelf is a different type and only a hint. The game documents no return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Raid.GetArmy",
+  "label": "Raiding army",
+  "summary": "The army carrying out this raid.",
+  "details": "It leads to the army, so the army's own functions can follow it. Vanilla's raid window starts from it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Raid.GetAttackerMen",
+  "label": "Raiding soldiers",
+  "summary": "The number of soldiers in the raiding army.",
+  "details": "Vanilla shows it in the raid window and its soldier tooltip, next to the garrison's count.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Raid.GetDailyProgressPercent",
+  "label": "Daily progress",
+  "summary": "How much further the raid gets each day, as a percentage.",
+  "details": "Vanilla shows it as \"Daily progress\" in the raid window's soldier tooltip. It is a decimal number.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Raid.GetDefenderMen",
+  "label": "Garrison soldiers",
+  "summary": "The number of soldiers in the garrison defending against this raid.",
+  "details": "Vanilla shows it in the raid window and its soldier tooltip as the garrison's count.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ }
+]

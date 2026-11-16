@@ -1,5 +1,5 @@
 /**
- * Compiler threads (shaderWorker.ts): Effects compile in parallel, off the index worker — indexing's shader phase
+ * Compiler threads (shaderWorker.ts): Effects compile in parallel, off the index worker: indexing's shader phase
  * uses several cores and an on-demand compile never holds up queries. Threads start on first use and end after a
  * minute without work.
  */
@@ -8,6 +8,7 @@ import { readFileSync } from 'node:fs';
 import { Worker } from 'node:worker_threads';
 import type { ModInfo, ShaderProgram, ShaderRequest } from '../../shared/api.ts';
 
+import { tr } from '../../shared/i18n.ts';
 interface Thread
 {
     w: Worker;
@@ -19,7 +20,7 @@ export class CancelledError extends Error
 {
     constructor()
     {
-        super('Shader compilation cancelled');
+        super(tr('Shader compilation cancelled'));
     }
 }
 
@@ -44,7 +45,7 @@ export class ShaderPool
     }
 
     /**
-     * The compiler's code: a hash of the thread script (the compiler is bundled there, not into the index worker) —
+     * The compiler's code: a hash of the thread script (the compiler is bundled there, not into the index worker),
      * part of the store's fingerprint, so a changed compiler compiles afresh.
      */
     get version(): string

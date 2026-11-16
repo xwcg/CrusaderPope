@@ -1,5 +1,5 @@
 /**
- * Portrait modifiers (gfx/portraits/portrait_modifiers) for historical characters — see docs/portraits.md.
+ * Portrait modifiers (gfx/portraits/portrait_modifiers) for historical characters; see docs/portraits.md.
  *
  * The game dresses characters through modifier groups: each group (applied by priority) picks one modifier by
  * weights computed from triggers (rank, culture, government, faith, …) and applies its DNA changes (accessory,
@@ -8,7 +8,7 @@
  * substitution. Triggers we cannot know (flags, variables, wars, court positions …) evaluate to false.
  */
 import { parse, type PNode } from '../indexer/parser.ts';
-import { riteHistory } from '../indexer/layouts.ts';
+import { faithHasDoctrine, faithTable, riteHistory } from '../indexer/layouts.ts';
 import type { GameIndex } from '../indexer/gameIndex.ts';
 import { field, kids, scalar } from './assets.ts';
 
@@ -61,6 +61,9 @@ export interface CharacterFacts
     father?: string;
     mother?: string;
     prowess: number;
+    /** flags and inactive traits the history gives (`add_character_flag`, `make_trait_inactive`, in an `effect` too) */
+    flags?: Set<string>;
+    inactive?: Set<string>;
 }
 
 export type Scope =
@@ -81,7 +84,7 @@ export type Scope =
 export type VarValue = number | Scope;
 
 /**
- * The script state effects set up — the game start's (gameStart.ts): global variables and variable lists, and the
+ * The script state effects set up (the game start's, gameStart.ts): global variables and variable lists, and the
  * variables and variable lists of characters, titles, stories … (by `varKey`).
  */
 export interface ScriptState
@@ -90,10 +93,17 @@ export interface ScriptState
     globalLists: Map<string, Scope[]>;
     vars: Map<string, Map<string, VarValue>>;
     lists: Map<string, Map<string, Scope[]>>;
+    /**
+     * character flags (`add_character_flag`) and traits made inactive (`make_trait_inactive`), by `varKey`; mods set
+     * a historical character's looks with them at the start (AGOT: hair, beard, clothes through portrait modifiers
+     * testing `has_character_flag` / `has_inactive_trait`)
+     */
+    flags: Map<string, Set<string>>;
+    inactive: Map<string, Set<string>>;
 }
 
 /**
- * One evaluation's view of the script state: the state (made when first read — most portraits never read it), and
+ * One evaluation's view of the script state: the state (made when first read; most portraits never read it), and
  * saved scopes (`save_temporary_scope_as`) and local variables of its own.
  */
 export interface ScriptRun
@@ -105,7 +115,7 @@ export interface ScriptRun
 
 export function emptyState(): ScriptState
 {
-    return { globals: new Map(), globalLists: new Map(), vars: new Map(), lists: new Map() };
+    return { globals: new Map(), globalLists: new Map(), vars: new Map(), lists: new Map(), flags: new Map(), inactive: new Map() };
 }
 
 const EMPTY = emptyState();
@@ -143,9 +153,23 @@ interface CultureInfo
 }
 
 /** Character and title history read at a date. */
+/**
+ * A loaded save as the history (docs/saves.md): its characters (type savegame/characters, written like history
+ * characters), its date (the facts' date when none is asked for), its title holders and lieges.
+ */
+export interface SaveHistorySource
+{
+    type: string;
+    date: number;
+    /** title key → its holder (a save character id) and de facto liege title */
+    titles: Map<string, { holder?: string; liege?: string; }>;
+}
+
 export class History
 {
     private idx: GameIndex;
+    /** a loaded save in place of the history files (its characters, date and titles) */
+    readonly save?: SaveHistorySource;
     private timelines: Map<string, { date: number; holder?: string; liege?: string; }[]> | null = null;
     private heldAt = new Map<number, Map<string, { name: string; tier: number; }[]>>();
     private factsCache = new Map<string, CharacterFacts | null>();
@@ -154,9 +178,22 @@ export class History
     private faiths: Map<string, { religion: string; doctrines: Set<string>; }> | null = null;
     private cultures = new Map<string, CultureInfo | null>();
 
-    constructor(idx: GameIndex)
+    constructor(idx: GameIndex, save?: SaveHistorySource)
     {
         this.idx = idx;
+        this.save = save;
+    }
+
+    /** The characters' type: the history files', or a loaded save's. */
+    get characterType(): string
+    {
+        return this.save?.type ?? 'characters';
+    }
+
+    /** The date facts are taken at when none is asked for: the first bookmark, or a loaded save's date. */
+    get defaultDate(): number
+    {
+        return this.save?.date ?? BOOKMARK_DATE;
     }
 
     private titleTimelines(): Map<string, { date: number; holder?: string; liege?: string; }[]>
@@ -165,6 +202,16 @@ export class History
             return this.timelines;
 
         this.timelines = new Map();
+
+        // (a loaded save: each title as the save has it, at its date)
+        if (this.save)
+        {
+            for (const [title, t] of this.save.titles)
+                this.timelines.set(title, [{ date: this.save.date, ...t }]);
+
+            return this.timelines;
+        }
+
         // the files the game loads with the mods (a total conversion replaces history/titles)
         const vfs = this.idx.vfs;
 
@@ -191,7 +238,7 @@ export class History
                         entries.push({ date, holder, liege });
                 }
 
-                // (a title's history can be spread over files — development levels in one of their own: they merge)
+                // (a title's history can be spread over files (development levels in one of their own): they merge)
                 const all = [...(this.timelines.get(t.k) ?? []), ...entries];
                 all.sort((a, b) => a.date - b.date);
                 this.timelines.set(t.k, all);
@@ -217,6 +264,12 @@ export class History
         return v && v !== '0' ? v : undefined;
     }
 
+    /** A faith as history writes it: a rite there (1.20: `religion = shafii`) is its faith at the date. */
+    private asFaith(v: string | undefined, date: number): string | undefined
+    {
+        return v && (riteHistory(this.idx).faithOf(v, date) ?? v);
+    }
+
     holderAt(title: string, date: number): string | undefined
     {
         return this.lastAt(title, date, 'holder');
@@ -230,7 +283,7 @@ export class History
 
     private tierMaps = new Map<number, Map<string, number>>();
 
-    /** Highest title tier (1 barony … 6 hegemony) per holder at a date — for filtering many characters at once. */
+    /** Highest title tier (1 barony … 6 hegemony) per holder at a date, for filtering many characters at once. */
     holderTiers(date: number): Map<string, number>
     {
         let m = this.tierMaps.get(date);
@@ -258,7 +311,7 @@ export class History
 
     private titlesAt(id: string, date: number): { name: string; tier: number; }[]
     {
-        // (a holder map per date — one pass over the titles, what finding one character's titles costs anyway — for a
+        // (a holder map per date (one pass over the titles, what finding one character's titles costs anyway) for a
         // few dates)
         let m = this.heldAt.get(date);
 
@@ -310,7 +363,7 @@ export class History
 
         if (body === undefined)
         {
-            const e = this.idx.get('characters', id);
+            const e = this.idx.get(this.characterType, id);
             const d = e && this.idx.defNode(e);
             this.bodies.set(id, body = d ? kids(d.node) : null);
         }
@@ -330,13 +383,17 @@ export class History
 
         if (date === undefined)
         {
-            date = BOOKMARK_DATE;
+            date = this.defaultDate;
 
             if (death !== undefined && death < date)
                 date = death;
             else if (birth !== undefined && birth > date)
                 date = Math.min(birth + 300000, death ?? Infinity);
         }
+        // (a date before the birth, the preview date at an earlier bookmark: not born yet; shown as without a date, at 30
+        // or at the death, not as a two-year-old; the date bar says "not born yet")
+        else if (birth !== undefined && birth > date)
+            date = Math.min(birth + 300000, death ?? Infinity);
 
         const rite = scalar(field(body, 'rite'));
         const f: CharacterFacts = {
@@ -349,7 +406,7 @@ export class History
             birthYear: birth !== undefined ? Math.floor(birth / 10000) : undefined,
             culture: scalar(field(body, 'culture')),
             // (1.20: the rite's faith at the date)
-            faith: (rite && riteHistory(this.idx).faithOf(rite, date)) ?? scalar(field(body, 'religion')) ?? scalar(field(body, 'faith')),
+            faith: (rite && riteHistory(this.idx).faithOf(rite, date)) ?? this.asFaith(scalar(field(body, 'religion')) ?? scalar(field(body, 'faith')), date),
             traits: new Set(body.filter((c) => c.k === 'trait' && typeof c.v === 'string').map((c) => c.v as string)),
             dynasty: scalar(field(body, 'dynasty')) ?? scalar(field(body, 'dynasty_house')),
             titles: [],
@@ -374,7 +431,7 @@ export class History
                 if (x.k === 'culture')
                     f.culture = v;
                 else if (x.k === 'religion' || x.k === 'faith')
-                    f.faith = v;
+                    f.faith = this.asFaith(v, date);
                 else if (x.k === 'rite')
                     f.faith = riteHistory(this.idx).faithOf(v, date) ?? f.faith;
                 else if (x.k === 'trait' || x.k === 'add_trait')
@@ -389,6 +446,24 @@ export class History
                     f.spouses.push(v);
                 else if (x.k === 'remove_spouse')
                     f.spouses = f.spouses.filter((s) => s !== v);
+            }
+
+            // (flags and inactive traits: the entry's own and its `effect`'s top-level statements)
+            for (const x of [...kids(c), ...kids(c).filter((y) => y.k === 'effect').flatMap((y) => kids(y))])
+            {
+                const v = typeof x.v === 'string' ? x.v : x.k === 'add_character_flag' ? scalar(field(kids(x), 'flag')) : undefined;
+
+                if (!v)
+                    continue;
+
+                if (x.k === 'add_character_flag')
+                    (f.flags ??= new Set()).add(v);
+                else if (x.k === 'remove_character_flag')
+                    f.flags?.delete(v);
+                else if (x.k === 'make_trait_inactive')
+                    (f.inactive ??= new Set()).add(v);
+                else if (x.k === 'make_trait_active')
+                    f.inactive?.delete(v);
             }
         }
 
@@ -444,7 +519,8 @@ export class History
             this.children = new Map();
             const vfs = this.idx.vfs;
 
-            for (const file of vfs.list('history/characters', { ext: /\.txt$/i }))
+            // (a loaded save: its characters' files; the type is their folder, savegame/characters)
+            for (const file of vfs.list(this.save ? this.save.type : 'history/characters', { ext: /\.txt$/i }))
             {
                 for (const c of parse(vfs.readText(file) ?? ''))
                 {
@@ -482,35 +558,10 @@ export class History
         return [...ids].map((id) => this.facts(id, f.date)).filter((x): x is CharacterFacts => !!x);
     }
 
+    /** A faith's religion and doctrines, from either layout (nested in its religion, or 1.20's faith_types: layouts.ts). */
     faith(name: string): { religion: string; doctrines: Set<string>; } | undefined
     {
-        if (!this.faiths)
-        {
-            this.faiths = new Map();
-
-            for (const religion of this.idx.names('religion/religion_types'))
-            {
-                const e = this.idx.get('religion/religion_types', religion);
-                const d = e && this.idx.defNode(e);
-
-                if (!d)
-                    continue;
-
-                const body = kids(d.node);
-                const base = body.filter((c) => c.k === 'doctrine' && typeof c.v === 'string').map((c) => c.v as string);
-
-                for (const faith of kids(field(body, 'faiths')))
-                {
-                    if (!faith.k || !Array.isArray(faith.v))
-                        continue;
-
-                    const own = faith.v.filter((c) => c.k === 'doctrine' && typeof c.v === 'string').map((c) => c.v as string);
-                    this.faiths.set(faith.k, { religion, doctrines: new Set([...base, ...own]) });
-                }
-            }
-        }
-
-        return this.faiths.get(name);
+        return faithTable(this.idx).faiths.get(name);
     }
 
     culture(name: string): CultureInfo | undefined
@@ -674,7 +725,7 @@ export class TriggerEvaluator
     }
 
     /**
-     * Script value block: `{ value = age multiply = 0.01 }` — value/add/subtract/multiply/divide/min/max and
+     * Script value block: `{ value = age multiply = 0.01 }`: value/add/subtract/multiply/divide/min/max and
      * if/else_if/else with `limit`, applied in order.
      */
     scriptValue(list: PNode[], scope: Scope, ctx: EvalCtx, start = 0): number
@@ -727,7 +778,7 @@ export class TriggerEvaluator
 
                     acc = this.scriptValue(body, s, ctx, acc);
 
-                    // (random / ordered: one of them — the first that fits)
+                    // (random / ordered: one of them, the first that fits)
                     if (!c.k.startsWith('every_'))
                         break;
                 }
@@ -877,7 +928,7 @@ export class TriggerEvaluator
             undefined;
     }
 
-    /** A variable list: a global one, else the scope's (lists of saved scopes — `list = x` — are not kept). */
+    /** A variable list: a global one, else the scope's (lists of saved scopes, `list = x`, are not kept). */
     listOf(name: string | undefined, scope: Scope, ctx: EvalCtx, global: boolean): Scope[]
     {
         if (!name)
@@ -1067,9 +1118,10 @@ export class TriggerEvaluator
                 return this.block(block ?? [], scope, ctx);
             case 'OR':
                 return this.any(block ?? [], scope, ctx);
-            case 'NOT':
             case 'NAND':
                 return !this.block(block ?? [], scope, ctx);
+            // (NOT with several statements is true when none of them holds, as NOR)
+            case 'NOT':
             case 'NOR':
                 return !this.any(block ?? [], scope, ctx);
             case 'calc_true_if':
@@ -1097,7 +1149,7 @@ export class TriggerEvaluator
                 if (v === 'this' || v === 'root')
                     return true;
 
-                // a variable (of a scope on the way: `scope:story.var:x`) — a number exists as well as a scope
+                // a variable (of a scope on the way: `scope:story.var:x`): a number exists as well as a scope
                 const m = /^(?:(.+)\.)?((?:var|local_var|global_var):\w+)$/.exec(v);
 
                 if (m)
@@ -1108,7 +1160,7 @@ export class TriggerEvaluator
 
                 // ~300 historical overrides test `exists = character:X`: no need to build their facts
                 if (v.startsWith('character:'))
-                    return !!this.idx.get('characters', v.slice(10));
+                    return !!this.idx.get(this.history.characterType, v.slice(10));
 
                 return !!this.scopeOf(v, scope, ctx);
             }
@@ -1196,6 +1248,13 @@ export class TriggerEvaluator
                 return false;
         }
 
+        // (a character's sex compared with another's; AGOT gives historical characters their looks only when it fits)
+        if (k === 'sex_same_as' || k === 'sex_opposite_of')
+        {
+            const o = this.scopeOf(v, scope, ctx);
+            return scope.t === 'char' && o?.t === 'char' && (o.f.female === scope.f.female) === (k === 'sex_same_as');
+        }
+
         // identity: `this = character:90104`, `culture = culture:norse`, `faith.religion = religion:x`, `primary_title = title:k_x`
         if (/^(character|culture|faith|religion|title|scope):/.test(v) || v === 'root' || v === 'this')
         {
@@ -1252,7 +1311,7 @@ export class TriggerEvaluator
         if (scope.t === 'faith')
         {
             if (k === 'has_doctrine')
-                return !!this.history.faith(scope.name)?.doctrines.has(v);
+                return faithHasDoctrine(this.idx, scope.name, v, ctx.root.date);
 
             if (k === 'religion_tag')
                 return this.history.faith(scope.name)?.religion === v;
@@ -1280,6 +1339,12 @@ export class TriggerEvaluator
                 return bool(f.female);
             case 'is_male':
                 return bool(!f.female);
+            // (the history's, and the game start's, modelled by gameStart.ts)
+            case 'has_character_flag':
+                return !!f.flags?.has(v) || !!ctx.run.state().flags.get('character:' + f.id)?.has(v);
+            case 'has_inactive_trait':
+                return !!f.inactive?.has(v) || !!ctx.run.state().inactive.get('character:' + f.id)?.has(v);
+
             case 'is_adult':
                 return bool(f.age >= 16);
             case 'is_child':
@@ -1723,7 +1788,7 @@ export class PortraitModifiers
     /**
      * The torso animation state of a creature portrait: the first portrait animation group with options the creature
      * entity has a state for, its option chosen like a modifier (weight ≥ 100 wins, else weighted random, else the
-     * default). Human portraits keep their idle pose — their animations are not evaluated.
+     * default). Human portraits keep their idle pose; their animations are not evaluated.
      */
     creatureState(root: CharacterFacts, kind: string, known: (state: string) => boolean, seed: string, rng: (seed: string) => () => number, run: ScriptRun = freshRun()): string | undefined
     {

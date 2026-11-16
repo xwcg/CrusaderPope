@@ -1,5 +1,5 @@
 /**
- * Files inside packed mods have no disk path — GameFiles.where shows them as `archive.zip › entry`. To open one in an
+ * Files inside packed mods have no disk path: GameFiles.where shows them as `archive.zip › entry`. To open one in an
  * editor, the entry is extracted to a temp folder as a read-only copy (docs/mods.md, "Files inside zips"); revealing
  * one shows the zip.
  */
@@ -8,6 +8,7 @@ import { createHash } from 'node:crypto';
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { entryNameProblem, ZipArchive } from './zip.ts';
 
+import { tr } from '../../shared/i18n.ts';
 /** Separator of GameFiles.where for a zip entry. */
 export const ZIP_SEP = ' › ';
 
@@ -34,7 +35,7 @@ export function extractEntry(archive: string, entry: string, tempRoot: string): 
 
     // (`..foo/x` is a name like any other: only a `..` segment leaves the folder)
     if (!rel || rel === '..' || rel.startsWith('..' + sep) || isAbsolute(rel) || entryNameProblem(entry))
-        throw new Error('Not a file inside the zip: ' + entry);
+        throw new Error(tr('Not a file inside the zip: ') + entry);
 
     if (existsSync(target))
         return target;
@@ -46,7 +47,7 @@ export function extractEntry(archive: string, entry: string, tempRoot: string): 
         const data = zip.readEntry(entry);
 
         if (!data)
-            throw new Error(`${entry} was not found in ${archive}`);
+            throw new Error(tr('{entry} was not found in {archive}', { entry, archive }));
 
         mkdirSync(dirname(target), { recursive: true });
         writeFileSync(target, data);

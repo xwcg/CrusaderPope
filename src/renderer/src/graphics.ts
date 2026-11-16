@@ -2,7 +2,7 @@ import type { GraphicsSettings } from '../../shared/api';
 
 /**
  * Graphics quality of the 3D views (Settings → Graphics; docs/app-architecture.md "Settings"): a preset, each value
- * overridable. Read when a view opens — a change applies to views opened afterwards. `high` is the full look (the
+ * overridable. Read when a view opens: a change applies to views opened afterwards. `high` is the full look (the
  * default); `low` for weaker graphics cards: no supersampling, no MSAA, no shadows, no trees and objects on the map.
  */
 export const GRAPHICS_PRESETS: Record<'low' | 'medium' | 'high', Required<Omit<GraphicsSettings, 'preset'>>> = {

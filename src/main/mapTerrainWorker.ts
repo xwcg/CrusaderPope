@@ -1,6 +1,6 @@
 /**
  * Builds the 3D map's terrain files on a thread of its own (docs/map.md, "3D map"), from bytes the index worker read
- * through its file layering (mods included) — `kind` picks the build: `heights` (map/terrain-raster.ts:
+ * through its file layering (mods included); `kind` picks the build: `heights` (map/terrain-raster.ts:
  * heightmap.png and rivers.png → `<key>-height.bin`, `<key>-rivers.bin`, `<key>-terrain.json`), `detail`
  * (map/terrain-detail.ts: the detail maps and material textures → `<key>-detail.bin`, `<key>-materials.bin`,
  * `<key>-detail.json`), `objects` (map/terrain-objects.ts: map_object_data and meshes → `<key>-objects.bin`,

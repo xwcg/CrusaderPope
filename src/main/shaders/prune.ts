@@ -321,7 +321,7 @@ export function preprocessConditionals(src: string): string
 // ---------------------------------------------------------------------------
 
 /**
- * The name a global constant declares (`static const float2 X[4] = …;`, `const int N = 4;`) — one declarator only
+ * The name a global constant declares (`static const float2 X[4] = …;`, `const int N = 4;`), one declarator only
  * (a top-level comma declares several: kept as they are).
  */
 function constName(text: string): string | undefined
@@ -398,7 +398,7 @@ function splitItems(src: string): Item[]
 
         if (c === '{')
         {
-            // function definition: "… name ( … ) {"  — anything else with braces (structs, initializers) ends at ';'
+            // function definition: "… name ( … ) {"; anything else with braces (structs, initializers) ends at ';'
             const head = src.slice(start, i);
             const fm = /([A-Za-z_]\w*)\s*\(([^()]|\([^()]*\))*\)\s*$/.exec(head);
             let depth = 0;

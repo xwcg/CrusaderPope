@@ -1,7 +1,7 @@
 /**
  * Backups of the files the app writes outside the mods (docs/mods.md, "Writing lists back"): the launcher database and
  * dlc_load.json are copied to `<user folder>/crusaderpope-backups/<name>-<date>_<time>-<ms>Z<ext>` (UTC) before each
- * write; the newest `keep` copies of each file are kept, older ones deleted — never the copy just made.
+ * write; the newest `keep` copies of each file are kept, older ones deleted, never the copy just made.
  */
 import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync } from 'node:fs';
 import { basename, extname, join } from 'node:path';
@@ -23,7 +23,7 @@ function stamp(ms: number): string
 const escape = (s: string): string => s.replace(/[.*+?^$(){}|[\]\\]/g, (c) => '\\' + c);
 
 /**
- * The backups of a file (`launcher-v2.sqlite` → `launcher-v2-<stamp>.sqlite`), oldest first: by the time in the name —
+ * The backups of a file (`launcher-v2.sqlite` → `launcher-v2-<stamp>.sqlite`), oldest first, by the time in the name:
  * UTC names (`…Z`), local time for the names app versions before 2026-10 wrote.
  */
 export function backupsOf(dir: string, file: string): string[]
@@ -55,7 +55,7 @@ export function backupsOf(dir: string, file: string): string[]
 }
 
 /**
- * Copies `file` into `dir` under a name with the current time (UTC) and deletes the oldest copies beyond `keep` — never
+ * Copies `file` into `dir` under a name with the current time (UTC) and deletes the oldest copies beyond `keep`, never
  * the new one, whatever the clock did. Returns the new copy's path.
  */
 export function rotatingBackup(file: string, dir: string, keep = BACKUPS_KEPT, now = Date.now()): string

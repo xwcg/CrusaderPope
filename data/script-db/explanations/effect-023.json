@@ -1,0 +1,435 @@
+[
+ {
+  "kind": "effect", "key": "set_relation_guardian", "label": "Guardian relation",
+  "summary": "Makes the given character the guardian of the character this runs on.",
+  "details": "Writing it as a plain value (`= scope:guardian`) sets the relation with no reason. The block form also takes a reason, which needs a matching `_corresponding` text for the other side. Vanilla mostly gives a plain character, often `root`, run on a child, so the child's guardian is that character.",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text shown for the relation. A second text named like it plus `_corresponding` shows the reason on the target's side, with the two characters swapped.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation that already exists between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla", "vanilla: events/activities/hold_court_activity/hold_court_events_general.txt:7272"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_relation_intrigue_mentor", "label": "Intrigue mentor relation",
+  "summary": "Makes the given character the intrigue mentor of the character this runs on.",
+  "details": "The character this runs on becomes their intrigue student: the game's relation definitions pair intrigue mentor with intrigue student and add the other side by themselves. Takes a plain character or a block with a reason. Vanilla uses it with plain characters only (two uses). A reason needs a `_corresponding` text for the other side.",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text for the relation; a `_corresponding` text covers the target's side, with the two characters swapped.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla", "vanilla: common/scripted_relations/00_scripted_relations.txt:186"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_relation_intrigue_student", "label": "Intrigue student relation",
+  "summary": "Makes the given character an intrigue student of the character this runs on.",
+  "details": "The character this runs on becomes their intrigue mentor: the game's relation definitions pair intrigue student with intrigue mentor and add the other side by themselves. Vanilla does not use this one.",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla: common/scripted_relations/00_scripted_relations.txt:191"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_relation_lover", "label": "Lover relation",
+  "summary": "Makes the given character a lover of the character this runs on.",
+  "details": "Mostly written as a block with a target and a reason. The reason needs a matching `_corresponding` text for the lover's side, with the two characters swapped. `copy_reason` reuses the reason of an existing relation; vanilla uses it with `crush`.",
+  "fields": [
+   {"name": "target", "text": "The lover.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text for the relation. A text named like it plus `_corresponding` shows it on the lover's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type, such as `crush`"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_relation_mentor", "label": "Mentor relation",
+  "summary": "Makes the given character the mentor of the character this runs on.",
+  "details": "Vanilla uses it with a plain character (7 uses), run on the student with the mentor as the value. The block form adds a reason, which needs a `_corresponding` text for the other side.",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla", "vanilla: events/dlc/ep1/ep1_fund_inspiration_events.txt:10907"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_relation_nemesis", "label": "Nemesis relation",
+  "summary": "Makes the given character a nemesis of the character this runs on.",
+  "details": "Vanilla nearly always writes the block with a target and a reason, and often `copy_reason = rival`, which reuses the reason of a rival relation between the two. The reason needs a `_corresponding` text for the other side.",
+  "fields": [
+   {"name": "target", "text": "The nemesis.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text for the relation; a `_corresponding` text covers the target's side, with the two characters swapped.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type, such as `rival`"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_relation_nursed_child", "label": "Nursed child relation",
+  "summary": "Makes the given character a nursed child of the character this runs on.",
+  "details": "The character this runs on becomes their wet nurse: the game's relation definitions pair nursed child with wet nurse and add the other side by themselves. The game documents only the shared usage of the set_relation effects, and vanilla does not use this one.",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla: common/scripted_relations/00_scripted_relations.txt:294"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_relation_oaf", "label": "Oaf relation",
+  "summary": "Sets the oaf relation between the character and the given character.",
+  "details": "Vanilla uses it five times with a plain character. Which of the two is the oaf is going by the name.",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "set_relation_old_flame", "label": "Old flame relation",
+  "summary": "Makes the given character an old flame of the character this runs on.",
+  "details": "Vanilla uses it once, with a plain character. The block form adds a reason that needs a `_corresponding` text.",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "set_relation_potential_friend", "label": "Potential friend relation",
+  "summary": "Marks the given character as a potential friend of the character this runs on.",
+  "details": "Vanilla uses it often (68 times), nearly always with a plain character. The block form adds a reason that needs a `_corresponding` text.",
+  "fields": [
+   {"name": "target", "text": "The character who may become a friend.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_relation_potential_hook", "label": "Potential hook relation",
+  "summary": "Sets the potential hook relation between the character and the given character.",
+  "details": "Vanilla uses it once, inside a script template, so there is little to show how it is used. What the relation does beyond its name is not documented.",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "set_relation_potential_lover", "label": "Potential lover relation",
+  "summary": "Marks the given character as a potential lover of the character this runs on.",
+  "details": "Vanilla uses it 26 times, nearly always with a plain character. The block form adds a reason that needs a `_corresponding` text.",
+  "fields": [
+   {"name": "target", "text": "The character who may become a lover.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_relation_potential_rival", "label": "Potential rival relation",
+  "summary": "Marks the given character as a potential rival of the character this runs on.",
+  "details": "Vanilla uses it 112 times, mostly with a plain character (often `root` or `scope:actor`). The block form adds a reason, for example `rival_quarreled_over_land`.",
+  "fields": [
+   {"name": "target", "text": "The character who may become a rival.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_relation_rival", "label": "Rival relation",
+  "summary": "Makes the given character a rival of the character this runs on.",
+  "details": "Vanilla writes it almost always as a block with a target and a reason (216 uses), for example `{ target = root reason = rival_tried_to_kill_me }`. The reason needs a `_corresponding` text for the other side, with the two characters swapped.",
+  "fields": [
+   {"name": "target", "text": "The rival.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text for the relation; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason, such as the victim of a feud.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_relation_soldier_friend", "label": "Soldier friend relation",
+  "summary": "Sets the soldier friend relation between the character and the given character.",
+  "details": "Vanilla uses it once, with a plain character. The game does not document the relation beyond its name.",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "set_relation_soulmate", "label": "Soulmate relation",
+  "summary": "Makes the given character a soulmate of the character this runs on.",
+  "details": "Vanilla writes it as a block with a target and a reason (33 of 34 uses). It often adds `copy_reason = lover`, which reuses the reason of a lover relation between the two. The reason needs a `_corresponding` text for the other side.",
+  "fields": [
+   {"name": "target", "text": "The soulmate.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side, with the two characters swapped.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type, such as `lover`"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_relation_student", "label": "Student relation",
+  "summary": "Makes the given character a student of the character this runs on.",
+  "details": "The character this runs on becomes their mentor: the game's relation definitions pair student with mentor and add the other side by themselves. The game documents only the shared usage of the set_relation effects, and vanilla does not use this one.",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla: common/scripted_relations/00_scripted_relations.txt:93"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_relation_victim", "label": "Victim relation",
+  "summary": "Makes the given character a victim of the character this runs on, who becomes their bully.",
+  "details": "The game's relation definitions pair victim with bully and add the other side by themselves. Vanilla uses it 19 times, almost always with a plain character; the one block use gives a target and a reason (`bully_tumbled_down_hill`).",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla", "vanilla: common/scripted_relations/00_scripted_relations.txt:155"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_relation_ward", "label": "Ward relation",
+  "summary": "Makes the given character a ward of the character this runs on.",
+  "details": "The character this runs on becomes their guardian: the game's relation definitions pair ward with guardian and add the other side by themselves. Vanilla uses it 8 times, mostly with a plain character such as `scope:ward`.",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla", "vanilla: common/scripted_relations/00_scripted_relations.txt:133"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_relation_wedding_bad_fertility", "label": "Bad fertility wedding relation",
+  "summary": "Sets the bad fertility wedding relation between the character and the given character.",
+  "details": "Vanilla uses it 6 times, with characters named like spouses (`scope:my_spouse`, `scope:spouse_2`). The game does not say what the relation does beyond its name.",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "set_relation_wedding_good_fertility", "label": "Good fertility wedding relation",
+  "summary": "Sets the good fertility wedding relation between the character and the given character.",
+  "details": "Vanilla uses it 11 times, with characters mostly named like spouses (`scope:my_spouse`, `scope:spouse_2`). The game does not say what the relation does beyond its name.",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "set_relation_wedding_very_bad_fertility", "label": "Very bad fertility wedding relation",
+  "summary": "Sets the very bad fertility wedding relation between the character and the given character.",
+  "details": "Vanilla uses it 7 times, with spouses or partners. The game does not say what the relation does beyond its name.",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "set_relation_wedding_very_good_fertility", "label": "Very good fertility wedding relation",
+  "summary": "Sets the very good fertility wedding relation between the character and the given character.",
+  "details": "Vanilla uses it twice, with a plain character (`scope:my_spouse`, `scope:borte`). The game does not say what the relation does beyond its name.",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "set_relation_wet_nurse", "label": "Wet nurse relation",
+  "summary": "Makes the given character the wet nurse of the character this runs on.",
+  "details": "The character this runs on becomes their nursed child: the game's relation definitions pair wet nurse with nursed child and add the other side by themselves. Vanilla uses it 4 times with a plain character such as `scope:wet_nurse` or `scope:employee`.",
+  "fields": [
+   {"name": "target", "text": "The other character in the relation.", "values": "a character", "required": true},
+   {"name": "reason", "text": "Key of the reason text; a `_corresponding` text covers the target's side.", "values": "a localization key"},
+   {"name": "copy_reason", "text": "Copies the reason from another relation between the two.", "values": "a relation type"},
+   {"name": "province", "text": "A province tied to the reason.", "values": "a province"},
+   {"name": "involved_character", "text": "A third character tied to the reason.", "values": "a character"}
+  ],
+  "sources": ["doc", "vanilla", "vanilla: common/scripted_relations/00_scripted_relations.txt:287"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_religious_head_title", "label": "Religious head title",
+  "summary": "Makes the given title the head title of the faith.",
+  "details": "Runs on a faith. Vanilla gives it a title, for example `title:k_papal_state` or a title saved earlier in the script.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_reserved_gold_maximum", "label": "Reserved gold maximum",
+  "summary": "Sets the most gold the AI keeps in its reserved budget, which is also the amount it aims for.",
+  "details": "The reserved budget is filled before the war chest budget. Gold already in the budget is not adjusted to the new maximum. Works on a character.",
+  "fields": [],
+  "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_reserved_treasury_maximum", "label": "Reserved treasury maximum",
+  "summary": "Sets the most treasury the AI keeps in its reserved budget, which is also the amount it aims for.",
+  "details": "The reserved budget is filled before the war chest budget. What is already in the budget is not adjusted to the new maximum. Works on a character.",
+  "fields": [],
+  "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_rite_enabled", "label": "Rite enabled",
+  "summary": "Turns a rite on or off.",
+  "details": "A disabled rite is hidden in the interface and left out of the `available_rites` lists. Use `yes` to enable and `no` to disable.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_rite_name", "label": "Rite name",
+  "summary": "Changes the name, description and follower names of an existing rite.",
+  "details": "Each part takes a localization key or a dynamic description. Vanilla does not use this effect.",
+  "fields": [
+   {"name": "name", "text": "The rite's name.", "values": "a localization key or dynamic description"},
+   {"name": "desc", "text": "The rite's description.", "values": "a localization key or dynamic description"},
+   {"name": "adjective", "text": "The adjective form of the rite.", "values": "a localization key or dynamic description"},
+   {"name": "adherent", "text": "The name for one follower of the rite.", "values": "a localization key or dynamic description"},
+   {"name": "adherent_plural", "text": "The name for several followers of the rite.", "values": "a localization key or dynamic description"}
+  ],
+  "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_ruler_objective_decision", "label": "Ruler objective decision",
+  "summary": "Makes the given decision the character's ruler objective.",
+  "details": "If the decision supports it, the game gives extra advice for it. Vanilla uses it once, with `unify_region_decision`. The input lists no scope for it; the game's example runs it on a character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "set_same_ethnicity_as", "label": "Same ethnicity as",
+  "summary": "Gives the character the same ethnicity as the given character.",
+  "details": "The character this runs on changes; the given character is only copied from.",
+  "fields": [],
+  "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_secret_owner", "label": "Secret owner",
+  "summary": "Makes the given character the owner of the secret.",
+  "details": "Runs on a secret.",
+  "fields": [],
+  "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_sexuality", "label": "Sexuality",
+  "summary": "Sets the character's sexuality.",
+  "details": "Vanilla uses `heterosexual`, `homosexual`, `bisexual` and `asexual`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_should_decay", "label": "Artifact decays",
+  "summary": "Sets whether the artifact wears out over time.",
+  "details": "`yes` lets it decay, `no` stops it. Runs on an artifact. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_situation_center_province", "label": "Situation center province",
+  "summary": "Sets the province a situation is centered on.",
+  "details": "The game uses it to place the situation's pins on the map. A script can read it back with the `situation_center_province` link. Vanilla gives the title province of a county.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_skip_pursuit", "label": "Skip pursuit",
+  "summary": "Makes a battle side skip the pursuit phase if it would lose.",
+  "details": "That side then takes no extra casualties from pursuit. `no` undoes it and is the default. Runs on a combat side.",
+  "fields": [],
+  "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_special_character", "label": "Special character",
+  "summary": "Sets the faction's special character.",
+  "details": "Runs on a faction. Vanilla gives it a character such as the peasant leader or the faction leader. The game does not say what the special character is used for.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_special_guest", "label": "Special guest",
+  "summary": "Makes the given character the special guest of a chosen type at the activity, replacing the one there.",
+  "details": "If the character is not attending, they are invited, possibly using a slot reserved for invites by effects. The effect gives an error if the activity has no such guest type. Vanilla does not use it.",
+  "fields": [
+   {"name": "type", "text": "The kind of special guest to set.", "values": "a special guest key", "required": true},
+   {"name": "target", "text": "The character who becomes the special guest.", "values": "a character", "required": true}
+  ],
+  "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_special_title", "label": "Special title",
+  "summary": "Sets the faction's special title.",
+  "details": "Runs on a faction. Vanilla gives it a title such as a top liege's primary title. The game does not say what the special title is used for.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "set_state_rite", "label": "State rite",
+  "summary": "Sets the state rite of a title.",
+  "details": "Meant for a title whose holder has the `state_faith` government rule. Vanilla gives it a rite, such as a faith's main rite.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ }
+]

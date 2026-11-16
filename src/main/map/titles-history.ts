@@ -1,6 +1,6 @@
 /**
  * Title history as timelines (docs/map.md, "History and realms"): per title its holders, de facto lieges, de jure
- * lieges, names, colours and governments by date — read once per index from history/titles, looked up by binary
+ * lieges, names, colours and governments by date, read once per index from history/titles, looked up by binary
  * search at any date.
  */
 import type { PNode } from '../indexer/parser.ts';
@@ -14,9 +14,9 @@ export interface TitleTimelines
     holder: Dated<string>[][];
     /** per title: its de facto liege title (−1: `liege = 0`) */
     liege: Dated<number>[][];
-    /** per title: its de jure liege (−1: `de_jure_liege = 0`) — else the landed_titles parent */
+    /** per title: its de jure liege (−1: `de_jure_liege = 0`), else the landed_titles parent */
     dejure: Dated<number>[][];
-    /** per title: the loc key of its name ('': its own name again — `reset_name`, `reset_title_name`) */
+    /** per title: the loc key of its name ('': its own name again: `reset_name`, `reset_title_name`) */
     name: Dated<string>[][];
     /** per title: `set_title_color` */
     color: Dated<string>[][];
@@ -40,8 +40,9 @@ function limitHolds(list: PNode[]): boolean | undefined
             v = true;
         else if (c.k === 'NOT' && Array.isArray(c.v))
         {
-            const inner = limitHolds(c.v);
-            v = inner === undefined ? undefined : !inner;
+            // (several statements: true when none of them holds)
+            const inners = c.v.map((x) => limitHolds([x]));
+            v = inners.includes(true) ? false : inners.includes(undefined) ? undefined : true;
         }
         else if (c.k === 'AND' && Array.isArray(c.v))
             v = limitHolds(c.v);

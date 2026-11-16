@@ -2,12 +2,14 @@
 // Usage: node --experimental-strip-types --max-old-space-size=6000 scripts/portrait-cli.ts [type name …]
 // With mods: MODS=<launcher playset name | uuid | game> node --experimental-strip-types --experimental-sqlite … (the
 // list's mods layered over the game as the app does), e.g. MODS=<playset> … characters <id>
+// The index: scripts/fast-index.ts (parse threads, cached in %TEMP%/ckp-index-cache; FRESH=1 builds it anew).
 import { homedir } from 'node:os';
 import { join } from 'node:path';
-import { GameIndex, resolveGameDir } from '../src/main/indexer/gameIndex.ts';
+import { resolveGameDir } from '../src/main/indexer/gameIndex.ts';
 import { PortraitBuilder } from '../src/main/portraits/portrait.ts';
 import { GameFiles } from '../src/main/mods/gamefiles.ts';
 import { defaultInstall } from './ck3-install.ts';
+import { fastIndex } from './fast-index.ts';
 
 const install = defaultInstall();
 const gameDir = resolveGameDir(install)!;
@@ -28,8 +30,7 @@ if (process.env.MODS)
     console.log('mods:', files.sources.map((s) => s.name).join(' → '));
 }
 
-const idx = new GameIndex(files, 'english');
-idx.build();
+const idx = await fastIndex(files, { cache: true });
 const pb = new PortraitBuilder(idx);
 const args = process.argv.slice(2);
 const targets = args.length ? args : ['dna_data', '163112_halfdan_whiteshirt', 'characters', '145665', 'bookmark_portraits', 'bookmark_adventurers_almos_arpad'];
@@ -53,7 +54,7 @@ for (let i = 0; i < targets.length; i += 2)
         continue;
     }
 
-    console.log(`\n${p.label} (${p.gender}, ${p.age}) — ${p.source} — ${(performance.now() - t0).toFixed(0)} ms`);
+    console.log(`\n${p.label} (${p.gender}, ${p.age}): ${p.source}, ${(performance.now() - t0).toFixed(0)} ms`);
     console.log('accessories', p.accessories.map((a) => `${a.gene}=${a.accessory}`).join(' '));
     console.log('tags', p.tags.join(','));
     console.log('modifiers', p.modifiers.join(' '));

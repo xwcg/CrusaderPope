@@ -3,10 +3,12 @@
 // Per type: how many sampled entries (up to 25, spread over the list) have an empty card, the visible lines per entry
 // and the top-level keys of the empty ones (what is not shown yet); all types without arguments.
 // GAME=<install dir> (default: the development install).
-import { GameIndex, resolveGameDir } from '../src/main/indexer/gameIndex.ts';
+// The index: scripts/fast-index.ts (parse threads, cached in %TEMP%/ckp-index-cache; FRESH=1 builds it anew).
+import { resolveGameDir } from '../src/main/indexer/gameIndex.ts';
 import { StoryBuilder } from '../src/main/describe/stories.ts';
 import type { EntityCard, Line } from '../src/shared/api.ts';
 import { defaultInstall } from './ck3-install.ts';
+import { fastIndex } from './fast-index.ts';
 
 const install = defaultInstall();
 const gameDir = resolveGameDir(install);
@@ -16,8 +18,7 @@ if (!gameDir)
     throw new Error('No CK3 game dir at ' + install);
 }
 
-const idx = new GameIndex(gameDir, 'english');
-idx.build();
+const idx = await fastIndex(gameDir, { cache: true });
 const sb = new StoryBuilder(idx);
 const count = (ls: Line[]): number => ls.reduce((n, l) => n + (l.hidden ? 0 : 1) + (l.children ? count(l.children) : 0), 0);
 const only = process.argv.slice(2);

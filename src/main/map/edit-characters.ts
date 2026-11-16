@@ -1,17 +1,18 @@
 /**
  * Characters for the map's holder chooser (docs/map.md, "Editing from the map"), in the index worker: found by first
- * name, id, house or dynasty — every word of the query must match one of them — the one whose id the query is first,
+ * name, id, house or dynasty (every word of the query must match one of them): the one whose id the query is first,
  * then those alive at the map's date, then by how well the words match; each with house, birth and death, age and
  * culture at the date. Characters a mod removed (AGOT's replace_path hides the game's) are not offered.
  */
+import { tr } from '../../shared/i18n.ts';
+import { fold } from '../../shared/fold.ts';
 import type { GameIndex } from '../indexer/gameIndex.ts';
-import { T_CHARACTER } from '../indexer/schema.ts';
 import type { CharacterTable } from '../history/characters.ts';
 import type { MapCharacter } from '../../shared/api.ts';
-import { HolderBook, holderAt } from './history-characters.ts';
+import { HolderBook, holderAt, holderType } from './history-characters.ts';
 import { dateNum } from './history.ts';
 
-/** A live character: id and first name, lowercase. */
+/** A live character: id and first name, lowercase (the name also without accents: fold()). */
 interface Row
 {
     id: string;
@@ -39,17 +40,17 @@ function cacheOf(idx: GameIndex, table: CharacterTable): Cache
 
     const rows: Row[] = [];
 
-    for (const id of idx.names(T_CHARACTER))
+    for (const id of idx.names(holderType(idx)))
     {
-        const e = idx.get(T_CHARACTER, id);
+        const e = idx.get(holderType(idx), id);
 
         if (!e || e.dead || !idx.winningDef(e))
             continue;
 
-        rows.push({ id, lid: id.toLowerCase(), lname: (idx.displayName(e) ?? id).toLowerCase() });
+        rows.push({ id, lid: id.toLowerCase(), lname: fold(idx.displayName(e) ?? id) });
     }
 
-    caches.set(table, c = { rows, alive: new Map(), book: new HolderBook(idx) });
+    caches.set(table, c = { rows, alive: new Map(), book: new HolderBook(idx, holderType(idx)) });
     return c;
 }
 
@@ -121,8 +122,8 @@ function factsOf(idx: GameIndex, book: HolderBook, id: string, alive: boolean, w
  */
 export function mapCharacters(idx: GameIndex, table: CharacterTable, q: string, date: string, limit = 60): MapCharacter[]
 {
-    const words = q.trim()
-        .toLowerCase()
+    // (accents and case aside, like the picker's character search: "etienne" finds "Étienne")
+    const words = fold(q.trim())
         .split(/\s+/)
         .filter(Boolean);
     const c = cacheOf(idx, table);
@@ -167,11 +168,76 @@ export function mapCharacters(idx: GameIndex, table: CharacterTable, q: string, 
 /** One character's facts at a date (y.m.d); null when the loaded game files have no such character. */
 export function mapCharacter(idx: GameIndex, table: CharacterTable, id: string, date: string): MapCharacter | null
 {
-    const e = idx.get(T_CHARACTER, id);
+    const e = idx.get(holderType(idx), id);
 
     if (!e || e.dead || !idx.winningDef(e))
         return null;
 
     const c = cacheOf(idx, table);
     return factsOf(idx, c.book, id, aliveAt(c, table, date).has(id), dateNum(date));
+}
+
+/**
+ * Who could hold a title, before anything is typed (the holder menu's first list): the people given (the holder,
+ * the de jure liege's and the vassal titles' holders, each with a note, `seeds`) and their close family (parents,
+ * spouses, children, siblings); those alive at the date first, each once with how they come in.
+ */
+export function mapHolderSuggestions(idx: GameIndex, table: CharacterTable, seeds: [string, string][], date: string, limit = 40, others = false): MapCharacter[]
+{
+    const c = cacheOf(idx, table);
+    const alive = aliveAt(c, table, date);
+    const why = new Map<string, string>();
+    const add = (id: string | undefined, note: string): void =>
+    {
+        if (id && !why.has(id) && idx.get(holderType(idx), id))
+            why.set(id, note);
+    };
+
+    for (const [id, note] of seeds)
+        add(id, note);
+
+    for (const [id] of seeds)
+    {
+        const t = table.familyTree(id);
+
+        if (!t)
+            continue;
+
+        const name = t.root.name;
+        add(t.root.father?.id, tr('father of {name}', { name }));
+        add(t.root.mother?.id, tr('mother of {name}', { name }));
+
+        for (const s of t.spouses)
+            add(s.id, tr('spouse of {name}', { name }));
+
+        for (const k of t.children)
+            add(k.id, k.female ? tr('daughter of {name}', { name }) : tr('son of {name}', { name }));
+
+        for (const s of t.siblings)
+            add(s.id, s.female ? tr('sister of {name}', { name }) : tr('brother of {name}', { name }));
+    }
+
+    // (the alive first, in the order they came in)
+    const ids = [...why.keys()];
+    const order = [...ids.filter((id) => alive.has(id)), ...ids.filter((id) => !alive.has(id))].slice(0, limit);
+    // then, asked for, everyone else alive at the date (by name): anyone living can hold a title
+    const rest = others ? c.rows.filter((r) => alive.has(r.id) && !why.has(r.id)).sort((a, b) => (a.lname < b.lname ? -1 : a.lname > b.lname ? 1 : 0)).map((r) => r.id) : [];
+    c.book.load(order);
+    const when = dateNum(date);
+    // (the rest from the character table alone: thousands at once)
+    const cultureName = new Map<string, string>();
+    const brief = (id: string): MapCharacter =>
+    {
+        const b = table.brief(id, when);
+        const k = b?.culture;
+
+        if (k && !cultureName.has(k))
+        {
+            const e = idx.get('culture/cultures', k);
+            cultureName.set(k, (e && idx.displayName(e)) ?? k);
+        }
+
+        return { id, name: b?.name ?? id, alive: true, house: b?.house, birth: b?.birth, death: b?.death, age: b?.age, ...(k ? { culture: { key: k, name: cultureName.get(k)! } } : {}) };
+    };
+    return [...order.map((id) => ({ ...factsOf(idx, c.book, id, alive.has(id), when), note: why.get(id) })), ...rest.map(brief)];
 }

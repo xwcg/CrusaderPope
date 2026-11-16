@@ -8,6 +8,7 @@ import type { MapInfo } from '../../../../shared/api';
 import { rasterOf, type View } from './gl2d';
 import { WATER, rgbOf, type Groups } from './model';
 
+import { tr } from '../../../../shared/i18n';
 /** CSS pixels wide */
 const WIDTH = 210;
 const OPEN_KEY = 'map.minimap.open';
@@ -152,7 +153,7 @@ export function Minimap(props: { info: MapInfo; groups: Groups; view: View | nul
 
     if (!open)
         return (
-            <button className="map-minimap-fold" onClick={() => fold(true)} onPointerDown={stop} onPointerUp={stop} title="Show the overview">
+            <button className="map-minimap-fold" onClick={() => fold(true)} onPointerDown={stop} onPointerUp={stop} title={tr('Show the overview')}>
                 ▣
             </button>
         );
@@ -171,7 +172,7 @@ export function Minimap(props: { info: MapInfo; groups: Groups; view: View | nul
                 onPointerMove={(e) => dragging.current && jump(e)}
                 onPointerUp={() => (dragging.current = false)}
             />
-            <button className="map-minimap-close ghost" onClick={() => fold(false)} title="Hide the overview">
+            <button className="map-minimap-close ghost" onClick={() => fold(false)} title={tr('Hide the overview')}>
                 ×
             </button>
         </div>

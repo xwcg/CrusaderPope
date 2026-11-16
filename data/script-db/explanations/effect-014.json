@@ -1,0 +1,264 @@
+[
+ {
+  "kind": "effect", "key": "refill_garrison", "label": "Refill garrison",
+  "summary": "Refills the garrison (the troops defending a province) of the province.",
+  "details": "Vanilla always writes `yes`. The game's documentation line ends with a stray `refill_levy = yes/no`, which looks copied from the levy effect, so the exact value rules are not documented.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "refill_levy", "label": "Refill levy",
+  "summary": "Refills the levy (the troops the province can raise) of the province.",
+  "details": "Vanilla always writes `yes`. The game's documentation names `yes/no` as the values.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "refill_supply", "label": "Refill supply",
+  "summary": "Fills the army's supply up to its maximum capacity.",
+  "details": "Works on an army. The game's documentation example misspells the key (`refull_supply`); the key is `refill_supply = yes`. Vanilla does not use it.",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "reforge_artifact", "label": "Reforge artifact",
+  "summary": "Reforges the artifact: its durability is restored and other properties can be changed.",
+  "details": "Fields left empty are not changed. Durability becomes the maximum unless you set it. The game's documentation notes that the current scopes are used implicitly, as in the artifact visuals definitions (common/artifacts/visuals). Vanilla uses it with a block, mostly to set an artifact's type, template, visuals, modifier, name and description; the description keys it uses (\"melted\") suggest it swaps a Santiago artifact to a melted-down form, which is an inference from the key names.",
+  "fields": [
+   { "name": "name", "text": "The artifact's new name.", "values": "a dynamic description (a localization key)" },
+   { "name": "description", "text": "The artifact's new description.", "values": "a dynamic description (a localization key)" },
+   { "name": "rarity", "text": "The new rarity, for example legendary.", "values": "a rarity name" },
+   { "name": "type", "text": "The inventory slot type, for example trinket.", "values": "an artifact slot type" },
+   { "name": "modifier", "text": "A static modifier that applies to the character who wields the artifact.", "values": "a modifier name" },
+   { "name": "durability", "text": "The new durability.", "values": "a number or script value", "default": "the maximum" },
+   { "name": "max_durability", "text": "A maximum durability that overrides the one the game's defines assign.", "values": "a number or script value", "required": false },
+   { "name": "decaying", "text": "Whether the artifact loses durability over time.", "values": "yes or no", "required": false, "default": "yes" },
+   { "name": "history", "text": "A custom history entry, for example to record that someone other than the owner reforged it.", "values": "a block with a type, such as reforged, created, stolen or inherited", "required": false },
+   { "name": "template", "text": "A scripted base template with its own triggers and modifiers.", "values": "an artifact template name" },
+   { "name": "visuals", "text": "How the artifact looks.", "values": "an artifact visual type" },
+   { "name": "generate_history", "text": "Whether a new history entry is made automatically when none is scripted.", "values": "yes or no" },
+   { "name": "quality", "text": "The new quality, used in the AI's scoring.", "values": "a number or script value" },
+   { "name": "wealth", "text": "The new wealth, used in the AI's scoring.", "values": "a number or script value" },
+   { "name": "creator", "text": "A custom creator of the artifact.", "values": "a character", "default": "the owner" },
+   { "name": "visuals_source", "text": "Where the coat of arms graphics come from. Only a few artifact models use it, banners most notably.", "values": "a title, dynasty or house" }
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "refund_all_perks", "label": "Refund all perks",
+  "summary": "Gives the character back every perk they have taken.",
+  "details": "Written as `refund_all_perks = yes`. The game's documentation does not say what happens to the spent points beyond \"refunds\".",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "refund_perks", "label": "Refund lifestyle perks",
+  "summary": "Gives back all the perks the character has taken in one lifestyle.",
+  "details": "The value is the lifestyle, for example `intrigue_lifestyle`. Vanilla does not use it.",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "release_from_prison", "label": "Release from prison",
+  "summary": "Lets the character out of prison.",
+  "details": "Vanilla always writes `release_from_prison = yes`. The game's documentation also mentions `imprison = X`, which does not match this key; vanilla only uses `yes`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_acclaimed_knight", "label": "Remove acclaimed knight",
+  "summary": "Takes the acclaimed knight off the accolade and hands the accolade to the successor, if there is one.",
+  "details": "Written as `remove_acclaimed_knight = yes`, inside an accolade. Vanilla does not use it.",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_agent_slot", "label": "Agent slot",
+  "summary": "Removes the given agent slot from the scheme.",
+  "details": "The value is a saved scope holding the slot. Vanilla passes slots it saved earlier, such as `scope:slot_temp` or `scope:slot_1`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_all_character_modifier_instances", "label": "All character modifier copies",
+  "summary": "Removes every copy of the named modifier from the character.",
+  "details": "The value is the modifier's name. Use it when the same modifier may be on the character more than once. Vanilla uses it with modifier names.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_all_county_modifier_instances", "label": "All county modifier copies",
+  "summary": "Removes every copy of the named modifier from the county.",
+  "details": "",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_all_dynasty_modifier_instances", "label": "All dynasty modifier copies",
+  "summary": "Removes every copy of the named modifier from the dynasty.",
+  "details": "",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_all_house_modifier_instances", "label": "All house modifier copies",
+  "summary": "Removes every copy of the named modifier from the house.",
+  "details": "",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_all_house_unity_modifier_instances", "label": "All house unity modifier copies",
+  "summary": "Removes every copy of the named modifier from the house's unity.",
+  "details": "Runs on a house. The value is the modifier's name.",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_all_legend_county_modifier_instances", "label": "All legend county modifier copies",
+  "summary": "Removes every copy of the named modifier from the effect a legend has on its counties.",
+  "details": "Runs on a legend.",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_all_legend_owner_modifier_instances", "label": "All legend owner modifier copies",
+  "summary": "Removes every copy of the named modifier from the effect a legend has on its owner.",
+  "details": "Runs on a legend.",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_all_legend_province_modifier_instances", "label": "All legend province modifier copies",
+  "summary": "Removes every copy of the named modifier from the effect a legend has on its provinces.",
+  "details": "Runs on a legend.",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_all_province_modifier_instances", "label": "All province modifier copies",
+  "summary": "Removes every copy of the named modifier from the province.",
+  "details": "",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_all_realm_laws", "label": "Remove all realm laws",
+  "summary": "Removes every realm law from the character.",
+  "details": "This leaves all law groups empty, so use it only when you plan to put new laws in place afterwards.",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_all_travel_plan_modifier_instances", "label": "All travel plan modifier copies",
+  "summary": "Removes every copy of the named modifier from the travel plan.",
+  "details": "",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_artifact_feature_group", "label": "Artifact feature group",
+  "summary": "Removes the feature chosen from the given group from the artifact.",
+  "details": "Groups the artifact requires cannot be removed. The value is the group's key. Vanilla does not use it.",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_artifact_modifier", "label": "Artifact modifier",
+  "summary": "Removes a static modifier from the artifact.",
+  "details": "The value is the modifier's name; a duration is not supported. Vanilla most often removes `artifact_placeholder_modifier`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_barter_goods", "label": "Barter goods",
+  "summary": "Removes barter goods from the character.",
+  "details": "The game's documentation says nothing more. Vanilla uses it once, with a saved scope called `scope:barter`, so the value is probably a saved barter; this is an inference from that single use.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "remove_bonus_fascination_innovation", "label": "Bonus fascination",
+  "summary": "Removes the culture's current bonus fascination (the innovation chosen as its bonus).",
+  "details": "You do not need to remove it before picking a different innovation, because the new choice replaces the old one. Written as `remove_bonus_fascination_innovation = yes` inside a culture.",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_building", "label": "Building",
+  "summary": "Removes a building from the province.",
+  "details": "The value is the building's name. Vanilla also uses template placeholders such as `$BUILDING$_01` inside scripted effects, and removes a great project's under-construction building.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_character", "label": "Traveler",
+  "summary": "Takes a character off the travel plan.",
+  "details": "The owner of the travel plan cannot be removed. Vanilla passes saved scopes or `root` and `prev`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_character_flag", "label": "Character flag",
+  "summary": "Removes a flag from the character.",
+  "details": "A flag is a named marker that script sets and later checks. Vanilla uses it very often, mostly with a plain flag name.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_character_modifier", "label": "Character modifier",
+  "summary": "Removes a modifier from the character.",
+  "details": "The value is the modifier's name. If the modifier was added several times, see `remove_all_character_modifier_instances`; the game's documentation does not say how many copies this one removes.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_character_realm_from_sub_region", "label": "Realm from sub-region",
+  "summary": "Removes all of the given character's de facto counties from the situation sub-region.",
+  "details": "De facto means the counties the character's realm actually holds. Runs on a situation sub-region; the value is the character. Vanilla does not use it.",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_character_secret_faith", "label": "Secret faith",
+  "summary": "Removes the character's secret faith.",
+  "details": "Written as `remove_character_secret_faith = yes`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_claim", "label": "Claim",
+  "summary": "Removes an explicit claim the character has on the given title.",
+  "details": "Only claims that were given directly are removed, not claims the character gets from a living parent or grandparent.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_clerical_realm_from_sub_region", "label": "Clerical realm from sub-region",
+  "summary": "Removes all counties of the given clerical title's realm from the situation sub-region.",
+  "details": "Runs on a situation sub-region; the value is the title.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_commander", "label": "Commander",
+  "summary": "Removes the commander currently leading the army.",
+  "details": "Written as `remove_commander = yes`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_concubine", "label": "Concubine",
+  "summary": "Ends the given character's role as a concubine of the character.",
+  "details": "The character the effect runs on is the one who keeps the concubine; the value is the concubine.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_confederation_member", "label": "Confederation member",
+  "summary": "Removes the given character from the confederation.",
+  "details": "The holder of the confederation title cannot be removed. The documented usage line spells the key `remove_member`, while vanilla writes `remove_confederation_member`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_confederation_member_house", "label": "Confederation member house",
+  "summary": "Removes the given house from the confederation.",
+  "details": "The documented usage line spells the key `remove_member_house`, while the key listed, and the one vanilla uses, is `remove_confederation_member_house`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_county_modifier", "label": "County modifier",
+  "summary": "Removes a modifier from the county.",
+  "details": "The value is the modifier's name.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_courtier_or_guest", "label": "Courtier or guest",
+  "summary": "Removes a courtier or guest from the host character's court.",
+  "details": "Without a new place, the removed character is moved to the pool and stays in the same province. With the block form you can name a new location.",
+  "fields": [
+   { "name": "character", "text": "The courtier or guest to remove.", "values": "a character", "required": true },
+   { "name": "new_location", "text": "The province the character is moved to.", "values": "a province", "required": false, "default": "stays in the same province" }
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_culture_tradition", "label": "Culture tradition",
+  "summary": "Removes the given tradition from the culture.",
+  "details": "The value is the tradition's name, for example `tradition_court_eunuchs`.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "remove_dead_character_variable", "label": "Dead character variable",
+  "summary": "Removes a variable from a dead character.",
+  "details": "The value is the variable's name. Vanilla does not use it.",
+  "fields": [], "sources": ["doc"], "uncertain": false
+ }
+]

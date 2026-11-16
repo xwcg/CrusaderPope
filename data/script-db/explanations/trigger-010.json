@@ -1,0 +1,554 @@
+[
+ {
+  "kind": "trigger",
+  "key": "has_building_gfx",
+  "label": "Has building graphics",
+  "summary": "Whether the culture uses the given building graphics set.",
+  "details": "Works on a culture. Vanilla writes a building graphics name such as `iranian_building_gfx` or `norse_building_gfx`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_building_or_higher",
+  "label": "Has building (or upgrade)",
+  "summary": "Whether the province has the given building, or a later upgrade of it.",
+  "details": "Works on a province. Vanilla writes the first level of a building line, such as `paddy_fields_01`; the game's documentation says a successor (upgrade) of the named building also counts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_building_with_flag",
+  "label": "Has building with flag",
+  "summary": "Whether the province has a building that carries the given flag.",
+  "details": "Works on a province. A flag is a tag that building definitions can carry, so one check covers every building with it. Written as a single name it means at least one such building. The block form can ask for a number of them with `count >= 2`.",
+  "fields": [
+   {
+    "name": "flag",
+    "text": "The building flag to look for.",
+    "values": "a building flag name, such as `travel_point_of_interest_martial`",
+    "required": true
+   },
+   {
+    "name": "count",
+    "text": "How many matching buildings are needed, written as a comparison such as `count >= 2`.",
+    "values": "a comparison with a number",
+    "default": "at least 1"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_cb_on",
+  "label": "Has casus belli on",
+  "summary": "Whether the character has the given casus belli (a valid reason for war) against the target character.",
+  "details": "Works on a character. If the target is not valid, the check is simply false. Vanilla writes the casus belli either as `cb` or as `casus_belli`; both are used.",
+  "fields": [
+   {
+    "name": "target",
+    "text": "The character the casus belli would be used against.",
+    "values": "a character, such as `scope:actor` or `prev`",
+    "required": true
+   },
+   {
+    "name": "cb",
+    "text": "The casus belli to look for. `casus_belli` is accepted in the same place.",
+    "values": "a casus belli key, such as `claim_cb`",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_character_flag",
+  "label": "Has character flag",
+  "summary": "Whether the character has the given flag set on them.",
+  "details": "Works on a character. Flags are markers that script sets elsewhere and reads back with this check. Vanilla mostly writes the flag name directly, and sometimes a scope reference.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_character_modifier",
+  "label": "Has character modifier",
+  "summary": "Whether the character currently has the named modifier.",
+  "details": "Works on a character. Write the modifier key, such as `gangrene_modifier`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_character_modifier_duration_remaining",
+  "label": "Character modifier time left",
+  "summary": "Checks the time remaining on a named modifier of the character.",
+  "details": "The game's documentation gives only the form `has_character_modifier_duration_remaining = name` and no comparison or unit, and vanilla does not use it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_character_nominiated",
+  "label": "Has nominated successor",
+  "summary": "Whether the given character has nominated a successor for this elective title.",
+  "details": "Works on a title with elective succession (the holder is chosen by electors). The key is spelled `nominiated` in the game. Vanilla uses it once, with `root` as the character.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_claim_on",
+  "label": "Claim on",
+  "summary": "Whether the character holds an explicit claim on the given title.",
+  "details": "Works on a character. The game's documentation says it checks for an explicit claim. Vanilla usually passes a title in a scope such as `prev` or `scope:title`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_clerical_region",
+  "label": "Has clerical region",
+  "summary": "Whether the title belongs to a clerical region.",
+  "details": "Works on a title. `yes` checks that it has one, `no` that it has none. The input does not say what a clerical region is beyond its name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_clerical_region_in_realm",
+  "label": "Clerical region in realm",
+  "summary": "Whether the character's realm contains counties of the given clerical region.",
+  "details": "Works on a character. The value is the title of the clerical region, usually held in a saved scope.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_clothing_gfx",
+  "label": "Has clothing graphics",
+  "summary": "Whether the culture uses the given clothing graphics set.",
+  "details": "Works on a culture. Vanilla writes names such as `indian_clothing_gfx`. The game's documentation example wrongly shows `has_building_gfx`; the key to write is `has_clothing_gfx`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_coa_gfx",
+  "label": "Has coat of arms graphics",
+  "summary": "Whether the culture uses the given coat of arms graphics set.",
+  "details": "Works on a culture. Vanilla writes names such as `norse_coa_gfx` or `arabic_group_coa_gfx`. The game's documentation example wrongly shows `has_building_gfx`; the key to write is `has_coa_gfx`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_coastal_province",
+  "label": "Has coastal province",
+  "summary": "Whether the county contains a coastal province.",
+  "details": "Works on a county title. Vanilla uses it with `yes` only.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_cohesion",
+  "label": "Has cohesion",
+  "summary": "Whether the confederation or bloc has a cohesion value.",
+  "details": "Works on a confederation (a bloc of rulers). The game's documentation does not explain when one has none. Vanilla uses it three times, always with `yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_cohesion_level_parameter",
+  "label": "Cohesion level parameter",
+  "summary": "Whether the confederation or bloc's current cohesion level carries the given parameter.",
+  "details": "Only the level the bloc is on right now is looked at. Vanilla writes parameter names such as `any_member_activity_cost_reduced`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_completed_activity_intent",
+  "label": "Completed activity intent",
+  "summary": "Whether the character has completed an intent of the given type in the activity they are involved in.",
+  "details": "Works on a character. Vanilla uses activity intent keys such as `woo_attendee_intent`. Written as a single name it checks that intent type. The block form can also name a target.",
+  "fields": [
+   {
+    "name": "type",
+    "text": "The intent type to look for.",
+    "values": "an activity intent key, such as `woo_attendee_intent`",
+    "required": true
+   },
+   {
+    "name": "target",
+    "text": "Only count the intent if it was aimed at this character.",
+    "values": "a character, such as `scope:finishing_intent`"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_completed_inspiration",
+  "label": "Has completed inspiration",
+  "summary": "Whether the character has ever completed an inspiration.",
+  "details": "`yes` means at least once in their life; `no` means never.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_construction_with_flag",
+  "label": "Constructing building with flag",
+  "summary": "Whether the province is currently constructing a building that has the given flag.",
+  "details": "Works on a province. It looks at buildings under construction, not finished ones; use the building flag check for those. Vanilla writes flags such as `temple`, `castle`, `city` and `tribe`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_contact",
+  "label": "Has contact",
+  "summary": "Whether the checked character has the given character as a contact.",
+  "details": "The game's documentation words it as checking whether someone has the character as an employer and explains nothing more. Vanilla uses it with faction members, such as `scope:faction.faction_leader`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_council",
+  "label": "Has council",
+  "summary": "Whether the character has a council.",
+  "details": "Takes `yes` or `no`. Vanilla does not use it in the input data.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_council_position",
+  "label": "Council position",
+  "summary": "Whether the character holds the given position on a council.",
+  "details": "Works on a character. Vanilla writes councillor types such as `councillor_marshal` or `councillor_court_chaplain`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_councillor_for_skill",
+  "label": "Has councillor for skill",
+  "summary": "Whether the character has a councillor for the given skill.",
+  "details": "Write a skill name or `general`, as the game's documentation says. Vanilla uses it twice, once with `general` and once with a `$SKILL$` placeholder in a template.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_county_modifier",
+  "label": "Has county modifier",
+  "summary": "Whether the county has the named modifier.",
+  "details": "Works on a county title. Write the modifier's key, such as `backwater_county_modifier`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_county_modifier_duration_remaining",
+  "label": "County modifier time left",
+  "summary": "Checks the time remaining on a named modifier of the county.",
+  "details": "The game's documentation gives only the form `has_county_modifier_duration_remaining = name` and no comparison or unit, and vanilla does not use it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_county_of_faith",
+  "label": "Has county of faith",
+  "summary": "Whether the ruler has at least one county of the given faith in their realm.",
+  "details": "The documented example runs it on a ruler (a character) with a faith as the value, but the input lists the faith as the scope it runs in. Check which one the game accepts before relying on it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_court_language",
+  "label": "Court language",
+  "summary": "Whether the character's court language is the given language.",
+  "details": "Works on a character. Write a language key, such as `language_norwegian`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_court_language_of_culture",
+  "label": "Court language of culture",
+  "summary": "Whether the character's court language is the language of the given culture.",
+  "details": "Works on a character. The value is a culture, such as `prev.culture` or `culture:han`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_court_position",
+  "label": "Court position",
+  "summary": "Whether the character holds the given court position.",
+  "details": "Works on a character. Write a court position type, such as `court_physician_court_position`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_court_type",
+  "label": "Court type",
+  "summary": "Whether the character's court is of the given type.",
+  "details": "Works on a character. Vanilla writes types such as `court_diplomatic`, `court_intrigue` and `court_warlike`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_cultural_era_or_later",
+  "label": "Cultural era (or later)",
+  "summary": "Whether the culture has reached the given era or a later one.",
+  "details": "Works on a culture. Vanilla writes eras such as `culture_era_early_medieval`, `culture_era_high_medieval` and `culture_era_late_medieval`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_cultural_parameter",
+  "label": "Cultural parameter",
+  "summary": "Whether the culture has the given cultural parameter switched on.",
+  "details": "Works on a culture. Vanilla uses it with many parameter names, such as `unlock_maa_cataphract_archers` or `next_level_fortification`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_cultural_pillar",
+  "label": "Cultural pillar",
+  "summary": "Whether the culture has the given pillar, such as a heritage or a language.",
+  "details": "Works on a culture. Vanilla mostly uses it with heritages, for example `heritage_byzantine`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_cultural_tradition",
+  "label": "Cultural tradition",
+  "summary": "Whether the culture has the given tradition.",
+  "details": "Works on a culture. Write a tradition key such as `tradition_hunters`, or a scope that holds one (vanilla uses `prev` this way).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_culture",
+  "label": "Has culture",
+  "summary": "Whether the character has the given culture.",
+  "details": "Works on a character. Write a culture such as `culture:norse`, or a scope that holds one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_current_phase",
+  "label": "Current phase",
+  "summary": "Whether the activity is currently in the given phase.",
+  "details": "Works on an activity. Activities run in phases, such as the joust or the melee in a tournament. Write the phase key, such as `tournament_phase_joust`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_custom_title_name",
+  "label": "Has custom title name",
+  "summary": "Whether the title uses a custom name set by script.",
+  "details": "Works on a title. A title gets a custom name through `set_title_name` or `set_random_dynasty_title_name`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_de_jure_claim_on",
+  "label": "De jure claim on",
+  "summary": "Whether the character has a de jure claim against the target.",
+  "details": "The game's documentation says the target is a character, and vanilla does not use it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_dead_character_flag",
+  "label": "Dead character has flag",
+  "summary": "Whether the dead character has the given flag.",
+  "details": "Like the normal character flag check, but for a character who has died. Vanilla uses it once.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_dead_character_variable",
+  "label": "Dead character has variable",
+  "summary": "Whether the dead character has the given variable.",
+  "details": "Like the normal variable check, but for a character who has died. Vanilla uses it for things such as `body_has_been_disposed`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ }
+]

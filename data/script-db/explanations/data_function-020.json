@@ -1,0 +1,2084 @@
+[
+ {
+  "kind": "data_function",
+  "key": "martial_custom",
+  "label": "Martial custom",
+  "summary": "The game concept Martial Custom: the culture pillar that decides which genders can serve as commanders or knights.",
+  "details": "Writing `[martial_custom|E]` in a text shows the word linked to the concept's explanation. Some traditions and doctrines change these rules for certain characters. Vanilla lists it among the culture pillars in the culture concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "martial_i",
+  "label": "Martial icon",
+  "summary": "The game concept Martial Skill (how good a character is at war and leading armies), in its icon form.",
+  "details": "This is another name of the martial skill concept whose name text is the martial skill icon, so `[martial_i|E]` shows that icon linked to the concept's explanation. Vanilla writes it as `[martial_i]`, without the link, to put the plain icon in front of the word martial in council task tooltips.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:737",
+   "vanilla: common/game_concepts/00_game_concepts.txt:779"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "martial_lifestyle",
+  "label": "Martial lifestyle",
+  "summary": "The game concept Martial Lifestyle: the lifestyle for characters who want better men-at-arms and knights, more control in their domain, or better chances of winning wars.",
+  "details": "Writing `[martial_lifestyle|E]` in a text shows the word linked to the concept's explanation. Vanilla uses it in effect texts about gaining martial lifestyle experience.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "martial_lifestyle_i",
+  "label": "Martial lifestyle icon",
+  "summary": "The game concept Martial Lifestyle (the lifestyle for war, troops and control), in its icon form.",
+  "details": "This is another name of the martial lifestyle concept whose name text is the martial lifestyle icon, so `[martial_lifestyle_i|E]` shows that icon linked to the concept's explanation. Vanilla writes it as `[martial_lifestyle_i]`, without the link, to show the plain icon in a bookmark character's description.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1035",
+   "vanilla: common/game_concepts/00_game_concepts.txt:1031"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "martial_skill",
+  "label": "Martial skill",
+  "summary": "The game concept Martial Skill: how good a character is at waging war and leading armies in battle.",
+  "details": "Writing `[martial_skill|E]` in a text shows the word linked to the concept's explanation. A high martial skill matters most for army commanders, since it raises their advantage in battle; the matching lifestyle is the martial lifestyle. Vanilla uses it in council task tooltips where the councillor's martial skill adds to a value.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "master_assassin",
+  "label": "Master assassin",
+  "summary": "The game concept Master Assassin: a court position, available to faiths with the Fedayeen core tenet, held by a fanatic who works with lesser assassins to kill the faith's enemies.",
+  "details": "Writing `[master_assassin|E]` in a text shows the word linked to the concept's explanation. Vanilla's knights view lists the master assassin among the characters who cannot be knights unless their culture allows it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "master_terrain",
+  "label": "Master terrain",
+  "summary": "The game concept Master Terrain: a decision from the wanderer lifestyle tree in which the character picks a terrain to specialize in.",
+  "details": "Writing `[master_terrain|E]` in a text shows the word linked to the concept's explanation. The choice is limited to the group picked earlier with designated terrain, and the chosen terrain gives large bonuses there: more advantage, better combat rolls, less attrition, and more prestige and prestige experience from battles. Vanilla uses it in the wanderer lifestyle's effect texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "masterwork",
+  "label": "Masterwork",
+  "summary": "The game concept Artifact Rarity, under its name for the rarity level \"Masterwork\": how rare an artifact is.",
+  "details": "Writing `[masterwork|E]` in a text shows the masterwork rarity's name linked to the artifact rarity concept's explanation. From lowest to highest the levels are common (never shown, it is the default), masterwork, famed and illustrious. Vanilla uses it in texts describing a masterwork artifact a player can get.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2119"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "matrilineal",
+  "label": "Matrilineal",
+  "summary": "The game concept Matrilineal: a kind of marriage in which the children are born into the mother's house instead of the father's.",
+  "details": "Writing `[matrilineal|E]` in a text shows the word linked to the concept's explanation. Vanilla uses it in the game rule texts that decide when AI characters arrange matrilineal marriages.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "matrilineally",
+  "label": "Matrilineally",
+  "summary": "The game concept Matrilineal (a marriage whose children join the mother's house), as the word \"Matrilineally\".",
+  "details": "Writing `[matrilineally|E]` in a text shows \"Matrilineally\" linked to the matrilineal concept's explanation. Vanilla uses it in the matrilineal marriage effect's texts (will marry someone matrilineally).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:568"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "maximum_piety_level",
+  "label": "Maximum level of devotion",
+  "summary": "The game concept Maximum Level of Devotion: the highest piety level a ruler can reach in their lifetime.",
+  "details": "Writing `[maximum_piety_level|E]` in a text shows the word linked to the concept's explanation. By default the highest is piety level 5; the description adds a note for mandala rulers, whose government can unlock further levels. Vanilla uses it in piety level lists and in a message when the maximum is reached.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:425"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "medical_treatments",
+  "label": "Medical treatments",
+  "summary": "The game concept Medical Treatments: treatments that help an ill or wounded character recover faster.",
+  "details": "Writing `[medical_treatments|E]` in a text shows the word linked to the concept's explanation. The court physician treats the ruler and their courtiers, and grows in skill the more treatments they perform. Vanilla uses it in AI personality and court position texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "megaduke_penalty",
+  "label": "Overextension",
+  "summary": "The game concept Overextension: a tax income penalty for a duke whose realm has more counties than a duke is allowed.",
+  "details": "Writing `[megaduke_penalty|E]` in a text shows the word \"Overextension\" linked to the concept's explanation. The county limit comes from a define (`NCharacter`, `MAX_COUNTIES_IN_REALM_AS_DUKE`); reaching king or emperor rank removes the penalty. Vanilla uses it in a text about a realm too large for a duke and as the name of the tax penalty line.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:355"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "member_house",
+  "label": "Member house",
+  "summary": "The game concept Bloc Member House, under its name \"Member House\": any house that has joined a house bloc, its leading house included.",
+  "details": "Writing `[member_house|E]` in a text shows \"Member House\" linked to the concept's explanation. Vanilla's bloc text says a member house that is attacked is defended by all the others.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_japan_government_l_english.yml:71"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "member_houses",
+  "label": "Member houses",
+  "summary": "The game concept Bloc Member House (a house that has joined a house bloc), in its plural form \"Member Houses\".",
+  "details": "Writing `[member_houses|E]` in a text shows \"Member Houses\" linked to the concept's explanation. Vanilla uses it in bloc texts about cohesion bonuses and what happens to member houses of a defeated bloc.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_japan_government_l_english.yml:72"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "men_at_arms",
+  "label": "Men-at-arms",
+  "summary": "The game concept Men-at-Arms: professional soldiers, better than levies, whose regiments the player puts together directly.",
+  "details": "Writing `[men_at_arms|E]` in a text shows the word linked to the concept's explanation. Each type is strong or weak in certain terrain and counters another type, and they can be stationed in holdings to be more effective. Vanilla uses it in building conditions that ask for a number of men-at-arms regiments.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "men_at_arms_counter",
+  "label": "Men-at-arms counter",
+  "summary": "The game concept Men-at-Arms Counter: one type of men-at-arms weakening another type it counters in battle.",
+  "details": "Writing `[men_at_arms_counter|E]` in a text shows the word linked to the concept's explanation. A countered regiment fights less effectively, and the more it is outnumbered by its counter, the bigger the penalty. Vanilla uses it in combat predictions and the counter resistance modifier's name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mental_break",
+  "label": "Mental break",
+  "summary": "The game concept Mental Break: a personal crisis when stress overwhelms a character and they feel they must lower it whatever the cost.",
+  "details": "Writing `[mental_break|E]` in a text shows the word linked to the concept's explanation. The character gets several ways to deal with it, many with bad consequences; at low stress levels these are small, and they grow as the stress level rises. Vanilla uses it in an achievement, a trait track and stress event texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mental_breaks",
+  "label": "Mental breaks",
+  "summary": "The game concept Mental Break (a crisis when stress overwhelms a character), in its plural form \"Mental Breaks\".",
+  "details": "Writing `[mental_breaks|E]` in a text shows \"Mental Breaks\" linked to the concept's explanation. Vanilla uses it in an effect text about the time between mental breaks and in the stress concept text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1545"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mentor",
+  "label": "Mentor",
+  "summary": "The game concept Mentor: a character who helps their student improve a skill.",
+  "details": "Writing `[mentor|E]` in a text shows the word linked to the concept's explanation. Mentors can be gained through events when the character's lifestyle focus is set to a given skill. Vanilla uses it as the name of the mentor relation and in the relation lists.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mentor_possessive",
+  "label": "Mentor's",
+  "summary": "The game concept Mentor (a character who helps their student improve a skill), in its possessive form \"Mentor's\".",
+  "details": "Writing `[mentor_possessive|E]` in a text shows \"Mentor's\" linked to the mentor concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1666"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mentors",
+  "label": "Mentors",
+  "summary": "The game concept Mentor (a character who helps their student improve a skill), in its plural form \"Mentors\".",
+  "details": "Writing `[mentors|E]` in a text shows \"Mentors\" linked to the mentor concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1665"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mentors_possessive",
+  "label": "Mentors'",
+  "summary": "The game concept Mentor (a character who helps their student improve a skill), in its plural possessive form \"Mentors'\".",
+  "details": "Writing `[mentors_possessive|E]` in a text shows \"Mentors'\" linked to the mentor concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1667"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mercenaries",
+  "label": "Mercenaries",
+  "summary": "The game concept Mercenary Company, under its plural name \"Mercenaries\": soldiers for hire who fight for gold.",
+  "details": "Writing `[mercenaries|E]` in a text shows \"Mercenaries\" linked to the mercenary company concept's explanation. Mercenary armies differ in size and in their men-at-arms and knights. They sign contracts for a number of months set by a define, which can be extended while the employer is still at war, and a contract stays in force even when their regiments are dismissed. Vanilla uses it in the army and hired troops concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:699"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mercenary",
+  "label": "Mercenary",
+  "summary": "The game concept Mercenary Company, as the word \"Mercenary\": soldiers for hire who fight for gold.",
+  "details": "Writing `[mercenary|E]` in a text shows \"Mercenary\" linked to the mercenary company concept's explanation. Vanilla uses it for mercenary contracts, mercenary captains and mercenary titles in concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:700"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mercenary_company",
+  "label": "Mercenary company",
+  "summary": "The game concept Mercenary Company: an army of soldiers for hire who fight for gold.",
+  "details": "Writing `[mercenary_company|E]` in a text shows the word linked to the concept's explanation. Companies differ in size and in their men-at-arms and knights. They are hired on contracts for a number of months set by a define, which can be extended while the employer is still at war, and the contract lasts even if their regiments are dismissed. Vanilla uses it in alerts about expiring contracts and in message filters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mercenary_contract",
+  "label": "Mercenary contract",
+  "summary": "The game concept Mercenary Contract: the agreement that, for a one-time cost, lets a ruler use a mercenary company's troops for a set number of months.",
+  "details": "Writing `[mercenary_contract|E]` in a text shows the word linked to the concept's explanation. The number of months comes from a define (`NMercenary`, `BASE_HIRE_MONTHS`); vanilla's tutorial text speaks of 3 years that can be extended by paying again. Vanilla also uses it in yurt domicile effects that last as long as the contract.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mercenary_contracts",
+  "label": "Mercenary contracts",
+  "summary": "The game concept Mercenary Contract (the agreement to use a mercenary company's troops for a set time), in its plural form \"Mercenary Contracts\".",
+  "details": "Writing `[mercenary_contracts|E]` in a text shows \"Mercenary Contracts\" linked to the concept's explanation. Vanilla uses it in the AI automation options, where contracts are extended when the war effort needs it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:704"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mercenary_i",
+  "label": "Mercenary icon",
+  "summary": "The game concept Mercenary Company (soldiers for hire), in its icon form.",
+  "details": "This is another name of the mercenary company concept whose name text is the mercenary government icon, so `[mercenary_i|E]` shows that icon linked to the concept's explanation. Vanilla puts it in front of the word mercenary in an opinion modifier's name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:701"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mercenary_task_contract",
+  "label": "Mercenary task contract",
+  "summary": "The game concept Mercenary Contract, the task contract kind: a job in which you help a character in a war they are fighting or mean to start with your help.",
+  "details": "Writing `[mercenary_task_contract|E]` in a text shows \"Mercenary Contract\" linked to the concept's explanation; this is a task contract for landless adventurers, not the hiring of a mercenary company. Pay depends on the war contribution and on how the war ends. Vanilla uses it in contract and camp texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:148"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mercenary_task_contract_possessive",
+  "label": "Mercenary task contract's",
+  "summary": "The game concept Mercenary Contract, the task contract kind (helping a character in a war for pay), in its possessive form \"Mercenary Contract's\".",
+  "details": "Writing `[mercenary_task_contract_possessive|E]` in a text shows \"Mercenary Contract's\" linked to the concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:150"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mercenary_task_contracts",
+  "label": "Mercenary task contracts",
+  "summary": "The game concept Mercenary Contract, the task contract kind (helping a character in a war for pay), in its plural form \"Mercenary Contracts\".",
+  "details": "Writing `[mercenary_task_contracts|E]` in a text shows \"Mercenary Contracts\" linked to the concept's explanation. Vanilla uses it in camp purpose effects (finds more mercenary contracts) and adventurer perks.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:149"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mercenary_task_contracts_possessive",
+  "label": "Mercenary task contracts'",
+  "summary": "The game concept Mercenary Contract, the task contract kind (helping a character in a war for pay), in its plural possessive form \"Mercenary Contracts'\".",
+  "details": "Writing `[mercenary_task_contracts_possessive|E]` in a text shows \"Mercenary Contracts'\" linked to the concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:151"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "merit",
+  "label": "Merit",
+  "summary": "The game concept Merit: what tracks a character's progress towards their next merit rank.",
+  "details": "Writing `[merit|E]` in a text shows the word linked to the concept's explanation. Characters with an elder or disciples gain merit over time; governors also gain it by constructing buildings in their holdings, going on inspections, taking part in debates and attending examinations. Vanilla uses it in merit tooltips and salary texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "merit_i",
+  "label": "Merit icon",
+  "summary": "The game concept Merit (a character's progress towards their next merit rank), in its icon form.",
+  "details": "This is another name of the merit concept whose name text is the merit icon, so `[merit_i|E]` shows that icon linked to the concept's explanation. Vanilla mostly writes it as `[merit_i]`, without the link, to put the plain icon in front of merit costs.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:16"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "merit_level",
+  "label": "Merit rank",
+  "summary": "The game concept Merit Rank: how suitable a character is as a governor in East Asian administrative governments, based on the merit they have gained.",
+  "details": "Writing `[merit_level|E]` in a text shows \"Merit Rank\" linked to the concept's explanation. It stands for an official's recorded achievements and moral conduct by Confucian ideals; a higher rank gives a higher candidate score and governor salary. Vanilla uses it in merit tooltips and requirement texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:17"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "merit_levels",
+  "label": "Merit ranks",
+  "summary": "The game concept Merit Rank (how suitable a character is as a governor), in its plural form \"Merit Ranks\".",
+  "details": "Writing `[merit_levels|E]` in a text shows \"Merit Ranks\" linked to the concept's explanation. Vanilla uses it in effect texts about gaining or losing merit ranks.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:19"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "merit_pool",
+  "label": "Candidate list",
+  "summary": "The game concept Candidate List: everyone eligible to receive a title through appointment, sorted by their candidate score.",
+  "details": "Writing `[merit_pool|E]` in a text shows \"Candidate List\" linked to the concept's explanation. Some appointment succession laws sort by merit rank first and candidate score second. When the holder of an appointed title dies, it goes to the highest-ranked character on the list. Vanilla uses it in decisions to join or leave all candidate lists.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:54"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "merit_pool_possessive",
+  "label": "Candidate list's",
+  "summary": "The game concept Candidate List (everyone eligible for an appointed title), in its possessive form \"Candidate List's\".",
+  "details": "Writing `[merit_pool_possessive|E]` in a text shows \"Candidate List's\" linked to the concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:56"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "merit_pools",
+  "label": "Candidate lists",
+  "summary": "The game concept Candidate List (everyone eligible for an appointed title), in its plural form \"Candidate Lists\".",
+  "details": "Writing `[merit_pools|E]` in a text shows \"Candidate Lists\" linked to the concept's explanation. Vanilla uses it in appointment succession law texts (succession based on merit rank and candidate lists).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:55"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "meritocratic",
+  "label": "Meritocratic",
+  "summary": "The game concept Meritocratic: a bureaucratic form of government, like celestial, in which the liege appoints characters as civil or military governors.",
+  "details": "Writing `[meritocratic|E]` in a text shows the word linked to the concept's explanation. Its characters have influence, noble families and family mansions; independent rulers have legitimacy, while vassals work towards merit. Vanilla uses it in government, tradition and decision texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "meritocratic_bureaucracy",
+  "label": "Meritocratic bureaucracy",
+  "summary": "The game concept Meritocratic Bureaucracy: how centralized a meritocratic realm is and how much power its ruler has over their vassals.",
+  "details": "Writing `[meritocratic_bureaucracy|E]` in a text shows the word linked to the concept's explanation. Only the top liege can change it, and meritocratic vassals use their liege's level; there are four levels. Vanilla uses it as a government's authority and as the name of its law, which has a cooldown after a change.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "meritocratic_i",
+  "label": "Meritocratic icon",
+  "summary": "The game concept Meritocratic (a bureaucratic government of appointed governors), in its icon form.",
+  "details": "This is another name of the meritocratic concept whose name text is the meritocratic government icon, so `[meritocratic_i|E]` shows that icon linked to the concept's explanation. Vanilla puts it in front of the word meritocratic in opinion modifier names.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_game_concepts_l_english.yml:5"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "meritorious",
+  "label": "Meritorious",
+  "summary": "The game concept Merit (a character's progress towards their next merit rank), as the word \"Meritorious\".",
+  "details": "Writing `[meritorious|E]` in a text shows \"Meritorious\" linked to the merit concept's explanation. Vanilla uses it once, in a situation parameter text about good meritorious Confucian government.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:14"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "metropolitan_examination",
+  "label": "Metropolitan examination",
+  "summary": "The game concept Metropolitan Examination: the third level of the imperial examinations, held by the celestial government through the imperial examination activity.",
+  "details": "Writing `[metropolitan_examination|E]` in a text shows the word linked to the concept's explanation. Passing it gives a modifier, whose effects the description shows. Vanilla's merit rank texts say the higher ranks require having passed it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "metropolitan_examination_i",
+  "label": "Metropolitan examination icon",
+  "summary": "The game concept Metropolitan Examination (the third level of the imperial examinations), in its icon form.",
+  "details": "This is another name of the concept whose name text is the metropolitan exam icon, so `[metropolitan_examination_i|E]` shows that icon linked to the concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:40"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "migrate",
+  "label": "Migrate",
+  "summary": "The game concept Migration, as the word \"Migrate\": nomads moving to new lands when the fertility of their realm is low.",
+  "details": "Writing `[migrate|E]` in a text shows \"Migrate\" linked to the migration concept's explanation. Migration can only target de jure titles, and a ruler's nomadic authority limits which title tiers they can reach. The nomad with the biggest herd in the target area gets a proposal and can leave willingly or go to war to defend the land. Vanilla uses it in nomad interaction and concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:131"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "migrated",
+  "label": "Migrated",
+  "summary": "The game concept Migration (nomads moving to new lands), as the word \"Migrated\".",
+  "details": "Writing `[migrated|E]` in a text shows \"Migrated\" linked to the migration concept's explanation. Vanilla uses it in messages that a nomad has migrated into a title.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:134"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "migrates",
+  "label": "Migrates",
+  "summary": "The game concept Migration (nomads moving to new lands), as the word \"Migrates\".",
+  "details": "Writing `[migrates|E]` in a text shows \"Migrates\" linked to the migration concept's explanation. Vanilla uses it in message filters for a nomad migrating into your realm or a neighbouring one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:133"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "migrating",
+  "label": "Migrating",
+  "summary": "The game concept Migration (nomads moving to new lands), as the word \"Migrating\".",
+  "details": "Writing `[migrating|E]` in a text shows \"Migrating\" linked to the migration concept's explanation. Vanilla uses it in interaction and nomad concept texts, for example that migrating into some land will mean a war for it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:135"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "migration",
+  "label": "Migration",
+  "summary": "The game concept Migration: nomads moving in search of better pastures when the fertility of their realm is low.",
+  "details": "Writing `[migration|E]` in a text shows the word linked to the concept's explanation. Migration can only target de jure titles, and the ruler's nomadic authority limits the title tiers they can reach. The nomad with the biggest herd in the target area is asked and can leave willingly or fight for the land. Vanilla uses it in the interaction to plan a migration and in court astrologer texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mild_centralization",
+  "label": "Mild centralization",
+  "summary": "The game concept Church Centralization, under the name of its middle level, mild centralization: how centralized the Church's authority and finances are.",
+  "details": "Writing `[mild_centralization|E]` in a text shows the mild centralization level's name linked to the church centralization concept's explanation. The stronger the centralization, the more income flows up the clerical hierarchy; the levels are minimal, mild and strong. Vanilla uses it in the Christian situation's theocratic lease ratio text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:95"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "military_building",
+  "label": "Military building",
+  "summary": "The game concept Military Building: a building whose main purpose is to raise the number of levies its holder gets.",
+  "details": "Writing `[military_building|E]` in a text shows the word linked to the concept's explanation. Vanilla uses it in an effect text that gives a holding a random military building.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "military_buildings",
+  "label": "Military buildings",
+  "summary": "The game concept Military Building (a building that raises its holder's levies), in its plural form \"Military Buildings\".",
+  "details": "Writing `[military_buildings|E]` in a text shows \"Military Buildings\" linked to the concept's explanation. Vanilla uses it in cultural innovations that unlock the military buildings of an era.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:913"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "military_career",
+  "label": "Military career",
+  "summary": "The game concept Military Career Path, under its name \"Military Career\": the career of rulers who put martial matters before administration.",
+  "details": "Writing `[military_career|E]` in a text shows \"Military Career\" linked to the concept's explanation. Such characters are appointed to military circuits, and their merit grows with how well they recruit and keep title men-at-arms. Vanilla uses it in decisions to change career and in candidate score texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:213"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "military_career_path",
+  "label": "Military career path",
+  "summary": "The game concept Military Career Path: the career of rulers who put martial matters before administration.",
+  "details": "Writing `[military_career_path|E]` in a text shows the word linked to the concept's explanation. These characters are appointed to military circuits, and their merit grows with how well they recruit and keep title men-at-arms; they can become military governors. Vanilla uses it in merit texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "military_career_short",
+  "label": "Military",
+  "summary": "The game concept Military Career Path (the career of rulers who put martial matters first), in its short form \"Military\".",
+  "details": "Writing `[military_career_short|E]` in a text shows the word \"Military\" linked to the military career path concept's explanation. Vanilla uses it in the decision to change one's career path.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:214"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "military_governor",
+  "label": "Military governor",
+  "summary": "The game concept Military Governor: a governor with military obligations who can field title men-at-arms, unlike civilian governors.",
+  "details": "Writing `[military_governor|E]` in a text shows the word linked to the concept's explanation. Military governors use their troops to defend the realm from outside attacks and to help other governors who need military aid; characters on the military career path can become one. Vanilla uses it in government and administration window texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "military_governor_short",
+  "label": "Military",
+  "summary": "The game concept Military Governor (a governor who can field troops), in its short form \"Military\".",
+  "details": "Writing `[military_governor_short|E]` in a text shows the word \"Military\" linked to the military governor concept's explanation. Vanilla uses it in a government concept text naming the two governor types, civil and military.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:222"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "military_governors",
+  "label": "Military governors",
+  "summary": "The game concept Military Governor (a governor who can field troops), in its plural form \"Military Governors\".",
+  "details": "Writing `[military_governors|E]` in a text shows \"Military Governors\" linked to the concept's explanation. Vanilla uses it in Chinese government concept texts, for example ordering military governors to join other governors' wars.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:221"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "military_holy_order",
+  "label": "Military order",
+  "summary": "The game concept Military Order: a holy order of warriors sworn to defend and expand the lands of their faith.",
+  "details": "Writing `[military_holy_order|E]` in a text shows \"Military Order\" linked to the concept's explanation. Rulers of the same faith can hire it for piety while at war with a hostile or evil faith, and it stops fighting for them when that war ends. Its patron does not have to pay for its services. Vanilla uses it in an achievement and in decisions about holy order loans.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:349"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "military_holy_order_patron",
+  "label": "Military order patron",
+  "summary": "The game concept Military Order Patron: the ruler of duke tier or higher, of the order's faith, whose realm holds the military order's capital.",
+  "details": "Writing `[military_holy_order_patron|E]` in a text shows \"Military Order Patron\" linked to the concept's explanation. The patron can call on the order against religious enemies for free instead of paying piety. The patronage can pass to a vassal of duke tier or higher if control of the order's capital is given up. Vanilla uses it in the decision to found a military order.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:355"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "military_holy_order_patronage",
+  "label": "Military order patronage",
+  "summary": "The game concept Military Order, under the name \"Military Order Patronage\": a holy order of warriors sworn to defend their faith's lands.",
+  "details": "Writing `[military_holy_order_patronage|E]` in a text shows \"Military Order Patronage\" linked to the military order concept's explanation, not to the patron concept. Same-faith rulers can hire the order for piety in wars against hostile or evil faiths, and its patron uses it for free. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:356"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "military_holy_order_patronize",
+  "label": "Patronize",
+  "summary": "The game concept Military Order Patron (the ruler whose realm holds a military order's capital), as the word \"Patronize\".",
+  "details": "Writing `[military_holy_order_patronize|E]` in a text shows \"Patronize\" linked to the military order patron concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:357"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "military_holy_order_possessive",
+  "label": "Military order's",
+  "summary": "The game concept Military Order (a holy order of warriors), in its possessive form \"Military Order's\".",
+  "details": "Writing `[military_holy_order_possessive|E]` in a text shows \"Military Order's\" linked to the military order concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:352"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "military_holy_orders",
+  "label": "Military orders",
+  "summary": "The game concept Military Order (a holy order of warriors), in its plural form \"Military Orders\".",
+  "details": "Writing `[military_holy_orders|E]` in a text shows \"Military Orders\" linked to the military order concept's explanation. Vanilla uses it as a heading in the faith view and in a doctrine that forbids creating them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:350"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "military_holy_orders_possessive",
+  "label": "Military orders'",
+  "summary": "The game concept Military Order (a holy order of warriors), in its plural possessive form \"Military Orders'\".",
+  "details": "Writing `[military_holy_orders_possessive|E]` in a text shows \"Military Orders'\" linked to the military order concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:353"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "military_power",
+  "label": "Military power",
+  "summary": "The game concept Faction Military Power, under its name \"Military Power\": the total military strength of a faction compared with its target.",
+  "details": "Writing `[military_power|E]` in a text shows \"Military Power\" linked to the concept's explanation. Every member adds their full strength while they stay in the faction; when the target is a member's liege, that member's strength is also taken off the liege's side. Vanilla uses it in faction texts about discontent and ultimatums.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:192"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minimal_centralization",
+  "label": "Minimal centralization",
+  "summary": "The game concept Church Centralization, under the name of its lowest level, minimal centralization: how centralized the Church's authority and finances are.",
+  "details": "Writing `[minimal_centralization|E]` in a text shows the minimal centralization level's name linked to the church centralization concept's explanation. The stronger the centralization, the more income flows up the clerical hierarchy; the levels are minimal, mild and strong. Vanilla uses it in the Christian situation's theocratic lease ratio text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:94"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister",
+  "label": "Minister",
+  "summary": "The game concept Minister: a councillor on the council, or ministry, of the Son of Heaven.",
+  "details": "Writing `[minister|E]` in a text shows the word linked to the concept's explanation. Each minister has their own duties, such as funding great projects and helping governors in different ways. Vanilla uses it in appointment, message and tradition texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_censor",
+  "label": "Imperial censor",
+  "summary": "The game concept Imperial Censor: the minister in charge of intrigue and intelligence.",
+  "details": "Writing `[minister_censor|E]` in a text shows \"Imperial Censor\" linked to the concept's explanation. A disloyal censor can easily hide and join schemes against the ruler and their close family. Depending on the grand secretariat law, the censor can be the grand secretariat director. Vanilla lists it among the ministers.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:164"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_censor_possessive",
+  "label": "Imperial censor's",
+  "summary": "The game concept Imperial Censor (the minister for intrigue and intelligence), in its possessive form \"Imperial Censor's\".",
+  "details": "Writing `[minister_censor_possessive|E]` in a text shows \"Imperial Censor's\" linked to the concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:166"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_grand_chancellor",
+  "label": "Grand chancellor",
+  "summary": "The game concept Grand Chancellor: the highest-ranking minister, in charge of diplomacy.",
+  "details": "Writing `[minister_grand_chancellor|E]` in a text shows \"Grand Chancellor\" linked to the concept's explanation. The grand chancellor usually holds the post of grand secretariat director, depending on the grand secretariat law. Vanilla lists it among the ministers and in a decision's requirements.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:160"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_grand_chancellor_possessive",
+  "label": "Grand chancellor's",
+  "summary": "The game concept Grand Chancellor (the highest minister, in charge of diplomacy), in its possessive form \"Grand Chancellor's\".",
+  "details": "Writing `[minister_grand_chancellor_possessive|E]` in a text shows \"Grand Chancellor's\" linked to the concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:162"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_grand_marshal",
+  "label": "Grand marshal",
+  "summary": "The game concept Grand Marshal: the highest-ranking commander of the realm, who leads an army of title men-at-arms.",
+  "details": "Writing `[minister_grand_marshal|E]` in a text shows \"Grand Marshal\" linked to the concept's explanation. Depending on the grand secretariat law, the grand marshal can be the grand secretariat director. Vanilla's succession texts say the post uses its own appointment law, reserved for commanders of the highest merit ranks.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:168"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_grand_marshal_possessive",
+  "label": "Grand marshal's",
+  "summary": "The game concept Grand Marshal (the realm's highest-ranking commander), in its possessive form \"Grand Marshal's\".",
+  "details": "Writing `[minister_grand_marshal_possessive|E]` in a text shows \"Grand Marshal's\" linked to the concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:170"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_of_justice",
+  "label": "Minister of justice",
+  "summary": "The game concept Minister of Justice: the minister in charge of legal affairs, who helps the Son of Heaven keep a righteous rule.",
+  "details": "Writing `[minister_of_justice|E]` in a text shows \"Minister of Justice\" linked to the concept's explanation. Vanilla uses it in interaction texts, for example characters highlighted because they are the minister of justice or because the minister is willing to pardon.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:188"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_of_justice_possessive",
+  "label": "Minister of justice's",
+  "summary": "The game concept Minister of Justice (the minister for legal affairs), in its possessive form \"Minister of Justice's\".",
+  "details": "Writing `[minister_of_justice_possessive|E]` in a text shows \"Minister of Justice's\" linked to the concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:190"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_of_personnel",
+  "label": "Minister of personnel",
+  "summary": "The game concept Minister of Personnel: the minister in charge of appointments, who can strongly affect other characters' candidate scores.",
+  "details": "Writing `[minister_of_personnel|E]` in a text shows \"Minister of Personnel\" linked to the concept's explanation. Vanilla lists it among the ministers and uses it in candidate score breakdowns.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:172"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_of_personnel_possessive",
+  "label": "Minister of personnel's",
+  "summary": "The game concept Minister of Personnel (the minister for appointments), in its possessive form \"Minister of Personnel's\".",
+  "details": "Writing `[minister_of_personnel_possessive|E]` in a text shows \"Minister of Personnel's\" linked to the concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:174"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_of_revenue",
+  "label": "Minister of revenue",
+  "summary": "The game concept Minister of Revenue: the minister in charge of taxation, who helps the Son of Heaven with the treasury.",
+  "details": "Writing `[minister_of_revenue|E]` in a text shows \"Minister of Revenue\" linked to the concept's explanation. Vanilla's texts say the minister of revenue, like the minister of war or the Son of Heaven, can pay off a governor's treasury debt.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:176"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_of_revenue_possessive",
+  "label": "Minister of revenue's",
+  "summary": "The game concept Minister of Revenue (the minister for taxation), in its possessive form \"Minister of Revenue's\".",
+  "details": "Writing `[minister_of_revenue_possessive|E]` in a text shows \"Minister of Revenue's\" linked to the concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:178"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_of_rites",
+  "label": "Minister of rites",
+  "summary": "The game concept Minister of Rites: the minister in charge of religious and spiritual affairs, who can help governors host examinations.",
+  "details": "Writing `[minister_of_rites|E]` in a text shows \"Minister of Rites\" linked to the concept's explanation. Vanilla uses it in the imperial examination activity window and in activity guest reason lines such as you are the minister of rites.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:180"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_of_rites_possessive",
+  "label": "Minister of rites'",
+  "summary": "The game concept Minister of Rites (the minister for religious affairs), in its possessive form \"Minister of Rites'\".",
+  "details": "Writing `[minister_of_rites_possessive|E]` in a text shows \"Minister of Rites'\" linked to the concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:182"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_of_war",
+  "label": "Minister of war",
+  "summary": "The game concept Minister of War: the minister who runs the administration of the troops and can send military governors to help governors in need.",
+  "details": "Writing `[minister_of_war|E]` in a text shows \"Minister of War\" linked to the concept's explanation. The minister of war does not command or lead troops; that is the grand marshal's job. Vanilla uses it in reason lines such as you are the minister of war and treasury debt texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:184"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_of_war_possessive",
+  "label": "Minister of war's",
+  "summary": "The game concept Minister of War (the minister who runs the troops' administration), in its possessive form \"Minister of War's\".",
+  "details": "Writing `[minister_of_war_possessive|E]` in a text shows \"Minister of War's\" linked to the concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:186"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_of_works",
+  "label": "Minister of works",
+  "summary": "The game concept Minister of Works: the minister in charge of construction and development across the realm, who can start great projects.",
+  "details": "Writing `[minister_of_works|E]` in a text shows \"Minister of Works\" linked to the concept's explanation. Vanilla uses it in natural disaster recovery and dynastic cycle texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:192"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_of_works_possessive",
+  "label": "Minister of works's",
+  "summary": "The game concept Minister of Works (the minister for construction and development), in its possessive form \"Minister of Works's\".",
+  "details": "Writing `[minister_of_works_possessive|E]` in a text shows \"Minister of Works's\" linked to the concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:194"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "minister_possessive",
+  "label": "Minister's",
+  "summary": "The game concept Minister (a councillor of the Son of Heaven), in its possessive form \"Minister's\".",
+  "details": "Writing `[minister_possessive|E]` in a text shows \"Minister's\" linked to the minister concept's explanation. Vanilla uses it in a movement decision about visiting the Son of Heaven's or a minister's capital.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:152"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ministers",
+  "label": "Ministers",
+  "summary": "The game concept Minister (a councillor of the Son of Heaven), in its plural form \"Ministers\".",
+  "details": "Writing `[ministers|E]` in a text shows \"Ministers\" linked to the minister concept's explanation. Vanilla uses it in a retirement text and in a dynastic cycle text requiring a number of ministers to belong to the conservative movement.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:151"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ministers_possessive",
+  "label": "Ministers'",
+  "summary": "The game concept Minister (a councillor of the Son of Heaven), in its plural possessive form \"Ministers'\".",
+  "details": "Writing `[ministers_possessive|E]` in a text shows \"Ministers'\" linked to the minister concept's explanation. None of the game's texts use this form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:153"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ministries",
+  "label": "Ministries",
+  "summary": "Another name of the game concept Ministry, in the plural: the special council of the Son of Heaven (the emperor of China), made of nine ministers.",
+  "details": "In a text, `[ministries|E]` shows the word \"Ministries\" linked to the concept's explanation. The ministers are ranked, so a lower minister can be promoted to a higher post. Vanilla uses it in a concept text about funding the ministries from the top liege's treasury.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:156"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ministries_possessive",
+  "label": "Ministries' (possessive)",
+  "summary": "Another name of the game concept Ministry, in the plural possessive form: the special council of the Son of Heaven, made of nine ministers.",
+  "details": "In a text, `[ministries_possessive|E]` shows the word \"Ministries'\" linked to the concept's explanation, for phrases like \"the ministries' tasks\". No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:158"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ministry",
+  "label": "Ministry",
+  "summary": "The game concept Ministry: a kind of council that only the Son of Heaven (the emperor of China) has, made of nine ministers.",
+  "details": "In a text, `[ministry|E]` shows the word \"Ministry\" linked to the concept's explanation. Each minister heads a department, and the posts form a ladder: a lower minister can be promoted to a higher post, depending on the title's appointment prominence. Vanilla uses it in the court position and minister texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:155"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ministry_obligation",
+  "label": "Ministry obligation",
+  "summary": "Another name of the game concept Ministry Obligations, in the singular: the fixed set of subject obligations (what tax and levies they owe) that only ministers have.",
+  "details": "In a text, `[ministry_obligation|E]` shows the words \"Ministry Obligation\" linked to the concept's explanation. Civil ministers each have a set default option, the Grand Marshal has one that gives men-at-arms, and these obligations cannot be changed. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:201"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ministry_obligations",
+  "label": "Ministry obligations",
+  "summary": "The game concept Ministry Obligations: a special set of subject obligations (what tax and levies a subject owes) that only ministers have.",
+  "details": "In a text, `[ministry_obligations|E]` shows the words \"Ministry Obligations\" linked to the concept's explanation. Every civil minister has a fixed default option; the Grand Marshal's own option gives them men-at-arms tied to the title. They cannot be changed. Vanilla uses it in the government texts, in the entry named celestial_ministry_obligations.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:202"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "ministry_possessive",
+  "label": "Ministry's (possessive)",
+  "summary": "Another name of the game concept Ministry, in the possessive form: the special council of the Son of Heaven, made of nine ministers.",
+  "details": "In a text, `[ministry_possessive|E]` shows the word \"Ministry's\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:157"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "modifier",
+  "label": "Modifier",
+  "summary": "The game concept Modifier: a lasting effect that changes some value over time, such as a character's skills or a scheme's success chance.",
+  "details": "In a text, `[modifier|E]` shows the word \"Modifier\" linked to the concept's explanation. Modifiers mostly sit on characters, schemes and counties. Vanilla uses it often, for example after a named modifier in the oath texts of buildings.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1701"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "modifier_base_contributes",
+  "label": "Base contributes",
+  "summary": "Another name of the game concept Base Contribution, as a verb: the part of a vassal's obligations that modifiers can raise as a share of the vassal's whole income, going by the game's example.",
+  "details": "In a text, `[modifier_base_contributes|E]` shows the words \"Base Contributes\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2009"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "modifier_base_contribution",
+  "label": "Base contribution",
+  "summary": "The game concept Base Contribution: the part of a vassal's obligations that a modifier can raise as a share of the vassal's whole income.",
+  "details": "In a text, `[modifier_base_contribution|E]` shows the words \"Base Contribution\" linked to the concept's explanation. The game's example: a vassal with 10 gold income who pays 1 gold a month pays 2 gold after a +10% base contribution modifier. It differs from Contribution, which scales what the vassal already pays. Vanilla uses it in the vassal stance tax and levy texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2007"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "modifier_base_contributions",
+  "label": "Base contributions",
+  "summary": "Another name of the game concept Base Contribution, in the plural: the part of a vassal's obligations that a modifier can raise as a share of the vassal's whole income.",
+  "details": "In a text, `[modifier_base_contributions|E]` shows the words \"Base Contributions\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2008"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "modifier_contributes",
+  "label": "Contributes",
+  "summary": "Another name of the game concept Contribution, as a verb: how much a vassal pays their liege through their obligations, which modifiers can scale.",
+  "details": "In a text, `[modifier_contributes|E]` shows the word \"Contributes\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2004"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "modifier_contribution",
+  "label": "Contribution",
+  "summary": "The game concept Contribution: what a vassal pays through their obligations, which a modifier can raise or lower by a percentage.",
+  "details": "In a text, `[modifier_contribution|E]` shows the word \"Contribution\" linked to the concept's explanation. The game's example: a vassal paying 1 gold a month pays 1.1 gold after a +10% contribution modifier. It differs from Base Contribution, which works from the vassal's whole income. Vanilla uses it in effect and vassal stance texts (\"tax contribution\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2002"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "modifier_contributions",
+  "label": "Contributions",
+  "summary": "Another name of the game concept Contribution, in the plural: what vassals pay through their obligations, which modifiers can scale by a percentage.",
+  "details": "In a text, `[modifier_contributions|E]` shows the word \"Contributions\" linked to the concept's explanation. Vanilla uses it in the concept text about obligations and their fine print.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2003"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "modifiers",
+  "label": "Modifiers",
+  "summary": "Another name of the game concept Modifier, in the plural: lasting effects that change values over time, such as skills or a scheme's success chance.",
+  "details": "In a text, `[modifiers|E]` shows the word \"Modifiers\" linked to the concept's explanation. Vanilla uses it in council task texts (\"Local county modifiers\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1702"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "monastic",
+  "label": "Monastic order",
+  "summary": "Another name of the game concept Monastic Order, as the adjective \"Monastic\": a holy order devoted to prayer, learning and spreading one core tenet.",
+  "details": "In a text, `[monastic|E]` shows the word \"Monastic\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:139"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "monastic_holy_order",
+  "label": "Monastic order",
+  "summary": "The game concept Monastic Order: a kind of holy order devoted to prayer, learning and spreading one core tenet of its founder's rite.",
+  "details": "In a text, `[monastic_holy_order|E]` shows the words \"Monastic Order\" linked to the concept's explanation. An archabbot leads it; its patrons give it temple holdings and gold, and it gives them spiritual fulfillment and piety back. Vanilla uses it in the decisions that found a new order.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:135"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "monastic_holy_order_i",
+  "label": "Monastic order icon",
+  "summary": "The icon of the game concept Monastic Order (a holy order devoted to prayer, learning and one core tenet).",
+  "details": "In a text, `[monastic_holy_order_i|E]` shows the monastic order government icon instead of a word, linked to the concept's explanation. Vanilla uses it alone in a custom text entry named monastic_holy_order_icon_concept.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:140"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "monastic_holy_order_possessive",
+  "label": "Monastic order's (possessive)",
+  "summary": "Another name of the game concept Monastic Order, in the possessive form: a holy order devoted to prayer, learning and one core tenet.",
+  "details": "In a text, `[monastic_holy_order_possessive|E]` shows the words \"Monastic Order's\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:137"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "monastic_holy_orders",
+  "label": "Monastic orders",
+  "summary": "Another name of the game concept Monastic Order, in the plural: holy orders devoted to prayer, learning and spreading one core tenet.",
+  "details": "In a text, `[monastic_holy_orders|E]` shows the words \"Monastic Orders\" linked to the concept's explanation. Vanilla uses it in the concept texts on barony leases and holy orders, where monastic orders raise development and give spiritual fulfillment.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:136"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "monastic_holy_orders_possessive",
+  "label": "Monastic orders' (possessive)",
+  "summary": "Another name of the game concept Monastic Order, in the plural possessive form: holy orders devoted to prayer, learning and one core tenet.",
+  "details": "In a text, `[monastic_holy_orders_possessive|E]` shows the words \"Monastic Orders'\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:138"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "monastic_order_patron",
+  "label": "Monastic order patron",
+  "summary": "The game concept Monastic Order Patron: a ruler of duchy rank or higher, clergy or secular, who supports a monastic order, most often its founder.",
+  "details": "In a text, `[monastic_order_patron|E]` shows the words \"Monastic Order Patron\" linked to the concept's explanation. The patron leases temple holdings to the order and gives it gold; in return they earn piety and spiritual fulfillment and may take control of the order's leader. Vanilla uses it in decision and interaction texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:143"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "monastic_order_patronage",
+  "label": "Patronage",
+  "summary": "Another name of the game concept Monastic Order Patron, as \"Patronage\": the support a patron ruler gives a monastic order.",
+  "details": "In a text, `[monastic_order_patronage|E]` shows the word \"Patronage\" linked to the concept's explanation. Vanilla uses it in the archabbot concept text, where a patron's patronage gives the order wealth and influence.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:147"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "monastic_order_patronize",
+  "label": "Patronize",
+  "summary": "Another name of the game concept Monastic Order Patron, as the verb \"Patronize\": to support a monastic order as its patron.",
+  "details": "In a text, `[monastic_order_patronize|E]` shows the word \"Patronize\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:145"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "monastic_order_patronized",
+  "label": "Patronized",
+  "summary": "Another name of the game concept Monastic Order Patron, as \"Patronized\": a monastic order that a patron ruler supports.",
+  "details": "In a text, `[monastic_order_patronized|E]` shows the word \"Patronized\" linked to the concept's explanation. Vanilla uses it in an interaction option (\"Enlist the Aid of Patronized Monastic Orders\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:146"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "monastic_order_patrons",
+  "label": "Monastic order patrons",
+  "summary": "Another name of the game concept Monastic Order Patron, in the plural: rulers of duchy rank or higher who support a monastic order.",
+  "details": "In a text, `[monastic_order_patrons|E]` shows the words \"Monastic Order Patrons\" linked to the concept's explanation. Vanilla uses it in the Monastic Order concept text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/pam/pam_game_concepts_l_english.yml:144"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mongol_empire",
+  "label": "Mongol Empire",
+  "summary": "The game concept Mongol Empire: an empire title a powerful tribal ruler on the steppes can create, which unlocks the Mongol invasion casus belli.",
+  "details": "In a text, `[mongol_empire|E]` shows the words \"Mongol Empire\" linked to the concept's explanation. The title is created by taking the \"become the Greatest of Khans\" decision. Vanilla uses it in that decision's effect text and in the casus belli concept.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1487"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "mongol_invasion_casus_belli",
+  "label": "Mongol invasion casus belli",
+  "summary": "The game concept Mongol Invasion Casus Belli: a strong reason for war that only the ruler of the Mongol Empire has.",
+  "details": "In a text, `[mongol_invasion_casus_belli|E]` shows the words \"Mongol Invasion Casus Belli\" linked to the concept's explanation. It can target a whole kingdom title at once, for fast expansion. Vanilla uses it in the decision and event texts that grant it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1489"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "monument_expedition",
+  "label": "Monument expedition",
+  "summary": "The game concept Monument Expedition: an activity in which a character travels to a famous monument or landmark to learn about it and better themselves.",
+  "details": "In a text, `[monument_expedition|E]` shows the words \"Monument Expedition\" linked to the concept's explanation. The expected rewards are skill points, excellent-aptitude court positions and prestige. Vanilla uses it in the journey activity texts, where the cost depends mostly on the distance to the chosen special building.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2730",
+   "vanilla: common/game_concepts/01_bp3_game_concepts.txt:29"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "monument_expedition_i",
+  "label": "Monument expedition icon",
+  "summary": "The icon of the game concept Monument Expedition (an activity of travelling to a famous monument).",
+  "details": "In a text, `[monument_expedition_i|E]` shows the activity's icon linked to the concept's explanation. Vanilla writes it without `|E` (`[monument_expedition_i]`) in lifestyle focus texts to show only the icon.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:2731",
+   "vanilla: common/game_concepts/01_bp3_game_concepts.txt:32"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "movement",
+  "label": "Movement",
+  "summary": "The game concept Movement: a group of characters with shared interests and a shared view of the dynastic cycle (the rise and fall of China's dynasties).",
+  "details": "In a text, `[movement|E]` shows the word \"Movement\" linked to the concept's explanation. Members get their own interactions and decisions to nudge the cycle, and a movement leader speaks for the group to the Son of Heaven. Vanilla uses it often in the dynastic cycle texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:268"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "movement_leader",
+  "label": "Movement leader",
+  "summary": "The game concept Movement Leader: the character who leads a movement and is the only member allowed to speak to the Son of Heaven for it.",
+  "details": "In a text, `[movement_leader|E]` shows the words \"Movement Leader\" linked to the concept's explanation. The leader pushes the movement's agenda with the movement petition decision. A character becomes leader by having the most movement power when the old leader dies, or by beating the leader in a debate activity. Vanilla uses it in request and debate host texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:280"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "movement_leader_possessive",
+  "label": "Movement leader's (possessive)",
+  "summary": "Another name of the game concept Movement Leader, in the possessive form: the character who leads a movement and speaks for it to the Son of Heaven.",
+  "details": "In a text, `[movement_leader_possessive|E]` shows the words \"Movement Leader's\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:281"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "movement_leader_short",
+  "label": "Leader (movement)",
+  "summary": "Another name of the game concept Movement Leader, in a short form: the character who leads a movement and speaks for it to the Son of Heaven.",
+  "details": "In a text, `[movement_leader_short|E]` shows just the word \"Leader\" linked to the Movement Leader explanation. Vanilla uses it in dynastic cycle phase texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:284"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "movement_leaders",
+  "label": "Movement leaders",
+  "summary": "Another name of the game concept Movement Leader, in the plural: the characters who lead the movements and speak for them to the Son of Heaven.",
+  "details": "In a text, `[movement_leaders|E]` shows the words \"Movement Leaders\" linked to the concept's explanation. Vanilla uses it in a text on who joins which group of the dynastic cycle.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:282"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "movement_leaders_possessive",
+  "label": "Movement leaders' (possessive)",
+  "summary": "Another name of the game concept Movement Leader, in the plural possessive form: the characters who lead the movements.",
+  "details": "In a text, `[movement_leaders_possessive|E]` shows the words \"Movement Leaders'\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:283"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "movement_lock",
+  "label": "Movement lock",
+  "summary": "Another name of the game concept Movement Locked: once an army has done more than half of a move order, the order can no longer be changed until it arrives.",
+  "details": "In a text, `[movement_lock|E]` shows the words \"Movement Lock\" linked to the concept's explanation. Vanilla uses it in the map tooltip that says when a unit's movement will lock.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1931"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "movement_locked",
+  "label": "Movement locked",
+  "summary": "The game concept Movement Locked: once an army has done more than half of a move order, the order can no longer be changed until it arrives.",
+  "details": "In a text, `[movement_locked|E]` shows the words \"Movement Locked\" linked to the concept's explanation. Vanilla uses it in the army tooltip on the map.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1932"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "movement_possessive",
+  "label": "Movement's (possessive)",
+  "summary": "Another name of the game concept Movement, in the possessive form: a group of characters with a shared view of the dynastic cycle.",
+  "details": "In a text, `[movement_possessive|E]` shows the word \"Movement's\" linked to the concept's explanation. Vanilla uses it in the Movement concept text and in scheme texts (\"their movement's movement power\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:270"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "movement_power",
+  "label": "Movement power",
+  "summary": "The game concept Movement Power: the political weight of a group in the dynastic cycle, the sum of its members' personal movement power.",
+  "details": "In a text, `[movement_power|E]` shows the words \"Movement Power\" linked to the concept's explanation. Very high movement power unlocks some interactions and a scheme, as the concept text lists. Vanilla uses it in merit and petition texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:273"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "movement_power_i",
+  "label": "Movement power icon",
+  "summary": "The icon of the game concept Movement Power (a group's political weight in the dynastic cycle).",
+  "details": "In a text, `[movement_power_i|E]` shows the movement power icon linked to the concept's explanation. Vanilla mostly writes it without `|E` (`[movement_power_i]`) to put the icon before a number.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:274"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "movement_power_short",
+  "label": "Power (movement)",
+  "summary": "Another name of the game concept Movement Power, in a short form: a group's political weight in the dynastic cycle.",
+  "details": "In a text, `[movement_power_short|E]` shows just the word \"Power\" linked to the Movement Power explanation. Vanilla uses it in petition texts and in the personal movement power concept.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:276"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "movements",
+  "label": "Movements",
+  "summary": "Another name of the game concept Movement, in the plural: groups of characters with a shared view of the dynastic cycle.",
+  "details": "In a text, `[movements|E]` shows the word \"Movements\" linked to the concept's explanation. Vanilla uses it in the decision to join a movement and in candidate score texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:269"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "movements_possessive",
+  "label": "Movements' (possessive)",
+  "summary": "Another name of the game concept Movement, in the plural possessive form: groups of characters with a shared view of the dynastic cycle.",
+  "details": "In a text, `[movements_possessive|E]` shows the word \"Movements'\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:271"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "natural_disaster",
+  "label": "Natural disaster",
+  "summary": "Another name of the game concept Disaster, in the singular: a flood or an earthquake that strikes counties.",
+  "details": "In a text, `[natural_disaster|E]` shows the words \"Natural Disaster\" linked to the concept's explanation. A disaster kills many characters in the hit counties and lowers development, county opinion and control, more so the worse it is; a relief project can undo the damage. Vanilla uses it in message filter texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:311"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "natural_disasters",
+  "label": "Natural disasters",
+  "summary": "Another name of the game concept Disaster, in the plural: floods and earthquakes that strike counties.",
+  "details": "In a text, `[natural_disasters|E]` shows the words \"Natural Disasters\" linked to the concept's explanation. Vanilla uses it in situation catalyst and warning-sign texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/tgp/dlc_tgp_china_game_concepts_l_english.yml:312"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "natural_prowess",
+  "label": "Natural prowess",
+  "summary": "Another name of the game concept Prowess Skill, as \"Natural Prowess\": the skill for a character's skill at personal combat.",
+  "details": "In a text, `[natural_prowess|E]` shows the words \"Natural Prowess\" linked to the concept's explanation. High prowess helps a character survive and do well as a knight in battle and in duels; each point adds knight damage and toughness. Vanilla uses it in prowess trigger texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:758"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "nemeses",
+  "label": "Nemeses",
+  "summary": "Another name of the game concept Nemesis, in the plural: characters bound by a relation of deep, mutual hatred.",
+  "details": "In a text, `[nemeses|E]` shows the word \"Nemeses\" linked to the concept's explanation. Vanilla uses it in effect texts (\"X and Y become nemeses\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1640"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "nemeses_possessive",
+  "label": "Nemeses' (possessive)",
+  "summary": "Another name of the game concept Nemesis, in the plural possessive form: characters bound by deep, mutual hatred.",
+  "details": "In a text, `[nemeses_possessive|E]` shows the word \"Nemeses'\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1642"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "nemesis",
+  "label": "Nemesis",
+  "summary": "The game concept Nemesis: a relation of deep, mutual hatred between two characters, stronger than a rivalry.",
+  "details": "In a text, `[nemesis|E]` shows the word \"Nemesis\" linked to the concept's explanation. A character can have only one nemesis. Vanilla uses it often, for example in council task texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1639"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "nemesis_possessive",
+  "label": "Nemesis' (possessive)",
+  "summary": "Another name of the game concept Nemesis, in the possessive form: a relation of deep, mutual hatred.",
+  "details": "In a text, `[nemesis_possessive|E]` shows the word \"Nemesis'\" linked to the concept's explanation. No vanilla text uses this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1641"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "nerge",
+  "label": "Nerge",
+  "summary": "The game concept Nerge: a special, very large hunt that nomadic rulers can hold, in which hundreds or thousands of animals are killed.",
+  "details": "In a text, `[nerge|E]` shows the word \"Nerge\" linked to the concept's explanation. Instead of the normal hunt success chance it keeps a Nerge Outcome score from the number of animals killed, which decides the host's and guests' rewards. Vanilla notes that a county can sustain only one nerge every 30 years.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:184"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "nerge_outcome",
+  "label": "Nerge outcome",
+  "summary": "Another name of the game concept Nerge, as \"Nerge Outcome\": the score of a nerge hunt, counted from the animals killed, that decides its rewards.",
+  "details": "In a text, `[nerge_outcome|E]` shows the words \"Nerge Outcome\" linked to the Nerge explanation. Vanilla uses it in the texts that make the outcome more successful.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/mpo/dlc_mpo_game_concepts_l_english.yml:185"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "nickname",
+  "label": "Nickname",
+  "summary": "The game concept Nickname: a second name a character takes or is given, such as Charles \"the Bald\".",
+  "details": "In a text, `[nickname|E]` shows the word \"Nickname\" linked to the concept's explanation. Nicknames have no game effect; a bad one is sometimes replaced by a good one later. Vanilla uses it in the texts of the effect that gives a nickname.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1972"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "nicknames",
+  "label": "Nicknames",
+  "summary": "Another name of the game concept Nickname, in the plural: second names characters take or are given.",
+  "details": "In a text, `[nicknames|E]` shows the word \"Nicknames\" linked to the concept's explanation. Vanilla uses it in the game rule texts for how often random nicknames appear.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1975"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "nobility",
+  "label": "Nobility",
+  "summary": "Another name of the game concept Noble, as \"Nobility\": being a member of a dynasty, as opposed to a lowborn commoner.",
+  "details": "In a text, `[nobility|E]` shows the word \"Nobility\" linked to the concept's explanation. Vanilla uses it in a tenet text where spiritual fulfillment depends on a sacrifice's nobility and rank.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1028"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "noble",
+  "label": "Noble",
+  "summary": "The game concept Noble: a character who belongs to a dynasty; characters without one are lowborn commoners.",
+  "details": "In a text, `[noble|E]` shows the word \"Noble\" linked to the concept's explanation. Vanilla uses it in the dynasty, house and favor concept texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/game_concepts_l_english.yml:1022"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "noble_families",
+  "label": "Noble families",
+  "summary": "Another name of the game concept Noble Family, in the plural: powerful houses in a bureaucratic (administrative) realm.",
+  "details": "In a text, `[noble_families|E]` shows the words \"Noble Families\" linked to the concept's explanation. Vanilla uses it in government and succession law texts, where the heads of noble families are among the candidates.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:87"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "noble_family",
+  "label": "Noble family",
+  "summary": "The game concept Noble Family: a powerful house in a bureaucratic (administrative) realm that owns an estate run by its house head.",
+  "details": "In a text, `[noble_family|E]` shows the words \"Noble Family\" linked to the concept's explanation. Noble families always stay part of the realm and try to gain influence and secure provinces; an influential one can become a powerful or dominant family. Vanilla uses it in faction and effect texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:86"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "noble_family_possessive",
+  "label": "Noble family's (possessive)",
+  "summary": "Another name of the game concept Noble Family, in the possessive form: a powerful house in an administrative realm.",
+  "details": "In a text, `[noble_family_possessive|E]` shows the words \"Noble Family's\" linked to the concept's explanation. Vanilla uses it with estates (\"a noble family's estate\").",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep3/dlc_ep3_game_concepts_l_english.yml:88"
+  ],
+  "uncertain": false
+ }
+]

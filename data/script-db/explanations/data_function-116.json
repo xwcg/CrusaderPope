@@ -1,0 +1,2016 @@
+[
+ {
+  "kind": "data_function",
+  "key": "Rite.random_PositiveAfterLife2",
+  "label": "Random good afterlife (2nd)",
+  "summary": "Going by its name, the rite's second wording for its good afterlife, read from the rite's localization block; going by the prefix, one picked at random when several are listed.",
+  "details": "The game's rite definition notes document `[Rite.random_key]` for the entries of a rite's `localization` block; a key the rite leaves out comes from its faith, then its religion. The Akom religion sets `PositiveAfterLife2` next to `PositiveAfterLife`. No game text calls this function itself.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:292"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_PositiveAfterLife3",
+  "label": "Random good afterlife (3rd)",
+  "summary": "The rite's third word for its good afterlife, from the rite's localization entry `PositiveAfterLife3`; going by the prefix, a random one if the entry lists several.",
+  "details": "Missing in the rite, the entry is inherited from the faith and then the religion. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_PriestFemale",
+  "label": "Random priest word (female)",
+  "summary": "The rite's word for a female priest, from its localization entry `PriestFemale`; going by the prefix, picked at random when several words are listed.",
+  "details": "Rites, faiths and religions define such words in a `localization` block, and a rite inherits what it does not set. A list is written `PriestFemale = { key1 key2 }`. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/faith_types/_faith_types.info:70"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_PriestFemalePlural",
+  "label": "Random priests word (female)",
+  "summary": "The rite's plural word for female priests (entry `PriestFemalePlural`); going by the prefix, one at random if several are listed.",
+  "details": "The value is a localization key set in the rite's `localization` block, or inherited from its faith or religion when the rite leaves it out. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:278"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_PriestMale",
+  "label": "Random priest word (male)",
+  "summary": "The rite's word for a male priest, from its localization entry `PriestMale`; going by the prefix, a random pick when several words are listed.",
+  "details": "The rite takes the word from its own `localization` block, else from its faith, else from its religion. No game text calls this function itself.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_PriestMalePlural",
+  "label": "Random priests word (male)",
+  "summary": "The rite's plural word for male priests (entry `PriestMalePlural`); going by the prefix, one chosen at random from a list.",
+  "details": "Without its own entry the rite uses its faith's or religion's word. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_PriestNeuter",
+  "label": "Random priest word (neutral)",
+  "summary": "The rite's gender-neutral word for a priest (entry `PriestNeuter`); going by the prefix, a random one when several are listed.",
+  "details": "Read from the rite's `localization` block, falling back to its faith and religion. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_PriestNeuterPlural",
+  "label": "Random priests word (neutral)",
+  "summary": "The rite's gender-neutral plural word for priests (entry `PriestNeuterPlural`); going by the prefix, picked at random from a list.",
+  "details": "The rite inherits the entry from its faith or religion when it has none. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_ReligiousHeadName",
+  "label": "Random religious head name",
+  "summary": "Going by its name, the rite's name for the head of its religion, from entry `ReligiousHeadName`; going by the prefix, a random one if several are listed.",
+  "details": "Read from the rite's `localization` block, else its faith's, else its religion's. A female form exists as `ReligiousHeadNameFemale`. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_ReligiousHeadNameFemale",
+  "label": "Random religious head (female)",
+  "summary": "The rite's name for a female religious head (entry `ReligiousHeadNameFemale`); going by the prefix, chosen at random when several are listed.",
+  "details": "The counterpart of `ReligiousHeadName` for a woman holding the office. Missing in the rite, it comes from the faith or religion. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_ReligiousHeadTitleName",
+  "label": "Random religious head title",
+  "summary": "The rite's name for the title (the office) its religious head holds, from entry `ReligiousHeadTitleName`; going by the prefix, a random one from a list.",
+  "details": "This names the title, not the person (that is `ReligiousHeadName`). Inherited from the faith or religion when the rite leaves it out. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:268"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_ReligiousSymbol",
+  "label": "Random religious symbol",
+  "summary": "Going by its name, the rite's holy symbol, from entry `ReligiousSymbol`; going by the prefix, one at random if several are listed.",
+  "details": "The Akom religion also sets `ReligiousSymbol2` and `ReligiousSymbol3`. The rite inherits the entry from its faith or religion when needed. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:260"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_ReligiousSymbol2",
+  "label": "Random religious symbol (2nd)",
+  "summary": "Going by its name, a second entry for the rite's holy symbol (entry `ReligiousSymbol2`); going by the prefix, picked at random from a list.",
+  "details": "A further entry beside `ReligiousSymbol`; the Akom religion sets both. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:261"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_ReligiousSymbol3",
+  "label": "Random religious symbol (3rd)",
+  "summary": "Going by its name, a third entry for the rite's holy symbol (entry `ReligiousSymbol3`); going by the prefix, a random pick when several are listed.",
+  "details": "Inherited from the faith or religion when the rite does not set it. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_ReligiousText",
+  "label": "Random holy text",
+  "summary": "Going by its name, the name of the rite's holy text, from entry `ReligiousText`; going by the prefix, one at random from a list.",
+  "details": "The Akom religion also sets `ReligiousText2` and `ReligiousText3`. A rite without the entry uses its faith's or religion's. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:263"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_ReligiousText2",
+  "label": "Random holy text (2nd)",
+  "summary": "Going by its name, a second entry for the rite's holy text name (entry `ReligiousText2`); going by the prefix, chosen at random if several are listed.",
+  "details": "Set beside `ReligiousText` in the Akom religion. Missing in the rite, it is taken from the faith or religion. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:264"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_ReligiousText3",
+  "label": "Random holy text (3rd)",
+  "summary": "Going by its name, a third entry for the rite's holy text name (entry `ReligiousText3`); going by the prefix, a random one from a list.",
+  "details": "Inherited from the faith or religion when the rite does not set it. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_TricksterGodHerHim",
+  "label": "Trickster god her/him",
+  "summary": "The object pronoun (her, him or it) for the rite's trickster god, from entry `TricksterGodHerHim`; the random prefix only matters if a list is given.",
+  "details": "The Akom religion sets this entry to a shared pronoun key, `CHARACTER_HERHIM_HIM`. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:228"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_TricksterGodHerHis",
+  "label": "Trickster god her/his",
+  "summary": "The possessive pronoun (her, his or its) for the rite's trickster god, from entry `TricksterGodHerHis`; going by the prefix, a random one if several are listed.",
+  "details": "The Akom religion fills it with the shared key `CHARACTER_HERHIS_HIS`. Inherited from the faith or religion when the rite leaves it out. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:227"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_TricksterGodName",
+  "label": "Random trickster god name",
+  "summary": "The name of the rite's trickster god, from entry `TricksterGodName`; going by the prefix, one at random when several names are listed.",
+  "details": "The rite inherits it from its faith or religion when it has none; the Akom religion points it at a text key named for its knowledge god. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:224"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_TricksterGodNamePossessive",
+  "label": "Trickster god's (possessive)",
+  "summary": "Going by its name, the possessive form of the rite's trickster god's name, from entry `TricksterGodNamePossessive`; going by the prefix, a random one from a list.",
+  "details": "Taken from the rite's `localization` block, else from its faith or religion. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_TricksterGodSheHe",
+  "label": "Trickster god she/he",
+  "summary": "The subject pronoun (she, he or it) for the rite's trickster god, from entry `TricksterGodSheHe`; going by the prefix, a random one if a list is given.",
+  "details": "The Akom religion sets it to `CHARACTER_SHEHE_HE`. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:226"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WarGodHerHim",
+  "label": "War god her/him",
+  "summary": "The object pronoun (her, him or it) for the rite's god of war, from entry `WarGodHerHim`; going by the prefix, a random one when several are listed.",
+  "details": "Vanilla sets it to a shared pronoun key such as `CHARACTER_HERHIM_HIM`. A rite without the entry uses its faith's or religion's. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/00_rite_types.txt:109",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WarGodHerHis",
+  "label": "War god her/his",
+  "summary": "The possessive pronoun (her, his or its) for the rite's god of war, from entry `WarGodHerHis`; going by the prefix, picked at random from a list.",
+  "details": "For example the Insular Celtic rite sets `CHARACTER_HERHIS_HIS` here. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/00_rite_types.txt:108",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WarGodName",
+  "label": "Random war god name",
+  "summary": "The name of the rite's god of war, from entry `WarGodName`; going by the prefix, one at random when several names are listed.",
+  "details": "Vanilla rites such as Insular Celtic set their own war god name; others inherit the faith's or religion's. No game text calls this function itself.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/00_rite_types.txt:105",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WarGodNamePossessive",
+  "label": "War god's (possessive)",
+  "summary": "Going by its name, the possessive form of the rite's war god's name, from entry `WarGodNamePossessive`; going by the prefix, a random one from a list.",
+  "details": "The Insular Celtic rite sets it right after `WarGodName`. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/00_rite_types.txt:106",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WarGodSheHe",
+  "label": "War god she/he",
+  "summary": "The subject pronoun (she, he or it) for the rite's god of war, from entry `WarGodSheHe`; going by the prefix, random when a list is given.",
+  "details": "Vanilla uses shared pronoun keys like `CHARACTER_SHEHE_HE`. Inherited from the faith or religion when missing. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/00_rite_types.txt:107",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WaterGodHerHim",
+  "label": "Water god her/him",
+  "summary": "The object pronoun (her, him or it) for the rite's god of water, from entry `WaterGodHerHim`; going by the prefix, a random one from a list.",
+  "details": "The Akom religion sets it to `CHARACTER_HERHIM_IT`, which makes its water god an \"it\". No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:242"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WaterGodHerHis",
+  "label": "Water god her/his",
+  "summary": "The possessive pronoun (her, his or its) for the rite's god of water, from entry `WaterGodHerHis`; going by the prefix, picked at random when several are listed.",
+  "details": "A rite without the entry uses its faith's or religion's. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:241"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WaterGodName",
+  "label": "Random water god name",
+  "summary": "The name of the rite's god of water, from entry `WaterGodName`; going by the prefix, one at random from a list.",
+  "details": "Read from the rite's `localization` block, else the faith's, else the religion's. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:238"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WaterGodNamePossessive",
+  "label": "Water god's (possessive)",
+  "summary": "The possessive form of the rite's water god's name, from entry `WaterGodNamePossessive`; going by the prefix, a random one when several are listed.",
+  "details": "The Akom religion sets it right after `WaterGodName`. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:239"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WaterGodSheHe",
+  "label": "Water god she/he",
+  "summary": "The subject pronoun (she, he or it) for the rite's god of water, from entry `WaterGodSheHe`; going by the prefix, random if a list is given.",
+  "details": "For example Akom sets `CHARACTER_SHEHE_IT`, so texts say \"it\". No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:240"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WealthGodHerHim",
+  "label": "Wealth god her/him",
+  "summary": "The object pronoun (her, him or it) for the rite's god of wealth, from entry `WealthGodHerHim`; going by the prefix, a random one from a list.",
+  "details": "The Insular Celtic rite, for one, sets its own wealth god entries. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/00_rite_types.txt:81",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WealthGodHerHis",
+  "label": "Wealth god her/his",
+  "summary": "The possessive pronoun (her, his or its) for the rite's god of wealth, from entry `WealthGodHerHis`; going by the prefix, picked at random when several are listed.",
+  "details": "Inherited from the faith or religion when the rite leaves it out. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/00_rite_types.txt:80",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WealthGodName",
+  "label": "Random wealth god name",
+  "summary": "The name of the rite's god of wealth, from entry `WealthGodName`; going by the prefix, one at random from a list.",
+  "details": "Vanilla rites like Insular Celtic set it in their `localization` block; others fall back to the faith or religion. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/00_rite_types.txt:77",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WealthGodNamePossessive",
+  "label": "Wealth god's (possessive)",
+  "summary": "Going by its name, the possessive form of the rite's wealth god's name, from entry `WealthGodNamePossessive`; going by the prefix, a random one when several are listed.",
+  "details": "The Insular Celtic rite sets it right after `WealthGodName`. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/00_rite_types.txt:78",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WealthGodSheHe",
+  "label": "Wealth god she/he",
+  "summary": "The subject pronoun (she, he or it) for the rite's god of wealth, from entry `WealthGodSheHe`; going by the prefix, random if a list is given.",
+  "details": "Vanilla uses shared keys such as `CHARACTER_SHEHE_HE`. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/00_rite_types.txt:79",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WitchGodHerHim",
+  "label": "Witch god her/him",
+  "summary": "The object pronoun (her, him or it) for the rite's god of witchcraft, from entry `WitchGodHerHim`; going by the prefix, a random one from a list.",
+  "details": "Missing in the rite, it is taken from the faith or religion. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WitchGodHerHis",
+  "label": "Witch god her/his",
+  "summary": "The possessive pronoun (her, his or its) for the rite's god of witchcraft, from entry `WitchGodHerHis`; going by the prefix, picked at random when several are listed.",
+  "details": "No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WitchGodMistressMaster",
+  "label": "Witch god mistress/master",
+  "summary": "The word \"mistress\" or \"master\" fitting the rite's god of witchcraft, from entry `WitchGodMistressMaster`; going by the prefix, a random one from a list.",
+  "details": "Vanilla sets it to a key such as `mistress`, for texts that call the witch god a mistress or master. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90",
+   "vanilla: common/religion/religion_types/00_akom.txt:307"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WitchGodMotherFather",
+  "label": "Witch god mother/father",
+  "summary": "The word \"mother\" or \"father\" fitting the rite's god of witchcraft, from entry `WitchGodMotherFather`; going by the prefix, random when several are listed.",
+  "details": "The rite inherits the entry from its faith or religion when it has none. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WitchGodName",
+  "label": "Random witch god name",
+  "summary": "The name of the rite's god of witchcraft, from entry `WitchGodName`; going by the prefix, one at random from a list.",
+  "details": "Read from the rite's `localization` block, else the faith's, else the religion's. No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WitchGodNamePossessive",
+  "label": "Witch god's (possessive)",
+  "summary": "The possessive form of the rite's witch god's name, from entry `WitchGodNamePossessive`; going by the prefix, a random one when several are listed.",
+  "details": "No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Rite.random_WitchGodSheHe",
+  "label": "Witch god she/he",
+  "summary": "The subject pronoun (she, he or it) for the rite's god of witchcraft, from entry `WitchGodSheHe`; going by the prefix, random if a list is given.",
+  "details": "No game text calls this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/_rite_types.info:90"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCapitalsIcon.AccessSelf",
+  "label": "Rite capitals icon itself",
+  "summary": "Going by its name, the rite capitals map icon itself, handed on as a value.",
+  "details": "Vanilla has a \"Faith Rite Capitals Icon\" widget in its map icon layer, which is the thing this type stands for. No game text uses this function; the same name appears only on other types.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: gui/map_icon_layer.gui:6280"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCapitalsIcon.GetFirstRite",
+  "label": "First rite",
+  "summary": "The first rite shown by a rite capitals map icon.",
+  "details": "Vanilla sets it as the data of the \"Faith Rite Capitals Icon\" widget on the map, so the icon shows that rite. Going by the name, an icon can stand for several rites and this is the first of them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/map_icon_layer.gui:6283"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCapitalsIcon.GetRites",
+  "label": "Rites",
+  "summary": "Going by its name, the list of rites a rite capitals map icon stands for.",
+  "details": "No game text uses it on this icon; the same name is used on faiths for their list of rites, a hint only.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCapitalsIcon.Self",
+  "label": "Rite capitals icon itself",
+  "summary": "The rite capitals map icon itself, handed on as a value, going by its name.",
+  "details": "No game text uses it on this type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.AccessSelf",
+  "label": "Rite creation window itself",
+  "summary": "Going by its name, the rite creation window itself, handed on as a value.",
+  "details": "The rite creation window is where the player creates or edits a branch rite of their faith. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.AddsParameter",
+  "label": "Adds parameter",
+  "summary": "Going by its name, whether the choices made in the rite creation window add a given faith parameter (a named rule flag of a faith, such as `lay_clergy`).",
+  "details": "Takes one value, presumably the parameter's key. No game text uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.CalcPietyCost",
+  "label": "Piety cost",
+  "summary": "The piety the player must pay to create or change the rite as currently set up in the rite creation window.",
+  "details": "Shown as the window's cost and in its cost tooltip, which is labelled creation cost or modification cost depending on whether a rite is being edited.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/rite_creation_window_l_english.yml:122"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.CalcPietyMissing",
+  "label": "Missing piety",
+  "summary": "How much piety the player still lacks to pay for the rite set up in the rite creation window.",
+  "details": "Vanilla shows a \"Missing\" line with this amount only when it is above zero.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.CanAutoFill",
+  "label": "Can auto-fill",
+  "summary": "Whether the rite creation window can fill in names and a description automatically.",
+  "details": "Vanilla shows the \"Suggest Other Names\" and \"Generate Description\" buttons only when this is true.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:668"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.CanCreateRite",
+  "label": "Can create rite",
+  "summary": "Whether the rite set up in the rite creation window can be created now.",
+  "details": "Vanilla enables the create button with it (not for observers). When it is false the button's tooltip lists the blockers instead of \"Click to create Rite\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/rite_creation_window_l_english.yml:118"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.CanEditRite",
+  "label": "Can edit rite",
+  "summary": "Whether the changes made to an existing rite in the rite creation window can be applied now.",
+  "details": "Vanilla enables the edit button with it; when false the tooltip shows the edit blockers.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/rite_creation_window_l_english.yml:116"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.Close",
+  "label": "Close",
+  "summary": "Closes the rite creation window.",
+  "details": "Vanilla calls it from the window's close buttons.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.CreateRite",
+  "label": "Create rite",
+  "summary": "Creates the rite as set up in the rite creation window.",
+  "details": "Vanilla calls it from the create buttons, which are enabled only when the rite can be created (and the viewer is not an observer).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.DivergenceResultsInFaithCreation",
+  "label": "Becomes a new faith",
+  "summary": "Whether creating the rite set up in the window would result in a whole new faith instead of a branch rite.",
+  "details": "Vanilla then titles the window with its \"create faith\" text and labels the button \"Create Faith\" instead of \"Create Rite\". The game does not say here what triggers this.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/rite_creation_window_l_english.yml:2"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.EditRite",
+  "label": "Edit rite",
+  "summary": "Applies the changes made to an existing rite in the rite creation window.",
+  "details": "Vanilla calls it from the edit button, enabled only when the edit is allowed.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GenerateDescription",
+  "label": "Generate description",
+  "summary": "Replaces the rite's description in the window with one generated from the chosen core tenets.",
+  "details": "Called by the \"Generate Description\" button, which is shown only when auto-fill is possible.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:678",
+   "vanilla: localization/english/gui/rite_creation_window_l_english.yml:34"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetCategoryHelper",
+  "label": "Doctrine category helper",
+  "summary": "A helper for one doctrine category of the rite creation window, chosen by its key.",
+  "details": "Vanilla passes category keys such as 'main_group', 'marriage', 'crimes' and 'clergy' and lists that category's doctrines through its `GetCategory`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:314"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetColor",
+  "label": "Rite color",
+  "summary": "The color chosen for the rite in the rite creation window.",
+  "details": "Vanilla uses it as a tint and a color of widgets in the window; the color editor reports edits back through `SetColor`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetCostTooltip",
+  "label": "Cost breakdown",
+  "summary": "The breakdown of the piety cost of the rite being set up, for the cost tooltip.",
+  "details": "Vanilla feeds it into a value breakdown tooltip on the cost display.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:540"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetCreationBlockers",
+  "label": "Creation blockers",
+  "summary": "A text listing what currently prevents the rite in the window from being created.",
+  "details": "Shown in the create button's tooltip when creation is not possible, in the reform tooltip and in the window's blockers section.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetDoctrineBlockersAndCost",
+  "label": "Doctrine blockers and cost",
+  "summary": "A text with what blocks choosing a given doctrine for the rite and what it costs.",
+  "details": "Takes the doctrine; vanilla shows it on each doctrine's entry in the window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:1319"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetDoctrineCategoryWindow",
+  "label": "Doctrine category panel",
+  "summary": "The panel of the rite creation window that shows the doctrines (or tenets) of one slot to choose from.",
+  "details": "Vanilla opens it for a tenet or doctrine slot (`ShowWindow`, `ShowWindowSortList`) and lists its doctrine items.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:1445"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetDoctrineCost",
+  "label": "Doctrine cost text",
+  "summary": "A text with the cost of choosing a given doctrine for the rite.",
+  "details": "Takes the doctrine and a yes/no switch; vanilla passes yes in the \"Click to change\" tooltip and no in the doctrine's entry text. What the switch changes is not documented.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetDoctrineCostTooltip",
+  "label": "Doctrine cost tooltip",
+  "summary": "The tooltip text with the cost of a given doctrine in the rite creation window.",
+  "details": "Takes the doctrine; vanilla uses it as the tooltip of doctrine entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:1038"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetDoctrines",
+  "label": "Doctrines",
+  "summary": "Going by its name, the list of doctrines shown in the rite creation window.",
+  "details": "No game text uses it on this window; the same name is used for lists of doctrines on faiths and the personal beliefs window, a hint only.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetEditBlockers",
+  "label": "Edit blockers",
+  "summary": "A text listing what currently prevents the changes to the rite from being applied.",
+  "details": "Shown in the edit button's tooltip when editing is not possible, and in the window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:468"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetFaithIcon",
+  "label": "Chosen icon",
+  "summary": "The icon picture currently chosen for the rite in the rite creation window.",
+  "details": "Vanilla shows it as the window's icon image.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:99"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetFaithIcons",
+  "label": "Icon choices",
+  "summary": "The list of icons the player can pick for the rite.",
+  "details": "Vanilla shows them as a grid of buttons; clicking one calls `SelectFaithIcon`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:890"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetFaithScope",
+  "label": "Faith",
+  "summary": "Going by its name and use, the faith the rite creation window works with, as data for its doctrine lists.",
+  "details": "Vanilla sets it as context next to the doctrine category panel.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:1446"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetFounder",
+  "label": "Founder",
+  "summary": "Going by its name, the character who founds the rite in the rite creation window.",
+  "details": "Vanilla passes it to the check whether that character may pick a tenet.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:1511"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetHostilityLevel",
+  "label": "Hostility level",
+  "summary": "How hostile the faith will be towards the new branch rite, as a number.",
+  "details": "Vanilla turns it into the level's name in the confirmation text \"Your Faith will consider your new branch Rite ...\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/rite_creation_window_l_english.yml:57"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetNewRiteName",
+  "label": "New rite name",
+  "summary": "The name the player has entered for the new rite.",
+  "details": "Empty until a name is chosen; vanilla then shows \"Choose Name\" or \"Unnamed Rite\" instead.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetPietyCostDesc",
+  "label": "Piety cost details",
+  "summary": "A text describing what the rite's piety cost is made of.",
+  "details": "Shown under the total in the cost tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/rite_creation_window_l_english.yml:122"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetRite",
+  "label": "Rite",
+  "summary": "The rite being created or edited in the rite creation window.",
+  "details": "Vanilla gets its faith from it for the divergence tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:494"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetRiteDivergence",
+  "label": "Rite divergence",
+  "summary": "The rite divergence (how far the rite differs from its faith) of the rite set up in the window.",
+  "details": "Shown with the divergence icon; vanilla also compares it with a limit to decide what to show.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetRiteDivergenceTooltip",
+  "label": "Divergence tooltip",
+  "summary": "The data for the tooltip that explains the rite's divergence.",
+  "details": "Vanilla feeds it into the rite divergence tooltip widget.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:495"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetSins",
+  "label": "Sins",
+  "summary": "The list of sins the rite set up in the window would have.",
+  "details": "Vanilla shows it in the sins and virtues section.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:274"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetTenetBlockersAndCost",
+  "label": "Tenet blockers and cost",
+  "summary": "A text with what blocks choosing a given tenet for the rite and what it costs.",
+  "details": "Takes the tenet; vanilla shows it in the tenet's \"Click to select\" tooltip and when the tenet is blocked as unpopular.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetTenetCost",
+  "label": "Tenet cost",
+  "summary": "The piety cost of choosing a given tenet for the rite.",
+  "details": "Takes the tenet; vanilla shows it with the piety icon next to the tenet's divergence.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetTenetCostString",
+  "label": "Tenet cost text",
+  "summary": "A text with the cost of choosing a given tenet for the rite.",
+  "details": "Takes the tenet and a yes/no switch; vanilla passes yes in the \"Click to change\" tooltip. What the switch changes is not documented.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetTenetCostTooltip",
+  "label": "Tenet cost tooltip",
+  "summary": "The tooltip text with the cost of a given tenet.",
+  "details": "Takes the tenet; vanilla uses it on tenet entries in the rite creation window and in the faith window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetTenetGroupItems",
+  "label": "Tenet groups",
+  "summary": "The groups of tenets the player can choose from in the rite creation window.",
+  "details": "Vanilla shows them as a list of foldout groups.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:1628"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetTenetSortController",
+  "label": "Tenet sorting",
+  "summary": "The control that sorts the list of tenets in the rite creation window.",
+  "details": "Vanilla uses it for the tenet sort buttons.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:1612"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetTenets",
+  "label": "Tenets",
+  "summary": "The tenets of the rite set up in the window, as a list.",
+  "details": "Vanilla lists them in the window's tenet slots.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:190"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetVassalConversionWindow",
+  "label": "Vassal conversion panel",
+  "summary": "Going by its name, the part of the rite creation window about vassals converting to the new rite.",
+  "details": "Vanilla sets it as data on the whole rite creation window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:8"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.GetVirtues",
+  "label": "Virtues",
+  "summary": "The list of virtues the rite set up in the window would have.",
+  "details": "Vanilla shows it in the sins and virtues section.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:278"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.HasBlockers",
+  "label": "Has blockers",
+  "summary": "Whether anything currently prevents the rite from being created or edited.",
+  "details": "Vanilla shows the blockers section only when this is true.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:1659"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.HasDoctrineSelected",
+  "label": "Has doctrine chosen",
+  "summary": "Whether a given doctrine is chosen for the rite in the window.",
+  "details": "Takes the doctrine; vanilla shows the doctrine's button as pressed when true.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:1291"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.HasParameter",
+  "label": "Has parameter",
+  "summary": "Whether the rite set up in the window has a given faith parameter (a named rule flag of a faith).",
+  "details": "Takes the parameter's key. Vanilla checks 'lay_clergy' to show church property or lay clergy information, and whether it differs from the player's current faith.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:1793"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.HasTenetSelected",
+  "label": "Has tenet chosen",
+  "summary": "Whether a given tenet is chosen for the rite in the window.",
+  "details": "Takes the tenet; vanilla shows the tenet's button as pressed when true.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.IsCreating",
+  "label": "Is creating",
+  "summary": "Whether the rite creation window is creating a new rite (rather than editing one).",
+  "details": "Vanilla uses it to show parts only meant for a new rite.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.IsCreatingFaith",
+  "label": "Is creating faith",
+  "summary": "Whether the window is creating a whole new faith rather than a branch rite.",
+  "details": "Vanilla uses it with doctrines locked to the faith, to show a note on them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.IsEditing",
+  "label": "Is editing",
+  "summary": "Whether the rite creation window is editing an existing rite.",
+  "details": "Vanilla switches the window title, the blockers text and the cost label (modification cost instead of creation cost) with it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.IsIconWindowShown",
+  "label": "Icon picker shown",
+  "summary": "Going by its name, whether the icon picker of the rite creation window is open.",
+  "details": "No game text uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.OnEditAdherent",
+  "label": "Adherent name edited",
+  "summary": "Takes in the name for one follower of the rite after the player edits it.",
+  "details": "Vanilla calls it when the adherent text field is edited.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.OnEditAdherentPlural",
+  "label": "Adherents name edited",
+  "summary": "Takes in the plural name for the rite's followers after the player edits it.",
+  "details": "Vanilla calls it when that text field is edited.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.OnEditAdjective",
+  "label": "Adjective edited",
+  "summary": "Takes in the rite's adjective (as in \"Celtic\") after the player edits it.",
+  "details": "Vanilla calls it when the adjective text field is edited.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.OnEditDescription",
+  "label": "Description edited",
+  "summary": "Takes in the rite's description after the player edits it.",
+  "details": "Vanilla calls it when the description text field is edited.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.OnEditName",
+  "label": "Name edited",
+  "summary": "Takes in the rite's name after the player edits it.",
+  "details": "Vanilla calls it when the name text field is edited.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.RemovesParameter",
+  "label": "Removes parameter",
+  "summary": "Going by its name, whether the choices made in the rite creation window remove a given faith parameter (a named rule flag of a faith).",
+  "details": "Takes one value, presumably the parameter's key. No game text uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.RerollNames",
+  "label": "Suggest other names",
+  "summary": "Replaces the rite's name, adjective and adherent names with another suggestion.",
+  "details": "Called by the \"Suggest Other Names\" button, shown only when auto-fill is possible.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/rite_creation_window_l_english.yml:33"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.SelectDoctrine",
+  "label": "Choose doctrine",
+  "summary": "Chooses a doctrine for the rite in the window.",
+  "details": "Vanilla calls it when a doctrine entry is clicked.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:1289"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.SelectFaithIcon",
+  "label": "Choose icon",
+  "summary": "Chooses an icon for the rite, by the icon's name.",
+  "details": "Vanilla calls it when an icon in the icon grid is clicked.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.SelectTenet",
+  "label": "Choose tenet",
+  "summary": "Chooses a tenet for the rite in the window.",
+  "details": "Vanilla calls it when a tenet entry is clicked.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.Self",
+  "label": "Rite creation window itself",
+  "summary": "The rite creation window itself, handed on as a value, going by its name.",
+  "details": "No game text uses it on this type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.SetColor",
+  "label": "Set color",
+  "summary": "Sets the rite's color from the window's color picker.",
+  "details": "Vanilla calls it when the color is edited; `GetColor` reads it back.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_rite_creation.gui:810"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteCreationWindow.ToggleIconWindow",
+  "label": "Toggle icon picker",
+  "summary": "Going by its name, opens or closes the icon picker of the rite creation window.",
+  "details": "No game text uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteItem.AccessSelf",
+  "label": "Rite entry itself",
+  "summary": "Going by its name, the rite entry itself, handed on as a value.",
+  "details": "A rite entry is one row of a rite list in the faith window or the ledger. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteItem.GetBaseFulfillmentDelta",
+  "label": "Fulfillment gain",
+  "summary": "The base spiritual fulfillment gained, shown for a rite entry.",
+  "details": "Vanilla shows it as \"Spiritual fulfillment Gain: +X\" in the faith view.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/faith_view_l_english.yml:237"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteItem.GetCountiesChange",
+  "label": "Counties change",
+  "summary": "How many counties the rite of this entry will gain or lose overall through conversions under way (negative means a loss).",
+  "details": "Shown in the ledger's rite list. The tooltip breaks it into counties gained and counties lost.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/ledger/ledger_filtersorts_l_english.yml:782"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteItem.GetCountiesGain",
+  "label": "Counties gained",
+  "summary": "How many counties are being converted to the rite of this entry.",
+  "details": "Shown in the ledger's county change tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/ledger/ledger_filtersorts_l_english.yml:782"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteItem.GetCountiesLoss",
+  "label": "Counties lost",
+  "summary": "How many of the rite's counties are being converted to another rite.",
+  "details": "Shown in the ledger's county change tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/ledger/ledger_filtersorts_l_english.yml:782"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteItem.GetDivergencePercent",
+  "label": "Divergence percent",
+  "summary": "The rite's divergence from its faith, as a percentage, for its entry in the faith view.",
+  "details": "",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/faith_view_l_english.yml:233"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteItem.GetDivergenceScore",
+  "label": "Divergence score",
+  "summary": "The rite's divergence score, how far it differs from its faith.",
+  "details": "Vanilla compares it with the heresy threshold: at or above it the rite is shown as a heresy.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_faith.gui:6049"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteItem.GetHeresyThreshold",
+  "label": "Heresy threshold",
+  "summary": "The divergence score at which the rite of this entry counts as a heresy.",
+  "details": "Vanilla shows the rite as a heresy when its divergence score reaches this value.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_faith.gui:6049"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteItem.GetNumberOfHolyWars",
+  "label": "Holy wars",
+  "summary": "The number of holy wars involving the rite of this entry, shown in the ledger.",
+  "details": "Vanilla shows it with a war icon only when it is not zero.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteItem.GetNumberOfRulers",
+  "label": "Rulers",
+  "summary": "How many rulers follow the rite of this entry, shown in the ledger.",
+  "details": "",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/ledger/ledger_filtersorts_l_english.yml:785"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteItem.GetNumberOfSinners",
+  "label": "Sinful rulers",
+  "summary": "How many rulers of the rite of this entry are sinful by its standards.",
+  "details": "Shown in the ledger with the tooltip \"Sinful ... rulers\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ledger.gui:9097",
+   "vanilla: localization/english/ledger/ledger_filtersorts_l_english.yml:786"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteItem.GetNumberOfVirtuous",
+  "label": "Virtuous rulers",
+  "summary": "How many rulers of the rite of this entry are virtuous by its standards.",
+  "details": "Shown in the ledger with the tooltip \"Virtuous ... rulers\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ledger.gui:9111",
+   "vanilla: localization/english/ledger/ledger_filtersorts_l_english.yml:787"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteItem.GetRite",
+  "label": "Rite",
+  "summary": "The rite this list entry stands for.",
+  "details": "Vanilla uses it in the faith window and the ledger to show the rite's name and icon.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_ledger.gui:8926"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteItem.GetTotalMilitaryStrength",
+  "label": "Military strength",
+  "summary": "The total military strength of the rite's followers, shown in the ledger's rite list.",
+  "details": "Going by its name and the ledger column; the game does not say whose troops are counted.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteItem.Self",
+  "label": "Rite entry itself",
+  "summary": "The rite entry itself, handed on as a value, going by its name.",
+  "details": "No game text uses it on this type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteType.AccessSelf",
+  "label": "Rite type itself",
+  "summary": "Going by its name, the rite type itself, handed on as a value.",
+  "details": "A rite type is a rite definition from `common/religion/rite_types`. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteType.Custom",
+  "label": "Custom text",
+  "summary": "Going by its name, a text made by a custom localization (a scripted text with variants), run on the rite type.",
+  "details": "Takes the custom localization's key. No game text uses it on a rite type; it is common on characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteType.GetBaseDescription",
+  "label": "Base description",
+  "summary": "Going by its name, the rite type's description as defined (not as a rite may rename it later).",
+  "details": "No game text uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteType.GetBaseName",
+  "label": "Base name",
+  "summary": "The name of the rite type, with its tooltip.",
+  "details": "Effect texts use it when a new rite is founded \"after the principles of\" a rite type. GetBaseNameNoTooltip is the plain form.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteType.GetBaseNameNoTooltip",
+  "label": "Base name (plain)",
+  "summary": "The rite type's name as plain text, without a tooltip link.",
+  "details": "Vanilla shows it as the title of the rite type's tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/shared/cooltip.gui:730"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteType.GetDescription",
+  "label": "Description",
+  "summary": "Going by its name, the rite type's description text.",
+  "details": "Takes one value, which the game does not document. No game text uses it on a rite type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteType.GetIndex",
+  "label": "Index",
+  "summary": "Going by its name, the rite type's position number in the game's list of rite types.",
+  "details": "No game text uses it on a rite type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteType.GetKey",
+  "label": "Key",
+  "summary": "Going by its name, the rite type's script key, such as `roman_rite`.",
+  "details": "No game text uses it on a rite type; other types use the same name for debug texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/religion/rite_types/00_rite_types.txt:1"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteType.GetLogName",
+  "label": "Log name",
+  "summary": "Going by its name, the rite type's name as written in the game's logs.",
+  "details": "No game text uses it. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteType.GetName",
+  "label": "Name",
+  "summary": "Going by its name, the rite type's name.",
+  "details": "Takes one value, which the game does not document. No game text uses it on a rite type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteType.GetNameNoTooltip",
+  "label": "Name (plain)",
+  "summary": "Going by its name, the rite type's name as plain text without a tooltip link.",
+  "details": "Takes one value, which the game does not document. No game text uses it on a rite type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteType.IsValid",
+  "label": "Is valid",
+  "summary": "Going by its name, whether the rite type is a real, existing entry.",
+  "details": "No game text uses it on a rite type; other types use the same name in texts.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteType.Localize",
+  "label": "Localize",
+  "summary": "Going by its name, a text from a localization key, filled in with the rite type.",
+  "details": "Takes the key. No game text uses it on a rite type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteType.MakeScope",
+  "label": "As script object",
+  "summary": "Going by its name, the rite type turned into a scope (an object script texts can work with further).",
+  "details": "No game text uses it on a rite type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteType.Self",
+  "label": "Rite type itself",
+  "summary": "The rite type itself, handed on as a value, going by its name.",
+  "details": "No game text uses it on this type.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteWindow.AccessSelf",
+  "label": "Rite window itself",
+  "summary": "Going by its name, the rite window itself, handed on as a value.",
+  "details": "The rite window is a sub-window of the faith view that lists rites. No game text uses this function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: gui/window_faith.gui:4127"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteWindow.Close",
+  "label": "Close",
+  "summary": "Closes the rite window of the faith view.",
+  "details": "Vanilla calls it from the window's close buttons.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteWindow.GetFaiths",
+  "label": "Listed entries",
+  "summary": "The list of entries the rite window shows.",
+  "details": "Vanilla shows them as the window's main list, whose rows are rite entries; the name says faiths, but the rows give rites.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_faith.gui:4255",
+   "vanilla: gui/window_faith.gui:4310"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteWindow.GetOrderByOptions",
+  "label": "Sort options",
+  "summary": "The options the rite window's list can be sorted by.",
+  "details": "Vanilla offers them in a dropdown; the choice is passed to `OnOrderBySelectionChanged`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_faith.gui:4182"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteWindow.GetOrderBySelectedIndex",
+  "label": "Chosen sort option",
+  "summary": "Which sort option is currently chosen in the rite window's dropdown.",
+  "details": "It returns a pair of whole numbers, not a single index; vanilla uses it as the dropdown's selected index.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_faith.gui:4184"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteWindow.GetReligion",
+  "label": "Religion",
+  "summary": "The religion whose rites the rite window shows.",
+  "details": "Vanilla sets it as the data of the whole rite sub-window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_faith.gui:4129"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteWindow.GetShowOnlyReligionFaithsTooltip",
+  "label": "Filter tooltip",
+  "summary": "The tooltip text of the rite window's checkbox that limits the list to the religion's own entries.",
+  "details": "Vanilla shows it on the checkbox that `ShowOnlyReligionFaiths` checks.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_faith.gui:4240"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteWindow.GetSortOrder",
+  "label": "Sort order",
+  "summary": "Whether the rite window's list is sorted ascending (true) or descending.",
+  "details": "Shown as \"Sort Order: Ascending/Descending\" on the toggle button.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/faith_view_l_english.yml:178"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "RiteWindow.IsVisible",
+  "label": "Is visible",
+  "summary": "Whether the rite sub-window of the faith view is open.",
+  "details": "Vanilla shows the sub-window only when this is true.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_faith.gui:1696"
+  ],
+  "uncertain": false
+ }
+]

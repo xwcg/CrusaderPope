@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useShownDate } from './map/mapLoad';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import type { PortraitData, PortraitRequest, ShaderProgram } from '../../../shared/api';
@@ -9,12 +10,14 @@ import { createGameScene, gameGeometry, gameMaterial, PORTRAIT_ENVIRONMENT, prog
 import { digest, useRevision } from '../revision';
 import { viewerPixelRatio } from '../graphics';
 
+import { errorText } from '../errors';
+import { tr } from '../../../shared/i18n';
 /** Entity types that get a 3D portrait on their card. */
-export const PORTRAIT_TYPES = new Set(['characters', 'dna_data', 'bookmark_portraits']);
+export const PORTRAIT_TYPES = new Set(['characters', 'dna_data', 'bookmark_portraits', 'savegame/characters']);
 
 /**
  * Camera for a whole creature: from the front-left and a little above, the silhouette centred and fitted into the
- * view (a sample of the vertices, three.js space). `fit(aspect)` is the camera distance for a view shape — the
+ * view (a sample of the vertices, three.js space). `fit(aspect)` is the camera distance for a view shape; the
  * enlarged view refits with it.
  */
 function creatureView(
@@ -114,7 +117,7 @@ function pendingOf(group: THREE.Object3D): object[]
 /**
  * The 3D view of one entry, kept while its toggles change: renderer, environment, the game's constants, camera and
  * controls stay. A new figure is built beside the shown one and replaces it once its textures are there and its
- * shaders compiled — no blank frames in between, and the camera stays where it was turned.
+ * shaders compiled: no blank frames in between, and the camera stays where it was turned.
  */
 class PortraitStage
 {
@@ -247,7 +250,7 @@ class PortraitStage
         if (data.creature)
         {
             // a creature (AGOT's dragons): all of it, from the front-left and a little above, like the game's dragon
-            // portrait camera (camera_dragon: from the side of the head, 35° field of view — the game zooms by its size)
+            // portrait camera (camera_dragon: from the side of the head, 35° field of view; the game zooms by its size)
             const view = creatureView(data.parts, width / height);
             // the portrait light rig scaled to the creature (a human figure is k = 1): positions, spot ranges and shadows
             k = view.radius / 110;
@@ -280,7 +283,7 @@ class PortraitStage
             k = Math.max(0.45, Math.min(1.2, (eyeY - box.min.y) / 166));
             const eyeZ = eyes ? eyes.getCenter(new THREE.Vector3()).z : center.z;
             const target = new THREE.Vector3(center.x, eyeY - 13 * k, eyeZ - 6 * k);
-            // the game's three portrait lights around the chest ("camera_torso_look_at"), directions as scripted — for the
+            // the game's three portrait lights around the chest ("camera_torso_look_at"), directions as scripted: for the
             // viewer's own materials as three.js lights, for the game shaders as their Light_* constants (game space)
             chest = new THREE.Vector3(center.x, eyeY - 32 * k, eyeZ - 8 * k);
             shadowSize = 70 * k;
@@ -388,7 +391,8 @@ class PortraitStage
  * A character's 3D portrait. `request`: genes, age and sex over its DNA (the barbershop's live preview, which also hides
  * the Barbershop button); `className` sizes it from outside.
  */
-export function PortraitViewer(props: { type: string; name: string; request?: PortraitRequest; className?: string; onData?: (d: PortraitData) => void; }): React.JSX.Element | null
+/** @param pending a change is on its way (the barbershop's sliders before the portrait is asked for): shown as busy */
+export function PortraitViewer(props: { type: string; name: string; request?: PortraitRequest; className?: string; onData?: (d: PortraitData) => void; pending?: boolean; }): React.JSX.Element | null
 {
     const [shop, setShop] = useState(false);
     const requestKey = JSON.stringify(props.request ?? null);
@@ -401,7 +405,7 @@ export function PortraitViewer(props: { type: string; name: string; request?: Po
     const [figLeaf, setFigLeaf] = useState(true);
     const [gameShaders, setGameShaders] = useState(true);
     const [big, setBig] = useState(false);
-    // the figure to show (data with its programs), and the one on screen — the old one stays until the new one is ready
+    // the figure to show (data with its programs), and the one on screen; the old one stays until the new one is ready
     const [figure, setFigure] = useState<Figure | null>(null);
     const [onScreen, setOnScreen] = useState<Figure | null>(null);
     const [fetching, setFetching] = useState(false);
@@ -425,13 +429,16 @@ export function PortraitViewer(props: { type: string; name: string; request?: Po
     // built again when a toggle changes, and after an index update (genes, DNA, history, textures may have changed):
     // the figure stays until then, and when the new one is the same nothing is redrawn
     const revision = useRevision();
+    // (a historical character at the preview date, the map's: viewState.ts)
+    const preview = useShownDate();
+    const date = props.type === 'characters' || props.type === 'dna_data' ? preview : undefined;
     useEffect(() =>
     {
         let cancelled = false;
         setError(null);
         setFetching(true);
         api
-            .portrait(props.type, props.name, { ...props.request, blendShapes: shapes, boneMorphs: bones, naked: !dressed, figLeaf })
+            .portrait(props.type, props.name, { ...props.request, blendShapes: shapes, boneMorphs: bones, naked: !dressed, figLeaf, ...(date ? { date } : {}) })
             .then((d) =>
             {
                 if (cancelled)
@@ -455,13 +462,13 @@ export function PortraitViewer(props: { type: string; name: string; request?: Po
                     return;
 
                 setFetching(false);
-                setError(e.message);
+                setError(errorText(e));
             });
         return () =>
         {
             cancelled = true;
         };
-    }, [props.type, props.name, requestKey, shapes, bones, dressed, figLeaf, revision]);
+    }, [props.type, props.name, requestKey, shapes, bones, dressed, figLeaf, revision, date]);
 
     // the game's own shaders per part (compiled once per Effect; parts whose Effect fails keep the viewer's material)
     useEffect(() =>
@@ -519,7 +526,7 @@ export function PortraitViewer(props: { type: string; name: string; request?: Po
     }, [error]);
 
     const waiting = gameShaders && !!data && !figure;
-    const busy = !!onScreen && (fetching || onScreen !== figure || figure?.data !== data);
+    const busy = !!onScreen && (!!props.pending || fetching || onScreen !== figure || figure?.data !== data);
 
     useEffect(() =>
     {
@@ -536,7 +543,7 @@ export function PortraitViewer(props: { type: string; name: string; request?: Po
     }, [big]);
 
     if (error)
-        return <div className="portrait-box portrait-empty">Portrait failed: {error}</div>;
+        return <div className="portrait-box portrait-empty">{tr('Portrait failed: {error}', { error })}</div>;
 
     if (data === null)
         return null;
@@ -548,11 +555,16 @@ export function PortraitViewer(props: { type: string; name: string; request?: Po
             {shop && <Barbershop type={props.type} name={props.name} onClose={() => setShop(false)} />}
             {big && <div className="portrait-backdrop" onClick={() => setBig(false)} />}
             <div className={'portrait-box' + (big ? ' big' : '')} ref={mount}>
-                {!onScreen && !waiting && <div className="portrait-empty">Sculpting the likeness…</div>}
-                {!onScreen && waiting && <div className="portrait-empty">Compiling the game&apos;s shaders…</div>}
-                {busy && <div className="portrait-busy" title="Updating the portrait…" />}
+                {!onScreen && !waiting && <div className="portrait-empty">{tr('Sculpting the likeness…')}</div>}
+                {!onScreen && waiting && <div className="portrait-empty">{tr('Compiling the game\'s shaders…')}</div>}
+                {busy && (
+                    <div className="portrait-busy" title={tr('Updating the portrait…')}>
+                        <span className="portrait-spinner" />
+                        {tr('Updating…')}
+                    </div>
+                )}
                 {data && (
-                    <button className="portrait-expand" title={big ? 'Back to the card (Esc)' : 'Enlarge'} onClick={() => setBig(!big)}>
+                    <button className="portrait-expand" title={big ? tr('Back to the card (Esc)') : tr('Enlarge')} onClick={() => setBig(!big)}>
                         {big ? '✕' : '⤢'}
                     </button>
                 )}
@@ -561,10 +573,10 @@ export function PortraitViewer(props: { type: string; name: string; request?: Po
                 <div className="portrait-info">
                     <span
                         title={[
-                            `${data.applied.genes} genes → ${data.applied.blendShapes} blend shapes, ${data.applied.boneMorphs} bone morphs`,
+                            tr('{genes} genes → {blendShapes} blend shapes, {boneMorphs} bone morphs', { genes: data.applied.genes, blendShapes: data.applied.blendShapes, boneMorphs: data.applied.boneMorphs }),
                             ...(worn ?? []),
-                            data.tags.length ? 'tags: ' + data.tags.join(', ') : '',
-                            data.modifiers.length ? 'portrait modifiers: ' + data.modifiers.join(', ') : ''
+                            data.tags.length ? tr('tags: ') + data.tags.join(', ') : '',
+                            data.modifiers.length ? tr('portrait modifiers: ') + data.modifiers.join(', ') : ''
                         ]
                             .filter(Boolean)
                             .join('\n')}
@@ -574,35 +586,29 @@ export function PortraitViewer(props: { type: string; name: string; request?: Po
                     <span className="portrait-toggles">
                         {/* creatures wear nothing to take off */}
                         {!data.creature && (
-                            <label title="Clothes, headgear and cloaks — undressed shows the body as the game does with nudity enabled">
-                                <input type="checkbox" checked={dressed} onChange={(e) => setDressed(e.target.checked)} /> Dressed
-                            </label>
+                            <label title={tr('Clothes, headgear and cloaks — undressed shows the body as the game does with nudity enabled')}>
+                                <input type="checkbox" checked={dressed} onChange={(e) => setDressed(e.target.checked)} /> {' '}{tr('Dressed')}</label>
                         )}
                         {!dressed && !data.creature && (
-                            <label title="Cover fun bits with a fig leaf">
-                                <input type="checkbox" checked={figLeaf} onChange={(e) => setFigLeaf(e.target.checked)} /> Modesty leaf
-                            </label>
+                            <label title={tr('Cover fun bits with a fig leaf')}>
+                                <input type="checkbox" checked={figLeaf} onChange={(e) => setFigLeaf(e.target.checked)} /> {' '}{tr('Modesty leaf')}</label>
                         )}
-                        <label title="Blend shapes: fine facial features">
-                            <input type="checkbox" checked={shapes} onChange={(e) => setShapes(e.target.checked)} /> Facial features
-                        </label>
-                        <label title="Bone morphs: face and body proportions">
-                            <input type="checkbox" checked={bones} onChange={(e) => setBones(e.target.checked)} /> Bone morphs
-                        </label>
+                        <label title={tr('Blend shapes: fine facial features')}>
+                            <input type="checkbox" checked={shapes} onChange={(e) => setShapes(e.target.checked)} /> {' '}{tr('Facial features')}</label>
+                        <label title={tr('Bone morphs: face and body proportions')}>
+                            <input type="checkbox" checked={bones} onChange={(e) => setBones(e.target.checked)} /> {' '}{tr('Bone morphs')}</label>
                         {!props.request && !data.creature && (
-                            <button className="portrait-shop" title="Change this character's looks - face, hair, colours - and save the DNA into your mod" onClick={() => setShop(true)}>
-                                Barbershop…
-                            </button>
+                            <button className="portrait-shop" title={tr('Change this character\'s looks - face, hair, colours - and save the DNA into your mod')} onClick={() => setShop(true)}>
+                                {tr('Barbershop…')}</button>
                         )}
-                        <label title="Render with the game's own shaders (gfx/FX effects compiled for WebGL), or with the viewer's approximation">
-                            <input type="checkbox" checked={gameShaders} onChange={(e) => setGameShaders(e.target.checked)} /> Game shaders
-                        </label>
+                        <label title={tr('Render with the game\'s own shaders (gfx/FX effects compiled for WebGL), or with the viewer\'s approximation')}>
+                            <input type="checkbox" checked={gameShaders} onChange={(e) => setGameShaders(e.target.checked)} /> {' '}{tr('Game shaders')}</label>
                     </span>
                     <span className="swatches">
                         {[
-                            { label: 'Skin', color: data.colors.skin },
-                            { label: 'Hair', color: data.colors.hair },
-                            { label: 'Eyes', color: data.colors.eyes }
+                            { label: tr('Skin'), color: data.colors.skin },
+                            { label: tr('Hair'), color: data.colors.hair },
+                            { label: tr('Eyes'), color: data.colors.eyes }
                         ].map((s) => <span key={s.label} className="swatch" style={{ background: swatch(s.color) }} title={s.label} />)}
                     </span>
                 </div>

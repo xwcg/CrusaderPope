@@ -8,8 +8,11 @@ import { formatCount } from './common';
 import { FileModTag, HideRemovedToggle, ModStateFilter, ModToggle, type ModStateCounts } from './ModChip';
 import { isConflict, matchesState, useHideRemoved, useModFilter, type ModFilter } from '../modStore';
 
+import { tr } from '../../../shared/i18n';
+import { fold, foldHas } from '../../../shared/fold';
+import { Slider } from './Slider';
 /** File-based types browsed by folder: game path → entity. */
-export const FILE_TYPES: Record<string, string> = { images: 'Images', models: '3D Models' };
+export const FILE_TYPES: Record<string, string> = { images: 'Images', models: tr('3D Models') };
 
 interface FolderNode
 {
@@ -27,7 +30,7 @@ interface FolderNode
 type Folders = GalleryFolder[];
 
 /**
- * Pictures a mod's replace_path removed that a folder shows: none while removed entries are hidden — unless the state
+ * Pictures a mod's replace_path removed that a folder shows: none while removed entries are hidden, unless the state
  * filter asks for the removed ones (as the entry lists do, `shownWith`).
  */
 function removedShown(f: GalleryFolder, mf: ModFilter, hideRemoved: boolean): number
@@ -217,9 +220,9 @@ function useSubfolders(type: string, folder: string, reloadKey: string): [string
 function emptyText(mf: ModFilter): string
 {
     if (mf.state === 'conflicts')
-        return 'No conflicts here: no file is changed by two or more of the loaded mods.';
+        return tr('No conflicts here: no file is changed by two or more of the loaded mods.');
 
-    return mf.state === 'all' ? 'No files from the loaded mods here.' : `No ${mf.state} files here.`;
+    return mf.state === 'all' ? tr('No files from the loaded mods here.') : tr('No {state} files here.', { state: mf.state });
 }
 
 const DEFAULT_OPEN: Record<string, string[]> = { images: ['gfx', 'gfx/interface', 'gfx/interface/icons'], models: ['gfx', 'gfx/models'] };
@@ -291,7 +294,7 @@ export function FolderList(props: { type: string; selected?: string; reloadKey: 
                     </span>
                     <span className="folder-name">{c.name}</span>
                     {!modFilter.on && c.mods > 0 && (
-                        <span className="mod-count" title={`${c.mods.toLocaleString()} files the loaded mods add, replace or remove`}>
+                        <span className="mod-count" title={tr('{mods} files the loaded mods add, replace or remove', { mods: c.mods.toLocaleString() })}>
                             {formatCount(c.mods)}
                         </span>
                     )}
@@ -312,12 +315,12 @@ export function FolderList(props: { type: string; selected?: string; reloadKey: 
             <div className="head">
                 <div className="title">
                     <h2>{FILE_TYPES[type] ?? type}</h2>
-                    <span className="count" title={tree?.mods ? `${tree.mods.toLocaleString()} files the loaded mods add, replace or remove` : undefined}>
+                    <span className="count" title={tree?.mods ? tr('{mods} files the loaded mods add, replace or remove', { mods: tree.mods.toLocaleString() }) : undefined}>
                         {tree ? (modFilter.on ? `${formatCount(tree.shown)} / ${formatCount(tree.total)}` : formatCount(tree.total)) : '…'}
                     </span>
                 </div>
             </div>
-            <div className="vlist folder-list">{tree ? rows : <div className="list-empty">Loading…</div>}</div>
+            <div className="vlist folder-list">{tree ? rows : <div className="list-empty">{tr('Loading…')}</div>}</div>
         </div>
     );
 }
@@ -363,7 +366,7 @@ function Subfolders(props: { type: string; folder: string; list: [string, number
 
 /**
  * Image tiles (thumbnails linking to the image); files from mods carry the mod's tag. Pictures a mod's replace_path
- * removed show their former picture, struck through, with "− <mod>" — no page of their own (the game with the mods has
+ * removed show their former picture, struck through, with "− <mod>"; no page of their own (the game with the mods has
  * no such file).
  */
 function ImageTiles(props: { items: GalleryFile[]; size: number; navigate: Navigate; }): React.JSX.Element
@@ -375,7 +378,7 @@ function ImageTiles(props: { items: GalleryFile[]; size: number; navigate: Navig
                 {props.items.slice(0, limit).map((i) =>
                     i.removed ?
                         (
-                            <div key={i.name} className="tile removed" title={`${i.name}\nRemoved by a mod's replace_path: the game with the loaded mods doesn't load it (the picture is the file it had before).`}>
+                            <div key={i.name} className="tile removed" title={tr('{name}\nRemoved by a mod\'s replace_path: the game with the loaded mods doesn\'t load it (the picture is the file it had before).', { name: i.name })}>
                                 <FileModTag removed={i.removed} />
                                 <div className="tile-img checker" style={{ height: props.size }}>
                                     <GameImg path={i.name} size={props.size} removed />
@@ -397,8 +400,7 @@ function ImageTiles(props: { items: GalleryFile[]; size: number; navigate: Navig
             </div>
             {props.items.length > limit && (
                 <button className="show-more" onClick={() => setLimit((l) => l + 800)}>
-                    Show more ({props.items.length - limit} remaining)
-                </button>
+                    {tr('Show more ({more} remaining)', { more: props.items.length - limit })}</button>
             )}
         </>
     );
@@ -411,12 +413,11 @@ function GalleryHead(props: { type: string; folder: string; navigate: Navigate; 
         <div className="gallery-head">
             <Crumbs type={props.type} folder={props.folder} navigate={props.navigate} />
             <div className="gallery-tools">
-                <input placeholder="Filter file names…" value={props.filter} onChange={(e) => props.setFilter(e.target.value)} />
-                <ModToggle label="Mod files only" title="Only files the loaded mods add, replace or remove" />
+                <input placeholder={tr('Filter file names…')} value={props.filter} onChange={(e) => props.setFilter(e.target.value)} />
+                <ModToggle label={tr('Mod files only')} title={tr('Only files the loaded mods add, replace or remove')} />
                 <HideRemovedToggle count={props.counts.removed} />
                 <label>
-                    Size
-                    <input type="range" min={64} max={320} step={16} value={props.size} onChange={(e) => props.setSize(Number(e.target.value))} />
+                    {tr('Size')}<Slider className="gallery-size" min={64} max={320} step={16} value={props.size} defaultValue={128} onChange={props.setSize} />
                 </label>
             </div>
             {modFilter.on && <ModStateFilter counts={props.counts} />}
@@ -436,7 +437,7 @@ export function GalleryGrid(props: { folder: string; navigate: Navigate; reloadK
     const [hideRemoved] = useHideRemoved();
 
     useEffect(() => setItems(null), [folder]);
-    // (again after an index update — the tiles stay until the new list is there)
+    // (again after an index update; the tiles stay until the new list is there)
     useEffect(() =>
     {
         let cancelled = false;
@@ -453,8 +454,8 @@ export function GalleryGrid(props: { folder: string; navigate: Navigate; reloadK
 
     const shown = useMemo(() =>
     {
-        const f = filter.trim().toLowerCase();
-        return (items ?? []).filter((i) => (!f || i.file.toLowerCase().includes(f)) && passes(i, modFilter, hideRemoved));
+        const f = fold(filter.trim());
+        return (items ?? []).filter((i) => (!f || foldHas(i.file, f)) && passes(i, modFilter, hideRemoved));
     }, [items, filter, modFilter, hideRemoved]);
     const counts = useMemo(() => stateCounts(items ?? []), [items]);
     const removed = counts.removed;
@@ -464,11 +465,11 @@ export function GalleryGrid(props: { folder: string; navigate: Navigate; reloadK
             <GalleryHead type="images" folder={folder} navigate={props.navigate} filter={filter} setFilter={setFilter} size={size} setSize={setSize} counts={counts} />
             <div className="detail-body gallery-body">
                 <Subfolders type="images" folder={folder} list={subfolders} navigate={props.navigate} />
-                {items === null ? <div className="read-loading">Loading…</div> : (
+                {items === null ? <div className="read-loading">{tr('Loading…')}</div> : (
                     <>
                         <ImageTiles key={folder} items={shown} size={size} navigate={props.navigate} />
-                        {items.length === 0 && subfolders.length === 0 && <div className="list-empty">No images here.</div>}
-                        {hideRemoved && removed > 0 && removed === items.length && shown.length === 0 && subfolders.length === 0 && <div className="list-empty">The loaded mods removed every picture here (hidden — “Show {removed} removed” above).</div>}
+                        {items.length === 0 && subfolders.length === 0 && <div className="list-empty">{tr('No images here.')}</div>}
+                        {hideRemoved && removed > 0 && removed === items.length && shown.length === 0 && subfolders.length === 0 && <div className="list-empty">{tr('The loaded mods removed every picture here (hidden — “Show {removed} removed” above).', { removed })}</div>}
                         {modFilter.on && items.length > 0 && shown.length === 0 && !(hideRemoved && removed === items.length) && subfolders.length === 0 && <div className="list-empty">{emptyText(modFilter)}</div>}
                     </>
                 )}
@@ -495,7 +496,7 @@ export function ModelGrid(props: { folder: string; navigate: Navigate; reloadKey
         setItems(null);
         setTextures([]);
     }, [folder]);
-    // (again after an index update — the tiles stay until the new list is there)
+    // (again after an index update; the tiles stay until the new list is there)
     useEffect(() =>
     {
         let cancelled = false;
@@ -510,9 +511,9 @@ export function ModelGrid(props: { folder: string; navigate: Navigate; reloadKey
         };
     }, [folder, props.reloadKey]);
 
-    const f = filter.trim().toLowerCase();
-    const shown = (items ?? []).filter((i) => (!f || i.file.toLowerCase().includes(f)) && (kinds === 'all' || i.kind === kinds) && passes(i, modFilter, hideRemoved));
-    const shownTex = textures.filter((i) => (!f || i.file.toLowerCase().includes(f)) && passes(i, modFilter, hideRemoved));
+    const f = fold(filter.trim());
+    const shown = (items ?? []).filter((i) => (!f || foldHas(i.file, f)) && (kinds === 'all' || i.kind === kinds) && passes(i, modFilter, hideRemoved));
+    const shownTex = textures.filter((i) => (!f || foldHas(i.file, f)) && passes(i, modFilter, hideRemoved));
     const assets = items?.filter((i) => i.kind === 'asset').length ?? 0;
     const counts = useMemo(() => stateCounts([...(items ?? []), ...textures]), [items, textures]);
 
@@ -521,22 +522,34 @@ export function ModelGrid(props: { folder: string; navigate: Navigate; reloadKey
             <GalleryHead type="models" folder={folder} navigate={props.navigate} filter={filter} setFilter={setFilter} size={size} setSize={setSize} counts={counts} />
             <div className="detail-body gallery-body">
                 <Subfolders type="models" folder={folder} list={subfolders} navigate={props.navigate} />
-                {items === null ? <div className="read-loading">Loading…</div> : (
+                {items === null ? <div className="read-loading">{tr('Loading…')}</div> : (
                     <>
                         {items.length > 0 && (
                             <div className="gallery-section-head">
-                                <span>Model files</span>
+                                <span>{tr('Model files')}</span>
                                 <span className="seg">
                                     {(['all', 'asset', 'mesh'] as const).map((k) => (
                                         <button key={k} className={kinds === k ? 'active' : ''} onClick={() => setKinds(k)}>
-                                            {k === 'all' ? `All ${items.length}` : k === 'asset' ? `Assets ${assets}` : `Meshes ${items.length - assets}`}
+                                            {k === 'all' ? tr('All {itemsCount}', { itemsCount: items.length }) : k === 'asset' ? tr('Assets {assets}', { assets }) : tr('Meshes {more}', { more: items.length - assets })}
                                         </button>
                                     ))}
                                 </span>
                             </div>
                         )}
                         <div className="gallery-grid" style={{ gridTemplateColumns: `repeat(auto-fill, minmax(${size + 16}px, 1fr))` }}>
-                            {shown.map((i) => (
+                            {shown.map((i) =>
+                                i.removed ?
+                                (
+                                    <div key={i.name} className={'tile model-tile removed ' + i.kind} title={tr('{name}\nRemoved by a mod\'s replace_path: the game with the loaded mods doesn\'t load it.', { name: i.name })}>
+                                        <FileModTag removed={i.removed} />
+                                        <div className="tile-img" style={{ height: size }}>
+                                            <span className="model-glyph">{i.kind === 'asset' ? '◆' : '△'}</span>
+                                            <span className={'model-kind ' + i.kind}>{i.kind === 'asset' ? 'asset' : 'mesh'}</span>
+                                        </div>
+                                        <div className="tile-name">{i.file.replace(/\.(asset|mesh)$/i, '')}</div>
+                                    </div>
+                                ) :
+                                (
                                 <div key={i.name} className={'tile model-tile ' + i.kind} title={i.name} onClick={() => props.navigate({ type: 'models', name: i.name })}>
                                     <FileModTag mod={i.mod} touch={i.touch} />
                                     <AssetMenu path={i.name} navigate={props.navigate} className="tile-menu" />
@@ -547,18 +560,19 @@ export function ModelGrid(props: { folder: string; navigate: Navigate; reloadKey
                                     <div className="tile-name">{i.file.replace(/\.(asset|mesh)$/i, '')}</div>
                                     {i.summary && <div className="tile-sub">{i.summary}</div>}
                                 </div>
-                            ))}
+                                )
+                            )}
                         </div>
                         {shownTex.length > 0 && (
                             <>
                                 <div className="gallery-section-head">
-                                    <span>Textures in this folder</span>
+                                    <span>{tr('Textures in this folder')}</span>
                                     <span className="count">{shownTex.length}</span>
                                 </div>
                                 <ImageTiles key={folder} items={shownTex} size={size} navigate={props.navigate} />
                             </>
                         )}
-                        {items.length === 0 && textures.length === 0 && subfolders.length === 0 && <div className="list-empty">No model files here.</div>}
+                        {items.length === 0 && textures.length === 0 && subfolders.length === 0 && <div className="list-empty">{tr('No model files here.')}</div>}
                         {modFilter.on && items.length + textures.length > 0 && shown.length + shownTex.length === 0 && subfolders.length === 0 && <div className="list-empty">{emptyText(modFilter)}</div>}
                     </>
                 )}

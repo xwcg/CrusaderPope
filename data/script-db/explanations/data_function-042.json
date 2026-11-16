@@ -1,0 +1,2053 @@
+[
+ {
+  "kind": "data_function",
+  "key": "Character.GetCommanderLeadingOwnAdvantageDesc",
+  "label": "Own-army commander advantage text",
+  "summary": "A tooltip text which, going by its name, describes an advantage of a commander leading their own army.",
+  "details": "Going by its name and its one use, the tooltip in the window for choosing an army's commander (called with the player as argument), this is a tooltip text. The game documents nothing more.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "A character; the game's one use passes the player.",
+    "values": "a character (vanilla: GetPlayer)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCommandingArmy",
+  "label": "Commanded army",
+  "summary": "The army this character is commanding.",
+  "details": "Vanilla uses it in 'Commanding [army name]' away texts, together with a check whether the character is commanding an army. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCompletedIntents",
+  "label": "Completed intents",
+  "summary": "The list of intents the character has completed in an activity.",
+  "details": "Going by its name and its use in the activity window, where it feeds a list and its size is compared with 1, this is a list of the intents the character has completed. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetConcubinist",
+  "label": "Concubinist",
+  "summary": "A character linked to this one as a 'concubinist'; the game documents nothing more.",
+  "details": "Going by its name only. The game's texts and GUI never use it, so which character it returns is not known.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetConfederation",
+  "label": "Confederation",
+  "summary": "The confederation the character belongs to.",
+  "details": "The game names no return type, but vanilla chains on it: war and casus belli names take the confederation's name and its leading house's name from the attacker and the defender. Going by the 'bloc' wording in those texts, a confederation can be a bloc of houses.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetConfederationMapTooltip",
+  "label": "Confederation map tooltip",
+  "summary": "A text for a map tooltip about the character's confederation.",
+  "details": "Going by its name only. The game never uses it, so what the text says is not known.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetConfederationTooltip",
+  "label": "Confederation tooltip",
+  "summary": "A tooltip text about the confederation the character belongs to.",
+  "details": "Going by its name and by the same name used in the confederation map mode text on a province's title holder. Those lines are a hint only; no use of exactly this function is shown.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetConsort",
+  "label": "Consort",
+  "summary": "A consort of the character; the game documents nothing more.",
+  "details": "Going by its name only. The game never uses it, so it is not known which consort it picks when there are several, or whether it covers concubines.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitle",
+  "label": "Council title",
+  "summary": "The name of the character's council position, as text, such as written before their name.",
+  "details": "Vanilla puts it in front of the character's name in name formats ('[council title] [name]'), also with the dynasty first and in the Japanese name order.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleBasePossessive",
+  "label": "Council title base, possessive",
+  "summary": "The character's council title in a possessive form (like 'Chancellor's').",
+  "details": "Going by its name only. The game never uses it, so what 'base' changes here is not known.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstName",
+  "label": "Council title and first name",
+  "summary": "The character's council title together with their first name, as text.",
+  "details": "Going by its name and by council texts that use the same name after a councillor (for example a text about a theocratic ruler whose rite differs). Those lines may concern another type, so this is a hint. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNicknamed",
+  "label": "Titled name with nickname",
+  "summary": "The council title and first name, with the character's nickname added.",
+  "details": "Going by its name only; the game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNicknamedNoTooltip",
+  "label": "Titled nickname, plain",
+  "summary": "The council title, first name and nickname, without the hover tooltip.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNicknamedNoTooltipRegnal",
+  "label": "Titled nickname, plain, regnal",
+  "summary": "The council title, first name and nickname, without tooltip, in a form that probably adds the regnal number.",
+  "details": "Going by its name only. The game never uses it. That 'Regnal' means the number after a ruler's name (as in Henry II) is a reading of the name.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNicknamedOrMe",
+  "label": "Titled nickname or me",
+  "summary": "The council title, first name and nickname, or a word like 'me' when the character is the speaker.",
+  "details": "Going by its name only; the game never uses it. The 'OrMe' reading comes from the name.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNicknamedOrMeNoTooltip",
+  "label": "Titled nickname/me, plain",
+  "summary": "Like the 'or me' form with nickname, but without the hover tooltip.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNicknamedOrMeNoTooltipRegnal",
+  "label": "Titled nickname/me, plain, regnal",
+  "summary": "Like the plain 'or me' form with nickname, in a form that probably adds the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNicknamedOrMeRegnal",
+  "label": "Titled nickname/me, regnal",
+  "summary": "The 'or me' form of title, first name and nickname, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNicknamedPossessive",
+  "label": "Titled nickname, possessive",
+  "summary": "The council title, first name and nickname in the possessive form (like 'Chancellor Ada the Wise's').",
+  "details": "Going by its name only; the game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNicknamedPossessiveNoTooltip",
+  "label": "Titled nickname, possessive, plain",
+  "summary": "The possessive title, first name and nickname, without the hover tooltip.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNicknamedPossessiveNoTooltipRegnal",
+  "label": "Titled nickname, possessive, plain, regnal",
+  "summary": "The possessive title, first name and nickname without tooltip, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNicknamedPossessiveOrMy",
+  "label": "Titled nickname, possessive/my",
+  "summary": "The possessive title, first name and nickname, or a word like 'my' when the character is the speaker.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNicknamedPossessiveOrMyNoTooltip",
+  "label": "Titled nickname, poss./my, plain",
+  "summary": "The possessive 'or my' form with nickname, without the hover tooltip.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNicknamedPossessiveOrMyNoTooltipRegnal",
+  "label": "Titled nickname, poss./my, plain, regnal",
+  "summary": "The possessive 'or my' form with nickname, without tooltip, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNicknamedPossessiveOrMyRegnal",
+  "label": "Titled nickname, poss./my, regnal",
+  "summary": "The possessive 'or my' form with nickname, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNicknamedPossessiveRegnal",
+  "label": "Titled nickname, possessive, regnal",
+  "summary": "The possessive title, first name and nickname, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNicknamedRegnal",
+  "label": "Titled nickname, regnal",
+  "summary": "The council title, first name and nickname, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNoTooltip",
+  "label": "Titled name, plain",
+  "summary": "The council title and first name as text, without the hover tooltip.",
+  "details": "Going by its name and by contract event texts that use the same name after a councillor, such as 'You successfully capture the [councillor]'. Those lines may concern another type, so this is a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameNoTooltipRegnal",
+  "label": "Titled name, plain, regnal",
+  "summary": "The council title and first name without tooltip, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameOrMe",
+  "label": "Titled name or me",
+  "summary": "The council title and first name, or a word like 'me' when the character is the speaker.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameOrMeNoTooltip",
+  "label": "Titled name/me, plain",
+  "summary": "The 'or me' form of council title and first name, without the hover tooltip.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameOrMeNoTooltipRegnal",
+  "label": "Titled name/me, plain, regnal",
+  "summary": "The plain 'or me' form of council title and first name, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameOrMeRegnal",
+  "label": "Titled name/me, regnal",
+  "summary": "The 'or me' form of council title and first name, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNamePossessive",
+  "label": "Titled name, possessive",
+  "summary": "The council title and first name in the possessive form, like 'Chancellor Ada's'.",
+  "details": "Going by its name and by council texts that use the same name after a councillor, such as '[councillor] learning' and '[councillor] rite'. Those lines may concern another type, so this is a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNamePossessiveNoTooltip",
+  "label": "Titled possessive, plain",
+  "summary": "The possessive council title and first name, without the hover tooltip.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNamePossessiveNoTooltipRegnal",
+  "label": "Titled possessive, plain, regnal",
+  "summary": "The possessive council title and first name without tooltip, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNamePossessiveOrMy",
+  "label": "Titled possessive/my",
+  "summary": "The possessive council title and first name, or a word like 'my' when the character is the speaker.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNamePossessiveOrMyNoTooltip",
+  "label": "Titled possessive/my, plain",
+  "summary": "The possessive 'or my' form of council title and first name, without the hover tooltip.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNamePossessiveOrMyNoTooltipRegnal",
+  "label": "Titled possessive/my, plain, regnal",
+  "summary": "The plain possessive 'or my' form, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNamePossessiveOrMyRegnal",
+  "label": "Titled possessive/my, regnal",
+  "summary": "The possessive 'or my' form of council title and first name, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNamePossessiveRegnal",
+  "label": "Titled possessive, regnal",
+  "summary": "The possessive council title and first name, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleFirstNameRegnal",
+  "label": "Titled name, regnal",
+  "summary": "The council title and first name, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleForPosition",
+  "label": "Council title for a position",
+  "summary": "The title a character would have in a given council position, as text.",
+  "details": "Going by its name only. The game never uses it, and it lists two arguments without saying what they are; the position is probably one of them.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Not documented; probably a council position.",
+    "values": "unknown",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "Not documented.",
+    "values": "unknown",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitleForPositionPossessive",
+  "label": "Position council title, possessive",
+  "summary": "The title a character would have in a given council position, in the possessive form.",
+  "details": "Going by its name only. The game never uses it, and it lists two arguments without saying what they are.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Not documented; probably a council position.",
+    "values": "unknown",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "Not documented.",
+    "values": "unknown",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncilTitlePossessive",
+  "label": "Council title, possessive",
+  "summary": "The council title of the character in the possessive form.",
+  "details": "Vanilla uses the same name in council texts like 'Your [councillor's title] diplomacy skill ...'. Those lines may concern another type, so this is partly a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncillor",
+  "label": "Councillor",
+  "summary": "A councillor of the character; the one argument is not described, and going by its name it picks the position.",
+  "details": "Vanilla uses the same name on council tasks to get the councillor doing the task, without an argument; that line may concern another type, so this is a hint. The game does not name its return type.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Not documented; probably which council position.",
+    "values": "unknown",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncillorModifierDesc",
+  "label": "Councillor modifier description",
+  "summary": "A text listing the effects the character's councillors have on them.",
+  "details": "Vanilla uses the same name in the council text '#T Effects on You' with the player as the character. That line may concern another type, so this is partly a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCouncillorPosition",
+  "label": "Councillor position",
+  "summary": "A council position of the character, picked by key.",
+  "details": "Vanilla uses the same name with a key such as 'councillor_court_chaplain' on the player, then reads the position's name or its holder. Those lines may concern another type, so this is partly a hint.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the council position, as text.",
+    "values": "a council position key in quotes, like 'councillor_court_chaplain'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCourt",
+  "label": "Court",
+  "summary": "The court of the character, as a list of the people in it.",
+  "details": "Vanilla uses it as a list: its size is counted ('Followers: N' for a domicile) and it is tested for being empty in the domicile window. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCourtGrandeurData",
+  "label": "Court grandeur data",
+  "summary": "The court grandeur data of the character, handed to a part of the window.",
+  "details": "Vanilla uses it as the data context of the main HUD, the character window and the court amenities window, so those parts can read the character's court grandeur data. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCourtGrandeurDiffFromExpectedLevelModifierCombinedDescription",
+  "label": "Court grandeur gap effects text",
+  "summary": "A text describing the combined effects of the gap between the court's grandeur level and the level expected of the character.",
+  "details": "Vanilla shows it in the court grandeur expectations tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCourtGrandeurDiffFromExpectedLevelWithoutGraceModifierCombinedDescription",
+  "label": "Grandeur gap effects, no grace",
+  "summary": "The same kind of text, for the court grandeur gap with the grace period left out.",
+  "details": "Vanilla shows it in the 'ignore grace' version of the court grandeur expectation text. How the grace period works is not stated in the input.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCourtLanguage",
+  "label": "Court language",
+  "summary": "The language the character's royal court uses.",
+  "details": "Vanilla uses it in the court amenities window as data context, and in the culture window it is compared with a culture pillar to see whether the court uses another language. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCourtLanguageAdoptionDate",
+  "label": "Court language adoption date",
+  "summary": "The date the character's court adopted its language.",
+  "details": "Vanilla shows it as 'Adopted on [date]' in the royal court window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCourtPositionAptitude",
+  "label": "Court position aptitude",
+  "summary": "The character's aptitude for a given court position, as text.",
+  "details": "Vanilla uses it with a court position type, in the court task window and in the charioteer text ('aptitude for charioteering is ...').",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The court position type to rate the character for.",
+    "values": "a court position type",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCourtScenePosition",
+  "label": "Court scene position",
+  "summary": "The screen position of the character in the royal court scene, as a two-number point.",
+  "details": "Vanilla uses the same name in the royal court window to place a court event item, with the parent widget as argument. That line may concern another type, so this is partly a hint.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The widget the position is measured in.",
+    "values": "a GUI widget (vanilla: the parent widget)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCourtType",
+  "label": "Court type",
+  "summary": "A word for the kind of court the character has.",
+  "details": "Vanilla uses the same name in release and vow texts ('... is not part of your [court type]'). The lines call it as a custom text, so this is partly a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCourtierLeaveDescription",
+  "label": "Courtier leave text",
+  "summary": "A tooltip text saying why or whether a courtier is leaving.",
+  "details": "Vanilla uses it as a tooltip in the HUD, the inspirations window and the situation list. Going by its name for what it says.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCulture",
+  "label": "Culture",
+  "summary": "The character's culture.",
+  "details": "Vanilla reads its name from it, as in 'A good [culture] name'. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCurrency",
+  "label": "Currency amount",
+  "summary": "How much of a given currency the character has, as a number.",
+  "details": "Vanilla uses it in the character window with 'barter_goods' as the currency, shown with no decimals.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the currency.",
+    "values": "a currency key in quotes, like 'barter_goods'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCurrentDomainFertility",
+  "label": "Current domain fertility",
+  "summary": "The character's current domain fertility, as a whole number.",
+  "details": "Going by its name only. The game never uses it; the text version 'GetDomainFertility' is a separate function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCurrentInspiration",
+  "label": "Current inspiration",
+  "summary": "The inspiration project the character currently has.",
+  "details": "Vanilla reads its name from it, as in '[character] has the [inspiration name]'. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCurrentLocation",
+  "label": "Current location",
+  "summary": "The place where the character currently is.",
+  "details": "Vanilla reads its name from it, as in 'Currently in [place]', and uses it for travelling characters. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCurrentMilitaryStrength",
+  "label": "Current military strength",
+  "summary": "The character's current military strength, as a whole number.",
+  "details": "Vanilla shows it as text in the confederation window and in shared lists.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetCurrentWeight",
+  "label": "Current weight",
+  "summary": "The character's current body weight value, as a whole number.",
+  "details": "Vanilla shows it only in the character's debug tooltip, after the base weight and the target weight. The scale of the number is not described.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDeathDate",
+  "label": "Death date",
+  "summary": "The date the character died.",
+  "details": "Vanilla shows it as a text ('[reason] on [date]') and uses it as the date for looking up the character's title name at death. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDeathOrBirthDateInfo",
+  "label": "Death or birth date text",
+  "summary": "A text with the character's birth date, or their death date if they are dead.",
+  "details": "Vanilla uses it as the tooltip of the age in the character window. That it covers the birth and death dates is a reading of its name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDeathReason",
+  "label": "Death reason",
+  "summary": "A text naming how the character died.",
+  "details": "Vanilla shows it in dead-character tooltips, as in '[reason] on [date]'. A separate 'HideKiller' version exists.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDeathReasonHideKiller",
+  "label": "Death reason, killer hidden",
+  "summary": "A text naming how the character died; going by its name, it leaves out who the killer was.",
+  "details": "Vanilla uses it in the dead-character tooltip for the hidden-killer case. That it leaves out the killer is a reading of its name and of its use there.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDeathReasonIcon",
+  "label": "Death reason icon",
+  "summary": "The icon image for how the character died.",
+  "details": "Vanilla uses it as a texture in the outliner, the memories window and the succession event window. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDebtModifierDescription",
+  "label": "Debt effects text",
+  "summary": "A text listing the effects of the character being in debt.",
+  "details": "Vanilla uses the same name in the 'you are in debt' notification, followed by 'Being in Debt has the following effects'. Those lines may concern another type, so this is partly a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDebugCourtierLeaveReasons",
+  "label": "Debug courtier leave reasons",
+  "summary": "A debug text listing the reasons a courtier would leave.",
+  "details": "Vanilla shows it in a debug style tooltip in the situation list and in shared lists. That it lists the reasons a courtier would leave is a reading of its name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDebugGuestArriveReasons",
+  "label": "Debug guest arrival reasons",
+  "summary": "A debug text listing the reasons a guest arrives.",
+  "details": "Vanilla uses it only as a tooltip in the debug window that watches the character pool. What it lists is a reading of its name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDebugGuestArriveStatus",
+  "label": "Debug guest arrival status",
+  "summary": "Whether the debug check for a guest arriving is true for the character.",
+  "details": "Vanilla uses it only as a visibility condition in the debug window that watches the character pool. What the check is about is a reading of its name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDebugGuestScore",
+  "label": "Debug guest score",
+  "summary": "A debug number shown as the character's score.",
+  "details": "Vanilla shows it as 'Score: N' in the debug window that watches the character pool. That it scores the character as a guest is a reading of its name; what the score is made of is not stated.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDebugTooltip",
+  "label": "Debug tooltip",
+  "summary": "A debug text about the character, added to their tooltip.",
+  "details": "Vanilla adds it under the character's name in the portrait tooltip and shows it in the shared tooltip layout.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDefaultRealmFlagTooltip",
+  "label": "Realm flag tooltip",
+  "summary": "The tooltip text of the character's default realm flag (coat of arms).",
+  "details": "Vanilla uses it as a tooltip on map icons and on shared coat of arms widgets.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDefaultRealmFlagTooltipNoClickInfo",
+  "label": "Flag tooltip, no click info",
+  "summary": "The same realm flag tooltip, without the line about what clicking does.",
+  "details": "Vanilla uses it in the character window's realm tooltip and then adds a click line from the title itself. That it leaves out the click info is a reading of its name and of this use.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDefaultRealmFlagTooltipPrimaryTitleClickInfo",
+  "label": "Flag tooltip, title click info",
+  "summary": "The realm flag tooltip with click info for the character's primary title.",
+  "details": "Vanilla uses it as a tooltip in the character window and in the government administration window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDesignatedDiarch",
+  "label": "Designated diarch",
+  "summary": "The character designated as diarch (a co-ruler) for this character.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDesignatedHeir",
+  "label": "Designated heir",
+  "summary": "The heir that has been designated for this character.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDesiredNumberOfConsorts",
+  "label": "Desired number of consorts",
+  "summary": "How many consorts the character wants, as a whole number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDestinyScriptedValueBreakdown",
+  "label": "Destiny value breakdown",
+  "summary": "A breakdown of how a scripted value, picked by its key, is made up for two characters.",
+  "details": "Vanilla uses it with a scripted value key ('destiny_score_interest', 'character_difficulty_value'), a character and that character's heir, as the data of a breakdown widget. Two of the window uses shown are commented out. Its definition type is 'Promote', not a plain function.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the scripted value.",
+    "values": "a scripted value key in quotes, like 'destiny_score_interest'",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "A character. Vanilla passes the player, or the dead character in the succession window.",
+    "values": "a character",
+    "required": true
+   },
+   {
+    "name": "Arg2",
+    "text": "A character. Vanilla passes the heir.",
+    "values": "a character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDiarchLoyaltyIconFrame",
+  "label": "Diarch loyalty icon frame",
+  "summary": "The number of the icon frame that shows the diarch's loyalty.",
+  "details": "Vanilla uses it as the frame of an icon in the diarchy window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDiarchLoyaltyLabel",
+  "label": "Diarch loyalty label",
+  "summary": "A word for how loyal the diarch is.",
+  "details": "Vanilla shows it after 'Diarch loyalty:' in the diarchy window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDiarchTitle",
+  "label": "Diarch title",
+  "summary": "The title word used for a diarch (co-ruler) character.",
+  "details": "Vanilla adds it after a spouse word ('[spouse]-[diarch title]') in the character window. The same name is used in many texts, so it fits more cases than this one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDiarchy",
+  "label": "Diarchy",
+  "summary": "The diarchy (shared rule) the character is part of.",
+  "details": "Vanilla uses it as the data context of the diarchy window and of the my realm window. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDiarchyTypeName",
+  "label": "Diarchy type name",
+  "summary": "The name of the type of diarchy the character is in.",
+  "details": "Vanilla uses it in the diarchy window, for example 'Sharing power in [article] [type]' and '[type] succession'.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDiarchyTypeNameNoTooltip",
+  "label": "Diarchy type name, plain",
+  "summary": "The name of the type of diarchy, without the hover tooltip.",
+  "details": "Vanilla uses it in the my realm window ('Sharing Power in [article] [type]').",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDifficultyInfoText",
+  "label": "Difficulty info text",
+  "summary": "A text about the difficulty of playing the character.",
+  "details": "Vanilla shows it with a warning icon in the multiplayer lobby. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDivorceReasons",
+  "label": "Divorce reasons",
+  "summary": "A text with the reasons the character may divorce another character.",
+  "details": "Going by its name only. The game never uses it, and its one argument is not described; it is probably the other character.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Not documented; probably the spouse.",
+    "values": "unknown",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDnaAccessoryTooltip",
+  "label": "DNA accessory tooltip",
+  "summary": "A tooltip text about the accessories in the character's DNA (their looks).",
+  "details": "Vanilla uses it as text in the barbershop window and in the shared tooltip layout.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDomainFertility",
+  "label": "Domain fertility",
+  "summary": "The character's domain fertility, as text.",
+  "details": "Vanilla shows it as 'Domain fertility: [value]' in a holding tooltip header.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDomainLimit",
+  "label": "Domain limit",
+  "summary": "The character's domain limit, as a whole number.",
+  "details": "Vanilla shows it next to the domain size ('size/limit') and shows something in the HUD and character window only when the size is higher than the limit. Reading both as numbers of holdings comes from the notification text 'holdings above your domain limit', which uses a similar name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDomainLimitBreakdown",
+  "label": "Domain limit breakdown",
+  "summary": "A text showing what makes up the character's domain limit.",
+  "details": "Going by its name only. The game never uses it; the tooltip version is a separate function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDomainLimitGracePeriodHoldings",
+  "label": "Holdings in grace period",
+  "summary": "A text listing the recently acquired holdings that are in the domain limit grace period.",
+  "details": "Vanilla uses the same name in the 'recently acquired holdings' list text with the player. Those lines may concern another type, so this is partly a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDomainLimitOverrunWithGracePeriod",
+  "label": "Domain limit overrun, with grace",
+  "summary": "How far the domain is over its limit, counting the grace period, as a whole number.",
+  "details": "Going by its name only. The game never uses it. The version without grace is a separate function.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDomainLimitOverrunWithoutGracePeriod",
+  "label": "Domain limit overrun, no grace",
+  "summary": "How many holdings the character is above their domain limit, ignoring the grace period.",
+  "details": "Vanilla uses the same name in the notification 'You are N holdings above your domain limit'. That line may concern another type, so this is partly a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDomainLimitTooltip",
+  "label": "Domain limit tooltip",
+  "summary": "A tooltip text explaining the character's domain limit.",
+  "details": "Vanilla uses it as a tooltip in the HUD, the character window and the my realm window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDomainSize",
+  "label": "Domain size",
+  "summary": "The size of the character's domain, as a whole number.",
+  "details": "Vanilla shows it as 'size/limit' with the domain limit in the HUD and the character window. That it counts holdings is a reading of a similar notification text ('holdings above your domain limit').",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDomainSizeWithGracePeriod",
+  "label": "Domain size, with grace",
+  "summary": "The domain size counting the grace period, as a whole number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDomicile",
+  "label": "Domicile",
+  "summary": "The domicile (a mobile home base, like a nomad camp) of the character.",
+  "details": "Vanilla reads its type, location and rite from it, for example 'Current Location: [barony]'. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDread",
+  "label": "Dread",
+  "summary": "The character's dread, as a number.",
+  "details": "Vanilla shows it without decimals in the character window and the ledger.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDreadBreakdown",
+  "label": "Dread breakdown",
+  "summary": "A tooltip text showing what makes up the character's dread.",
+  "details": "Vanilla uses it as a tooltip in the character window and the ledger.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDreadEffectIconFrameFor",
+  "label": "Dread effect icon frame",
+  "summary": "The number of the icon frame for how the character's dread affects another character.",
+  "details": "Vanilla uses it in the character window with the liege or the court owner as the argument.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The other character; vanilla passes the liege or the court owner.",
+    "values": "a character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDreadEffectTooltipFor",
+  "label": "Dread effect tooltip",
+  "summary": "A tooltip text about how the character's dread affects another character.",
+  "details": "Vanilla uses it in the character window with the liege or the court owner as the argument.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The other character; vanilla passes the liege or the court owner.",
+    "values": "a character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDynasty",
+  "label": "Dynasty",
+  "summary": "The character's dynasty.",
+  "details": "Vanilla reads its base name from it, as in 'the [name] Dynasty'. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDynastyHeadRelationFrame",
+  "label": "Dynasty head relation frame",
+  "summary": "The number of the icon frame for the character's relation to the head of their dynasty.",
+  "details": "Vanilla uses it as an icon frame, and shows the icon only when the frame is below 9. Vanilla passes 'no' as the argument.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "A yes/no flag; vanilla passes no. What it changes is not stated.",
+    "values": "a bool written like '(bool)no'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDynastyHeadRelationTooltip",
+  "label": "Dynasty head relation tooltip",
+  "summary": "A tooltip text about the character's relation to the head of their dynasty.",
+  "details": "Vanilla uses it as a tooltip on portraits and in the tournament widget.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDynastyHeadTooltip",
+  "label": "Dynasty head tooltip",
+  "summary": "A tooltip text about the character being their dynasty's head.",
+  "details": "Vanilla uses it as a tooltip in the character window, the dynasty tree and the multiplayer lobby.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDynastyHouseName",
+  "label": "House name",
+  "summary": "The name of the character's house (their branch of the dynasty), as text.",
+  "details": "Vanilla uses it often (over 70 uses) in texts such as relationship reasons: 'a feud between House [name] and [name]'.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDynastyHouseNameNoTooltip",
+  "label": "Dynasty house name, plain",
+  "summary": "The name of the character's house, without the hover tooltip.",
+  "details": "Vanilla uses it in the house window: 'house head of House [name]'.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDynastyMembersText",
+  "label": "Dynasty members text",
+  "summary": "A text about the members of the character's dynasty.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDynastyName",
+  "label": "Dynasty name",
+  "summary": "The name of the character's dynasty, as text.",
+  "details": "Vanilla shows it in the character's debug tooltip ('Dynasty: ...'), in the text of the effect that sets a dynasty ('now belongs to the [name] Dynasty') and in an interaction text about which dynasty a child will be of.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetDynastyNameNoTooltip",
+  "label": "Dynasty name, plain",
+  "summary": "The name of the character's dynasty, without the hover tooltip.",
+  "details": "Vanilla uses it to build building names such as '[dynasty] Hall' from a legendary figure.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetElectorVoteStrengthBreakdown",
+  "label": "Elector vote strength breakdown",
+  "summary": "A text showing what makes up an elector's vote strength.",
+  "details": "Going by its name. Vanilla uses the name only on the succession election window, never on a character, so it may not belong to the character type at all.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetEmployedCourtPositions",
+  "label": "Employed court positions",
+  "summary": "The court positions the character holds or employs.",
+  "details": "Going by its name only. The game never uses it, and it does not say whether the character holds the positions or employs others in them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetEmployer",
+  "label": "Employer",
+  "summary": "The character that employs this one.",
+  "details": "Vanilla uses the same name on court positions and task contracts to get the employer. Those lines may concern another type, so this is partly a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetEthnicity",
+  "label": "Ethnicity",
+  "summary": "The character's ethnicity.",
+  "details": "The game names no return type. Vanilla only uses it in the character's debug tooltip, taking its name ('Ethnicity: [ethnicity's name]').",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetExecuteReasons",
+  "label": "Execution reasons",
+  "summary": "A text with the reasons the character may be executed.",
+  "details": "Vanilla uses the same name for a known criminal ('is a known criminal (reasons) allowing you ...') with the acting character as argument. That line may concern another type, so this is partly a hint.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The character who would execute them.",
+    "values": "a character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetExpectedFulfillmentChangeOnPersonalTenetGain",
+  "label": "Fulfillment change on tenet gain",
+  "summary": "How the character's fulfillment is expected to change when they gain a personal tenet.",
+  "details": "Going by its name only. The game never uses it, and its argument is not described; it is probably the tenet.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Not documented; probably the tenet.",
+    "values": "unknown",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetExpectedFulfillmentChangeOnPersonalTenetLoss",
+  "label": "Fulfillment change on tenet loss",
+  "summary": "How the character's fulfillment is expected to change when they lose a personal tenet.",
+  "details": "Going by its name only. The game never uses it, and its argument is not described; it is probably the tenet.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Not documented; probably the tenet.",
+    "values": "unknown",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetExpensesBreakdownFromTheocraticLease",
+  "label": "Theocratic lease expenses breakdown",
+  "summary": "A text showing what makes up the character's expenses from theocratic leases.",
+  "details": "Vanilla uses it in the church property tooltip of the character window, next to the number of temples held under lease.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetExpensesFromTheocraticLease",
+  "label": "Theocratic lease expenses",
+  "summary": "The amount the character pays for theocratic leases, as a number.",
+  "details": "Vanilla uses it in the church property tooltip of the character window, next to the number of temples held under lease.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFaith",
+  "label": "Faith",
+  "summary": "The character's faith.",
+  "details": "Vanilla reads names from it, such as the plural name of its followers, and passes it on as data. It is used very often. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFallbackSuccessionCharacter",
+  "label": "Fallback heir",
+  "summary": "The character that inherits if the normal succession finds no one.",
+  "details": "Vanilla shows its name in succession law tooltips, after the label 'fallback heir'.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFallbackSuccessionTitle",
+  "label": "Fallback heir title",
+  "summary": "The title used for the fallback succession.",
+  "details": "Vanilla first checks it is valid, then shows its name after the label 'fallback heir title' in succession law tooltips.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFather",
+  "label": "Father",
+  "summary": "The character's father.",
+  "details": "Vanilla uses it in the child naming widget, for example 'After [father]', and checks whether he is the local player. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFertility",
+  "label": "Fertility",
+  "summary": "The character's fertility value, as a decimal number.",
+  "details": "Vanilla shows it only in the character's debug tooltips, written as a percentage with no decimals ('Fertility: ...').",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstEmployedOfType",
+  "label": "First employed of type",
+  "summary": "The first character the character employs in a certain kind of court position.",
+  "details": "Going by its name only. The game never uses it, and its argument is not described; it is probably a court position type.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Not documented; probably a court position type.",
+    "values": "unknown",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstName",
+  "label": "First name",
+  "summary": "The character's first name.",
+  "details": "The game names no return type. Vanilla uses it in many texts, often before the house name ('[first name] [house] has gained [title]') or alone ('When [first name] arrives:').",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameBase",
+  "label": "First name, base",
+  "summary": "The base form of the character's first name, as text.",
+  "details": "Vanilla uses the same name on a character's father and mother in the child naming widget, to offer their name as the child's name. Those lines may concern another type, so this is partly a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNicknamed",
+  "label": "First name with nickname",
+  "summary": "The character's first name together with their nickname.",
+  "details": "The game names no return type. Vanilla uses it once, for the victor of a historic battle on a battle point of interest ('Victor: [name]'). The exact order of name and nickname is not shown.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNicknamedNoTooltip",
+  "label": "First name with nickname, plain",
+  "summary": "The first name with nickname, without the hover tooltip.",
+  "details": "Vanilla uses the same name in event texts, such as '[name] continues to serve you'. Those lines may concern another type, so this is partly a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNicknamedNoTooltipRegnal",
+  "label": "First name, nickname, plain, regnal",
+  "summary": "The first name with nickname and no tooltip, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNicknamedOrMe",
+  "label": "Nicknamed name or me",
+  "summary": "The first name with nickname, or a word like 'me' when the character is the speaker.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNicknamedOrMeNoTooltip",
+  "label": "Nicknamed name or me, plain",
+  "summary": "The 'or me' form of first name with nickname, without the hover tooltip.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNicknamedOrMeNoTooltipRegnal",
+  "label": "Nicknamed name/me, plain, regnal",
+  "summary": "The plain 'or me' form with nickname, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNicknamedOrMeRegnal",
+  "label": "Nicknamed name/me, regnal",
+  "summary": "The 'or me' form of first name with nickname, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNicknamedPossessive",
+  "label": "First name with nickname, possessive",
+  "summary": "The first name with nickname in the possessive form, like 'Ada the Wise's'.",
+  "details": "Vanilla uses the same name in event texts, such as 'I toss [name]'s severed head'. Those lines may concern another type, so this is partly a hint.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNicknamedPossessiveNoTooltip",
+  "label": "First name, nickname, possessive, plain",
+  "summary": "The possessive first name with nickname, without the hover tooltip.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNicknamedPossessiveNoTooltipRegnal",
+  "label": "Nickname, possessive, plain, regnal",
+  "summary": "The possessive first name with nickname, without tooltip, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNicknamedPossessiveOrMy",
+  "label": "Nickname, possessive/my",
+  "summary": "The possessive first name with nickname, or a word like 'my' when the character is the speaker.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNicknamedPossessiveOrMyNoTooltip",
+  "label": "Nicknamed possessive or my, plain",
+  "summary": "The possessive 'or my' form with nickname, without the hover tooltip.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNicknamedPossessiveOrMyNoTooltipRegnal",
+  "label": "Nickname, poss./my, plain, regnal",
+  "summary": "The plain possessive 'or my' form with nickname, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNicknamedPossessiveOrMyRegnal",
+  "label": "Nickname, poss./my, regnal",
+  "summary": "The possessive 'or my' form with nickname, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNicknamedPossessiveRegnal",
+  "label": "First name, nickname, possessive, regnal",
+  "summary": "The possessive first name with nickname, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNicknamedRegnal",
+  "label": "First name, nickname, regnal",
+  "summary": "The first name with nickname, probably with the regnal number.",
+  "details": "Going by its name only. The game never uses it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNoTooltip",
+  "label": "First name, plain",
+  "summary": "The character's first name, without the hover tooltip.",
+  "details": "Vanilla uses it in building and figure names, such as 'Temple of [name]', and it is used more than six thousand times in the game's texts. The game does not name its return type.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Character.GetFirstNameNoTooltipRegnal",
+  "label": "First name, plain, regnal",
+  "summary": "The first name without tooltip, probably with the regnal number.",
+  "details": "Vanilla uses the same name in coronation event titles such as 'The Crowning of [host]'. Those lines may concern another type, and that the number is added is a reading of the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ }
+]

@@ -4,6 +4,7 @@ import { capitalize, formatNumber, humanize, rich, signed } from '../text.ts';
 import type { CardFn } from './types.ts';
 import { RealmCard, isBlock, join, ownValue, val, type Block } from './realm-kit.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 /** The stats of a men-at-arms type, in the order a player reads them (common/men_at_arms_types/_men_at_arms_types.info). */
 const MAA_STATS = ['damage', 'toughness', 'pursuit', 'screen', 'siege_value', 'siege_tier', 'stack', 'hired_stack_size', 'max', 'max_regiments', 'max_sub_regiments'];
 
@@ -32,7 +33,7 @@ function bonusLines(c: RealmCard, n: Block | undefined, name: (key: string) => R
     return (n?.v ?? []).filter(isBlock).map((t): Line => ({ text: rich(name(t.k!), ': ', bonusText(c, t)), tip: t.k!, src: c.b.fieldAnchor(t, c.ctx, 'maa_bonus', true) }));
 }
 
-const WINTER: Record<string, string> = { normal_winter: 'In winter', harsh_winter: 'In harsh winter' };
+const WINTER: Record<string, string> = { normal_winter: tr('In winter'), harsh_winter: tr('In harsh winter') };
 
 /**
  * A men-at-arms type: its base type, stats, costs, what it counters, terrain / winter / holding bonuses, when it can
@@ -48,14 +49,14 @@ const menAtArms: CardFn = (b, x) =>
         c.fact('Type: ', baseType(c, type));
 
     if (val(x.body, 'special_recruit_only') === 'yes')
-        c.fact('Never recruited — only made by events');
+        c.fact(tr('Never recruited — only made by events'));
 
     // the stats first, then the other settings
     const provisions = c.node('provision_cost');
-    c.settings('Stats', 'men_at_arms_types', c.fields('men_at_arms_types', MAA_STATS.flatMap((k) => c.all(k))));
+    c.settings(tr('Stats'), 'men_at_arms_types', c.fields('men_at_arms_types', MAA_STATS.flatMap((k) => c.all(k))));
     const costs: Line[] = [];
 
-    for (const [k, label] of [['buy_cost', 'To recruit'], ['low_maintenance_cost', 'Upkeep while unraised and at full strength'], ['high_maintenance_cost', 'Upkeep while raised or reinforcing']])
+    for (const [k, label] of [['buy_cost', tr('To recruit')], ['low_maintenance_cost', tr('Upkeep while unraised and at full strength')], ['high_maintenance_cost', tr('Upkeep while raised or reinforcing')]])
     {
         const n = c.block(k);
 
@@ -66,28 +67,28 @@ const menAtArms: CardFn = (b, x) =>
     if (provisions)
         costs.push(c.field('men_at_arms_types', provisions));
 
-    c.section('Costs', costs);
+    c.section(tr('Costs'), costs);
     const counters = c.block('counters');
     c.section(
-        'Counters',
+        tr('Counters'),
         (counters?.v ?? [])
             .filter((n) => n.k && typeof n.v === 'string')
             .map((n): Line =>
             {
                 const v = c.num(n.v as string);
-                return { text: rich('Counters ', baseType(c, n.k!), v !== undefined && v !== 1 ? ` ×${formatNumber(v)}` : ''), tip: `${n.k} = ${n.v} (sub-regiments countered by one)`, src: c.anchor(n, 'other') };
+                return { text: rich(tr('Counters '), baseType(c, n.k!), v !== undefined && v !== 1 ? ` ×${formatNumber(v)}` : ''), tip: tr('{k} = {v} (sub-regiments countered by one)', { k: n.k, v: n.v }), src: c.anchor(n, 'other') };
             })
     );
     const bonuses = [
         ...bonusLines(c, c.block('terrain_bonus'), (k) => b.d.ref(k, ['terrain_types'])),
         ...bonusLines(c, c.block('winter_bonus'), (k) => [WINTER[k] ?? capitalize(humanize(k))]),
-        ...bonusLines(c, c.block('holding_bonus'), (k) => rich('In a ', b.d.ref(k, ['holdings'])))
+        ...bonusLines(c, c.block('holding_bonus'), (k) => rich(tr('In a '), b.d.ref(k, ['holdings'])))
     ];
-    c.section('Bonuses', bonuses);
-    c.triggers('can_recruit', 'Can be recruited when', 'character');
-    c.triggers('should_show_when_unavailable', 'Shown while unavailable when', 'character');
-    c.triggers('access_through_subject', 'Available through subjects when', 'character');
-    c.ai('ai_quality', 'How much the AI values it (besides its stats)');
+    c.section(tr('Bonuses'), bonuses);
+    c.triggers('can_recruit', tr('Can be recruited when'), 'character');
+    c.triggers('should_show_when_unavailable', tr('Shown while unavailable when'), 'character');
+    c.triggers('access_through_subject', tr('Available through subjects when'), 'character');
+    c.ai('ai_quality', tr('How much the AI values it (besides its stats)'));
     return c.done();
 };
 
@@ -116,32 +117,32 @@ const casusBelliGroup: CardFn = (b, x) =>
     }
 
     if (members.length)
-        c.fact(`${members.length} casus belli`);
+        c.fact(tr('{length} casus belli', { length: members.length }));
 
-    c.section('Casus belli', members);
-    c.triggers('allowed_for_character', 'Allowed when', 'character');
-    c.settings('Settings', 'casus_belli_groups');
+    c.section(tr('Casus belli'), members);
+    c.triggers('allowed_for_character', tr('Allowed when'), 'character');
+    c.settings(tr('Settings'), 'casus_belli_groups');
     return c.done();
 };
 
 /** Objectives of a war stance (common/ai_war_stances/_ai_war_stances.info). */
 const OBJECTIVES: Record<string, string> = {
-    wargoal_province: 'War goal provinces',
-    enemy_unit_province: 'Enemy armies',
-    enemy_capital_province: 'The enemy’s capital',
-    capital_province: 'Its own capital',
-    enemy_province: 'Enemy provinces',
-    enemy_ally_province: 'Provinces of the enemy’s allies',
-    province: 'Its own provinces',
-    defend_wargoal_province: 'Defending the war goal'
+    wargoal_province: tr('War goal provinces'),
+    enemy_unit_province: tr('Enemy armies'),
+    enemy_capital_province: tr('The enemy’s capital'),
+    capital_province: tr('Its own capital'),
+    enemy_province: tr('Enemy provinces'),
+    enemy_ally_province: tr('Provinces of the enemy’s allies'),
+    province: tr('Its own provinces'),
+    defend_wargoal_province: tr('Defending the war goal')
 };
 
 const AREAS: Record<string, string> = {
-    wargoal: 'the war goal',
-    primary_attacker: 'the attacker’s lands',
-    primary_attacker_ally: 'the attacker’s allies’ lands',
-    primary_defender: 'the defender’s lands',
-    primary_defender_ally: 'the defender’s allies’ lands'
+    wargoal: tr('the war goal'),
+    primary_attacker: tr('the attacker’s lands'),
+    primary_attacker_ally: tr('the attacker’s allies’ lands'),
+    primary_defender: tr('the defender’s lands'),
+    primary_defender_ally: tr('the defender’s allies’ lands')
 };
 
 /** One `objectives` block: its targets by priority (`enemy_unit_province = { priority area … }` in areas). */
@@ -154,10 +155,10 @@ function objectiveLines(c: RealmCard, n: Block): Line[]
             const what = OBJECTIVES[o.k!] ?? capitalize(humanize(o.k!));
 
             if (typeof o.v === 'string')
-                return { text: rich({ text: o.v, kind: 'value' }, ' — ', what), tip: `${o.k} = ${o.v}`, src: c.anchor(o, 'other') };
+                return { text: rich({ text: o.v, kind: 'value' }, ': ', what), tip: `${o.k} = ${o.v}`, src: c.anchor(o, 'other') };
 
             const areas = o.v.filter((a) => a.k === 'area' && typeof a.v === 'string').map((a) => AREAS[a.v as string] ?? humanize(a.v as string));
-            return { text: rich({ text: val(o.v, 'priority') ?? '?', kind: 'value' }, ' — ', what, areas.length ? rich(' in ', join(areas, ' or ')) : ''), tip: o.k!, src: c.anchor(o, 'other') };
+            return { text: rich({ text: val(o.v, 'priority') ?? '?', kind: 'value' }, ': ', what, areas.length ? rich(tr(' in '), join(areas, ' or ')) : ''), tip: o.k!, src: c.anchor(o, 'other') };
         });
 }
 
@@ -182,10 +183,10 @@ const warStance: CardFn = (b, x) =>
 
     c.all('objectives')
         .filter(isBlock)
-        .forEach((n, i) => c.section(i ? 'Then' : 'Objectives (priority — target)', objectiveLines(c, n)));
-    c.settings('Settings', 'ai_war_stances', when ? c.fields('war_stance_behaviour', when.v) : []);
-    c.triggers('can_be_picked', 'Picked when', 'war');
-    c.ai('ai_will_do', 'Weight of this stance');
+        .forEach((n, i) => c.section(i ? tr('Then') : tr('Objectives (priority — target)'), objectiveLines(c, n)));
+    c.settings(tr('Settings'), 'ai_war_stances', when ? c.fields('war_stance_behaviour', when.v) : []);
+    c.triggers('can_be_picked', tr('Picked when'), 'war');
+    c.ai('ai_will_do', tr('Weight of this stance'));
     return c.done();
 };
 

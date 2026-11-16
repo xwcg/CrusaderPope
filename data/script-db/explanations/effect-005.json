@@ -1,0 +1,454 @@
+[
+ {
+  "kind": "effect",
+  "key": "add_truce_one_way",
+  "label": "One-way truce",
+  "summary": "Sets a truce held by the character against the given character, in that direction only.",
+  "details": "The truce lasts for the time given in years, months or days. With `override = yes` it replaces an existing truce even if the new one is shorter. `result` says how the truce counts from the character's point of view (`victory`, `defeat` or `white_peace`, white peace by default). Give either a casus belli (the war reason that caused it) or a custom `name` for the truce text, not both.",
+  "fields": [
+    { "name": "character", "text": "The character the truce is held against.", "values": "a character", "required": true },
+    { "name": "years / months / days", "text": "How long the truce lasts.", "values": "a number or a script value" },
+    { "name": "override", "text": "Whether the new truce replaces an existing one even when it is shorter.", "values": "yes or no" },
+    { "name": "result", "text": "The outcome the truce stands for, seen from the character's side.", "values": "victory, defeat or white_peace", "default": "white_peace" },
+    { "name": "casus_belli / war", "text": "The casus belli or war that caused the truce. Cannot be combined with name.", "values": "a casus belli or war" },
+    { "name": "name", "text": "A custom description of the truce, shown in the game.", "values": "a localization key" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_tyranny",
+  "label": "Tyranny",
+  "summary": "Adds tyranny to the character, or removes it with a negative amount.",
+  "details": "Vanilla mostly writes a named amount such as `minor_tyranny_gain` or `medium_tyranny_gain`. It can also be a block with `value`, and vanilla once uses `multiply` to scale the amount by a number (the tier of a title).",
+  "fields": [
+    { "name": "value", "text": "How much tyranny to add.", "values": "a number, a script value or a named amount like medium_tyranny_gain" },
+    { "name": "multiply", "text": "Multiplies the amount by this number (block form).", "values": "a number or a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_unity_value",
+  "label": "House unity",
+  "summary": "Adds unity to the dynasty house.",
+  "details": "Runs on a dynasty house. Vanilla also uses loss amounts such as `medium_unity_loss`, so the amount can lower unity. `desc` is a localization key; going by its name and vanilla's keys, it is the text shown for the change. Vanilla always gives all three fields.",
+  "fields": [
+    { "name": "value", "text": "How much unity to add.", "values": "a number, a script value or a named amount like medium_unity_gain", "required": true },
+    { "name": "character", "text": "A character tied to the change; the game's documentation does not say more. Vanilla gives the root character, the house head or an actor.", "values": "a character", "required": true },
+    { "name": "desc", "text": "A localization key describing the change.", "values": "a localization key", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_unpressed_claim",
+  "label": "Claim (unpressed)",
+  "summary": "Gives the character an unpressed claim on a title.",
+  "details": "Written as `add_unpressed_claim = <title>`, for example a saved scope or `title:k_burgundy`. The game's documentation does not explain what makes a claim unpressed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_visiting_courtier",
+  "label": "Visiting courtier",
+  "summary": "Makes the given character a guest at the character's court.",
+  "details": "The character running the effect is the host. Vanilla gives it a saved scope or a link to the guest.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_wanderer_lifestyle_perk_points",
+  "label": "Wanderer perk points",
+  "summary": "Gives the character perk points for the wanderer lifestyle.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "add_wanderer_lifestyle_xp",
+  "label": "Wanderer experience",
+  "summary": "Gives the character experience in the wanderer lifestyle.",
+  "details": "Vanilla uses plain numbers (100, 250, 500) and named amounts such as `massive_lifestyle_xp`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "add_war_chest_gold",
+  "label": "War chest gold",
+  "summary": "Adds gold to the character's war chest, a category of the AI's budget.",
+  "details": "The gold is created from nothing. The war chest has a maximum, and anything over it goes into the short-term budget instead. Written as `add_war_chest_gold = X`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "adopt",
+  "label": "Adopt",
+  "summary": "Makes the character the parent of the given character.",
+  "details": "The character running the effect becomes the new parent; the value is the child. Vanilla uses it on a hostage.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "ai_attempt_to_build_building_effect",
+  "label": "AI builds a building",
+  "summary": "Makes the AI character look at which buildings it could build or upgrade in its domain and start one if it can pay.",
+  "details": "Written as `= yes`; vanilla always writes `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "ai_attempt_to_host_activity",
+  "label": "AI hosts activity",
+  "summary": "Makes the AI character re-evaluate whether it wants to host the given activity type.",
+  "details": "It ignores the activity's normal AI check interval and cooldown. Vanilla uses it with activity types like `activity_hunt` or `activity_feast`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "ai_start_best_war",
+  "label": "AI starts best war",
+  "summary": "Makes the AI character start the highest-scored war from the wars it could start.",
+  "details": "The AI first filters its possible wars with your `is_valid` block. In it, `root` is the AI character, and the game provides saved scopes such as `scope:target_character`, `scope:target_title`, `scope:casus_belli_type` and `scope:score`. `on_success` runs when a war started, `on_failure` when none did. `multi_target` can start several wars at once (a count and an optional strength limit). `cb` limits the allowed casus belli types, and `first_valid_cb_type = yes` takes the first valid one for speed.",
+  "fields": [
+    { "name": "cb", "text": "The casus belli types the war may use.", "values": "a list of casus belli types" },
+    { "name": "is_valid", "text": "Filter for possible wars; only wars passing it are considered.", "values": "a trigger block" },
+    { "name": "on_success", "text": "Effects run after a war was started.", "values": "an effect block" },
+    { "name": "on_failure", "text": "Effects run when no war was found or started.", "values": "an effect block" },
+    { "name": "multi_target", "text": "Start several wars: `count` is how many, `max_accumulative_strength` an optional strength limit for extra targets.", "values": "a block" },
+    { "name": "first_valid_cb_type", "text": "Take the first valid casus belli instead of the best one, for speed.", "values": "yes or no" },
+    { "name": "recalculate_cb_targets", "text": "Recompute the AI's casus belli targets instead of using the current data. Only if needed.", "values": "yes or no", "default": "no" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "allow_alliance",
+  "label": "Allow alliance",
+  "summary": "Lets the character make an alliance with the given character again after it was broken.",
+  "details": "The game's documentation speaks of an alliance that was broken before.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "allow_in_scheme",
+  "label": "Allow in scheme",
+  "summary": "Lets the character join the given scheme as an agent.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "always_fire_councillor",
+  "label": "Fire councillor",
+  "summary": "Makes the character fire the given character from their council, skipping the usual rule checks.",
+  "details": "It ignores rules such as the AI's `ai_can_reassign_council_positions`. The `_skip_effects` version is documented as also skipping on_actions, which suggests this one does not.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "always_fire_councillor_skip_effects",
+  "label": "Fire councillor quietly",
+  "summary": "Makes the character fire the given character from their council without rule checks and without running on_actions.",
+  "details": "Like `always_fire_councillor`, but the on_actions that normally follow a firing do not run.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "apply_ai_vassal_admin_province_obligation_liege_most_desired",
+  "label": "Apply liege's admin province obligation",
+  "summary": "Sets the administrative province obligation level in the contract to the level the liege most wants.",
+  "details": "This is for AI contracts. Written as `= yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "apply_ai_vassal_admin_province_obligation_vassal_most_desired",
+  "label": "Apply vassal's admin province obligation",
+  "summary": "Sets the administrative province obligation level in the contract to the level the vassal most wants.",
+  "details": "This is for AI contracts. Vanilla does not use it in the input.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "apply_ai_vassal_obligation_liege_most_desired",
+  "label": "Apply liege's obligation",
+  "summary": "Sets the vassal obligation level in the contract to the level the liege most wants.",
+  "details": "This is for AI contracts. Written as `= yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "apply_ai_vassal_obligation_vassal_most_desired",
+  "label": "Apply vassal's obligation",
+  "summary": "Sets the vassal obligation level in the contract to the level the vassal most wants.",
+  "details": "This is for AI contracts. Written as `= yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "appoint_court_position",
+  "label": "Appoint court position",
+  "summary": "Gives a court position in the character's court to the given character.",
+  "details": "The character running the effect is the ruler whose court it is. The recipient gets the position.",
+  "fields": [
+    { "name": "recipient", "text": "The character who receives the position.", "values": "a character", "required": true },
+    { "name": "court_position", "text": "Which court position to give.", "values": "a court position type", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "assert_if",
+  "label": "Assert if",
+  "summary": "Raises a debugging error while the game runs when the condition is true.",
+  "details": "A developer tool for catching situations that should never happen. Vanilla uses it with a message describing what went wrong.",
+  "fields": [
+    { "name": "limit", "text": "The condition that triggers the error.", "values": "a trigger block", "required": true },
+    { "name": "text", "text": "A message printed with the error.", "values": "a text string" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "assert_read",
+  "label": "Assert on read",
+  "summary": "Raises a debugging error when the script is read, not while the game runs.",
+  "details": "The value is `yes`, or a text that is printed with the error.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "assign_commander",
+  "label": "Commander",
+  "summary": "Makes the given character the commander of the army.",
+  "details": "Runs on an army. The documented example writes `set_commander`, but the key is `assign_commander`, which is also what vanilla uses.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "assign_council_task",
+  "label": "Assign council task",
+  "summary": "Puts the given character on a council task.",
+  "details": "`fire_on_actions` is optional in the documented usage; it is not described further.",
+  "fields": [
+    { "name": "council_task", "text": "The council task to assign.", "values": "a council task", "required": true },
+    { "name": "target", "text": "The character who takes the task.", "values": "a character", "required": true },
+    { "name": "fire_on_actions", "text": "Whether the related on_actions are fired.", "values": "yes or no" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "assign_councillor_type",
+  "label": "Assign councillor",
+  "summary": "Puts the given character in a council position of one type, such as chancellor or steward.",
+  "details": "With `remove_existing_councillor = yes`, whoever holds that position is removed first; the game's documentation adds a note '(not fired)' there, without saying exactly what is not fired. Vanilla uses it with types like `councillor_chancellor` and `councillor_court_chaplain`.",
+  "fields": [
+    { "name": "type", "text": "The council position type.", "values": "a council position type", "required": true },
+    { "name": "target", "text": "The character who takes the position.", "values": "a character", "required": true },
+    { "name": "fire_on_actions", "text": "Whether the related on_actions are fired.", "values": "yes or no" },
+    { "name": "remove_existing_councillor", "text": "Remove the current holder first.", "values": "yes or no", "default": "no" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "auto_assign_scheme_agents",
+  "label": "Auto-assign agents",
+  "summary": "Fills the scheme with agents who are competent and willing.",
+  "details": "Runs on a scheme, written as `auto_assign_scheme_agents = yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "banish",
+  "label": "Banish",
+  "summary": "Banishes the character.",
+  "details": "Written as `banish = yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "battle_event",
+  "label": "Battle event",
+  "summary": "Shows an event line in a battle and in its result summary.",
+  "details": "Runs on one side of a combat. The key is a localization key; the game adds `_friendly` or `_enemy` to it. When the side is not the player's, the two portraits swap places. Vanilla also sets a `type` (`death`, `wound` or `imprison`).",
+  "fields": [
+    { "name": "key", "text": "The text key of the event.", "values": "a localization key", "required": true },
+    { "name": "left_portrait", "text": "The character shown on the left.", "values": "a character", "required": true },
+    { "name": "right_portrait", "text": "The character shown on the right.", "values": "a character" },
+    { "name": "type", "text": "Not in the game's documentation; vanilla always sets it.", "values": "death, wound or imprison (as used by vanilla)" },
+    { "name": "target_right", "text": "Used by vanilla with yes; the game's documentation does not describe it.", "values": "yes" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "becomes_independent",
+  "label": "Become independent",
+  "summary": "Makes the character an independent ruler, using a title and vassal change prepared earlier.",
+  "details": "The `change` is a saved title-and-vassal change made before; this effect applies it.",
+  "fields": [
+    { "name": "change", "text": "The earlier prepared title and vassal change.", "values": "a saved change", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "begin_create_holding",
+  "label": "Start building holding",
+  "summary": "Starts construction of a holding of the given type in the province.",
+  "details": "Written as just the holding type, or as a block. By default a player gets nothing back if they cancel the construction; `refund_cost` sets what they get back.",
+  "fields": [
+    { "name": "type", "text": "The holding type to build.", "values": "a holding type such as castle_holding", "required": true },
+    { "name": "refund_cost", "text": "What is refunded if the construction is cancelled, such as `gold = 100`.", "values": "a cost block" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "break_alliance",
+  "label": "Break alliance",
+  "summary": "Ends the character's alliance with the given character.",
+  "details": "",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "break_betrothal",
+  "label": "Break betrothal",
+  "summary": "Ends the betrothal between the character and the given character.",
+  "details": "Vanilla often passes the link `betrothed`, meaning the character's own betrothed.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "cancel_great_project",
+  "label": "Cancel great project",
+  "summary": "Stops the planning or construction of a great project.",
+  "details": "The project's cancel effects run. There is no refund. Vanilla runs it on the project itself with `= this`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "cancel_travel_plan",
+  "label": "Cancel the journey",
+  "summary": "Drops the rest of a travel plan, leaves its activities and sends the traveller home.",
+  "details": "Runs on a travel plan, written as `= yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "cancel_truce_both_ways",
+  "label": "Cancel truce (both)",
+  "summary": "Ends the character's truce against the given character, and that character's truce against the character.",
+  "details": "For ending only one direction, see `cancel_truce_one_way`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "cancel_truce_one_way",
+  "label": "Cancel truce (one way)",
+  "summary": "Ends the character's truce against the given character.",
+  "details": "Only the character's truce against the given character is named; for both directions see `cancel_truce_both_ways`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_age",
+  "label": "Change age",
+  "summary": "Raises or lowers the character's age by the given amount.",
+  "details": "Age cannot go below 0. This skips birthday on_actions, age-related health and similar things, like the console command.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_appointment_investment",
+  "label": "Appointment investment",
+  "summary": "Raises the appointment score of a character for the title.",
+  "details": "Runs on a title.",
+  "fields": [
+    { "name": "target", "text": "The character who gets the score.", "values": "a character", "required": true },
+    { "name": "value", "text": "How much to add.", "values": "a number or a script value", "required": true },
+    { "name": "investor", "text": "The character who made the investment.", "values": "a character" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "change_cohesion",
+  "label": "Cohesion",
+  "summary": "Changes the confederation's cohesion by the given amount.",
+  "details": "Runs on a confederation. Vanilla uses negative numbers (-20, -100) to lower it.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

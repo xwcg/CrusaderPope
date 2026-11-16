@@ -59,9 +59,27 @@ button.small {
   color: #f0e6cc;
   font-weight: 600;
 }
+/* a number (a skill, an amount): teal, apart from the gold links */
+.rt-value.rt-num {
+  color: #8fd3c4;
+  font-variant-numeric: tabular-nums;
+}
 .rt-color {
   color: #f0e6cc;
   font-family: Consolas, monospace;
+}
+/* a game image in a line ("Icon: <the picture> tenet_divine_marriage") */
+.rt-image {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  vertical-align: middle;
+}
+.rt-image img,
+.rt-image canvas {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
 }
 .rt-swatch {
   display: inline-block;
@@ -87,6 +105,16 @@ button.small {
 .rt-code {
   color: #b9b28a;
 }
+/* keywords, as in a code editor (rich.tsx keywordText): If / Otherwise in the Source view's key colour, the negations
+   (Not if, Not, None) in red */
+.rt-kw {
+  color: var(--tok-key);
+  font-weight: 600;
+}
+.rt-kwneg {
+  color: #e2867a;
+  font-weight: 600;
+}
 .rt-link {
   cursor: pointer;
 }
@@ -106,7 +134,7 @@ button.small {
   padding-left: 8px;
   border-left: 1px solid rgba(255, 255, 255, 0.07);
 }
-/* conditionals: each if / else if / else is one block — a gold bar along all of it and a faint tint; the members of
+/* conditionals: each if / else if / else is one block (a gold bar along all of it and a faint tint); the members of
    one chain join into one rounded group, a thin line between them */
 .line.chain {
   padding-left: 7px;
@@ -133,6 +161,15 @@ button.small {
 }
 .line.chain-solo {
   border-left-color: rgba(201, 164, 92, 0.32);
+}
+/* a not-if (an inverse condition: "Not if: X is already your Lover"): barred and tinted red, its condition box too */
+.line.chain.inverse {
+  border-left-color: rgba(226, 134, 122, 0.55);
+  background: rgba(226, 134, 122, 0.04);
+}
+.line.chain.inverse > .line-conditions {
+  border-left-color: rgba(226, 134, 122, 0.45);
+  background: rgba(226, 134, 122, 0.05);
 }
 .line.chain + .line:not(.chain),
 .line:not(.chain) + .line.chain,
@@ -208,7 +245,7 @@ button.small {
   opacity: 0.55;
   font-style: italic;
 }
-/* (an if's conditions: their bullets line up with the heading's text — "If all of these are true:") */
+/* (an if's conditions: their bullets line up with the heading's text ("If all of these are true:")) */
 .line-conditions {
   margin: 2px 0 4px 12px;
   padding: 4px 8px;
@@ -532,6 +569,13 @@ button.small {
 }
 .oa-note {
   padding: 8px 20px;
+  color: var(--text-dim);
+  font-style: italic;
+}
+/* a list written under a spelling the game's files don't use (random_on_actions): a hint, read all the same */
+.pool-hint {
+  padding: 2px 0 4px;
+  font-size: 11.5px;
   color: var(--text-dim);
   font-style: italic;
 }
@@ -878,4 +922,51 @@ button.small {
 .ev2-item-body .ev2-random {
   padding-left: 10px;
   border-left: 2px solid rgba(233, 223, 198, 0.1);
+}
+
+/* a historical character at the preview date (PreviewDateBar.tsx): the date (the map's too) and who they are then */
+.preview-date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: var(--text-dim);
+  flex-wrap: wrap;
+}
+.preview-date-label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+}
+.preview-date-input {
+  width: 92px;
+}
+.preview-date-who {
+  color: var(--text);
+}
+
+/* the app's tooltips (TipLayer.tsx): any title, in the hover cards' look */
+.tipcard {
+  position: fixed;
+  z-index: 400;
+  max-width: 420px;
+  padding: 6px 10px;
+  border: 1px solid #6b5630;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #2c261b 0%, #1b1813 100%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+  color: #e8dcc0;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre-line;
+  pointer-events: none;
+}
+/* pinned by a middle click (TipLayer.tsx): stays, its text can be selected; × / Esc / a click outside closes it */
+.tipcard.pinned {
+  pointer-events: auto;
+  user-select: text;
+  padding-right: 26px;
+  border-color: #b08d48;
+  z-index: 399;
 }

@@ -1,3 +1,4 @@
+import { tr } from './i18n.ts';
 /**
  * Mod rules shared by the main process and the Mods view (docs/mods.md): folder names of new mods, descriptor text
  * values, `supported_version` checks against the game version.
@@ -9,22 +10,22 @@ const RESERVED = /^(con|prn|aux|nul|com[0-9]|lpt[0-9])$/i;
 export function modFolderProblem(folder: string): string | undefined
 {
     if (!folder)
-        return 'Enter a folder name.';
+        return tr('Enter a folder name.');
 
     if (folder.length > 64)
-        return 'The folder name is too long (64 characters at most).';
+        return tr('The folder name is too long (64 characters at most).');
 
     if (!/^[A-Za-z0-9][A-Za-z0-9_.-]*$/.test(folder))
-        return 'Use letters, digits, "_", "-" and "." only, starting with a letter or digit.';
+        return tr('Use letters, digits, "_", "-" and "." only, starting with a letter or digit.');
 
     if (folder.endsWith('.'))
-        return 'The folder name cannot end with a dot.';
+        return tr('The folder name cannot end with a dot.');
 
     if (/\.mod$/i.test(folder) || /\.zip$/i.test(folder))
-        return 'Leave out the extension: the descriptor becomes <folder>.mod.';
+        return tr('Leave out the extension: the descriptor becomes <folder>.mod.');
 
     if (RESERVED.test(folder.replace(/\..*$/, '')))
-        return `"${folder}" is a reserved name on Windows.`;
+        return tr('"{folder}" is a reserved name on Windows.', { folder });
 
     return undefined;
 }
@@ -44,7 +45,7 @@ export function folderFromName(name: string): string
 /** Descriptor values are written quoted on one line: no double quotes or line breaks. */
 export function descriptorTextProblem(label: string, value: string): string | undefined
 {
-    return /["\r\n]/.test(value) ? `${label}: double quotes and line breaks are not allowed.` : undefined;
+    return /["\r\n]/.test(value) ? tr('{label}: double quotes and line breaks are not allowed.', { label }) : undefined;
 }
 
 /**
@@ -90,4 +91,16 @@ export function supportedVersionFor(game: string | undefined): string
 {
     const m = /^v?(\d+)\.(\d+)/i.exec(game?.trim() ?? '');
     return m ? `${m[1]}.${m[2]}.*` : '';
+}
+
+/** Whether a mod's `supported_version` is an earlier major.minor than the game's (the mod is for an older game: "fix for …"). */
+export function olderThanGame(supported: string | undefined, game: string | undefined): boolean
+{
+    const a = /^v?(\d+)\.(\d+)/i.exec(supported?.trim() ?? '');
+    const b = /^v?(\d+)\.(\d+)/i.exec(game?.trim() ?? '');
+
+    if (!a || !b)
+        return false;
+
+    return Number(a[1]) < Number(b[1]) || (Number(a[1]) === Number(b[1]) && Number(a[2]) < Number(b[2]));
 }

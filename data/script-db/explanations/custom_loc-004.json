@@ -1,0 +1,1342 @@
+[
+ {
+  "kind": "custom_loc",
+  "key": "DE_ART_DEF_S_A",
+  "label": "German 'the', accusative",
+  "summary": "Gives the German singular definite article ('the') in the accusative case, chosen by the character's gender.",
+  "details": "Gives \"den\" for a male character and \"die\" for a female one. Meant for German texts, so the article matches the person it describes.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:19"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_ART_DEF_S_D",
+  "label": "German 'the', dative",
+  "summary": "Gives the German singular definite article ('the') in the dative case, chosen by the character's gender.",
+  "details": "Gives \"dem\" for a male character and \"der\" for a female one. Meant for German texts only.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:20"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_ART_DEF_S_G",
+  "label": "German 'the', genitive",
+  "summary": "Gives the German singular definite article ('the') in the genitive case, chosen by the character's gender.",
+  "details": "Gives \"des\" for a male character and \"der\" for a female one. Meant for German texts only.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:21"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_ART_DEF_S_N",
+  "label": "German 'the', nominative",
+  "summary": "Gives the German singular definite article ('the') in the nominative case, chosen by the character's gender.",
+  "details": "Gives \"der\" for a male character and \"die\" for a female one. Meant for German texts only.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:22"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_ART_IND_A",
+  "label": "German 'a', accusative",
+  "summary": "Gives the German indefinite article ('a' or 'an') in the accusative case, chosen by the character's gender.",
+  "details": "Gives \"einen\" for a male character and \"eine\" for a female one. Meant for German texts only.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:27"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_ART_IND_A_Opp",
+  "label": "German 'a', accusative, opposite",
+  "summary": "Gives the German indefinite article in the accusative case, but with the male and female forms swapped.",
+  "details": "Gives \"eine\" for a male character and \"einen\" for a female one, the reverse of DE_ART_IND_A. Vanilla defines it in the special gender cases file by testing is_female and returning the other gender's text.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_special_gender_cases.txt:58",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:279"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_ART_IND_D",
+  "label": "German 'a', dative",
+  "summary": "Gives the German indefinite article ('a' or 'an') in the dative case, chosen by the character's gender.",
+  "details": "Gives \"einem\" for a male character and \"einer\" for a female one. Meant for German texts only.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:28"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_ART_IND_G",
+  "label": "German 'a', genitive",
+  "summary": "Gives the German indefinite article ('a' or 'an') in the genitive case, chosen by the character's gender.",
+  "details": "Gives \"eines\" for a male character and \"einer\" for a female one. Meant for German texts only.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:29"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_ART_IND_N",
+  "label": "German 'a', nominative",
+  "summary": "Gives the German indefinite article ('a' or 'an') in the nominative case, chosen by the character's gender.",
+  "details": "Gives \"ein\" for a male character and \"eine\" for a female one. Meant for German texts only.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:30"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_DasDen",
+  "label": "German den or das",
+  "summary": "Gives the German word \"den\" for a male character and \"das\" for a female one.",
+  "details": "Vanilla picks the male text (CustomLoc_DE_Den) when the character is not female and the female text (CustomLoc_DE_Das) when she is.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_special_gender_cases.txt:45",
+   "vanilla: localization/german/custom_localization/de_custom_loc_extra_l_german.yml:11"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_DEF_P_A",
+  "label": "German adjective ending, 'the' plural, accusative",
+  "summary": "Gives the ending to add to a German adjective after a definite article, in the plural accusative.",
+  "details": "Gives \"en\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:36"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_DEF_P_D",
+  "label": "German adjective ending, 'the' plural, dative",
+  "summary": "Gives the ending to add to a German adjective after a definite article, in the plural dative.",
+  "details": "Gives \"en\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:37"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_DEF_P_G",
+  "label": "German adjective ending, 'the' plural, genitive",
+  "summary": "Gives the ending to add to a German adjective after a definite article, in the plural genitive.",
+  "details": "Gives \"en\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:38"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_DEF_P_N",
+  "label": "German adjective ending, 'the' plural, nominative",
+  "summary": "Gives the ending to add to a German adjective after a definite article, in the plural nominative.",
+  "details": "Gives \"en\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:39"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_DEF_S_A",
+  "label": "German adjective ending, 'the' singular, accusative",
+  "summary": "Gives the ending to add to a German adjective after a definite article, in the singular accusative.",
+  "details": "Gives \"en\" for a male character and \"e\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:44"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_DEF_S_D",
+  "label": "German adjective ending, 'the' singular, dative",
+  "summary": "Gives the ending to add to a German adjective after a definite article, in the singular dative.",
+  "details": "Gives \"en\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:45"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_DEF_S_G",
+  "label": "German adjective ending, 'the' singular, genitive",
+  "summary": "Gives the ending to add to a German adjective after a definite article, in the singular genitive.",
+  "details": "Gives \"en\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:46"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_DEF_S_N",
+  "label": "German adjective ending, 'the' singular, nominative",
+  "summary": "Gives the ending to add to a German adjective after a definite article, in the singular nominative.",
+  "details": "Gives \"e\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:47"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_IND_P_A",
+  "label": "German adjective ending, 'a' plural, accusative",
+  "summary": "Gives the ending to add to a German adjective after an indefinite article, in the plural accusative.",
+  "details": "Gives \"en\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:52"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_IND_P_D",
+  "label": "German adjective ending, 'a' plural, dative",
+  "summary": "Gives the ending to add to a German adjective after an indefinite article, in the plural dative.",
+  "details": "Gives \"en\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:53"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_IND_P_G",
+  "label": "German adjective ending, 'a' plural, genitive",
+  "summary": "Gives the ending to add to a German adjective after an indefinite article, in the plural genitive.",
+  "details": "Gives \"en\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:54"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_IND_P_N",
+  "label": "German adjective ending, 'a' plural, nominative",
+  "summary": "Gives the ending to add to a German adjective after an indefinite article, in the plural nominative.",
+  "details": "Gives \"en\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:55"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_IND_S_A",
+  "label": "German adjective ending, 'a' singular, accusative",
+  "summary": "Gives the ending to add to a German adjective after an indefinite article, in the singular accusative.",
+  "details": "Gives \"en\" for a male character and \"e\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:60"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_IND_S_D",
+  "label": "German adjective ending, 'a' singular, dative",
+  "summary": "Gives the ending to add to a German adjective after an indefinite article, in the singular dative.",
+  "details": "Gives \"en\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:61"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_IND_S_G",
+  "label": "German adjective ending, 'a' singular, genitive",
+  "summary": "Gives the ending to add to a German adjective after an indefinite article, in the singular genitive.",
+  "details": "Gives \"en\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:62"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_IND_S_N",
+  "label": "German adjective ending, 'a' singular, nominative",
+  "summary": "Gives the ending to add to a German adjective after an indefinite article, in the singular nominative.",
+  "details": "Gives \"er\" for a male character and \"e\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:63"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_NUL_P_A",
+  "label": "German bare adjective, plural acc.",
+  "summary": "Gives the ending to add to a German adjective that stands without any article, in the plural accusative.",
+  "details": "Gives \"e\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:68"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_NUL_P_D",
+  "label": "German bare adjective, plural dat.",
+  "summary": "Gives the ending to add to a German adjective that stands without any article, in the plural dative.",
+  "details": "Gives \"en\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:69"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_NUL_P_G",
+  "label": "German bare adjective, plural gen.",
+  "summary": "Gives the ending to add to a German adjective that stands without any article, in the plural genitive.",
+  "details": "Gives \"er\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:70"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_NUL_P_N",
+  "label": "German bare adjective, plural nom.",
+  "summary": "Gives the ending to add to a German adjective that stands without any article, in the plural nominative.",
+  "details": "Gives \"e\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:71"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_NUL_S_A",
+  "label": "German bare adjective, singular acc.",
+  "summary": "Gives the ending to add to a German adjective that stands without any article, in the singular accusative.",
+  "details": "Gives \"en\" for a male character and \"e\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:76"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_NUL_S_D",
+  "label": "German bare adjective, singular dat.",
+  "summary": "Gives the ending to add to a German adjective that stands without any article, in the singular dative.",
+  "details": "Gives \"em\" for a male character and \"er\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:77"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_NUL_S_G",
+  "label": "German bare adjective, singular gen.",
+  "summary": "Gives the ending to add to a German adjective that stands without any article, in the singular genitive.",
+  "details": "Gives \"en\" for a male character and \"er\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:78"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_ADJ_NUL_S_N",
+  "label": "German bare adjective, singular nom.",
+  "summary": "Gives the ending to add to a German adjective that stands without any article, in the singular nominative.",
+  "details": "Gives \"er\" for a male character and \"e\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:79"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_NOU_S_G",
+  "label": "German noun ending, genitive",
+  "summary": "Gives the ending a German noun takes in the singular genitive, by the character's gender.",
+  "details": "Gives nothing (an empty text) for a female character and \"s\" for a male one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:88"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_NOU_S_GS_N",
+  "label": "German noun gender suffix",
+  "summary": "Gives the suffix that turns a German noun into its male or female form, for the singular.",
+  "details": "Gives \"in\" for a female character and nothing for a male one (the way Rivale becomes Rivalin).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:92"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_PRO_P_A",
+  "label": "German pronoun ending, plural, accusative",
+  "summary": "Gives the ending to add to a German pronoun stem in the plural accusative.",
+  "details": "Gives \"e\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:99"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_PRO_P_D",
+  "label": "German pronoun ending, plural, dative",
+  "summary": "Gives the ending to add to a German pronoun stem in the plural dative.",
+  "details": "Gives \"en\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:100"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_PRO_P_G",
+  "label": "German pronoun ending, plural, genitive",
+  "summary": "Gives the ending to add to a German pronoun stem in the plural genitive.",
+  "details": "Gives \"er\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:101"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_PRO_P_N",
+  "label": "German pronoun ending, plural, nominative",
+  "summary": "Gives the ending to add to a German pronoun stem in the plural nominative.",
+  "details": "Gives \"e\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:102"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_PRO_S_A",
+  "label": "German pronoun ending, singular, accusative",
+  "summary": "Gives the ending to add to a German pronoun stem in the singular accusative.",
+  "details": "Gives \"en\" for a male character and \"e\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:107"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_PRO_S_D",
+  "label": "German pronoun ending, singular, dative",
+  "summary": "Gives the ending to add to a German pronoun stem in the singular dative.",
+  "details": "Gives \"em\" for a male character and \"er\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:108"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_PRO_S_G",
+  "label": "German pronoun ending, singular, genitive",
+  "summary": "Gives the ending to add to a German pronoun stem in the singular genitive.",
+  "details": "Gives \"es\" for a male character and \"er\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:109"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_END_PRO_S_N",
+  "label": "German pronoun ending, singular, nominative",
+  "summary": "Gives the ending to add to a German pronoun stem in the singular nominative.",
+  "details": "Gives nothing (an empty text) for a male character and \"e\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:110"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_Im_InDer_ResidenceBuilding",
+  "label": "German 'in the' residence",
+  "summary": "Gives the German phrase for 'in the' before a ruler's residence building: \"im\" or \"in der\".",
+  "details": "Gives \"im\" when the character has a republic government, a theocracy government, or is a theocratic lessee. Otherwise it falls back to \"in der\". Vanilla's own comment gives the examples im Herrenhaus, im Tempel, in der Burg.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_regional_custom_localization.txt:6",
+   "vanilla: localization/german/custom_localization/de_custom_loc_extra_l_german.yml:31"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_MutterlichVaterlich",
+  "label": "German motherly or fatherly",
+  "summary": "Gives the German word for \"fatherly\" (väterlich) for a male character and \"motherly\" (mütterlich) for a female one.",
+  "details": "Vanilla picks CustomLoc_DE_Vaterlich when the character is not female and CustomLoc_DE_Mutterlich when she is.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_special_gender_cases.txt:6",
+   "vanilla: localization/german/custom_localization/de_custom_loc_extra_l_german.yml:6"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_PRO_DEM",
+  "label": "German 'this'",
+  "summary": "Gives the German demonstrative pronoun stem \"dies\" for any character.",
+  "details": "Male and female give the same stem, \"dies\". An ending is meant to be added after it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:113"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_PRO_PER_P_3P_A",
+  "label": "German 'them', accusative",
+  "summary": "Gives the German plural 'they' pronoun in the accusative case.",
+  "details": "Gives \"sie\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:117"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_PRO_PER_P_3P_D",
+  "label": "German 'them', dative",
+  "summary": "Gives the German plural 'they' pronoun in the dative case.",
+  "details": "Gives \"ihnen\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:118"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_PRO_PER_P_3P_G",
+  "label": "German 'their', genitive",
+  "summary": "Gives the German plural 'they' pronoun in the genitive case.",
+  "details": "Gives \"ihrer\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:119"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_PRO_PER_P_3P_N",
+  "label": "German 'they', nominative",
+  "summary": "Gives the German plural 'they' pronoun in the nominative case.",
+  "details": "Gives \"sie\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:120"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_PRO_PER_S_3P_A",
+  "label": "German 'him' or 'her', accusative",
+  "summary": "Gives the German singular third-person pronoun ('him' or 'her') in the accusative case, by the character's gender.",
+  "details": "Gives \"ihn\" for a male character and \"sie\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:124"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_PRO_PER_S_3P_D",
+  "label": "German 'him' or 'her', dative",
+  "summary": "Gives the German singular third-person pronoun ('to him' or 'to her') in the dative case, by the character's gender.",
+  "details": "Gives \"ihm\" for a male character and \"ihr\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:125"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_PRO_PER_S_3P_G",
+  "label": "German his or her, genitive",
+  "summary": "Gives the German singular third-person pronoun in the genitive case, by the character's gender.",
+  "details": "Gives \"seiner\" for a male character and \"ihrer\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:126"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_PRO_PER_S_3P_N",
+  "label": "German 'he' or 'she', nominative",
+  "summary": "Gives the German singular third-person pronoun ('he' or 'she') in the nominative case, by the character's gender.",
+  "details": "Gives \"er\" for a male character and \"sie\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:127"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_PRO_POS_P_1P",
+  "label": "German 'our'",
+  "summary": "Gives the German possessive pronoun stem for 'our'.",
+  "details": "Gives \"unser\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:131"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_PRO_POS_P_2P",
+  "label": "German 'your' (plural), stem",
+  "summary": "Gives the German possessive pronoun stem for 'your' (addressing several people).",
+  "details": "Gives \"eur\" for both male and female characters. It is only the stem: an ending is meant to follow it. DE_PRO_POS_P_2P_N gives \"euer\" for a male character and \"eure\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:134"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_PRO_POS_P_2P_N",
+  "label": "German 'your' (plural), nominative",
+  "summary": "Gives the German possessive pronoun for 'your' (addressing several people) in the nominative, by the character's gender.",
+  "details": "Gives \"euer\" for a male character and \"eure\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:144"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_PRO_POS_P_3P",
+  "label": "German 'their'",
+  "summary": "Gives the German possessive pronoun for 'their'.",
+  "details": "Gives \"ihr\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:147"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_PRO_POS_S_1P",
+  "label": "German 'my'",
+  "summary": "Gives the German possessive pronoun stem for 'my'.",
+  "details": "Gives \"mein\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:150"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_PRO_POS_S_2P",
+  "label": "German 'your' (single)",
+  "summary": "Gives the German possessive pronoun stem for 'your' (addressing one person).",
+  "details": "Gives \"dein\" for both male and female characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:153"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_PRO_POS_S_3P",
+  "label": "German 'his' or 'her'",
+  "summary": "Gives the German possessive pronoun for 'his' or 'her', by the character's gender.",
+  "details": "Gives \"sein\" for a male character and \"ihr\" for a female one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_custom_loc.txt:156"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_RivalinRivale",
+  "label": "German rival, by gender",
+  "summary": "Gives the German word for 'rival': \"Rivale\" for a male character and \"Rivalin\" for a female one.",
+  "details": "The male text is \"Rivale\" and the female text is \"Rivalin\". For the male form that ends in \"n\" use DE_RivalinRivalen.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_special_gender_cases.txt:19",
+   "vanilla: localization/german/custom_localization/de_custom_loc_extra_l_german.yml:8"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DE_RivalinRivalen",
+  "label": "German rival, declined, by gender",
+  "summary": "Gives the German word for \"rival\" with an extra n for a male character: \"Rivalen\" for male, \"Rivalin\" for female.",
+  "details": "The same as DE_RivalinRivale, except that the male text is \"Rivalen\" instead of \"Rivale\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_de_special_gender_cases.txt:32",
+   "vanilla: localization/german/custom_localization/de_custom_loc_extra_l_german.yml:8"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DamageArtifactAction",
+  "label": "Damaging an artifact",
+  "summary": "Gives a short phrase for how an artifact was damaged, such as \"set fire to\" or \"knocked over\".",
+  "details": "Runs on an artifact and is allowed to pick at random among the phrases whose variable exists on it. Each phrase is tied to a variable on the artifact (artifact_burned, artifact_knocked_over, artifact_smeared_food and so on). Vanilla's comment says it hooks up with determine_artifact_damage_type_effect. The last phrase (damage_artifact_fallback) needs the variable artifact_damage_fallback. \"Toppled\" and \"knocked over\" share the variable artifact_knocked_over, and \"tear\" and \"cut holes\" share artifact_tear, so each pair can both match.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_feast_custom_loc.txt:57"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DamageArtifactActionFollowup",
+  "label": "Evidence of artifact damage",
+  "summary": "Gives a sentence about a clue that shows who damaged an artifact, matching the way it was damaged.",
+  "details": "Runs on an artifact and picks the sentence by the same variables as DamageArtifactAction (burned, knocked over, smeared food, spilled drink, torn, taken down, thrown up on, unspeakable). The sentences describe the captain's garment or hands showing signs of the damage. Random is off, so the first matching text is used. The \"taken down\" sentence is also used when the variable artifact_damage_fallback exists.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_feast_custom_loc.txt:107"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DaughterSon",
+  "label": "Daughter or son",
+  "summary": "Gives the word \"daughter\" for a female character and \"son\" for a male one.",
+  "details": "Use it in texts that refer to a character's child by that child's gender.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_generic_character_words.txt:1"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DeathDeityNameNarz",
+  "label": "Death deity name (Narz form)",
+  "summary": "Gives the name of the faith's death deity in a special \"narz\" form, one text per religion.",
+  "details": "Runs on a faith and picks a text by the faith's religion (for example Christianity, Baltic, Hindu, Germanic, Hellenic). There are about 30 entries; the input shows only the first twelve. The first one is checked against the Christian religion. The Polish texts are short names such as \"Śmiercią\" (Christianity) or \"Guayotą\" (Acham). The \"narz\" in the key is probably the Polish instrumental case (narzędnik), judging by the endings, but the vanilla comment above it says \"Wołacz\" (vocative), so which case it is is not certain.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla: common/customizable_localization/00_pl_custom_loc_extra.txt:6336",
+   "vanilla: localization/polish/custom_localization/pl_m_custom_loc_l_polish.yml:1704"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DeathMessageIntro",
+  "label": "Death message intro",
+  "summary": "Gives the opening sentence of the message shown when a ruler dies, such as \"has passed on at 60 years of age\".",
+  "details": "Runs on the dead character and picks one text at random (random is allowed). The texts include general ones and ones for pious, wicked or wounded characters and for Christianity or Islam. The lines use the character's name, age and pronouns. Each default line has a low weight (0.1) in vanilla.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_ruler_transition_loc.txt:18"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DeathMessageOutro",
+  "label": "Death message ending",
+  "summary": "Gives the closing sentence of the message shown when a ruler dies, based on their age, body, or other traits.",
+  "details": "Runs on the dead character and picks one text at random from those whose conditions match. Examples from vanilla: a short life for characters under 14, a long life for those over 50 and under 100, a surprise for those over 100, plus lines about illness, looks or build. Each text has its own weight (0.25 to 0.5 in the cases shown). There are around 70 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_ruler_transition_loc.txt:298"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DeathMessageReason",
+  "label": "Death reason sentence",
+  "summary": "Gives the sentence that names how the character died.",
+  "details": "Runs on the dead character. It has a single text, which starts with the character's pronoun (he or she, capitalized) and ends with the death reason the game works out for them.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DefaultBishopTitle",
+  "label": "Bishop title",
+  "summary": "Gives the title of a bishop in the character's faith, in a male, female or neuter form.",
+  "details": "The form follows the faith's doctrines. Male is used when the faith allows only male clergy, or either gender with male-dominated gender doctrine. Female is used for female-only clergy, or either with female-dominated doctrine. Neuter is the fallback, used when clergy may be either and the genders are equal. The text itself comes from the faith's own bishop name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_divinity_custom_loc.txt:293"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DefaultBishopTitlePlural",
+  "label": "Bishop title, plural",
+  "summary": "Gives the plural title of bishops in the character's faith, in a male, female or neuter form.",
+  "details": "The form follows the faith's doctrines. Male is used when the faith allows only male clergy, or either gender with male-dominated gender doctrine. Female is used for female-only clergy, or either with female-dominated doctrine. Neuter is the fallback, used when clergy may be either and the genders are equal. The text itself comes from the faith's own bishop name in the plural.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_divinity_custom_loc.txt:338"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DefaultPriestTitle",
+  "label": "Priest title",
+  "summary": "Gives the title of a priest in the character's faith, in a male, female or neuter form.",
+  "details": "The form follows the faith's doctrines. Male is used when the faith allows only male clergy, or either gender with male-dominated gender doctrine. Female is used for female-only clergy, or either with female-dominated doctrine. Neuter is the fallback, used when clergy may be either and the genders are equal. The text itself comes from the faith's own priest name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_divinity_custom_loc.txt:157"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DefaultPriestTitlePlural",
+  "label": "Priest title, plural",
+  "summary": "Gives the plural title of priests in the character's faith, in a male, female or neuter form.",
+  "details": "The form follows the faith's doctrines. Male is used when the faith allows only male clergy, or either gender with male-dominated gender doctrine. Female is used for female-only clergy, or either with female-dominated doctrine. Neuter is the fallback, used when clergy may be either and the genders are equal. The text itself comes from the faith's own priest name in the plural.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_divinity_custom_loc.txt:202"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DefaultPriestWomenMen",
+  "label": "Priests as men or women",
+  "summary": "Gives \"men\" or \"women\" depending on who the faith allows as clergy.",
+  "details": "Gives \"men\" when the faith's clergy are male only, or open to either gender with male-dominated gender doctrine. Gives \"women\" for female-only clergy, or open to either with female-dominated doctrine. \"Men\" is also the fallback when clergy are open to either and the genders are equal. Vanilla's comment says it is for a priest of unspecified gender or for priests in general.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_divinity_custom_loc.txt:248"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DescribingEducationOutcome",
+  "label": "Education outcome description",
+  "summary": "Gives a sentence describing how well a character did in their education, by the education trait and its rank.",
+  "details": "Runs on the educated character. It checks the education trait (martial, diplomacy, stewardship and so on) and its rank from 1 to 4, and gives the matching text. Martial rank 3 has two texts: the first needs the character to be able to command armies for the relevant army owner (the character if a ruler, the liege, the host), otherwise the \"not commander\" text applies. Vanilla marks it as mostly for notification events sent to other characters. There are about 21 entries; the input shows the first twelve.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_education_custom_loc.txt:417"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DescribingEducationOutcomeProwess",
+  "label": "Education prowess description",
+  "summary": "Gives an extra paragraph on how a character's martial education shows in personal fighting skill, by the prowess education trait (rank 1 to 4).",
+  "details": "Each text applies when the character has the matching trait (education_martial_prowess_1 to _4). The texts start with a blank line break, which suggests they follow DescribingEducationOutcome, and they use the character's pronouns. Vanilla marks it as mostly for notification events sent to other characters.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_education_custom_loc.txt:643"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DescriptorMixed",
+  "label": "Trait descriptor, good or bad",
+  "summary": "Gives a one-word description of a character, such as \"loyal\" or \"traitorous\", drawn from both the positive and negative lists.",
+  "details": "Merges the positive and negative descriptors into one list. Describes a second character, saved as scope:second, from the point of view of the character it runs on. Texts check whether scope:second is a vassal of the root or has certain traits. Vanilla's comment says it cannot be used on its own. One matching text is picked at random. There are about 157 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_character_descriptions.txt:3534"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DescriptorMixedArticle",
+  "label": "Mixed descriptor with a/an",
+  "summary": "Gives the same descriptors as DescriptorMixed, written with \"a\" or \"an\" in front, such as \"a loyal\".",
+  "details": "Mirrors DescriptorMixed entry by entry, with the article added. Describes a second character, saved as scope:second, from the point of view of the character it runs on. Vanilla's comment says it cannot be used on its own. One matching text is picked at random.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_character_descriptions.txt:5274"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DescriptorMixedArticle_RULOC_Nom",
+  "label": "Trait descriptor with a/an, Russian",
+  "summary": "A Russian-language version of the mixed descriptor with article, apparently in the nominative case.",
+  "details": "Like DescriptorMixedArticle, but the texts are Russian and come in male and female forms (for example \"верный\" and \"верная\" for loyal). The male texts apply when scope:second is a male vassal of the root. It is allowed to pick at random. That it is the nominative case is only a guess from the key name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/99_ru_custom_loc.txt:890",
+   "vanilla: localization/russian/custom_localization/ru_custom_loc_l_russian.yml:3283"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DescriptorNegative",
+  "label": "Bad trait descriptor",
+  "summary": "Gives a one-word negative description of a second character, such as \"traitorous\", \"useless\" or \"arrogant\".",
+  "details": "Describes a second character, saved as scope:second, from the point of view of the character it runs on. Some texts apply when scope:second is a vassal of the root, and some have extra weights (for example \"traitorous\" is weighted up when someone is targeting scope:second with an exposed scheme agent). One matching text is picked at random. Vanilla's comment says it cannot be used on its own. There are about 80 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_character_descriptions.txt:1650"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DescriptorNegativeArticle",
+  "label": "Bad trait descriptor with a/an",
+  "summary": "Gives the negative descriptors of DescriptorNegative written with \"a\" or \"an\" in front, such as \"a traitorous\".",
+  "details": "Describes a second character, saved as scope:second, from the point of view of the character it runs on. It mirrors DescriptorNegative entry by entry, with the article added, and one matching text is picked at random. Vanilla's comment says it cannot be used on its own.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_character_descriptions.txt:2592"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DescriptorNegativeStandalone",
+  "label": "Bad trait descriptor, standalone",
+  "summary": "Gives a one-word negative description of a character that can be used on its own, such as \"pathetic\" or \"naive\".",
+  "details": "Unlike DescriptorNegative, it describes the character it runs on and checks that character's own traits (for example disloyal gives \"traitorous\", deceitful gives \"subversive\"). It is allowed to pick at random among the matching texts. There are about 76 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_historical_character_loc.txt:2153"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DescriptorPositive",
+  "label": "Good trait descriptor",
+  "summary": "Gives a one-word positive description of a second character, such as \"loyal\", \"generous\" or \"honorable\".",
+  "details": "Describes a second character, saved as scope:second, from the point of view of the character it runs on. Some texts apply when scope:second is a vassal of the root (loyal, faithful), others when scope:second has a given trait (generous). One matching text is picked at random. Vanilla's comment says it cannot be used on its own. There are about 78 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_character_descriptions.txt:30"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DescriptorPositiveArticle",
+  "label": "Good trait descriptor with a/an",
+  "summary": "Gives the positive descriptors of DescriptorPositive written with \"a\" or \"an\" in front, such as \"a loyal\" or \"an honorable\".",
+  "details": "Describes a second character, saved as scope:second, from the point of view of the character it runs on. It mirrors DescriptorPositive entry by entry, with the article added, and one matching text is picked at random. Vanilla's comment says it cannot be used on its own.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_character_descriptions.txt:840"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DescriptorPositiveStandalone",
+  "label": "Good trait descriptor, standalone",
+  "summary": "Gives a one-word positive description of a character that can be used on its own, such as \"loyal\" or \"generous\".",
+  "details": "Describes the character it runs on from that character's own traits (for example the loyal trait gives \"loyal\"; zealous or humble gives \"faithful\"). It is allowed to pick at random among the matching texts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_historical_character_loc.txt:1610"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DesiredCouncilPosition",
+  "label": "Desired council position",
+  "summary": "Gives the name of a council job: Chancellor, Marshal, Steward, Spymaster or Court Chaplain.",
+  "details": "Runs on a character. It compares scope:second with a flag, such as flag:chancellor, and gives the matching title. Vanilla keeps it in its petition-to-liege file, so it names the job in that kind of request.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_petition_liege_custom_loc.txt:2"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DestinationInspiredLanguageDescriptor",
+  "label": "Language sound descriptor",
+  "summary": "Gives a short phrase describing how a language sounds, by the language of the province's culture.",
+  "details": "Runs on a province. It checks the culture's language pillar (Anglic, Aramaic, Basque, Chinese and so on) and gives a phrase such as \"melodic and flexible\" or \"timeless and resonant\". There are about 75 entries, one per language group.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_destination_custom_loc.txt:2"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DeviantObjectArticle",
+  "label": "Deviant object with a/an",
+  "summary": "Gives the name of an object used in a character's private habits, with \"a\" or \"an\" in front.",
+  "details": "Picks one of nine objects at random (a whip, a shoe, a rope, a clearly used loincloth, a stick, a feather, an animal skin, a candle, a razor blade). It matches DeviantObjectNoun, DeviantObjectCapitalized and DeviantObjectPlural entry by entry.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_personal_details_custom_loc.txt:245"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DeviantObjectCapitalized",
+  "label": "Deviant object, capitalized",
+  "summary": "Gives the name of an object used in a character's private habits, with capital letters, as in a title.",
+  "details": "Picks one of nine objects at random. It matches DeviantObjectNoun entry by entry.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DeviantObjectNoun",
+  "label": "Deviant object",
+  "summary": "Gives the name of an object used in a character's private habits, such as \"whip\" or \"rope\".",
+  "details": "Picks one of nine objects at random. It has no trigger on any text: every object is always possible.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_personal_details_custom_loc.txt:287"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DeviantObjectPlural",
+  "label": "Deviant object, plural",
+  "summary": "Gives the plural name of an object used in a character's private habits, such as \"whips\" or \"ropes\".",
+  "details": "Picks one of nine objects at random. It matches DeviantObjectNoun entry by entry.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DiedHouse_arrest",
+  "label": "Died, with house arrest",
+  "summary": "Gives \"died\" or \"died under house arrest\" for a character.",
+  "details": "Gives \"died under house arrest\" when a saved scope named house_arrest_holder exists (someone held the character under house arrest). Otherwise it gives \"died\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_personal_details_custom_loc.txt:226"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DistantLandsLoc",
+  "label": "Dream of distant lands",
+  "summary": "Gives the name of an animal or sight from a faraway land that a character dreams of, such as \"bison\" or \"African elephant\".",
+  "details": "Runs on a character. It reads variables named dreams_of_distant_lands_<region> (europe, africa, middle_east, india, tibet, steppe) with a value of 1, 2 or 3 (Europe has only 1 and 2), and gives the matching text. Vanilla keeps it in its Wanderer file. There are about 17 entries.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_bp3_wanderer_loc.txt:145"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DistantLandsRegionLoc",
+  "label": "Distant lands region",
+  "summary": "Gives the name of a faraway region a character dreams of: Europe, Africa, Asia, India, Tibet or the Steppe.",
+  "details": "Runs on a character. It is the region counterpart of DistantLandsLoc: it checks whether the matching dreams_of_distant_lands_<region> variable exists, whatever its value. The middle_east variable gives \"Asia\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_bp3_wanderer_loc.txt:321"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DogEyeColor",
+  "label": "Dog eye color",
+  "summary": "Gives the eye color of the character's pet dog: blue, amber, brown or gray.",
+  "details": "Runs on a character. It looks at the character's owned pet dog story (story_cycle_pet_dog) and reads its variable dog_eye_color. Use DogEyeColorAll when there is no character scope.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_pet_custom_loc.txt:882"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DogEyeColorAll",
+  "label": "Dog eye color, any scope",
+  "summary": "Gives the eye color of a dog (blue, amber, brown or gray) from a variable on the thing it runs on.",
+  "details": "Works in any kind of scope (type all). It reads the variable dog_eye_color directly from the thing it runs on (as a flag such as flag:blue), so it must be run on something that carries it, such as the pet dog's story.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_pet_custom_loc.txt:2703"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DogFurColor",
+  "label": "Dog fur color",
+  "summary": "Gives the fur color of the character's pet dog: brown, gray, black or white.",
+  "details": "Runs on a character. It looks at the character's owned pet dog story (story_cycle_pet_dog) and reads its variable dog_fur_color. Use DogFurColorAll when there is no character scope.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_pet_custom_loc.txt:841"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "custom_loc",
+  "key": "DogFurColorAll",
+  "label": "Dog fur color, any scope",
+  "summary": "Gives the fur color of a dog (brown, gray, black or white) from the thing it runs on.",
+  "details": "Works in any kind of scope (type all). It reads the variable dog_fur_color directly from the thing it runs on (as a flag such as flag:brown), so it must be run on something that carries it, such as the pet dog's story.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/customizable_localization/00_pet_custom_loc.txt:2674"
+  ],
+  "uncertain": false
+ }
+]

@@ -1,0 +1,415 @@
+[
+ {
+  "kind": "trigger",
+  "key": "travel_leader_speed",
+  "label": "Travel leader speed",
+  "summary": "Whether the speed aptitude of the character's current travel leader compares as given to a number.",
+  "details": "The travel leader is the character who leads the travel party. Write it as a comparison, for example `>= 5`. The game does not say what range the value has.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "travel_safety",
+  "label": "Travel safety",
+  "summary": "Whether the current safety of the travel plan compares as given to a number.",
+  "details": "Works on a travel plan, not on a character. Write it as a comparison, for example `< 50`. The game does not say what range or unit the value has.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "travel_speed",
+  "label": "Travel speed",
+  "summary": "Whether the current speed of the travel plan, counted in percentage points above 100%, compares as given.",
+  "details": "Works on a travel plan. A value of 20 means the party travels 20 percentage points faster than the base speed of 100%. Write it as a comparison, for example `>= 20`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "treasury",
+  "label": "Treasury",
+  "summary": "Whether the character's treasury holds the amount given by the comparison.",
+  "details": "The treasury is a money amount the character has, separate from their gold (the game's `treasury_or_gold` check swaps one for the other). Vanilla mostly writes a plain comparison such as `< 0` or `>= 20000`. It also uses a block with `value = ...` and `multiply = -1` to compare against a negated amount, for example the treasury of another character.",
+  "fields": [
+    { "name": "value", "text": "The amount to compare with, in the block form.", "values": "a number or a script value", "required": true },
+    { "name": "multiply", "text": "Multiplies the value first. Vanilla uses -1 to flip its sign.", "values": "a number" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "treasury_budget_allocation_cardinal",
+  "label": "Cardinal budget share",
+  "summary": "Whether the share of the character's budget currently allocated to the cardinal category compares as given.",
+  "details": "The value runs from 0.0 (nothing) to 1.0 (the whole budget). Write it as a comparison, for example `>= 0.25`. The game does not explain what the cardinal category covers.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "treasury_budget_allocation_excess",
+  "label": "Budget excess",
+  "summary": "Whether the character's current budget allocation excess compares as given.",
+  "details": "A negative value means a deficit allocation. A positive value means part of the budget is not allocated. Write it as a comparison, for example `< 0`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "treasury_budget_allocation_military",
+  "label": "Military budget share",
+  "summary": "Whether the share of the character's budget currently allocated to the military compares as given.",
+  "details": "The value runs from 0.0 (nothing) to 1.0 (the whole budget). Write it as a comparison, for example `> 0.4`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "treasury_budget_allocation_ministries",
+  "label": "Ministry budget share",
+  "summary": "Whether the share of the character's budget currently allocated to the ministries compares as given.",
+  "details": "The value runs from 0.0 (nothing) to 1.0 (the whole budget). Write it as a comparison, for example `>= 0.3`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "treasury_budget_allocation_salaries",
+  "label": "Salary budget share",
+  "summary": "Whether the share of the character's budget currently allocated to salaries compares as given.",
+  "details": "The value runs from 0.0 (nothing) to 1.0 (the whole budget). Write it as a comparison, for example `>= 0.3`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "treasury_budget_base_rate_cardinal",
+  "label": "Cardinal budget base rate",
+  "summary": "Whether the base rate of the character's cardinal budget compares as given.",
+  "details": "Write it as a comparison. The game does not say what unit or range the base rate has, or what the cardinal category covers.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "treasury_budget_base_rate_military",
+  "label": "Military budget base rate",
+  "summary": "Whether the base rate of the character's military budget compares as given.",
+  "details": "Write it as a comparison. The game does not say what unit or range the base rate has.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "treasury_budget_base_rate_ministries",
+  "label": "Ministry budget base rate",
+  "summary": "Whether the base rate of the character's ministry budget compares as given.",
+  "details": "Write it as a comparison. The game does not say what unit or range the base rate has.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "treasury_budget_base_rate_salaries",
+  "label": "Salary budget base rate",
+  "summary": "Whether the base rate of the character's salary budget compares as given.",
+  "details": "Write it as a comparison. The game does not say what unit or range the base rate has.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "treasury_budget_enact_date",
+  "label": "Budget enact date",
+  "summary": "Whether the date on which the character's current budget was enacted compares as given to a date.",
+  "details": "Write it as a comparison with a valid date, for example `< 1200.1.1`. It does not accept `!=`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "treasury_days_since_budget_enact_date",
+  "label": "Days since budget enacted",
+  "summary": "Whether the number of days since the character's current budget was enacted compares as given.",
+  "details": "Write it as a comparison, for example `>= 20`. See also the month and year versions of this check.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "treasury_debt_level",
+  "label": "Treasury debt level",
+  "summary": "Whether the character's treasury debt level is the given number.",
+  "details": "The level is -1 when the treasury meets no debt level threshold, 0 for the first threshold, 1 for the next, and so on. It is worked out fresh each time, so it can differ from the debt modifier the character actually has, because that one can lag behind. Vanilla compares it with plain numbers such as `> 0` or `>= 7`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "treasury_months_since_budget_enact_date",
+  "label": "Months since budget enacted",
+  "summary": "Whether the number of months since the character's current budget was enacted compares as given.",
+  "details": "Write it as a comparison. Vanilla uses it with values such as `>= 12`, `>= 60` and `>= 96`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "treasury_or_gold",
+  "label": "Treasury or gold",
+  "summary": "Whether the character has enough of the money that pays their costs: their treasury if costs are paid from the treasury, otherwise their gold.",
+  "details": "The game compares the value against the treasury when costs are paid from it, otherwise against gold. Vanilla compares it with cost values, for example `>= medium_treasury_or_gold_value`. It also uses a block with `value` and an optional `multiply`.",
+  "fields": [
+    { "name": "value", "text": "The amount to compare with, in the block form.", "values": "a number or a script value", "required": true },
+    { "name": "multiply", "text": "Multiplies the value first. Vanilla uses it to scale a base amount by a value.", "values": "a number or a script value" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "treasury_years_since_budget_enact_date",
+  "label": "Years since budget enacted",
+  "summary": "Whether the number of years since the character's current budget was enacted compares as given.",
+  "details": "Write it as a comparison. Vanilla uses it with small numbers such as `>= 1` or `>= 5`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "tributary_contract_obligation_level_can_be_decreased",
+  "label": "Tributary obligation can drop",
+  "summary": "Whether the obligation level of the named tributary contract of the character can be lowered.",
+  "details": "You write the name of the tributary contract type after the equals sign. Vanilla has no use of this one; its raise counterpart is used with celestial investiture privileges.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "tributary_contract_obligation_level_can_be_increased",
+  "label": "Tributary obligation can rise",
+  "summary": "Whether the obligation level of the named tributary contract of the character can be raised.",
+  "details": "You write the name of the contract type after the equals sign. Vanilla uses it with the investiture privileges of celestial tributaries (trade, marriage, politics).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "trigger_else",
+  "label": "Trigger else",
+  "summary": "Checks its triggers only when the condition of the preceding `trigger_if` or `trigger_else_if` was not met.",
+  "details": "It has no `limit` of its own and must follow a `trigger_if` or `trigger_else_if`. It is the fallback branch. Vanilla often writes `trigger_else = { always = no }` to make the check fail when no earlier branch applied.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "trigger_else_if",
+  "label": "Trigger else if",
+  "summary": "Checks its triggers when the preceding `trigger_if` or `trigger_else_if` condition was not met and its own `limit` is met.",
+  "details": "Put it after a `trigger_if`. The `limit` block holds the condition for this branch, and the other triggers inside are the ones checked when it applies. If its limit is not met, the next `trigger_else_if` or `trigger_else` gets its turn.",
+  "fields": [
+    { "name": "limit", "text": "The condition that decides whether this branch is used.", "values": "a block of triggers", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "trigger_if",
+  "label": "Trigger if",
+  "summary": "Checks the triggers inside it only when its `limit` condition is met.",
+  "details": "It is a conditional inside a trigger block. When the limit is not met, the triggers inside are not checked. Follow it with `trigger_else_if` or `trigger_else` for other cases.",
+  "fields": [
+    { "name": "limit", "text": "The condition that decides whether the triggers inside are checked.", "values": "a block of triggers", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "troops_ratio",
+  "label": "Troops ratio",
+  "summary": "Whether the combat side's troops divided by the troops of the opposing side compares as given.",
+  "details": "A value below 1 means this side has fewer troops than the enemy. `< 0.5` means less than half as many. Vanilla uses `<= 0.5` and `< 0.95`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "type_has_accolade_category",
+  "label": "Accolade type has category",
+  "summary": "Whether the accolade type has the given category.",
+  "details": "Works on an accolade type, not on a character or accolade. Vanilla uses categories such as `men_at_arms`, `militant`, `courtly`, `forceful`, `subtle`, `aggressive`, `champion` and `leader`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "tyranny",
+  "label": "Tyranny",
+  "summary": "Whether the character's tyranny compares as given.",
+  "details": "Vanilla compares it with numbers such as `> 0` or `>= 50`, and with named values such as `medium_tyranny` and `high_tyranny`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "uses_county_fertility",
+  "label": "Uses county fertility",
+  "summary": "Whether the county title uses the county fertility system.",
+  "details": "Works on a title. Vanilla only ever writes `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "uses_treasury_vassal_development",
+  "label": "Uses vassal development",
+  "summary": "Whether the character's government has vassal development in its treasury system.",
+  "details": "With vassal development, treasury money flows down from a liege to the vassals, based on the taxes those vassals pay.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "using_cb",
+  "label": "Casus belli",
+  "summary": "Whether the war is being fought under the given casus belli (the reason for the war).",
+  "details": "Works on a war. Write the key of the casus belli, for example `using_cb = religious_war`. Vanilla uses it with many kinds, such as the great holy war types and the peasant war.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "valid_for_council_position",
+  "label": "Valid for council position",
+  "summary": "Whether the character is valid for the given council position.",
+  "details": "Write the key of a council position, for example `councillor_spymaster`. Typically used on a candidate before appointing them.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "valid_for_council_task",
+  "label": "Valid for council task",
+  "summary": "Whether the character is valid for the given active council task.",
+  "details": "The task is given as a saved scope, for example `valid_for_council_task = scope:active_council_task`. Typically used on a candidate.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "variable_list_size",
+  "label": "Variable list size",
+  "summary": "Whether the number of items in a variable list compares as given.",
+  "details": "Gives the list by name and the number to compare with. Vanilla uses it with lists such as `imperial_examiners_list`.",
+  "fields": [
+    { "name": "name", "text": "The name of the variable list.", "values": "a list name", "required": true },
+    { "name": "value", "text": "The comparison against the list size. The game's own usage line writes it as `target`, but vanilla always writes `value`.", "values": "a comparison with a number or script value, for example `< 3`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "vassal_contract_has_flag",
+  "label": "Vassal contract has flag",
+  "summary": "Whether any of the active obligations in the character's vassal contract has the given flag.",
+  "details": "A flag is a label that a contract obligation carries. Write the flag name, for example `religiously_protected`. Vanilla uses it a lot, with flags such as `vassal_contract_cannot_revoke_titles`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "vassal_contract_has_modifiable_obligations",
+  "label": "Contract can be modified",
+  "summary": "Whether the character's vassal contract can be changed at all.",
+  "details": "It is true only if the character has a contract, the government uses obligation levels, and the character is of count rank or higher. Vanilla only writes `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "vassal_contract_liege_dynasty_reign_start_date",
+  "label": "Liege dynasty ruling since",
+  "summary": "Whether the date on which the liege's dynasty started ruling over this vassal compares as given to a date.",
+  "details": "Write it as a comparison with a valid date. It does not accept `!=`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "vassal_contract_obligation_level",
+  "label": "Contract obligation level",
+  "summary": "Whether the level of a given contract type in the character's current vassal contract compares as given.",
+  "details": "The game says the contract type is provided but does not show how it is written here, so the exact syntax is not known from the data.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "vassal_contract_obligation_level_can_be_decreased",
+  "label": "Obligation can be lowered",
+  "summary": "Whether the obligation level of the named vassal contract type can be lowered for the character.",
+  "details": "Write the contract type, for example `feudal_government_taxes` or `feudal_government_levies`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "vassal_contract_obligation_level_can_be_increased",
+  "label": "Obligation can be raised",
+  "summary": "Whether the obligation level of the named vassal contract type can be raised for the character.",
+  "details": "Write the contract type, for example `feudal_government_taxes`, `feudal_government_levies` or `fortification_rights`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "vassal_contract_obligation_level_score",
+  "label": "Contract obligation score",
+  "summary": "Whether the score in favour of the vassal for a given contract type in the character's vassal contract compares as given.",
+  "details": "The game says the contract type is provided but does not show how it is written here, and does not explain the score's range.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ }
+]

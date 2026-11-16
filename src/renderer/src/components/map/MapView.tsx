@@ -1,11 +1,11 @@
 /**
- * The map page (docs/map.md): the game's province map — ck3://map/<key>.bin, a province id per pixel — in 2D
+ * The map page (docs/map.md): the game's province map (ck3://map/<key>.bin, a province id per pixel) in 2D
  * (gl2d.ts: WebGL2 through a palette per mode) or 3D (Map3DView), coloured by a mode (model.ts: realms and vassals
- * at a date, de jure titles, the layers — cultures, faiths, terrain …), with names (labels.ts), a legend, an
+ * at a date, de jure titles, the layers (cultures, faiths, terrain …)), with names (labels.ts), a legend, an
  * overview, hover and the side panel (MapPanel.tsx).
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { MapInfo } from '../../../../shared/api';
+import type { MapFogInfo, MapInfo } from '../../../../shared/api';
 import { api } from '../../api';
 import { imgUrl } from '../../img';
 import type { Navigate } from '../../App';
@@ -26,7 +26,15 @@ import { track } from '../../pending';
 import { hook } from '../../testApi';
 import '../../styles/map.css';
 import { Select } from '../Select';
+import { MapEditMenu } from './MapEditMenu';
+import { mapMemory, rememberMap, setPreviewDate, usePreviewDate } from '../../viewState';
+import { pickMapEdit } from './mapPick';
+import { buildFog, defaultViewpoint, realmOf, viewpointName, type FogDraw, type Viewpoint } from './fog';
+import { pickViewpoint } from './fogPick';
 
+import { errorText } from '../../errors';
+import { tr } from '../../../../shared/i18n';
+import { fold } from '../../../../shared/fold';
 export const MAP_ROUTE = '@map';
 
 /** A picture of one colour (AGOT's terrain colour map is a grey placeholder). */
@@ -51,22 +59,49 @@ function isFlat(img: HTMLImageElement): boolean
     return hi - lo < 10;
 }
 
-export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: string; }): React.JSX.Element
+/** @param active the map page shows (false: kept loaded, hidden; App.tsx MAP_KEEP: no shortcuts) */
+export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: string; active?: boolean; }): React.JSX.Element
 {
+    const active = useRef(props.active !== false);
+    active.current = props.active !== false;
     const [info, setInfo] = useState<MapInfo | null>(null);
     const [ids, setIds] = useState<Uint16Array | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [date, setDate] = useState<string | undefined>(undefined);
+    // the preview date (the character pages' too, viewState.ts); what the map showed last comes back
+    const date = usePreviewDate();
+    const setDate = setPreviewDate;
+    const memory = useRef(mapMemory()).current;
     // (an edit from the map: read it again)
     const [edits, setEdits] = useState(0);
-    const [mode, setMode] = useState<Mode>('realm');
-    const [dim, setDim] = useState<'2d' | '3d'>('2d');
-    const [style, setStyle] = useState<Style>('terrain');
+    const [mode, setMode] = useState<Mode>((memory.mode as Mode | undefined) ?? 'realm');
+    const [dim, setDim] = useState<'2d' | '3d'>(memory.dim ?? '2d');
+    const [style, setStyle] = useState<Style>((memory.style as Style | undefined) ?? 'terrain');
     // (a style picked in the menu stays; otherwise a flat terrain colour map gives way to the paper map)
-    const picked = useRef(false);
+    const picked = useRef(!!memory.stylePicked);
     const [hover, setHover] = useState<{ p: number; x: number; y: number; } | null>(null);
+    // the right-click menu in the picker (mapPick.ts); its Colour… opens the colour editor (MapEditMenu.tsx) at the point
+    const [menu, setMenu] = useState<{ p: number; x: number; y: number; title: number; } | null>(null);
+    const openMenu = useCallback((p: number, x: number, y: number): void =>
+    {
+        setSel(p > 0 ? p : null);
+        setMenu(null);
+
+        if (p <= 0 || !info)
+            return;
+
+        void pickMapEdit(info, p, { x, y }).then((r) =>
+        {
+            if (r && 'done' in r)
+                setEdits((n) => n + 1);
+            else if (r)
+                setMenu({ p, x, y, title: r.colour });
+        });
+    }, [info]);
     // the selected province (its group is the mode's: a mode change keeps it selected)
-    const [sel, setSel] = useState<number | null>(null);
+    const [sel, setSel] = useState<number | null>(memory.sel ?? null);
+
+    // (remembered for the next time the map is made: viewState.ts)
+    useEffect(() => rememberMap({ mode, dim, style, stylePicked: picked.current, sel }), [mode, dim, style, sel]);
     const [focusBox, setFocusBox] = useState<[number, number, number, number] | undefined>(undefined);
     const [search, setSearch] = useState('');
     const wrap = useRef<HTMLDivElement>(null);
@@ -78,9 +113,16 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
     const map2d = useRef<Map2D | null>(null);
     const view = useRef<View | null>(null);
     const frame = useRef(0);
+    // the labels as last placed (their view and what they were placed from): while the view moves they are only moved
+    // along (a CSS transform) and placed again once it rests; placing them every frame made zooming slow
+    const labelsAt = useRef<{ v: View; t: number; key: unknown[]; } | null>(null);
+    const labelsTimer = useRef<number | undefined>(undefined);
+    // the minimap follows the view at most every 100 ms (a state change re-renders the page)
+    const tickAt = useRef(0);
+    const tickTimer = useRef<number | undefined>(undefined);
     const [ready, setReady] = useState(0);
     const [viewTick, setViewTick] = useState(0);
-    // the date whose map and raster are in (null: none yet) — the test API waits for the date it asked for
+    // the date whose map and raster are in (null: none yet); the test API waits for the date it asked for
     const loadedFor = useRef<string | undefined | null>(null);
 
     // the map at the date (a new index, date or edit: again)
@@ -95,7 +137,7 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
                     return;
 
                 if (!i)
-                    throw new Error('The index is not ready');
+                    throw new Error(tr('The index is not ready'));
 
                 setInfo(i);
                 return provinceRaster(i.key).then((r) =>
@@ -107,7 +149,7 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
                     loadedFor.current = date;
                 });
             })
-            .catch((e: Error) => live && setError(e.message));
+            .catch((e: Error) => live && setError(errorText(e)));
         return () =>
         {
             live = false;
@@ -129,16 +171,64 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
             if (!m || !cv || !v || !groups || !info)
                 return;
 
+            // (the view remembered for the next time the map is made)
+            rememberMap({ view: { key: info.key, x: v.x, y: v.y, scale: v.scale } });
             const hp = legendHover ?? hover?.p;
-            m.draw(cv, v, style, hp !== undefined ? groups.of[hp] + 1 : 0, sel !== null ? groups.of[sel] + 1 : 0);
+            m.draw(cv, v, style, hp !== undefined ? groups.of[hp] + 1 : 0, sel !== null ? groups.of[sel] + 1 : 0, sel !== null && groups.of[sel] < 0 ? sel : 0);
 
             if (overlay.current)
                 drawOverlays2d(overlay.current, v, info, style);
 
-            if (labels.current)
-                drawLabels(labels.current, v, info, groups, style);
+            const lc = labels.current;
 
-            setViewTick((t) => t + 1);
+            if (lc)
+            {
+                const now = performance.now();
+                const last = labelsAt.current;
+                const key = [info, groups, style];
+                const place = (): void =>
+                {
+                    const at = view.current ?? v;
+                    drawLabels(lc, at, info, groups, style);
+                    lc.style.transform = '';
+                    labelsAt.current = { v: { ...at }, t: performance.now(), key };
+                };
+                const same = !!last && last.key.every((k, i) => k === key[i]);
+
+                if (same && last.v.x === v.x && last.v.y === v.y && last.v.scale === v.scale)
+                    lc.style.transform = '';
+                // (moving: the labels drawn last moved and scaled with the view, placed again when it rests)
+                else if (same && now - last.t < 400)
+                {
+                    const k = last.v.scale / v.scale;
+                    lc.style.transformOrigin = '0 0';
+                    lc.style.transform = `translate(${(last.v.x - v.x) / v.scale}px, ${(last.v.y - v.y) / v.scale}px) scale(${k})`;
+                    window.clearTimeout(labelsTimer.current);
+                    labelsTimer.current = window.setTimeout(place, 140);
+                }
+                else
+                {
+                    window.clearTimeout(labelsTimer.current);
+                    place();
+                }
+            }
+
+            const now = performance.now();
+
+            if (now - tickAt.current > 100)
+            {
+                tickAt.current = now;
+                setViewTick((t) => t + 1);
+            }
+            else
+            {
+                window.clearTimeout(tickTimer.current);
+                tickTimer.current = window.setTimeout(() =>
+                {
+                    tickAt.current = performance.now();
+                    setViewTick((t) => t + 1);
+                }, 100);
+            }
         });
     }, [info, groups, hover, legendHover, sel, style]);
 
@@ -149,8 +239,8 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
         {
             const t = e.target as HTMLElement | null;
 
-            // (sliders and pickers keep the focus after use: they don't take Ctrl+Z)
-            if (!(e.ctrlKey || e.metaKey) || e.shiftKey || e.key.toLowerCase() !== 'z' || t?.closest('textarea, [contenteditable], input:not([type=range], [type=color], [type=checkbox])'))
+            // (sliders and pickers keep the focus after use: they don't take Ctrl+Z; a hidden map takes none)
+            if (!active.current || !(e.ctrlKey || e.metaKey) || e.shiftKey || e.key.toLowerCase() !== 'z' || t?.closest('textarea, [contenteditable], input:not([type=range], [type=color], [type=checkbox])'))
                 return;
 
             e.preventDefault();
@@ -169,6 +259,61 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
     const terrainImage = info?.terrainImage;
     const paperImage = info?.paperImage;
 
+    // the fog of war (docs/map.md, "Fog of war"): on or off, whose view (a title or a character: their realm at the
+    // date, one ring of neighbours around it), the game's settings (NFogOfWar, read again with the mods)
+    const [fogOn, setFogOn] = useState(!!memory.fog?.on);
+    const [fogVp, setFogVp] = useState<Viewpoint | null>(memory.fog?.vp ?? null);
+    const fogPicked = useRef(!!memory.fog?.picked);
+    const [fogDef, setFogDef] = useState<MapFogInfo | null>(null);
+    useEffect(() => rememberMap({ fog: { on: fogOn, vp: fogVp ?? undefined, picked: fogPicked.current } }), [fogOn, fogVp]);
+    useEffect(() =>
+    {
+        if (!fogOn)
+            return;
+
+        let live = true;
+        void api.mapFog().then((d) => live && setFogDef(d)).catch(() => undefined);
+        return () =>
+        {
+            live = false;
+        };
+    }, [fogOn, props.reloadKey, mapKey]);
+    // (made again only for another map, date, viewpoint or settings; the neighbours of a raster are read once)
+    const fogDraw = useMemo<FogDraw | null>(() => (fogOn && fogDef && info && ids && fogVp ? buildFog(info, ids, fogDef, fogVp) : null), [fogOn, fogDef, info, ids, fogVp]);
+    const chooseFog = useCallback((at: { x: number; y: number; }): void =>
+    {
+        if (!info)
+            return;
+
+        void pickViewpoint(info, at).then((vp) =>
+        {
+            if (!vp)
+                return;
+
+            fogPicked.current = true;
+            setFogVp(vp);
+            setFogOn(true);
+        });
+    }, [info]);
+    const toggleFog = (e: React.MouseEvent<HTMLElement>): void =>
+    {
+        if (fogOn)
+            return setFogOn(false);
+
+        // (a viewpoint chosen stays; else the played character of a loaded save, else the selected province's realm)
+        const vp = fogPicked.current && fogVp ? fogVp : info ? defaultViewpoint(info, sel) ?? fogVp : fogVp;
+
+        if (vp)
+        {
+            setFogVp(vp);
+            setFogOn(true);
+            return;
+        }
+
+        const r = e.currentTarget.getBoundingClientRect();
+        chooseFog({ x: r.left, y: r.bottom });
+    };
+
     // the 2D drawing once the raster is here
     useEffect(() =>
     {
@@ -186,13 +331,18 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
         }
         catch (e)
         {
-            setError((e as Error).message);
+            setError(errorText(e));
             return;
         }
 
         map2d.current = m;
 
-        // the whole map in view
+        // the view the map had (the same map), else the whole map in view
+        const was = mapMemory().view;
+
+        if (!view.current && was && was.key === info.key)
+            view.current = { x: was.x, y: was.y, scale: was.scale };
+
         if (!view.current)
         {
             const s = Math.max(info.width / cv.clientWidth, info.height / cv.clientHeight);
@@ -253,8 +403,30 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
             return;
 
         map2d.current.setGroups(groups);
-        draw();
-    }, [groups, ready, draw]);
+        drawRef.current();
+        // (not on every hover: `draw` changes with it; the groups' distance field and textures are made again only for
+        // other groups)
+    }, [groups, ready]);
+
+    // the fog of war in 2D: the mask for the table (made again only for another one)
+    useEffect(() =>
+    {
+        const m = map2d.current;
+
+        if (!m)
+            return;
+
+        try
+        {
+            m.setFog(fogDraw);
+        }
+        catch (e)
+        {
+            setError(errorText(e));
+        }
+
+        drawRef.current();
+    }, [fogDraw, ready]);
 
     useEffect(() => draw(), [draw]);
     useEffect(() =>
@@ -377,7 +549,7 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
                         const m = all.find((x) => x.id === t.mode) ?? all.find((x) => x.label.toLowerCase() === t.mode!.toLowerCase());
 
                         if (!m)
-                            return `Unknown map mode "${t.mode}" — ${all.map((x) => `${x.id} (${x.label})`).join(', ')}`;
+                            return tr('Unknown map mode "{mode}" — {all}', { mode: t.mode, all: all.map((x) => `${x.id} (${x.label})`).join(', ') });
 
                         want.current.mode = m.id;
                         setMode(m.id);
@@ -505,11 +677,15 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
         const d = drag.current;
         drag.current = null;
 
-        if (!d || d.moved || e.button !== 0 || !groups)
+        if (!d || d.moved || (e.button !== 0 && e.button !== 2) || !groups)
             return;
 
         const p = provinceAt(e);
-        setSel(p > 0 ? p : null);
+
+        if (e.button === 2)
+            openMenu(p, e.clientX, e.clientY);
+        else
+            setSel(p > 0 ? p : null);
     };
     const jump = (x: number, y: number): void =>
     {
@@ -528,22 +704,26 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
         if (!groups)
             return [];
 
-        const out: { g: number; name: string; }[] = [];
+        const out: { g: number; name: string; folded: string; }[] = [];
 
         for (let g = 0; g < groups.area.length; g++)
             if (groups.area[g])
-                out.push({ g, name: groups.name(g) });
+            {
+                const name = groups.name(g);
+                out.push({ g, name, folded: fold(name) });
+            }
 
         return out.sort((a, b) => a.name.localeCompare(b.name));
     }, [groups]);
     const runSearch = (): void =>
     {
-        const q = search.trim().toLowerCase();
+        // (accents and case aside: "evreux" finds "Évreux")
+        const q = fold(search.trim());
 
         if (!q || !groups)
             return;
 
-        const hit = searchable.find((s) => s.name.toLowerCase() === q) ?? searchable.find((s) => s.name.toLowerCase().startsWith(q)) ?? searchable.find((s) => s.name.toLowerCase().includes(q));
+        const hit = searchable.find((s) => s.folded === q) ?? searchable.find((s) => s.folded.startsWith(q)) ?? searchable.find((s) => s.folded.includes(q));
 
         if (hit && info)
             select(centralProvince(info, groups, hit.g), true);
@@ -555,7 +735,33 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
         <div className="map-page">
             <div className="map-toolbar">
                 <ModeBar modes={modes} mode={mode} onMode={setMode} />
-                {info && <DateControl info={info} historical={!!current?.historical} onDate={setDate} />}
+                {/* (a loaded save: its date only, no timeline) */}
+                {info?.save && (
+                    <span className="map-save-date" title={tr('The loaded save\'s state: its titles and realms at its date (the Save tab loads another or unloads it)')}>
+                        {tr('Savegame · {date}', { date: info.save.date })}
+                    </span>
+                )}
+                {info && !info.save && (
+                    <DateControl
+                        info={info}
+                        historical={!!current?.historical}
+                        onDate={setDate}
+                        onNewBookmark={(date) =>
+                        {
+                            // (a key of its own: bm_<year>_<n>, the first free one; its card opens to fill it in)
+                            const year = date.split('.')[0];
+                            void api.createEntries([{ what: 'entry', key: `bm_${year}_${Date.now() % 100000}`, loc: `New bookmark ${date}`, fields: [['type', 'bookmarks/bookmarks'], ['start_date', date]] }])
+                                .then((r) =>
+                                {
+                                    const key = /“([^”]+)”/.exec(r.notes[0] ?? '')?.[1];
+
+                                    if (key)
+                                        props.navigate({ type: 'bookmarks/bookmarks', name: key });
+                                })
+                                .catch((e: Error) => window.alert(errorText(e)));
+                        }}
+                    />
+                )}
                 <form
                     className="map-search"
                     onSubmit={(e) =>
@@ -564,7 +770,7 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
                         runSearch();
                     }}
                 >
-                    <input list="map-search-names" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={`Find ${current?.label.toLowerCase() ?? ''}…`} />
+                    <input list="map-search-names" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={tr('Find {label}…', { label: current?.label.toLowerCase() ?? '' })} />
                     <datalist id="map-search-names">
                         {searchable.slice(0, 3000).map((s) => <option key={s.g} value={s.name} />)}
                     </datalist>
@@ -583,7 +789,7 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
                                 if (d === '3d' && dim === '2d' && v && cv)
                                     setFocusBox([v.x, v.y, v.x + cv.clientWidth * v.scale, v.y + cv.clientHeight * v.scale]);
 
-                                // (the 3D terrain has the game's materials: a flat colour map — AGOT — no longer calls for the paper map)
+                                // (the 3D terrain has the game's materials: a flat colour map (AGOT) no longer calls for the paper map)
                                 if (d === '3d' && !picked.current && style === 'paper')
                                     setStyle('terrain');
 
@@ -594,6 +800,26 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
                         </button>
                     ))}
                 </div>
+                <button
+                    className={'map-mode map-fog' + (fogOn ? ' on' : '')}
+                    onClick={toggleFog}
+                    title={tr('Fog of war as the game draws it: what is out of sight of a realm (its provinces and one ring of neighbours at this date) goes dark — whose view: the selected province’s realm, a loaded save’s player, or any title or character. In 3D the fog shows only when zoomed in, as in the game')}
+                >
+                    {tr('Fog of war')}
+                </button>
+                {fogOn && info && (
+                    <button
+                        className="map-mode map-fog-view"
+                        onClick={(e) =>
+                        {
+                            const r = e.currentTarget.getBoundingClientRect();
+                            chooseFog({ x: r.left, y: r.bottom });
+                        }}
+                        title={fogVp && realmOf(info, fogVp) < 0 ? tr('{name} has no realm on {date}: nothing is hidden. Choose another view', { name: viewpointName(info, fogVp), date: info.date }) : fogDraw ? tr('Whose view the fog of war shows: {realm} provinces of the realm and {ring} next to it in sight, of {total} (choose a title or a character)', { realm: fogDraw.count.realm, ring: fogDraw.count.ring, total: fogDraw.count.total }) : tr('Whose view the fog of war shows (choose a title or a character)')}
+                    >
+                        {fogVp ? viewpointName(info, fogVp) : tr('Choose…')}
+                    </button>
+                )}
                 <Select
                     className="map-style"
                     value={style}
@@ -602,11 +828,11 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
                         picked.current = true;
                         setStyle(e.target.value as Style);
                     }}
-                    title="What is under the map mode's colours"
+                    title={tr('What is under the map mode\'s colours')}
                 >
-                    <option value="terrain">Terrain</option>
-                    <option value="paper">Paper map</option>
-                    <option value="plain">Plain</option>
+                    <option value="terrain">{tr('Terrain')}</option>
+                    <option value="paper">{tr('Paper map')}</option>
+                    <option value="plain">{tr('Plain')}</option>
                 </Select>
             </div>
             <div className="map-body">
@@ -616,7 +842,7 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
                             <canvas ref={canvas} />
                             <canvas ref={overlay} className="map-labels map-overlay" />
                             <canvas ref={labels} className="map-labels" />
-                            {!ids && !error && <div className="map-status">{info ? 'Loading the province map…' : 'Reading the map (the first time builds the province map)…'}</div>}
+                            {!ids && !error && <div className="map-status">{info ? tr('Loading the province map…') : tr('Reading the map (the first time builds the province map)…')}</div>}
                             {error && <div className="map-status error">{error}</div>}
                             {hover && info && groups && !drag.current?.moved && <MapTooltip info={info} groups={groups} mode={mode} p={hover.p} x={hover.x} y={hover.y} />}
                             {info && groups && canvas.current && <Minimap info={info} groups={groups} view={view.current} size={{ w: canvas.current.clientWidth, h: canvas.current.clientHeight }} tick={viewTick} onJump={jump} />}
@@ -636,14 +862,17 @@ export function MapView(props: { navigate: Navigate; reloadKey: string; focus?: 
                                         hover={legendHover ?? hover?.p ?? -1}
                                         onHover={(p, x, y) => setHover(p > 0 ? { p, x, y } : null)}
                                         onSelect={(p) => setSel(p > 0 ? p : null)}
+                                        onMenu={openMenu}
                                         focus={focusBox}
+                                        fog={fogDraw}
                                     />
                                 ) :
-                                <div className="map-status">{error ?? 'Loading the map…'}</div>}
+                                <div className="map-status">{error ?? tr('Loading the map…')}</div>}
                             {hover && info && groups && <MapTooltip info={info} groups={groups} mode={mode} p={hover.p} x={hover.x} y={hover.y} />}
                         </div>
                     )}
                 {info && groups && <Legend info={info} groups={groups} mode={mode} onPick={(g) => select(centralProvince(info, groups, g), true)} onHover={(g) => setLegendHover(g === null ? null : centralProvince(info, groups, g))} />}
+                {info && menu && <MapEditMenu info={info} p={menu.p} x={menu.x} y={menu.y} title={menu.title} onClose={() => setMenu(null)} onChanged={() => setEdits((n) => n + 1)} />}
                 {info && groups && sel !== null && <MapPanel info={info} groups={groups} mode={mode} sel={sel} navigate={props.navigate} onClose={() => setSel(null)} onZoom={() => select(sel, true)} onChanged={() => setEdits((n) => n + 1)} />}
             </div>
         </div>

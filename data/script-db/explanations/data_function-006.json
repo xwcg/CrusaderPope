@@ -1,0 +1,2447 @@
+[
+ {
+  "kind": "data_function",
+  "key": "HasFailedChildrenExamination",
+  "label": "Failed Children examination",
+  "summary": "Whether the character has failed the Children examination.",
+  "details": "Part of the merit system of the administrative government. Vanilla uses it in the government administration window to show the failed state, and in a merit text. It runs a hidden scripted GUI check on the character.",
+  "fields": [
+   {
+    "name": "ScopeCharacter",
+    "text": "The character to check.",
+    "values": "a character, e.g. Character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HasFailedMetropolitanExamination",
+  "label": "Failed Metropolitan examination",
+  "summary": "Whether the character has failed the Metropolitan examination.",
+  "details": "Part of the merit system of the administrative government. Vanilla uses it in the government administration window and in a merit tooltip. It runs a hidden scripted GUI check on the character.",
+  "fields": [
+   {
+    "name": "ScopeCharacter",
+    "text": "The character to check.",
+    "values": "a character, e.g. Character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HasFailedProvincialExamination",
+  "label": "Failed Provincial examination",
+  "summary": "Whether the character has failed the Provincial examination.",
+  "details": "Part of the merit system of the administrative government. Vanilla uses it in the government administration window and in a merit tooltip. It runs a hidden scripted GUI check on the character.",
+  "fields": [
+   {
+    "name": "ScopeCharacter",
+    "text": "The character to check.",
+    "values": "a character, e.g. Character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HasGameStartedForTheFirstTime",
+  "label": "Game started first time",
+  "summary": "Whether the game has been started for the first time; the game documents nothing more.",
+  "details": "Vanilla uses it with Not in the bookmarks screen and the game rules screen (together with IsHost), so those parts show only before the first start. The character window uses it together with the multiplayer preparation lobby check. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "HasHostError",
+  "label": "Multiplayer host error",
+  "summary": "Whether the host of the multiplayer game has an error.",
+  "details": "Vanilla uses it in the multiplayer GUI to show an element only when there is a host error. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HasLoadedMods",
+  "label": "Has loaded mods",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether mods are loaded.",
+  "details": "The game documents nothing more and the game's texts and GUI files never use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "HasOpenResetReactiveTutorialPopup",
+  "label": "Reset tutorial popup open",
+  "summary": "Whether the popup for resetting the reactive tutorial is open.",
+  "details": "Going by its name and its use in the settings GUI, where vanilla enables a setting only when it is false. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "HasOpenSuccession",
+  "label": "Has open succession",
+  "summary": "Whether the given character has an open succession.",
+  "details": "Going by its name and its use in the bottom bar of the main screen, where vanilla passes the player. The game documents nothing about what an open succession means exactly. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The character to check.",
+    "values": "a character, e.g. GetPlayer",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "HasPassedChildrenExamination",
+  "label": "Passed Children examination",
+  "summary": "Whether the character has passed the Children examination.",
+  "details": "Part of the merit system of the administrative government. Vanilla uses it in the government administration window and in a merit text to choose between the passed and failed wording. It runs a hidden scripted GUI check on the character.",
+  "fields": [
+   {
+    "name": "ScopeCharacter",
+    "text": "The character to check.",
+    "values": "a character, e.g. Character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HasPassedMetropolitanExamination",
+  "label": "Passed Metropolitan examination",
+  "summary": "Whether the character has passed the Metropolitan examination.",
+  "details": "Part of the merit system of the administrative government. Vanilla uses it in the government administration window and in a merit tooltip. It runs a hidden scripted GUI check on the character.",
+  "fields": [
+   {
+    "name": "ScopeCharacter",
+    "text": "The character to check.",
+    "values": "a character, e.g. Character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HasPassedPalaceExamination",
+  "label": "Passed Palace examination",
+  "summary": "Whether the character has passed the Palace examination.",
+  "details": "Part of the merit system of the administrative government. Vanilla uses it in the government administration window and in a merit tooltip. It runs a hidden scripted GUI check on the character.",
+  "fields": [
+   {
+    "name": "ScopeCharacter",
+    "text": "The character to check.",
+    "values": "a character, e.g. Character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HasPassedProvincialExamination",
+  "label": "Passed Provincial examination",
+  "summary": "Whether the character has passed the Provincial examination.",
+  "details": "Part of the merit system of the administrative government. Vanilla uses it in the government administration window and in a merit tooltip. It runs a hidden scripted GUI check on the character.",
+  "fields": [
+   {
+    "name": "ScopeCharacter",
+    "text": "The character to check.",
+    "values": "a character, e.g. Character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HasSpecialHouseAspiration",
+  "label": "Has special house aspirations",
+  "summary": "Whether the dynasty house is under a government that uses special house aspirations.",
+  "details": "It looks at the house's government and checks its flag for special house aspirations. Vanilla uses it in the administrative vassal detail window and the house aspiration window.",
+  "fields": [
+   {
+    "name": "TargetDynastyHouse",
+    "text": "The house to check.",
+    "values": "a dynasty house, e.g. DynastyHouse",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "HasViewHistory",
+  "label": "Has view history",
+  "summary": "Whether there is a view history, going by its name.",
+  "details": "Vanilla uses it as a visibility condition in the character, confederation and county windows. The game documents nothing more. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "HighlightStruggle",
+  "label": "Highlight struggle",
+  "summary": "Highlights the given struggle.",
+  "details": "Going by its name and its use: vanilla calls it when the mouse enters a struggle element in the HUD. It returns nothing; it is an action, not a value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The struggle to highlight.",
+    "values": "a struggle, e.g. Struggle.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "HoursPerDay",
+  "label": "Hours per day",
+  "summary": "The number of hours in a game day.",
+  "details": "Returns a whole number. The game's texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IMPORTANT_ACTION_ITEM",
+  "label": "Important action item",
+  "summary": "A promote function of the GUI that gives an important action item.",
+  "details": "The game documents nothing more, and its texts and GUI files do not use it. Going by its name and return type, it stands for an important action item.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "INNOVATION",
+  "label": "Innovation",
+  "summary": "The culture innovation a game text is about.",
+  "details": "Vanilla's condition texts use it: \"The ... culture has the ... innovation\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "INNOVATION_TYPE",
+  "label": "Innovation type",
+  "summary": "A promote function of the GUI that gives a culture innovation type.",
+  "details": "Going by its name and return type, it stands for the type of a culture innovation. Vanilla texts for adding or removing an innovation contain a text variable of this name ($INNOVATION_TYPE|V$), which is only a hint.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "INSPIRATION",
+  "label": "Inspiration",
+  "summary": "The inspiration (a skilled character's project that can come true if someone sponsors them) a game text is about.",
+  "details": "Vanilla uses it in the text about funding an inspiration: its owner, its base gold cost and what the owner is inspired to do.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/dlc/ep1/dlc_ep1_game_concepts_l_english.yml:39"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "INTERMEDIARY",
+  "label": "Intermediary",
+  "summary": "A promote function of the GUI that gives a character; going by its name, an intermediary (a go-between).",
+  "details": "The game documents nothing more, and its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "InDebugMode",
+  "label": "In debug mode",
+  "summary": "Whether the game is running in debug mode.",
+  "details": "Vanilla uses it to show debug-only elements such as the console and parts of the main menu. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "InReleaseMode",
+  "label": "In release mode",
+  "summary": "Whether the game is running in release mode.",
+  "details": "It returns a yes/no value. The game's texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "Int32ToCVector2i",
+  "label": "Two integers to vector",
+  "summary": "Makes a vector of two whole numbers from two values.",
+  "details": "Going by its name and return type, the arguments are the two components. The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "First component.",
+    "values": "a whole number"
+   },
+   {
+    "name": "Arg1",
+    "text": "Second component.",
+    "values": "a whole number"
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Int32ToCVector3i",
+  "label": "Three integers to vector",
+  "summary": "Makes a vector of three whole numbers from three values.",
+  "details": "Going by its name and return type, the arguments are the three components. The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "First component.",
+    "values": "a whole number"
+   },
+   {
+    "name": "Arg1",
+    "text": "Second component.",
+    "values": "a whole number"
+   },
+   {
+    "name": "Arg2",
+    "text": "Third component.",
+    "values": "a whole number"
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "Int32ToCVector4i",
+  "label": "Four integers to vector",
+  "summary": "Makes a vector of four whole numbers from four values.",
+  "details": "Going by its name and return type, the arguments are the four components. The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "First component.",
+    "values": "a whole number"
+   },
+   {
+    "name": "Arg1",
+    "text": "Second component.",
+    "values": "a whole number"
+   },
+   {
+    "name": "Arg2",
+    "text": "Third component.",
+    "values": "a whole number"
+   },
+   {
+    "name": "Arg3",
+    "text": "Fourth component.",
+    "values": "a whole number"
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IntToFixedPoint",
+  "label": "Integer to fixed point",
+  "summary": "Converts a whole number to a fixed-point number.",
+  "details": "Vanilla uses it in the holy site window to pass the holy site's total active artifact rarity into the holy site type's effect description. The game lists the return type as float although the name says fixed point. Going by its name, the value stays the same and only the number type changes.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The whole number to convert.",
+    "values": "a whole number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IntToFloat",
+  "label": "Integer to float",
+  "summary": "Converts a whole number to a decimal number.",
+  "details": "Vanilla uses it in the HUD to turn the soldier counts of an army into numbers for the max and value settings of a bar. Going by its name, the value stays the same and only the number type changes.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The whole number to convert.",
+    "values": "a whole number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IntToFrameIndex",
+  "label": "Integer to frame index",
+  "summary": "Adds 1 to a whole number so it can be used as a frame number.",
+  "details": "Vanilla uses it in the HUD to pick the frame of a picture from a legitimacy level index, the player's stress level or a merit level. The game's own documentation says it adds 1.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The number to add 1 to.",
+    "values": "a whole number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IntToString",
+  "label": "Integer to text",
+  "summary": "Converts a whole number to text.",
+  "details": "Vanilla uses it in event window texts, for example to show the number of a keyboard shortcut next to an option.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The number to convert.",
+    "values": "a whole number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IntToUnsigned",
+  "label": "Integer to unsigned",
+  "summary": "Converts a whole number to an unsigned (non-negative) number, going by its name.",
+  "details": "Vanilla uses it to turn a define (a game constant) such as the maximum length of a house motto or rite description into the maximum number of characters of a text box. The game lists the return type as float.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The number to convert.",
+    "values": "a whole number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsActionEnabledByPuppet",
+  "label": "Action enabled by puppet",
+  "summary": "Whether the named action is enabled by a puppet.",
+  "details": "Going by its name and its use in the faith window, where vanilla passes keys like puppet_trigger_can_create_rite and combines the result with whether a rite can be created. The game documents nothing about what a puppet is. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the puppet action.",
+    "values": "a text key in quotes",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsActivityHost",
+  "label": "Is activity host",
+  "summary": "Whether the character is the host of the activity.",
+  "details": "It compares the activity's host with the given character. Vanilla uses it in activity window texts to pick wording depending on who hosts.",
+  "fields": [
+   {
+    "name": "Activity",
+    "text": "The activity.",
+    "values": "an activity, e.g. Activity",
+    "required": true
+   },
+   {
+    "name": "Character",
+    "text": "The character to compare with the host.",
+    "values": "a character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsAdminVassalDetailViewShown",
+  "label": "Admin vassal detail shown",
+  "summary": "Whether the detail view of the given administrative vassal is being shown.",
+  "details": "Going by its name and its use as a button's pressed state in the government administration window, where vanilla passes the title. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The title whose detail view is checked.",
+    "values": "a title, e.g. Title.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsAdministrativeArmyDetailViewShown",
+  "label": "Admin army detail shown",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether the detail view of an administrative army is shown.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it. Compare IsAdminVassalDetailViewShown, which works similarly for vassals.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsAdministrativeRuler",
+  "label": "Is administrative ruler",
+  "summary": "Whether the character is an administrative noble, meaning their government has the administrative mechanic.",
+  "details": "Vanilla uses it in diarchy texts to show or hide wording depending on the player, and in the HUD together with a check that the player is an independent ruler.",
+  "fields": [
+   {
+    "name": "TargetCharacter",
+    "text": "The character to check.",
+    "values": "a character, e.g. GetPlayer",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsAltDown",
+  "label": "Alt key down",
+  "summary": "Whether the Alt key is held down.",
+  "details": "Going by its name. The game documents nothing more and its texts and GUI files do not use it. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsAnySituationViewOpen",
+  "label": "Any situation view open",
+  "summary": "Whether any situation window is open.",
+  "details": "Going by its name and its use in the bottom bar of the main screen, where vanilla hides elements while a situation view is open. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsAutoSaving",
+  "label": "Is autosaving",
+  "summary": "Whether the game is autosaving right now.",
+  "details": "Going by its name and its use in the top bar, where vanilla shows an element while it is true. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsBetterPlayedWithTGP",
+  "label": "Better with TGP",
+  "summary": "Whether the character is better experienced with the TGP DLC.",
+  "details": "Vanilla uses it as a visibility condition on a character in the multiplayer GUI. It runs a hidden scripted GUI check on the character.",
+  "fields": [
+   {
+    "name": "ScopeCharacter",
+    "text": "The character to check.",
+    "values": "a character, e.g. Character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsBottomLeftWindowOpen",
+  "label": "Bottom left window open",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether the bottom left window is open.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsBottomWindowOpen",
+  "label": "Bottom window open",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether the bottom window is open.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsBowContest",
+  "label": "Is bow contest",
+  "summary": "Whether the current tournament contest is an archery contest.",
+  "details": "It checks that the contest type is tournament_phase_archery. Meant for the tournament activity window, where the contest is the datacontexted one (the one the GUI element belongs to). Vanilla uses it to show elements for archery.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsBuildDebug",
+  "label": "Is debug build",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether the game is a debug build.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsCameraRestrictionsEnabled",
+  "label": "Camera restrictions on",
+  "summary": "Whether the camera restrictions are on in the map editor.",
+  "details": "A tool function of the map editor. The game's texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsCelestialAdministrativeRuler",
+  "label": "Is celestial administrative",
+  "summary": "Whether the character has a celestial government.",
+  "details": "It checks the character's government for the flag government_is_celestial. The game's own description is worded as celestial administrative. The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "TargetCharacter",
+    "text": "The character to check.",
+    "values": "a character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsCenterWindowOpen",
+  "label": "Center window open",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether the center window is open.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsCharacterCompeting",
+  "label": "Is character competing",
+  "summary": "Whether the character is among the contestants of the activity phase.",
+  "details": "It checks that the character is in the phase's guest group named contestant. It needs a character and an activity phase in the GUI context. The game's texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsCharacterQualified",
+  "label": "Is character qualified",
+  "summary": "Whether the character is in the qualified group of the activity phase.",
+  "details": "It checks that the character is in the phase's guest group named qualified. The game's own description says Is the character competing, the same text as for IsCharacterCompeting, but the macro checks the qualified group, so the description looks copied. Vanilla uses it together with CharacterHasPtV in the tournament widgets.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsCompactFaith",
+  "label": "Is compact faith window",
+  "summary": "Whether the faith window is in compact mode.",
+  "details": "It checks that the GUI variable compact_faith_window exists. Vanilla uses it and its opposite to switch between layouts in the faith window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsContestFormatFFA",
+  "label": "Free-for-all contest",
+  "summary": "Whether the current tournament contest is a free-for-all format contest (a race or a turn format).",
+  "details": "It is true when IsContestFormatRace or IsContestFormatTurn is true. The contest is the datacontexted one. Vanilla uses it in the contest information widget.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsContestFormatRace",
+  "label": "Race format contest",
+  "summary": "Whether the current tournament contest is a race format contest.",
+  "details": "It checks that the contest type is tournament_phase_horse_race. Vanilla uses it in the contest selection widget.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsContestFormatTeam",
+  "label": "Team format contest",
+  "summary": "Whether the current tournament contest is a team format contest.",
+  "details": "It checks that the contest type is tournament_phase_melee. Vanilla uses it in the contest information and selection widgets.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsContestFormatTurn",
+  "label": "Turn format contest",
+  "summary": "Whether the current tournament contest is a turn format contest, meaning archery or recital.",
+  "details": "It is true for the contest types tournament_phase_archery and tournament_phase_recital. Vanilla uses it in the contest selection widget.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsContestFormatVersus",
+  "label": "Versus format contest",
+  "summary": "Whether the current tournament contest is a versus format contest: joust, duel, wrestling or board game.",
+  "details": "It is true for the contest types tournament_phase_joust, tournament_phase_duel, tournament_phase_wrestling and tournament_phase_board_game. The contest is the datacontexted one. Vanilla uses it in the contest information and selection widgets.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsContestInfoTabViewing",
+  "label": "Contest info tab shown",
+  "summary": "Whether the given tab of the tournament contest information is the one being shown.",
+  "details": "It compares the GUI variable activity_contest_info_tab with the given value. Vanilla uses it with the tab names overview, participants and log.",
+  "fields": [
+   {
+    "name": "ViewVariable",
+    "text": "The name of the tab.",
+    "values": "a text in quotes, e.g. 'overview', 'participants' or 'log'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsContestType",
+  "label": "Is contest type",
+  "summary": "Whether the current tournament contest is of the given type.",
+  "details": "It compares the key of the datacontexted activity phase with the given key. Vanilla passes keys like tournament_phase_melee and tournament_phase_ceremony.",
+  "fields": [
+   {
+    "name": "ContestTypeKey",
+    "text": "The key of the contest type.",
+    "values": "a text in quotes, e.g. 'tournament_phase_melee'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsContractBlockedFromBeingModified",
+  "label": "Contract modification blocked",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether a contract is blocked from being modified.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it. The two arguments are not explained.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Not documented.",
+    "values": ""
+   },
+   {
+    "name": "Arg1",
+    "text": "Not documented.",
+    "values": ""
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsContractBlockedFromBeingModifiedText",
+  "label": "Contract blocked reason text",
+  "summary": "A game function of the GUI that returns text; going by its name it gives the text for why a contract is blocked from being modified.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it. It is the text companion of IsContractBlockedFromBeingModified.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Not documented.",
+    "values": ""
+   },
+   {
+    "name": "Arg1",
+    "text": "Not documented.",
+    "values": ""
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsCostEmpty",
+  "label": "Is cost empty",
+  "summary": "A game function of the GUI; going by its name it tells whether a cost is empty.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it. Its return type is listed as a fixed-point number, not yes/no, which is odd for a name like this.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Not documented.",
+    "values": ""
+   },
+   {
+    "name": "Arg1",
+    "text": "Not documented.",
+    "values": ""
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsCtrlDown",
+  "label": "Ctrl key down",
+  "summary": "Whether the Ctrl key is held down.",
+  "details": "Going by its name. The game documents nothing more and its texts and GUI files do not use it. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsCurrentTaxObligation",
+  "label": "Is current tax obligation",
+  "summary": "Whether the given tax obligation is the active one of the tax slot.",
+  "details": "It compares the tax slot's obligation with the given one. Vanilla uses it in the tax obligation window, together with IsSelectedTaxObligation, to tell the current obligation from the one picked in the window.",
+  "fields": [
+   {
+    "name": "Obligation",
+    "text": "The tax obligation to compare.",
+    "values": "a tax obligation, e.g. TaxSlotObligation.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsDataModelEmpty",
+  "label": "Is list empty",
+  "summary": "Whether a GUI list (data model) has no entries.",
+  "details": "Going by its name and its many uses in the game's texts and GUI files, such as the tournament results texts, where it chooses between two wordings. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The list to check.",
+    "values": "a GUI list, e.g. a data model of an activity",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsDateAfter",
+  "label": "Is date after",
+  "summary": "Whether the first date is after the second date.",
+  "details": "The second date itself does not count (exclusive). Vanilla uses it with the current date, for example to check whether a departure date has passed.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The date to test.",
+    "values": "a date, e.g. GetCurrentDate",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The date to compare with.",
+    "values": "a date",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsDateBefore",
+  "label": "Is date before",
+  "summary": "Whether the first date is before the second date.",
+  "details": "The second date itself does not count (exclusive). The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The date to test.",
+    "values": "a date",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The date to compare with.",
+    "values": "a date",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsDateBetween",
+  "label": "Is date between",
+  "summary": "Whether the first date lies between the other two dates.",
+  "details": "Both end dates count (inclusive). The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The date to test.",
+    "values": "a date",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The earlier limit.",
+    "values": "a date",
+    "required": true
+   },
+   {
+    "name": "Arg2",
+    "text": "The later limit.",
+    "values": "a date",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsDateToday",
+  "label": "Is date today",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether the given date is today.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The date to check.",
+    "values": "a date"
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsDefaultGUIMode",
+  "label": "Is default GUI mode",
+  "summary": "Whether the game's interface is in its default mode.",
+  "details": "Going by its name and its use in the HUD and the console, where vanilla shows elements only in this mode. The game documents nothing about the other modes. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsDesignatedHeir",
+  "label": "Is designated heir",
+  "summary": "Whether the given character is the designated heir.",
+  "details": "Going by its name and its use in the designate heir window, where vanilla uses it to mark or disable the entry of the current designated heir. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The character to check.",
+    "values": "a character, e.g. Character.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsExploringFaiths",
+  "label": "Is exploring faiths",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether the player is exploring faiths.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsExploringHouses",
+  "label": "Is exploring houses",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether the player is exploring houses.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsExploringRealms",
+  "label": "Is exploring realms",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether the player is exploring realms.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsFootContest",
+  "label": "Is foot contest",
+  "summary": "Whether the current tournament contest is one of joust, melee, wrestling or duel, which the game calls a foot contest.",
+  "details": "It is true for the contest types tournament_phase_joust, tournament_phase_melee, tournament_phase_wrestling and tournament_phase_duel. Joust being on the list is odd for the name; the game's own macro is what counts. Vanilla uses it in the contest widgets.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsFullScreenWindowOpen",
+  "label": "Full screen window open",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether a full screen window is open.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsGameChecksumOk",
+  "label": "Game checksum ok",
+  "summary": "Whether the game's checksum is fine.",
+  "details": "Going by its name and its use in the load screen, where vanilla shows an element when a save can earn achievements and the checksum is not ok. The game documents nothing more. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsGameOver",
+  "label": "Is game over",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether the game is over.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsGamePaused",
+  "label": "Is game paused",
+  "summary": "Whether the game is paused.",
+  "details": "Going by its name and its use as a visibility condition in the HUD, the in-game menu and the sound GUI. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsGameSettingEnabled",
+  "label": "Game setting enabled",
+  "summary": "Whether the named game setting is switched on.",
+  "details": "Going by its name and its use in the character event window, where vanilla passes show_event_name_plates. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the setting.",
+    "values": "a text in quotes, e.g. 'show_event_name_plates'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsGameSettingOptionSelected",
+  "label": "Setting option selected",
+  "summary": "Whether the named game setting has the named option selected.",
+  "details": "Going by its name and its use, for example IsGameSettingOptionSelected('show_event_shortcuts', 'options_and_tooltips') in the event window GUI. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the setting.",
+    "values": "a text in quotes",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The key of the option.",
+    "values": "a text in quotes",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsGameViewDataShown",
+  "label": "Game view data shown",
+  "summary": "Whether the named game view is currently showing the given data.",
+  "details": "Going by its name and its use in the activity window, where vanilla passes view names like activity_guest_list and activity_log together with the activity, for a button's pressed state. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the view.",
+    "values": "a text in quotes, e.g. 'activity_log'",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The data shown in the view.",
+    "values": "a game object, e.g. Activity.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsGameViewOpen",
+  "label": "Game view open",
+  "summary": "Whether the named game view (window) is open.",
+  "details": "Going by its name and its many uses; vanilla passes keys like barbershop, succession_event and struggle. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the view.",
+    "values": "a text in quotes, e.g. 'barbershop'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsHerder",
+  "label": "Is herder",
+  "summary": "Whether the character has the herder government.",
+  "details": "It checks that the character's government is of the type herder_government. Vanilla uses it in realm information texts and in the title revoke interaction.",
+  "fields": [
+   {
+    "name": "TargetCharacter",
+    "text": "The character to check.",
+    "values": "a character, e.g. Character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsHireableRulerDetailViewShown",
+  "label": "Hireable ruler detail shown",
+  "summary": "Whether the detail view of the given hireable ruler is being shown.",
+  "details": "Going by its name and its use in the military window, where vanilla passes a character for a button's pressed state. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The character whose detail view is checked.",
+    "values": "a character, e.g. Character.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsHoF",
+  "label": "Is head of faith",
+  "summary": "Whether the character is the head of the faith.",
+  "details": "It compares the character with the faith's religious head. Vanilla uses it in the faith window; HoF stands for head of faith.",
+  "fields": [
+   {
+    "name": "CHARACTER",
+    "text": "The character to check.",
+    "values": "a character, e.g. Character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsHoR",
+  "label": "Is head of rite",
+  "summary": "Whether the character is the head of the rite.",
+  "details": "It compares the character with the head of the rite in the current context. Vanilla uses it in the faith window; HoR stands for head of rite.",
+  "fields": [
+   {
+    "name": "CHARACTER",
+    "text": "The character to check.",
+    "values": "a character, e.g. Character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsHorseContest",
+  "label": "Is horse contest",
+  "summary": "Whether the current tournament contest is one of horse race, joust or melee, which the game calls a horse contest.",
+  "details": "It is true for the contest types tournament_phase_horse_race, tournament_phase_joust and tournament_phase_melee. The contest is the datacontexted one. Vanilla uses it in the contest widgets.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsHost",
+  "label": "Is multiplayer host",
+  "summary": "Whether the player is the host of the multiplayer game.",
+  "details": "Vanilla uses it in the game rules screen, together with a check that the game has not started yet. The game documents nothing more. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsInGame",
+  "label": "Is in game",
+  "summary": "Whether the game is running a game, not only the menu.",
+  "details": "Going by its name and its use in the debug component library window. The game documents nothing more. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsInciteHolyWar",
+  "label": "Is Incite Holy War",
+  "summary": "Whether the interaction in the confirmation window is Incite Holy War or Incite Claim War.",
+  "details": "It compares the window's interaction with the ecclesiastic incite holy war and incite claim war interactions. Vanilla uses it in the interaction confirmation window to show different parts.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsInteractionConfirmationWindowOpen",
+  "label": "Interaction confirmation open",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether the interaction confirmation window is open.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsInteractionMenuOpenForCharacter",
+  "label": "Interaction menu open for",
+  "summary": "Whether the interaction menu is open for the given character.",
+  "details": "Going by its name and its use, where vanilla hides tooltips on the outliner and map icons while the menu is open for that character. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The ID of the character.",
+    "values": "a character ID, e.g. Character.GetID",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsInteractionMenuOpenForCharacterWithFilter",
+  "label": "Interaction menu open (filter)",
+  "summary": "Whether the interaction menu is open for the given character with the given filter.",
+  "details": "Going by its name and its use, where vanilla passes filters like accolade and admin_governor to hide tooltips while the menu is open. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The character.",
+    "values": "a character, e.g. Character.Self",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The key of the filter.",
+    "values": "a text in quotes, e.g. 'accolade'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsIronmanEnabled",
+  "label": "Ironman enabled",
+  "summary": "Whether Ironman mode is enabled.",
+  "details": "Going by its name and its uses in the bookmarks screen and multiplayer lobby, where it also appears as a checkbox state. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsLandlessAdventurer",
+  "label": "Is landless adventurer",
+  "summary": "Whether the character has the landless adventurer government.",
+  "details": "It checks that the character's government is of the type landless_adventurer_government. Vanilla uses it in texts to switch wording, for example Follower instead of Courtier.",
+  "fields": [
+   {
+    "name": "TargetCharacter",
+    "text": "The character to check.",
+    "values": "a character, e.g. GetPlayer",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsLeftWindowOpen",
+  "label": "Left window open",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether the left window is open.",
+  "details": "The game documents nothing more. Its only appearance in the game's files is in a commented-out line of the sidebars GUI.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsMachineRulerDesigning",
+  "label": "Machine ruler designing",
+  "summary": "Whether the given multiplayer lobby player is still designing their ruler.",
+  "details": "Going by its name and its use in the multiplayer lobby, where vanilla shows a designing text instead of a not-ready text. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The ID of the lobby player.",
+    "values": "a player ID, e.g. LobbyPlayer.GetID",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsManuallyPaused",
+  "label": "Is manually paused",
+  "summary": "Whether the player has paused the game by hand.",
+  "details": "Going by its name and its use in the HUD, next to the other pause checks (IsPausedByEvent, IsPausedBySuccession). It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsMapInteractionConfirmationWindowOpen",
+  "label": "Map interaction confirmation open",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether the map interaction confirmation window is open.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsMapMode",
+  "label": "Is map mode",
+  "summary": "Whether the named map mode is the active one.",
+  "details": "Going by its name and its many uses; vanilla passes keys like realms. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The key of the map mode.",
+    "values": "a text in quotes, e.g. 'realms'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsMartialContest",
+  "label": "Is martial contest",
+  "summary": "Whether the current tournament contest is none of board game, recital or horse race.",
+  "details": "The game calls this a martial contest. It is true for every contest type except tournament_phase_board_game, tournament_phase_recital and tournament_phase_horse_race. Vanilla uses it in the contest information widget to choose between the non-martial player check (IsPlayerAvailableToCompeteNonMartial) and the martial one (CanPlayerCompeteInMartialContest).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsMercenaryCompanyDetailViewShown",
+  "label": "Mercenary detail shown",
+  "summary": "Whether the detail view of the given mercenary company is being shown.",
+  "details": "Going by its name and its use in the military window, where it is used for a button's pressed state. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The mercenary company.",
+    "values": "a mercenary company, e.g. MercenaryCompany.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsNomad",
+  "label": "Is nomad",
+  "summary": "Whether the character is a nomad: has the nomad government and lives in a yurt.",
+  "details": "Both parts must be true: the government type nomad_government and a domicile of the type yurt. Vanilla uses it often in texts to switch wording.",
+  "fields": [
+   {
+    "name": "TargetCharacter",
+    "text": "The character to check.",
+    "values": "a character, e.g. GetPlayer",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsNotHiredByPlayer",
+  "label": "Not hired by player",
+  "summary": "Whether the title is not hired by the local player.",
+  "details": "It is true when the title's holder is not the player and the title is not an administrative army hired by the local player. Vanilla uses it in the military window.",
+  "fields": [
+   {
+    "name": "TargetTitle",
+    "text": "The title to check.",
+    "values": "a title, e.g. Title",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsObserver",
+  "label": "Is observer",
+  "summary": "Whether the player is an observer.",
+  "details": "Going by its name and its use in the HUD, where vanilla combines it with the succession event view. The game documents nothing more. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsOnTheSilkRoad",
+  "label": "Innovation on Silk Road",
+  "summary": "Whether the innovation is currently on the Silk Road.",
+  "details": "Vanilla uses it in visibility conditions in the culture window. It runs a hidden scripted GUI check on the innovation type.",
+  "fields": [
+   {
+    "name": "ScopeInnovationType",
+    "text": "The innovation to check.",
+    "values": "an innovation type, e.g. CultureInnovation.GetType",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsOne",
+  "label": "Is one",
+  "summary": "Whether a whole number equals 1.",
+  "details": "It compares a 32-bit whole number with 1. The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Value",
+    "text": "The number to test.",
+    "values": "a whole number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsOngoingCoronationOath",
+  "label": "Coronation oath undecided",
+  "summary": "Adds a note that the oath's value is still undecided while the stored value is 0.",
+  "details": "It looks at a variable of the player and, while it is 0, adds the text coronation_value_still_undecided. The game's own description says it checks whether the oath's value is decided. Vanilla uses it in the texts of coronation oath decisions.",
+  "fields": [
+   {
+    "name": "SetVariable",
+    "text": "The name of the variable that holds the oath's value.",
+    "values": "a variable name in quotes",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsOverviewWindowOpen",
+  "label": "Overview window open",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether the overview window is open.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsPauseMenuShown",
+  "label": "Pause menu shown",
+  "summary": "Whether the pause menu is shown.",
+  "details": "Going by its name and its use in the HUD, where vanilla hides elements while it is shown. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsPausedByEvent",
+  "label": "Paused by event",
+  "summary": "Whether the game is paused because of an event.",
+  "details": "Going by its name and its use in the HUD. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsPausedByMe",
+  "label": "Paused by me",
+  "summary": "Whether the local player paused the game.",
+  "details": "Going by its name and its use in the pause text and the bottom bar, which also check whether the game has several players. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsPausedBySuccession",
+  "label": "Paused by succession",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether the game is paused by a succession.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsPlayerAvailableToCompeteMartial",
+  "label": "Player can compete (martial)",
+  "summary": "Whether the player can compete in martial contests.",
+  "details": "It runs a hidden scripted GUI check on the player. Vanilla uses it in the tournament contest information widget together with the non-martial version.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsPlayerAvailableToCompeteMartialTooltip",
+  "label": "Compete (martial) tooltip",
+  "summary": "The tooltip that explains whether the player can compete in martial contests.",
+  "details": "It builds the tooltip of the same scripted GUI check that IsPlayerAvailableToCompeteMartial uses. The game's texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsPlayerAvailableToCompeteNonMartial",
+  "label": "Player can compete (non-martial)",
+  "summary": "Whether the player is available to compete in non-martial contests.",
+  "details": "It runs a hidden scripted GUI check on the player. Vanilla uses it in the tournament contest information widget.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsPlayerAvailableToCompeteNonMartialTooltip",
+  "label": "Compete (non-martial) tooltip",
+  "summary": "The tooltip that explains whether the player can compete in non-martial contests.",
+  "details": "It builds the tooltip of the same check as IsPlayerAvailableToCompeteNonMartial. Vanilla uses it in the texts that say why you cannot compete.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsPlayerCompetingInPhase",
+  "label": "Player competing in phase",
+  "summary": "Whether the player is a contestant in the current activity phase.",
+  "details": "It checks that the player is in the phase's guest group named contestant. Vanilla uses it in the tournament bottom middle widget.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsPlayerCompetingUpcoming",
+  "label": "Player competing upcoming",
+  "summary": "Whether the player is a contestant in the upcoming contest.",
+  "details": "It checks the activity's current phase for the guest group named contestant. The game's texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsPlayerRite",
+  "label": "Is player rite",
+  "summary": "Whether the rite in the current context is the player's rite.",
+  "details": "It compares the player's rite with the rite of the context. Vanilla uses it in the faith window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsPreparationLobby",
+  "label": "Is preparation lobby",
+  "summary": "Whether the multiplayer lobby is the preparation lobby.",
+  "details": "Going by its name and its use in the multiplayer lobby GUI. The game documents nothing more. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsRightSubwindowOpen",
+  "label": "Right subwindow open",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether a right subwindow is open.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsRightWindowNoSidebarOpen",
+  "label": "Right window (no sidebar) open",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether a right window without a sidebar is open.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsRightWindowOpen",
+  "label": "Right window open",
+  "summary": "Whether a window on the right side of the screen is open.",
+  "details": "Going by its name and its use in the HUD and in notification templates. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsSelectedTaxObligation",
+  "label": "Is selected tax obligation",
+  "summary": "Whether the given tax obligation is the one selected in the tax obligation window.",
+  "details": "It compares the window's selected obligation with the given one. Vanilla uses it for the pressed state of entries in that window.",
+  "fields": [
+   {
+    "name": "Obligation",
+    "text": "The tax obligation to compare.",
+    "values": "a tax obligation, e.g. TaxSlotObligation.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsShiftDown",
+  "label": "Shift key down",
+  "summary": "Whether the Shift key is held down.",
+  "details": "Going by its name and its use in the console GUI. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsShowingFuneralDeceasedSelection",
+  "label": "Funeral deceased selection shown",
+  "summary": "Whether the widget for choosing the deceased to honor at a funeral should be shown.",
+  "details": "It checks that the GUI variable activity_funeral_deceased_selection exists. Vanilla uses it in the funeral deceased selection widget.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsShowingLocaleView",
+  "label": "Locale view shown",
+  "summary": "Whether the given view of the activity locale is the one being shown.",
+  "details": "It compares the GUI variable activity_locale_view with the given value. Vanilla uses it with my_knights_window.",
+  "fields": [
+   {
+    "name": "ViewVariable",
+    "text": "The name of the view.",
+    "values": "a text in quotes, e.g. 'my_knights_window'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsSituationPriority",
+  "label": "Situation priority is",
+  "summary": "Whether the situation has the given priority setting in the situation list.",
+  "details": "Going by its name and its use in the situation list window, where vanilla passes visible for a toggle button's state and tooltip. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The situation.",
+    "values": "a situation, e.g. Situation.Self",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The priority setting.",
+    "values": "a text in quotes, e.g. 'visible'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsStrugglePriority",
+  "label": "Struggle priority is",
+  "summary": "Whether the struggle has the given priority setting in the situation list.",
+  "details": "Going by its name and its use in the situation list window, where vanilla passes visible for a toggle button's state and tooltip. It is the struggle counterpart of IsSituationPriority. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The struggle.",
+    "values": "a struggle, e.g. Struggle.Self",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The priority setting.",
+    "values": "a text in quotes, e.g. 'visible'",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsTutorialTagOpen",
+  "label": "Tutorial tag open",
+  "summary": "A game function of the GUI that returns yes or no; going by its name it tells whether the given tutorial tag is open.",
+  "details": "The game documents nothing more and its texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The tutorial tag.",
+    "values": "a text"
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsUsingTenetPopularity",
+  "label": "Faith uses tenet popularity",
+  "summary": "Whether the faith uses tenet popularity.",
+  "details": "It runs a hidden scripted GUI check on the faith. Vanilla uses it in the faith window and in the decision view's tenet picker name.",
+  "fields": [
+   {
+    "name": "Faith",
+    "text": "The faith to check.",
+    "values": "a faith, e.g. Faith",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsValidCommand",
+  "label": "Is valid command",
+  "summary": "Whether the given game command could be carried out right now.",
+  "details": "Going by its name and its uses: vanilla passes commands such as starting to promote a legend or adding an accolade type, to enable a button or choose a tooltip. It returns a yes/no value.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The command to test.",
+    "values": "a command, e.g. GetPlayer.StartPromotingLegend(...)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "IsValidDate",
+  "label": "Is valid date",
+  "summary": "Whether the date is a real date, not the unset initial date.",
+  "details": "The unset date is the init date 0.0.-1. Vanilla uses it in the activity window.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The date to check.",
+    "values": "a date",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsWitContest",
+  "label": "Is wit contest",
+  "summary": "Whether the current tournament contest is a wit contest: recital or board game.",
+  "details": "It is true for the contest types tournament_phase_recital and tournament_phase_board_game. Vanilla uses it in the contest widgets.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsZero",
+  "label": "Is zero",
+  "summary": "Whether a whole number equals 0.",
+  "details": "It compares a 32-bit whole number with 0. Vanilla uses it in a few texts, for example to choose a wording when a candidate's position is zero.",
+  "fields": [
+   {
+    "name": "Value",
+    "text": "The number to test.",
+    "values": "a whole number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsZero_CFixedPoint",
+  "label": "Is zero (fixed point)",
+  "summary": "Whether a fixed-point (decimal) number equals 0.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Value",
+    "text": "The number to test.",
+    "values": "a fixed-point number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "IsZero_int64",
+  "label": "Is zero (64-bit)",
+  "summary": "Whether a 64-bit whole number equals 0.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "Value",
+    "text": "The number to test.",
+    "values": "a 64-bit whole number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "JoinText",
+  "label": "Join text",
+  "summary": "Joins two texts with a separator between them.",
+  "details": "Going by its name and its uses: vanilla passes a line break such as '\\n' first, then two texts, for example in the date tooltip. It returns text.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "The separator put between the texts.",
+    "values": "a text in quotes, e.g. '\\n'",
+    "required": true
+   },
+   {
+    "name": "Arg1",
+    "text": "The first text.",
+    "values": "a text",
+    "required": true
+   },
+   {
+    "name": "Arg2",
+    "text": "The second text.",
+    "values": "a text",
+    "required": true
+   }
+  ],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "JominiAccessPlayerJoinRequests",
+  "label": "Player join requests",
+  "summary": "The list of players who asked to join the multiplayer game.",
+  "details": "Going by its name and its use as a list source (datamodel) in the multiplayer GUI. The game lists its return type as unregistered, so the type of the entries is not known.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "JominiAreAchievementsAvailable",
+  "label": "Achievements available",
+  "summary": "Whether achievements are available.",
+  "details": "The game's texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "JominiGetAchievementsNotAvailableString",
+  "label": "Why no achievements",
+  "summary": "The text that says why achievements are not available.",
+  "details": "The game's texts and GUI files do not use it. It is the text companion of JominiAreAchievementsAvailable.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "JominiGetMultiplayerAccessibleString",
+  "label": "Multiplayer access text",
+  "summary": "The text explaining multiplayer access; going by its name and its use, probably why multiplayer is not available.",
+  "details": "Vanilla uses it as a tooltip in the main menu, next to JominiIsMultiplayerAccessible. The game documents nothing more.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "JominiHasPlayerJoinRequests",
+  "label": "Has join requests",
+  "summary": "Whether any players have asked to join the multiplayer game.",
+  "details": "Going by its name and its use in the multiplayer GUI, next to JominiAccessPlayerJoinRequests. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "JominiIsHostOrLocal",
+  "label": "Is host or local",
+  "summary": "Whether the player is the host of the game or is playing locally.",
+  "details": "Going by its name and its use in the multiplayer lobby, where vanilla combines it with JominiIsMultiplayerAccessible to enable controls. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "JominiIsMultiplayerAccessible",
+  "label": "Multiplayer accessible",
+  "summary": "Whether multiplayer can be used.",
+  "details": "Going by its name and its use in the main menu and lobby, where it enables multiplayer buttons. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "JominiMultiplayerIsCrossplayEnabled",
+  "label": "Crossplay enabled",
+  "summary": "Whether crossplay is enabled in multiplayer.",
+  "details": "Going by its name and its use in the multiplayer GUI, where it enables a control. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "JominiMultiplayerIsCrossplayFilterAvailable",
+  "label": "Crossplay filter available",
+  "summary": "Whether the crossplay filter is available in multiplayer.",
+  "details": "Going by its name and its use in the multiplayer game setup GUI, where it shows the filter. It returns a yes/no value.",
+  "fields": [],
+  "sources": [
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "JominiPlayer",
+  "label": "Generic player",
+  "summary": "The generic current playable object of the Jomini script system.",
+  "details": "The game's own description is worded this way and its return type is listed as unregistered. Its texts and GUI files do not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "KnowsDeadFaith",
+  "label": "Knows dead faith",
+  "summary": "Whether the character can research the given dead faith.",
+  "details": "It runs a hidden scripted GUI check named pam_knows_dead_faith with the character and the faith. The game's texts and GUI files do not use it.",
+  "fields": [
+   {
+    "name": "ScopeCharacter",
+    "text": "The character who would research.",
+    "values": "a character",
+    "required": true
+   },
+   {
+    "name": "Faith",
+    "text": "The dead faith.",
+    "values": "a faith",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "LAW",
+  "label": "Law",
+  "summary": "The realm law a game text is about.",
+  "details": "Vanilla's effect texts use it as the law a ruler adopts. Where a law changes, it is the new law; OLD_LAW or TARGET_LAW is the previous one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ }
+]

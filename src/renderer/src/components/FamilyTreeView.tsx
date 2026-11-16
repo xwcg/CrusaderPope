@@ -4,6 +4,7 @@ import { api } from '../api';
 import type { Navigate } from '../App';
 import { useRevision } from '../revision';
 
+import { tr } from '../../../shared/i18n';
 const W = 140; // node width
 const H = 58; // node height
 const HG = 14; // horizontal gap
@@ -27,7 +28,7 @@ function layout(tree: FamilyTree): { nodes: Placed[]; lines: string[]; minX: num
     const nodes: Placed[] = [];
     const lines: string[] = [];
     const slot = W + HG;
-    // ancestors: a compact pedigree — each couple takes only the width its known forebears need (fixed 2^k slots per
+    // ancestors: a compact pedigree; each couple takes only the width its known forebears need (fixed 2^k slots per
     // generation left sparse lines as wide staircases, mostly outside the view); a single known parent sits straight above
     const depthOf = (a: FamilyAncestor | undefined, d: number): number => (a ? Math.max(d, depthOf(a.father, d + 1), depthOf(a.mother, d + 1)) : d - 1);
     const D = Math.max(0, depthOf(tree.root, 0));
@@ -106,7 +107,7 @@ function layout(tree: FamilyTree): { nodes: Placed[]; lines: string[]; minX: num
         {
             const x = cursor + widths[i] / 2;
             xs.push(x);
-            nodes.push({ p: k, x, y, kind: depth === 1 ? 'child' : 'grandchild', note: depth === 1 && k.otherParent && tree.spouses.length !== 1 ? `with ${k.otherParent.name}` : undefined });
+            nodes.push({ p: k, x, y, kind: depth === 1 ? 'child' : 'grandchild', note: depth === 1 && k.otherParent && tree.spouses.length !== 1 ? tr('with {name}', { name: k.otherParent.name }) : undefined });
 
             // grandchildren (more than MAX_GRANDCHILDREN end in a "…" node)
             if (depth < 2)
@@ -148,23 +149,23 @@ function layout(tree: FamilyTree): { nodes: Placed[]; lines: string[]; minX: num
     return { nodes, lines, minX, maxX, minY: 0, maxY };
 }
 
-export function FamilyTreeView(props: { id: string; navigate: Navigate; }): React.JSX.Element | null
+export function FamilyTreeView(props: { id: string; type?: string; navigate: Navigate; }): React.JSX.Element | null
 {
     const [tree, setTree] = useState<FamilyTree | null | undefined>(undefined);
     const scroller = useRef<HTMLDivElement>(null);
 
-    // again after an index update (the tree stays — and keeps its scroll — when it is the same)
+    // again after an index update (the tree stays, and keeps its scroll, when it is the same)
     const revision = useRevision();
     useEffect(() => setTree(undefined), [props.id]);
     useEffect(() =>
     {
         let cancelled = false;
-        void api.familyTree(props.id).then((t) => !cancelled && setTree((old) => (old && t && JSON.stringify(old) === JSON.stringify(t) ? old : t)));
+        void api.familyTree(props.id, props.type).then((t) => !cancelled && setTree((old) => (old && t && JSON.stringify(old) === JSON.stringify(t) ? old : t)));
         return () =>
         {
             cancelled = true;
         };
-    }, [props.id, revision]);
+    }, [props.id, props.type, revision]);
 
     const lay = useMemo(() => (tree ? layout(tree) : null), [tree]);
 
@@ -178,7 +179,7 @@ export function FamilyTreeView(props: { id: string; navigate: Navigate; }): Reac
     }, [lay]);
 
     if (tree === undefined)
-        return <div className="family-tree loading">Tracing the bloodline…</div>;
+        return <div className="family-tree loading">{tr('Tracing the bloodline…')}</div>;
 
     if (!tree || !lay)
         return null;
@@ -213,9 +214,9 @@ export function FamilyTreeView(props: { id: string; navigate: Navigate; }): Reac
                 key={i}
                 className={`ft-node ${n.p.female ? 'f' : 'm'} ${n.kind}` + (clickable ? ' link' : '')}
                 style={style}
-                data-ref-type={clickable ? 'characters' : undefined}
+                data-ref-type={clickable ? props.type ?? 'characters' : undefined}
                 data-ref-name={clickable ? n.p.id : undefined}
-                onClick={clickable ? () => props.navigate({ type: 'characters', name: n.p.id }) : undefined}
+                onClick={clickable ? () => props.navigate({ type: props.type ?? 'characters', name: n.p.id }) : undefined}
             >
                 <div className="ft-name">{n.p.name}</div>
                 <div className="ft-house">{n.p.house ?? ' '}</div>
@@ -232,7 +233,7 @@ export function FamilyTreeView(props: { id: string; navigate: Navigate; }): Reac
 
     return (
         <div className="family-tree">
-            <div className="family-title">Family</div>
+            <div className="family-title">{tr('Family')}</div>
             <div className="ft-scroll" ref={scroller}>
                 <div className="ft-canvas" style={{ width, height }}>
                     <svg className="ft-lines" width={width} height={height}>
@@ -245,20 +246,20 @@ export function FamilyTreeView(props: { id: string; navigate: Navigate; }): Reac
             </div>
             {tree.siblings.length > 0 && (
                 <div className="ft-siblings">
-                    <span className="ft-sib-label">Siblings</span>
+                    <span className="ft-sib-label">{tr('Siblings')}</span>
                     {tree.siblings.map((s) => (
                         <span
                             key={s.id}
                             className={'ft-sib rt-link ' + (s.female ? 'f' : 'm')}
                             data-ref-type="characters"
                             data-ref-name={s.id}
-                            onClick={() => props.navigate({ type: 'characters', name: s.id })}
+                            onClick={() => props.navigate({ type: props.type ?? 'characters', name: s.id })}
                         >
                             {s.name}
                             <span className="ft-sib-meta">
                                 {' '}
                                 {year(s.birth)}–{s.death ? year(s.death) : ''}
-                                {s.half ? ' · half' : ''}
+                                {s.half ? tr(' · half') : ''}
                             </span>
                         </span>
                     ))}

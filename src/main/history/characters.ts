@@ -6,7 +6,8 @@
 import { parse, type PNode } from '../indexer/parser.ts';
 import type { GameIndex } from '../indexer/gameIndex.ts';
 import { riteHistory } from '../indexer/layouts.ts';
-import { BOOKMARK_DATE, History, dateNum } from '../portraits/modifiers.ts';
+import { History, dateNum } from '../portraits/modifiers.ts';
+import { fold, foldHas } from '../../shared/fold.ts';
 import type { CharacterFacets, CharacterFacetValue, CharacterFilter, CharacterHit, FamilyAncestor, FamilyDescendant, FamilyPerson, FamilyTree } from '../../shared/api.ts';
 
 interface CharRecord
@@ -22,7 +23,7 @@ interface CharRecord
     death?: number;
     culture?: string;
     faith?: string;
-    /** 1.20: `rite = x` — the faith is its faith at the date */
+    /** 1.20: `rite = x`: the faith is its faith at the date */
     rite?: string;
     traits: string[];
     dna?: string;
@@ -57,7 +58,7 @@ export class CharacterTable
     private childIndex = new Map<string, string[]>();
     private spouseIndex = new Map<string, Set<string>>();
     private dynastyNames = new Map<string, string>();
-    private searchable: { r: CharRecord; first: string; hay: string; }[] | undefined;
+    private searchable: { r: CharRecord; first: string; id: string; hay: string; }[] | undefined;
 
     constructor(idx: GameIndex, history: History)
     {
@@ -74,7 +75,8 @@ export class CharacterTable
 
         // through the mod layering: characters in files a mod hid (AGOT's replace_path) are not in the game; a later
         // record of an id wins
-        for (const file of this.idx.vfs.list('history/characters', { ext: /\.txt$/i }))
+        // (a loaded save's history: its characters' files, docs/saves.md)
+        for (const file of this.idx.vfs.list(this.history.save ? this.history.save.type : 'history/characters', { ext: /\.txt$/i }))
         {
             const text = this.idx.vfs.readText(file);
 
@@ -183,7 +185,9 @@ export class CharacterTable
     /** A character's faith: their rite's at the date (1.20), else as written. */
     private faithOf(r: CharRecord, date: number): string | undefined
     {
-        return (r.rite && riteHistory(this.idx).faithOf(r.rite, date)) || r.faith;
+        const rites = riteHistory(this.idx);
+        // (a rite written as the faith (`religion = shafii`): its faith then)
+        return (r.rite && rites.faithOf(r.rite, date)) || (r.faith && (rites.faithOf(r.faith, date) ?? r.faith));
     }
 
     private factsAt(r: CharRecord, date: number): Facts
@@ -207,7 +211,7 @@ export class CharacterTable
             if (c.k === 'culture')
                 f.culture = c.v;
             else if (c.k === 'religion' || c.k === 'faith')
-                f.faith = c.v;
+                f.faith = riteHistory(this.idx).faithOf(c.v, date) ?? c.v;
             else if (c.k === 'rite')
                 f.faith = riteHistory(this.idx).faithOf(c.v, date) ?? f.faith;
             else if (c.k === 'trait' || c.k === 'add_trait')
@@ -259,10 +263,10 @@ export class CharacterTable
     filter(f: CharacterFilter): string[]
     {
         const records = this.load();
-        const date = dateNum(f.date) ?? BOOKMARK_DATE;
+        const date = dateNum(f.date) ?? this.history.defaultDate;
         const tiers = f.rank ? this.history.holderTiers(date) : undefined;
         const religionOf = (faith: string | undefined): string | undefined => (faith ? this.history.faith(faith)?.religion : undefined);
-        const dyn = f.dynasty?.trim().toLowerCase();
+        const dyn = f.dynasty ? fold(f.dynasty.trim()) : undefined;
         const out: string[] = [];
 
         for (const r of records.values())
@@ -277,7 +281,7 @@ export class CharacterTable
             {
                 const names = [r.dynasty, r.house, this.dynastyName(r.dynasty, 'dynasties'), this.dynastyName(r.house, 'dynasty_houses')];
 
-                if (!names.some((x) => x?.toLowerCase().includes(dyn)))
+                if (!names.some((x) => foldHas(x, dyn)))
                     continue;
             }
 
@@ -338,7 +342,7 @@ export class CharacterTable
         for (const r of records.values())
         {
             // (a rite's faith: at the bookmark the lists start with)
-            const faith = this.faithOf(r, BOOKMARK_DATE);
+            const faith = this.faithOf(r, this.history.defaultDate);
             count(cultures, r.culture);
             count(faiths, faith);
             count(religions, faith ? this.history.faith(faith)?.religion : undefined);
@@ -365,42 +369,44 @@ export class CharacterTable
 
     /**
      * Historical characters by name for the statement picker (docs/picker.md, "Historical characters"): every word
-     * typed is in the first name, the id, the house's or the dynasty's name; rulers at the 1066 bookmark first (higher
-     * tiers first), then by how well the first word fits the first name, then by birth. Each with its full name
+     * typed is in the first name, the id, the house's or the dynasty's name (accents and case aside, `fold()`: `sarvin`
+     * finds "Šarvin"); ordered by how well the first word fits the first name (the id, the whole name, its start, elsewhere),
+     * and only within the same fit the rulers at the 1066 bookmark first (higher tiers first), then by birth. Each with its full name
      * ("William de Normandie “the Conqueror”") and who it is (highest title, lifetime, id).
      */
     search(q: string, limit = 60): CharacterHit[]
     {
         const records = this.load();
-        const terms = q.toLowerCase()
+        const terms = fold(q)
             .split(/\s+/)
             .filter(Boolean);
 
         if (!terms.length)
             return [];
 
-        const tiers = this.history.holderTiers(BOOKMARK_DATE);
+        const tiers = this.history.holderTiers(this.history.defaultDate);
         const hits: { r: CharRecord; score: number; }[] = [];
         // (what a search looks in, made once: first name, id, house and dynasty names)
         this.searchable ??= [...records.values()].map((r) =>
         {
-            const first = (this.idx.plainLoc(r.name) ?? r.name).toLowerCase();
-            return { r, first, hay: `${first} ${r.id.toLowerCase()} ${(this.dynastyName(r.house, 'dynasty_houses') ?? '').toLowerCase()} ${(this.dynastyName(r.dynasty, 'dynasties') ?? '').toLowerCase()}` };
+            const first = fold(this.idx.plainLoc(r.name) ?? r.name);
+            const id = fold(r.id);
+            return { r, first, id, hay: `${first} ${id} ${fold(this.dynastyName(r.house, 'dynasty_houses') ?? '')} ${fold(this.dynastyName(r.dynasty, 'dynasties') ?? '')}` };
         });
 
-        for (const { r, first, hay } of this.searchable)
+        for (const { r, first, id, hay } of this.searchable)
         {
             if (!terms.every((t) => hay.includes(t)))
                 continue;
 
-            const fit = r.id.toLowerCase() === terms[0] ? 0 : first === terms[0] ? 1 : first.startsWith(terms[0]) ? 2 : 3;
+            const fit = id === terms[0] ? 0 : first === terms[0] ? 1 : first.startsWith(terms[0]) ? 2 : 3;
             hits.push({ r, score: fit * 10 - (tiers.get(r.id) ?? 0) });
         }
 
         hits.sort((a, b) => a.score - b.score || (a.r.birth ?? 0) - (b.r.birth ?? 0));
         return hits.slice(0, limit).map(({ r }) =>
         {
-            const nick = this.factsAt(r, r.death ?? BOOKMARK_DATE).nickname;
+            const nick = this.factsAt(r, r.death ?? this.history.defaultDate).nickname;
             const nickName = nick ? this.idx.plainLoc(nick) : undefined;
             const house = this.dynastyName(r.house, 'dynasty_houses') ?? this.dynastyName(r.dynasty, 'dynasties');
             const titles = this.history.facts(r.id)?.titles ?? [];
@@ -420,6 +426,39 @@ export class CharacterTable
     // Family tree
     // ---------------------------------------------------------------------------
 
+    /**
+     * A character in a long list (the map's holder list): name, house, life, culture and age at the date, from the
+     * table alone, no titles (cheap: thousands at once).
+     */
+    brief(id: string, date: number): { name: string; house?: string; birth?: string; death?: string; age?: number; culture?: string; } | undefined
+    {
+        const r = this.load().get(id);
+
+        if (!r)
+            return undefined;
+
+        const f = this.factsAt(r, date);
+        return {
+            name: this.idx.plainLoc(r.name) ?? r.name,
+            house: this.dynastyName(r.house, 'dynasty_houses') ?? this.dynastyName(r.dynasty, 'dynasties'),
+            birth: fmtDate(r.birth),
+            death: fmtDate(r.death),
+            age: f.age,
+            culture: f.culture
+        };
+    }
+
+    /** Birth and death (y.m.d) of historical characters, for "Between…": are both parents alive at a child's birth? */
+    lifespans(ids: string[]): { id: string; birth?: string; death?: string; female?: boolean; }[]
+    {
+        const records = this.load();
+        return ids.map((id) =>
+        {
+            const r = records.get(id);
+            return { id, birth: r?.birth ? fmtDate(r.birth) : undefined, death: r?.death ? fmtDate(r.death) : undefined, female: r?.female };
+        });
+    }
+
     private person(id: string): FamilyPerson | undefined
     {
         const r = this.load().get(id);
@@ -427,7 +466,7 @@ export class CharacterTable
         if (!r)
             return undefined;
 
-        const nick = this.factsAt(r, r.death ?? BOOKMARK_DATE).nickname;
+        const nick = this.factsAt(r, r.death ?? this.history.defaultDate).nickname;
         const nickName = nick ? (this.idx.plainLoc(nick) ?? '') : '';
         const titles = this.history.facts(id)?.titles ?? [];
         const top = titles[0] ? this.idx.get('landed_titles', titles[0].name) : undefined;

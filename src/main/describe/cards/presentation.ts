@@ -1,4 +1,4 @@
-/** Cards: Presentation and data — game concepts, event backgrounds/themes, messages, flavorization, customizable/effect/trigger localization, genes, defines, colours, coats of arms. */
+/** Cards: Presentation and data (game concepts, event backgrounds/themes, messages, flavorization, customizable/effect/trigger localization, genes, defines, colours, coats of arms). */
 import type { PNode } from '../../indexer/parser.ts';
 import type { Line, Rich, RichSeg } from '../../../shared/api.ts';
 import type { Ctx } from '../describer.ts';
@@ -10,6 +10,7 @@ import { SCENE_CARDS } from './presentation-scenes.ts';
 import { TEXT_CARDS } from './presentation-text.ts';
 import { LOOK_CARDS } from './presentation-looks.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 /** A define's value: a number, a date, an entry it names, else as written. */
 function defineValue(b: StoryBuilder, v: string): RichSeg
 {
@@ -36,9 +37,9 @@ function defineLines(b: StoryBuilder, list: PNode[], ctx: Ctx): Line[]
         const kids_ = kids(c);
         const nested = kids_.some((x) => x.k);
         const vals = values(c);
-        const shown: Rich = typeof c.v === 'string' ? [defineValue(b, c.v)] : nested ? [] : vals.length > 24 ? [{ text: `${vals.slice(0, 24).join(', ')} … (${vals.length})`, kind: 'value' }] : [{ text: vals.join(', ') || '(none)', kind: 'value' }];
+        const shown: Rich = typeof c.v === 'string' ? [defineValue(b, c.v)] : nested ? [] : vals.length > 24 ? [{ text: `${vals.slice(0, 24).join(', ')} … (${vals.length})`, kind: 'value' }] : [{ text: vals.join(', ') || tr('(none)'), kind: 'value' }];
         const comment = lineComment(ctx.src, c) ?? commentAbove(ctx.src, c);
-        const l: Line = { text: rich(capitalize(humanize(c.k).replace(/^n(?=[a-z])/, '')), nested ? ':' : ': ', shown, comment ? rich(' ', note(`— ${comment}`)) : ''), tip: typeof c.v === 'string' ? `${c.k} = ${c.v}` : c.k };
+        const l: Line = { text: rich(capitalize(humanize(c.k).replace(/^n(?=[a-z])/, '')), nested ? ':' : ': ', shown, comment ? rich(' ', note(`(${comment})`)) : ''), tip: typeof c.v === 'string' ? `${c.k} = ${c.v}` : c.k };
 
         if (nested)
             l.children = defineLines(b, kids_, ctx);
@@ -54,7 +55,7 @@ function defineLines(b: StoryBuilder, list: PNode[], ctx: Ctx): Line[]
 
 /**
  * A group of entries (decision groups, activity groups, situation groups, interaction categories): its settings, how
- * the interface shows it (`gui_tags`), and its members — the entries naming it with `key` (read from their files: the
+ * the interface shows it (`gui_tags`), and its members: the entries naming it with `key` (read from their files: the
  * index does not link these).
  */
 function groupCard(member: string, key: string, what: string, extra?: (b: StoryBuilder, body: PNode[], facts: Rich[], src: string) => void): CardFn
@@ -67,26 +68,26 @@ function groupCard(member: string, key: string, what: string, extra?: (b: StoryB
         const tags = values(body.find((c) => c.k === 'gui_tags'));
 
         if (tags.length)
-            card.facts.push(rich('Shown as ', { text: tags.map((t) => humanize(t)).join(', '), kind: 'code', tip: 'gui_tags' }));
+            card.facts.push(rich(tr('Shown as '), { text: tags.map((t) => humanize(t)).join(', '), kind: 'code', tip: 'gui_tags' }));
 
         // (`desc`: a loc key)
         if (members.length)
             card.sections.push({ title: capitalize(what), lines: entryLines(b, members, undefined, 80) });
 
-        const show = (k: string, v: string): Rich | undefined => (k === 'desc' ? rich('Described as “', b.d.loc(v) ?? v, '”') : undefined);
-        card.sections.push({ title: 'Settings', lines: settingLines(b, e.type, body, ctx, show), src: own('field', e.type) });
+        const show = (k: string, v: string): Rich | undefined => (k === 'desc' ? rich(tr('Described as “'), b.d.loc(v) ?? v, '”') : undefined);
+        card.sections.push({ title: tr('Settings'), lines: settingLines(b, e.type, body, ctx, show), src: own('field', e.type) });
         return true;
     };
 }
 
 const OTHER_CARDS: Record<string, CardFn> = {
-    // common/defines: `NGame = { END_DATE = "1453.1.1" … }` — every file and sub-folder merges into these groups
+    // common/defines: `NGame = { END_DATE = "1453.1.1" … }`: every file and sub-folder merges into these groups
     defines: (b, { e, body, card, ctx, own }) =>
     {
         card.title = keyTitle(e.name);
         const lines = defineLines(b, body, ctx);
-        card.facts.push([`${lines.length} values`]);
-        card.sections.push({ title: 'Values', lines, src: own('other') });
+        card.facts.push([tr('{length} values', { length: lines.length })]);
+        card.sections.push({ title: tr('Values'), lines, src: own('other') });
         return true;
     },
     decision_group_types: groupCard('decisions', 'decision_group_type', 'decisions'),
@@ -99,7 +100,7 @@ const OTHER_CARDS: Record<string, CardFn> = {
         const t = color && colorText(color, src);
 
         if (t)
-            facts.push(rich('Colour ', t));
+            facts.push(rich(tr('Colour '), t));
 
         const desc = str(body, 'desc');
         const d = desc && b.d.loc(desc);
@@ -108,49 +109,50 @@ const OTHER_CARDS: Record<string, CardFn> = {
             facts.push(rich('“', d, '”'));
 
         if (str(body, 'favorite_interactions') === 'yes')
-            facts.push(['Holds the player’s favourite interactions']);
+            facts.push([tr('Holds the player’s favourite interactions')]);
     }),
-    // common/connection_arrows: the map's arrows (silk road) — `provinces` from the start to the end point, the ones between shape the line
+    // common/connection_arrows: the map's arrows (silk road): `provinces` from the start to the end point, the ones between shape the line
     connection_arrows: (b, { body, card, ctx, own }) =>
     {
         if (str(body, 'is_primary') === 'yes')
-            card.facts.push(['Main route']);
+            card.facts.push([tr('Main route')]);
 
         const type = str(body, 'arrow_type');
 
         if (type)
-            card.facts.push(rich('Arrow: ', { text: words(type.replace(/([a-z])([A-Z])/g, '$1_$2')), kind: 'code', tip: type }));
+            card.facts.push(rich(tr('Arrow: '), { text: words(type.replace(/([a-z])([A-Z])/g, '$1_$2')), kind: 'code', tip: type }));
 
         const provs = kids(body.find((c) => c.k === 'provinces')).filter((c) => c.k === null && typeof c.v === 'string');
         // (the provinces are named by the comments beside them: `10148 # Chang'an (Zhouzhi)`)
         const name = (n: PNode): string | undefined => lineComment(ctx.src, n)?.split('#')[0].trim() || undefined;
-        const named = (n: PNode): Rich => rich({ text: `province ${n.v}`, kind: 'value' }, name(n) ? ` (${name(n)})` : '');
-        const lines: Line[] = provs.length ? [{ text: rich('From ', named(provs[0]), ' to ', named(provs[provs.length - 1]), ` — ${provs.length} provinces`), src: b.d.anchor(body.find((c) => c.k === 'provinces')!, ctx, 'other', true) }] : [];
+        const named = (n: PNode): Rich => rich({ text: tr('province {v}', { v: n.v }), kind: 'value' }, name(n) ? ` (${name(n)})` : '');
+        const lines: Line[] = provs.length ? [{ text: rich(tr('From '), named(provs[0]), tr(' to '), named(provs[provs.length - 1]), tr(' — {length} provinces', { length: provs.length })), src: b.d.anchor(body.find((c) => c.k === 'provinces')!, ctx, 'other', true) }] : [];
         const between = provs
             .slice(1, -1)
             .map(name)
             .filter((n): n is string => !!n);
 
         if (between.length)
-            lines.push({ text: [`Through ${between.join(', ')}`] });
+            lines.push({ text: [tr('Through {join}', { join: between.join(', ') })] });
 
-        card.sections.push({ title: 'Route', lines, src: own('other') });
+        card.sections.push({ title: tr('Route'), lines, src: own('other') });
         return true;
     },
     // common/console_groups: console commands grouped for the debug console
     console_groups: (b, { body, card, ctx, own }) =>
     {
         const cmds = body.filter((c) => c.k === null && typeof c.v === 'string');
-        card.facts.push([`${cmds.length} console command${cmds.length === 1 ? '' : 's'}`]);
-        card.sections.push({ title: 'Commands', lines: cmds.map((c): Line => ({ text: [{ text: c.v as string, kind: 'code' }], src: b.d.anchor(c, ctx, 'other', false) })), src: own('other') });
+        card.facts.push([tr('{length} console command{value}', { length: cmds.length, value: cmds.length === 1 ? '' : 's' })]);
+        card.sections.push({ title: tr('Commands'), lines: cmds.map((c): Line => ({ text: [{ text: c.v as string, kind: 'code' }], src: b.d.anchor(c, ctx, 'other', false) })), src: own('other') });
         return true;
     },
-    // common/ai_goaltypes: goals the AI weighs (the game's one test goal sets nothing)
-    ai_goaltypes: (b, { body, card }) =>
-    {
-        if (!body.length)
-            card.facts.push(['Nothing set — the game’s defaults apply']);
-    }
+    // common/ai_goaltypes: goals the AI weighs (the game's one test goal sets nothing); its keys are the card's Settings
+    // (stories.ts unknownSettings), and an empty one's note comes after that pass (EMPTY_NOTE): a note made here would
+    // make the pass count a goal's only key as read
+    ai_goaltypes: () => undefined
 };
+
+/** Types whose empty definition reads "Nothing set" (stories.ts card(), after its Settings pass). */
+export const EMPTY_NOTE = new Set(['ai_goaltypes']);
 
 export const PRESENTATION_CARDS: Record<string, CardFn> = { ...SCENE_CARDS, ...TEXT_CARDS, ...LOOK_CARDS, ...OTHER_CARDS };

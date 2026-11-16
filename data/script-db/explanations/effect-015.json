@@ -1,0 +1,658 @@
+[
+ {
+  "kind": "effect",
+  "key": "remove_decision_cooldown",
+  "label": "Decision cooldown",
+  "summary": "Removes the waiting time before the character can take a decision again.",
+  "details": "Write the decision's name. The character can then take that decision again without waiting. Vanilla uses it for decisions such as visiting a local shrine or meditating in seclusion.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_dejure_title_from_sub_region",
+  "label": "De jure title from sub-region",
+  "summary": "Takes every de jure county of the given title out of a situation sub-region.",
+  "details": "It runs on a situation sub-region (a part of a situation). The title is the one whose de jure counties (the counties that belong to it by the map's default borders) are removed. Vanilla passes a scope reference such as `prev` or a saved county scope.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_doctrine",
+  "label": "Doctrine",
+  "summary": "Takes a doctrine away from a faith.",
+  "details": "It runs on a faith. Write the doctrine's key. Vanilla values include `doctrine_no_head`, `doctrine_polygamy` and the special ecumenical doctrines.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_domicile_building",
+  "label": "Domicile building",
+  "summary": "Removes a building from a domicile.",
+  "details": "It runs on a domicile (the mobile home of a nomadic ruler). Write the building's key. The game's documentation says nothing about a refund; the separate no-refund variant exists for removing without one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_domicile_building_no_refund",
+  "label": "Domicile building, no refund",
+  "summary": "Removes a building from a domicile without paying back its cost.",
+  "details": "It runs on a domicile. Write the building's key. Vanilla uses it only five times, always with a template placeholder (`$BUILDING$_01`).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_dynasty_modifier",
+  "label": "Dynasty modifier",
+  "summary": "Removes a modifier from a dynasty.",
+  "details": "It runs on a dynasty. Write the modifier's name. Vanilla uses it with the mandala domes dynasty modifiers.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_dynasty_perk",
+  "label": "Dynasty perk",
+  "summary": "Removes a dynasty perk from a dynasty.",
+  "details": "It runs on a dynasty. Write the perk's key. Vanilla does not use it, so there is no example to show.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_from_activity",
+  "label": "Leave activity",
+  "summary": "Takes the character out of the given activity.",
+  "details": "It runs on the character who leaves; the value is the activity. Vanilla gives it a saved activity scope or `involved_activity`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_from_current_phase_guest_subset",
+  "label": "Guest from current phase group",
+  "summary": "Takes a character out of a named guest group, but only in the activity's current phase.",
+  "details": "It runs on an activity. The group is named by `name`, the character who is removed by `target`. Compare the longer remove_from_guest_subset, which can also act on other phases.",
+  "fields": [
+   {
+    "name": "name",
+    "text": "The key of the guest group (subset).",
+    "values": "a guest subset key",
+    "required": true
+   },
+   {
+    "name": "target",
+    "text": "The character to take out of the group.",
+    "values": "a character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_from_guest_subset",
+  "label": "Guest from a group",
+  "summary": "Takes a character out of a named guest group of an activity.",
+  "details": "It runs on an activity. Without `phase`, the character leaves the group in all upcoming and ongoing phases. With `phase`, they leave it in all phases of that type. The documented usage line names add_to_guest_subset, which looks like a copy slip; the block fields are the same ones vanilla uses here.",
+  "fields": [
+   {
+    "name": "name",
+    "text": "The key of the guest group (subset).",
+    "values": "a guest subset key, for example `entrants` or `qualified` in vanilla",
+    "required": true
+   },
+   {
+    "name": "target",
+    "text": "The character to take out of the group.",
+    "values": "a character, for example `prev` or a saved scope",
+    "required": true
+   },
+   {
+    "name": "phase",
+    "text": "Limits the removal to phases of this type.",
+    "values": "a phase key",
+    "required": false
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_from_list",
+  "label": "Remove from list",
+  "summary": "Takes the current scope out of a named list.",
+  "details": "The list is found by its name. What is removed is whatever the script is currently looking at (a character, a title and so on).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_geographical_region",
+  "label": "Geographical region from sub-region",
+  "summary": "Takes a geographical region out of a situation sub-region.",
+  "details": "It runs on a situation sub-region. The value is a geographical region, given as a scope or in the form `db_type:geographical_region`. Vanilla uses it once, with a saved scope.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_global_variable",
+  "label": "Global variable",
+  "summary": "Deletes a global variable.",
+  "details": "A global variable is stored for the whole game, not on one thing. Write the variable's name. The documented usage line says `remove_variable`, which is the documentation’s own copy of the text; the key here is the global one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_holding",
+  "label": "Holding",
+  "summary": "Removes the holding in a province.",
+  "details": "It runs on a province and is written `= yes`. It cannot remove a capital holding (the holding that is the county's capital).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_holy_site",
+  "label": "Holy site",
+  "summary": "Takes a holy site away from a faith.",
+  "details": "It runs on a faith. Write the holy site directly, or use the block form to also name the character who acts. Vanilla uses the block form once, with the selected item as target and the root character as actor. The game's documentation does not say what the actor changes.",
+  "fields": [
+   {
+    "name": "target",
+    "text": "The holy site to remove.",
+    "values": "a holy site",
+    "required": true
+   },
+   {
+    "name": "actor",
+    "text": "The character who does it.",
+    "values": "a character",
+    "required": false
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_holy_site_artifact",
+  "label": "Holy site artifact",
+  "summary": "Makes the character take an artifact away from a holy site.",
+  "details": "It runs on a character. It fires the `on_holy_site_artifact_removed` on_action. To avoid that, move the artifact with the normal inventory ownership effects instead.",
+  "fields": [
+   {
+    "name": "holy_site",
+    "text": "The holy site the artifact is taken from.",
+    "values": "a holy site",
+    "required": true
+   },
+   {
+    "name": "artifact",
+    "text": "The artifact to take.",
+    "values": "an artifact",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_hook",
+  "label": "Hook",
+  "summary": "Removes the hook the character holds on the target character.",
+  "details": "The character the effect runs on loses the hook; `target` is the character it was over. When an interaction is blocked with a hook, vanilla spends it so: `scope:recipient = { remove_hook = { target = scope:puppet_or_actor } }`. With `type`, only a hook of that type is removed (vanilla uses `favor_hook` most). Without it, the game's documentation does not say which hook goes.",
+  "fields": [
+   {
+    "name": "target",
+    "text": "The character the hook is over.",
+    "values": "a character",
+    "required": true
+   },
+   {
+    "name": "type",
+    "text": "Remove the hook only if it is of this type.",
+    "values": "a hook type, for example `favor_hook`, `strong_hook`",
+    "required": false
+   }
+  ],
+  "sources": ["doc", "vanilla", "vanilla: common/character_interactions/00_vassal_interactions.txt:659"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_house_artifact_claim",
+  "label": "House artifact claim",
+  "summary": "Removes a house's claim on an artifact.",
+  "details": "It runs on a dynasty house. The value is the artifact. Vanilla uses it once, with a saved artifact scope.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_house_modifier",
+  "label": "House modifier",
+  "summary": "Removes a modifier from a dynasty house.",
+  "details": "It runs on a house. Write the modifier's name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_house_unity_modifier",
+  "label": "House unity modifier",
+  "summary": "Removes a modifier from a house's unity.",
+  "details": "It runs on a dynasty house. Write the modifier's name. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_important_location",
+  "label": "Important location",
+  "summary": "Makes a county no longer important for anyone.",
+  "details": "It runs on a county title and is written `= yes`. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_innovation",
+  "label": "Innovation",
+  "summary": "Takes an innovation away from a culture.",
+  "details": "It runs on a culture. Write the innovation's key. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_interaction_cooldown",
+  "label": "Interaction cooldown",
+  "summary": "Removes the waiting time before the character can use an interaction again.",
+  "details": "Write the interaction's name. To clear the cooldown for one particular target only, use remove_interaction_cooldown_against.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_interaction_cooldown_against",
+  "label": "Interaction cooldown against someone",
+  "summary": "Removes the waiting time before the character can use an interaction on one particular character again.",
+  "details": "It runs on the character who uses the interaction. Vanilla uses it with the challenge interactions (chess, trial by combat) and the recipient as target.",
+  "fields": [
+   {
+    "name": "interaction",
+    "text": "The interaction whose cooldown is removed.",
+    "values": "an interaction key",
+    "required": true
+   },
+   {
+    "name": "target",
+    "text": "The character the interaction was used against.",
+    "values": "a character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_legend_county_modifier",
+  "label": "Legend county modifier",
+  "summary": "Removes a modifier that a legend gives to its counties.",
+  "details": "It runs on a legend. Write the modifier's name. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_legend_owner_modifier",
+  "label": "Legend owner modifier",
+  "summary": "Removes a modifier that a legend gives to its owner.",
+  "details": "It runs on a legend. Write the modifier's name. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_legend_province_modifier",
+  "label": "Legend province modifier",
+  "summary": "Removes a modifier that a legend gives to its provinces.",
+  "details": "It runs on a legend. Write the modifier's name. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_legend_spread",
+  "label": "Legend spread",
+  "summary": "Removes a legend from the legends that have spread to a province.",
+  "details": "It runs on a province. The value is the legend. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_list_global_variable",
+  "label": "Global variable list entry",
+  "summary": "Takes an item out of a global variable list.",
+  "details": "A global variable list is kept for the whole game. Use `name` for the list and `target` for the item to remove. Vanilla list names include `unavailable_unique_decisions`, `efg_empire_holders` and `roma_cardinalates`.",
+  "fields": [
+   {
+    "name": "name",
+    "text": "The name of the global variable list.",
+    "values": "a variable name",
+    "required": true
+   },
+   {
+    "name": "target",
+    "text": "The item to remove from the list.",
+    "values": "a scope such as a character or `root`",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_list_local_variable",
+  "label": "Local variable list entry",
+  "summary": "Takes an item out of a local variable list.",
+  "details": "A local variable list lives only during the current script run. Use `name` for the list and `target` for the item to remove. Vanilla does not use it.",
+  "fields": [
+   {
+    "name": "name",
+    "text": "The name of the local variable list.",
+    "values": "a variable name",
+    "required": true
+   },
+   {
+    "name": "target",
+    "text": "The item to remove from the list.",
+    "values": "a scope such as a character",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_list_variable",
+  "label": "Variable list entry",
+  "summary": "Takes an item out of a variable list stored on the current scope.",
+  "details": "Use `name` for the list and `target` for the item to remove. Vanilla list names include `owes_me_money`, `obedient_vassals` and `subjugation_offer_under_consideration`.",
+  "fields": [
+   {
+    "name": "name",
+    "text": "The name of the variable list.",
+    "values": "a variable name",
+    "required": true
+   },
+   {
+    "name": "target",
+    "text": "The item to remove from the list.",
+    "values": "a scope such as a character, `root`, or a saved scope",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_local_variable",
+  "label": "Local variable",
+  "summary": "Deletes a local variable.",
+  "details": "A local variable lives only during the current script run. Write the variable's name. The documented usage line says `remove_variable`, which is the documentation’s own copy of the text. Vanilla uses it for combat move flags.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_localized_text",
+  "label": "Localized text",
+  "summary": "Removes a piece of custom text stored on the character under a key.",
+  "details": "The game's documentation says to do this once the text is no longer needed, so that saves do not grow. Write the key the text was stored under.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_long_term_gold",
+  "label": "Long-term gold",
+  "summary": "Takes gold from the character, from the AI's long-term budget first and then from the rest.",
+  "details": "Write the amount as a plain value or as `{ value = ... }`. The game's documentation says nothing more, for example what happens if the character has too little. Vanilla also uses the word `gold` as the value.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "How much gold to take.",
+    "values": "a number or script value",
+    "required": false
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "remove_long_term_treasury",
+  "label": "Long-term treasury",
+  "summary": "Takes treasury from the character, from the AI's long-term budget first and then from the rest.",
+  "details": "Vanilla does not use it and the game's documentation gives no usage, so the accepted value is not shown.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "remove_manual_participant",
+  "label": "Manual participant",
+  "summary": "Removes a character who was added by hand to a situation.",
+  "details": "It runs on a situation. The character must have been added earlier with add_manual_participant. Vanilla uses `prev`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_nickname",
+  "label": "Nickname",
+  "summary": "Removes the character's nickname.",
+  "details": "Written `= yes`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_opinion",
+  "label": "Opinion",
+  "summary": "Removes a temporary opinion modifier that the character has towards another character.",
+  "details": "By default all instances of the modifier are removed; with `single = yes` only one is. Only temporary opinion modifiers are covered.",
+  "fields": [
+   {
+    "name": "target",
+    "text": "The character the opinion is held towards.",
+    "values": "a character",
+    "required": true
+   },
+   {
+    "name": "modifier",
+    "text": "The opinion modifier to remove.",
+    "values": "an opinion modifier key",
+    "required": true
+   },
+   {
+    "name": "single",
+    "text": "Whether to remove only one instance instead of all.",
+    "values": "yes or no",
+    "required": false,
+    "default": "no"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_participant",
+  "label": "War participant",
+  "summary": "Removes a character from a war.",
+  "details": "It runs on a war. The value is the character to remove. Vanilla uses `prev`, `root` and saved scopes.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "remove_perk",
+  "label": "Perk",
+  "summary": "Removes a perk from the character.",
+  "details": "Write the perk's key. Vanilla uses it once, for the restraint perk.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ }
+]

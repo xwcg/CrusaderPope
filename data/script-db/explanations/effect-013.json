@@ -1,0 +1,410 @@
+[
+ {
+  "kind": "effect", "key": "overlord_contract_set_obligation_level",
+  "label": "Set obligation level",
+  "summary": "Changes the obligation level of the character's contract with their overlord.",
+  "details": "The level can be given as a number (an index), the name of a level such as `feudal_obligation_low`, or a saved scope. The documented usage lines are written with `vassal_contract_set_obligation_level`, so check which spelling the game accepts. No vanilla use is given.",
+  "fields": [
+   { "name": "type", "text": "Which obligation type of the contract is changed.", "values": "the name of an obligation type", "required": true },
+   { "name": "level", "text": "The new level for that obligation.", "values": "a number (index), a level name like feudal_obligation_low, or a scope such as scope:obligation", "required": true }
+  ],
+  "sources": ["doc"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "pan_camera_to_province",
+  "label": "Pan camera to province",
+  "summary": "Moves the camera to the given province.",
+  "details": "Vanilla uses it with a province saved in a scope and with a location link.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "pan_camera_to_title",
+  "label": "Pan camera to title",
+  "summary": "Moves the camera to the given title.",
+  "details": "Vanilla gives it a title directly (`title:k_ireland`), a title link such as `capital_barony`, or a saved scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "pause_travel_plan",
+  "label": "Pause the journey",
+  "summary": "Pauses a travel plan until it is resumed explicitly.",
+  "details": "Any resume date set by an earlier pause is removed. Written as `yes` (vanilla always uses `yes`); the game's documentation also lists `no`. Works on a travel plan.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "pause_travel_plan_mp",
+  "label": "Pause the journey (multiplayer)",
+  "summary": "Pauses a travel plan until it is resumed, but only in a multiplayer game.",
+  "details": "Any resume date set by an earlier pause is removed. Works on a travel plan. Vanilla uses it once, with `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "pay_gold_to_treasury",
+  "label": "Pay gold into a treasury",
+  "summary": "Makes the character pay gold, which the target character receives as treasury.",
+  "details": "The character the effect runs on pays; the target receives. No vanilla use is given, so the exact amount handling is not shown.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the payment.", "values": "a character", "required": true },
+   { "name": "value", "text": "How much is paid.", "values": "a number or a script value", "required": true }
+  ],
+  "sources": ["doc"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "pay_herd",
+  "label": "Pay herd",
+  "summary": "Makes the character pay herd to the target character.",
+  "details": "The character the effect runs on pays; the target receives. Vanilla gives the amount as a value from the domicile, such as `domicile.minor_herd_value`.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the herd.", "values": "a character, such as root or a saved scope", "required": true },
+   { "name": "value", "text": "How much herd is paid.", "values": "a number or a script value", "required": true }
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "pay_long_term_gold",
+  "label": "Pay gold (long-term budget)",
+  "summary": "Makes the character pay gold to the target, taking it from their 'long term' AI budget first and then from the rest.",
+  "details": "The character the effect runs on pays; the target receives. 'Long term' is one of the categories of the AI budget.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the gold.", "values": "a character", "required": true },
+   { "name": "gold", "text": "How much gold is paid.", "values": "a number or a script value, for example 25", "required": true }
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "pay_long_term_income",
+  "label": "Pay income (long-term budget)",
+  "summary": "Makes the character immediately pay the target an amount of gold equal to their income over a stated time, taking it from the 'long term' AI budget first and then from the rest.",
+  "details": "The time is given in days, months or years. The character the effect runs on pays; the target receives. No vanilla use is given.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the gold.", "values": "a character", "required": true },
+   { "name": "days / months / years", "text": "For how much time the income is paid out.", "values": "a number", "required": true }
+  ],
+  "sources": ["doc"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "pay_long_term_treasury",
+  "label": "Pay treasury (long-term budget)",
+  "summary": "Makes the character pay treasury to the target, taking it from the 'long term' AI budget first and then from the rest.",
+  "details": "If the target has no treasury, they get gold instead. The character the effect runs on pays; the target receives. No vanilla use is given.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the payment.", "values": "a character", "required": true },
+   { "name": "treasury", "text": "How much is paid.", "values": "a number or a script value", "required": true }
+  ],
+  "sources": ["doc"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "pay_long_term_treasury_income",
+  "label": "Pay treasury income (long-term budget)",
+  "summary": "Makes the character immediately pay the target treasury equal to their income over a stated time, taking it from the 'long term' AI budget first and then from the rest.",
+  "details": "The time is given in days, months or years. The character the effect runs on pays; the target receives. No vanilla use is given.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the payment.", "values": "a character", "required": true },
+   { "name": "days / months / years", "text": "For how much time the income is paid out.", "values": "a number", "required": true }
+  ],
+  "sources": ["doc"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "pay_reserved_gold",
+  "label": "Pay gold (reserved budget)",
+  "summary": "Makes the character pay gold to the target, taking it from their 'reserved' AI budget first and then from the rest.",
+  "details": "The character the effect runs on pays; the target receives. No vanilla use is given.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the gold.", "values": "a character", "required": true },
+   { "name": "gold", "text": "How much gold is paid.", "values": "a number or a script value", "required": true }
+  ],
+  "sources": ["doc"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "pay_reserved_income",
+  "label": "Pay income (reserved budget)",
+  "summary": "Makes the character immediately pay the target an amount of gold equal to their income over a stated time, taking it from the 'reserved' AI budget first and then from the rest.",
+  "details": "The time is given in days, months or years. The character the effect runs on pays; the target receives. No vanilla use is given.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the gold.", "values": "a character", "required": true },
+   { "name": "days / months / years", "text": "For how much time the income is paid out.", "values": "a number", "required": true }
+  ],
+  "sources": ["doc"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "pay_reserved_treasury",
+  "label": "Pay treasury (reserved budget)",
+  "summary": "Makes the character pay treasury to the target, taking it from the 'reserved' AI budget first and then from the rest.",
+  "details": "If the target has no treasury, they get gold instead. The character the effect runs on pays; the target receives. No vanilla use is given.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the payment.", "values": "a character", "required": true },
+   { "name": "treasury", "text": "How much is paid.", "values": "a number or a script value", "required": true }
+  ],
+  "sources": ["doc"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "pay_reserved_treasury_income",
+  "label": "Pay treasury income (reserved budget)",
+  "summary": "Makes the character immediately pay the target treasury equal to their income over a stated time, taking it from the 'reserved' AI budget first and then from the rest.",
+  "details": "The time is given in days, months or years. The character the effect runs on pays; the target receives. No vanilla use is given.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the payment.", "values": "a character", "required": true },
+   { "name": "days / months / years", "text": "For how much time the income is paid out.", "values": "a number", "required": true }
+  ],
+  "sources": ["doc"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "pay_short_term_gold",
+  "label": "Pay gold",
+  "summary": "Makes the character pay gold to the target, taking it from their 'short term' AI budget first and then from the rest.",
+  "details": "The character the effect runs on pays; the target receives. This is the common way vanilla moves gold between characters. The gold amount is mostly one of the game's named values such as `minor_gold_value`. Vanilla once also uses a `yearly_income = yes` field; the game's documentation does not describe it.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the gold.", "values": "a character, such as root or a saved scope", "required": true },
+   { "name": "gold", "text": "How much gold is paid.", "values": "a number or a script value, such as minor_gold_value", "required": true }
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "pay_short_term_income",
+  "label": "Pay income",
+  "summary": "Makes the character immediately pay the target an amount of gold equal to their income over a stated time, taking it from the 'short term' AI budget first and then from the rest.",
+  "details": "The game's documentation allows days, months or years; vanilla only uses `years` (2 to 4), always with a saved defender as target. The character the effect runs on pays; the target receives.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the gold.", "values": "a character", "required": true },
+   { "name": "days / months / years", "text": "For how much time the income is paid out.", "values": "a number, for example years = 3", "required": true }
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "pay_short_term_treasury",
+  "label": "Pay treasury",
+  "summary": "Makes the character pay treasury to the target, taking it from the 'short term' AI budget first and then from the rest.",
+  "details": "If the target has no treasury, they get gold instead. The character the effect runs on pays; the target receives. Vanilla mostly writes `treasury = ...`, and twice uses `gold = ...` instead.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the payment.", "values": "a character", "required": true },
+   { "name": "treasury", "text": "How much is paid.", "values": "a number or a script value, for example 50", "required": true }
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "pay_short_term_treasury_income",
+  "label": "Pay treasury income",
+  "summary": "Makes the character immediately pay the target treasury equal to their income over a stated time, taking it from the 'short term' AI budget first and then from the rest.",
+  "details": "The time is given in days, months or years. The character the effect runs on pays; the target receives. No vanilla use is given.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the payment.", "values": "a character", "required": true },
+   { "name": "days / months / years", "text": "For how much time the income is paid out.", "values": "a number", "required": true }
+  ],
+  "sources": ["doc"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "pay_treasury",
+  "label": "Pay treasury (plain)",
+  "summary": "Makes the character pay treasury to the target, taking it from the 'short term' budget for treasury.",
+  "details": "If the target has no treasury, they get gold instead. The character the effect runs on pays; the target receives. No vanilla use is given.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the payment.", "values": "a character", "required": true },
+   { "name": "value", "text": "How much is paid.", "values": "a number or a script value", "required": true }
+  ],
+  "sources": ["doc"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "pay_treasury_or_gold",
+  "label": "Pay treasury or gold",
+  "summary": "Makes the character pay treasury if they have one, otherwise gold, and the target receives treasury if they have one, otherwise gold.",
+  "details": "The character the effect runs on pays; the target receives. Vanilla gives the amount as a named value such as `medium_treasury_or_gold_value` or a court physician cost.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the payment.", "values": "a character, such as root or a saved scope", "required": true },
+   { "name": "value", "text": "How much is paid.", "values": "a number or a script value", "required": true }
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "pay_treasury_to_gold",
+  "label": "Pay treasury, receive gold",
+  "summary": "Makes the character pay treasury and the target character receive it as gold.",
+  "details": "The character the effect runs on pays; the target receives. Vanilla uses it for bribes and similar named costs.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the gold.", "values": "a character", "required": true },
+   { "name": "value", "text": "How much is paid.", "values": "a number or a script value, such as bribe_value", "required": true }
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "pay_war_chest_gold",
+  "label": "Pay gold (war chest budget)",
+  "summary": "Makes the character pay gold to the target, taking it from their 'war chest' AI budget first and then from the rest.",
+  "details": "The character the effect runs on pays; the target receives. No vanilla use is given.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the gold.", "values": "a character", "required": true },
+   { "name": "gold", "text": "How much gold is paid.", "values": "a number or a script value", "required": true }
+  ],
+  "sources": ["doc"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "pay_war_chest_income",
+  "label": "Pay income (war chest budget)",
+  "summary": "Makes the character immediately pay the target an amount of gold equal to their income over a stated time, taking it from the 'war chest' AI budget first and then from the rest.",
+  "details": "The time is given in days, months or years. The character the effect runs on pays; the target receives. No vanilla use is given.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the gold.", "values": "a character", "required": true },
+   { "name": "days / months / years", "text": "For how much time the income is paid out.", "values": "a number", "required": true }
+  ],
+  "sources": ["doc"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "pay_war_chest_treasury",
+  "label": "Pay treasury (war chest budget)",
+  "summary": "Makes the character pay treasury to the target, taking it from the 'war chest' AI budget first and then from the rest.",
+  "details": "If the target has no treasury, they get gold instead. The character the effect runs on pays; the target receives. No vanilla use is given.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the payment.", "values": "a character", "required": true },
+   { "name": "treasury", "text": "How much is paid.", "values": "a number or a script value", "required": true }
+  ],
+  "sources": ["doc"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "pay_war_chest_treasury_income",
+  "label": "Pay treasury income (war chest budget)",
+  "summary": "Makes the character immediately pay the target treasury equal to their income over a stated time, taking it from the 'war chest' AI budget first and then from the rest.",
+  "details": "The time is given in days, months or years. The character the effect runs on pays; the target receives. No vanilla use is given.",
+  "fields": [
+   { "name": "target", "text": "The character who receives the payment.", "values": "a character", "required": true },
+   { "name": "days / months / years", "text": "For how much time the income is paid out.", "values": "a number", "required": true }
+  ],
+  "sources": ["doc"], "uncertain": true
+ },
+ {
+  "kind": "effect", "key": "plan_great_project",
+  "label": "Plan great project",
+  "summary": "Starts funding a Great Project of the chosen type in the province.",
+  "details": "The founder pays the initial cost and can fund contributions before other rulers. Works on a province. Vanilla can also save the new project as a scope with `save_scope_as`.",
+  "fields": [
+   { "name": "founder", "text": "The character who pays the initial cost and gets first pick at contributing.", "values": "a character, such as root or a saved scope", "required": true },
+   { "name": "great_project_type", "text": "Which kind of Great Project is planned.", "values": "a great project type key, for example mandala_capital_01", "required": true },
+   { "name": "save_scope_as", "text": "Saves the new project under this name so later script can refer to it.", "values": "a scope name", "required": false }
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "play_music_cue",
+  "label": "Play music cue",
+  "summary": "Plays the named music cue.",
+  "details": "Vanilla uses it very often, with cues named after the mood, such as `mx_cue_prison`, `mx_cue_murder` or `mx_cue_death`. Works on a character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "play_sound_effect",
+  "label": "Play sound effect",
+  "summary": "Plays the named sound effect.",
+  "details": "Vanilla writes the sound as an audio event path starting with `event:/`, for example the contract success sound. Works on a character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "pledge_attacker",
+  "label": "Pledged attacker",
+  "summary": "Makes the target character join a great holy war as an attacker.",
+  "details": "The target must have the same faith as the one who declared the holy war. Works on a great holy war. Vanilla gives the character as root or a saved scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "pledge_defender",
+  "label": "Pledged defender",
+  "summary": "Makes the target character join a great holy war as a defender.",
+  "details": "The target must have the same faith as the target of the holy war. Works on a great holy war. Vanilla gives the character as root or root's leader.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "populate_task_contracts_for_area",
+  "label": "Populate task contracts",
+  "summary": "Fills the area around a location with task contracts, up to the given amount.",
+  "details": "The `group` list names the contract groups to use. Works on a character. Vanilla gives the location as a province (a saved scope or a character's location) and the groups as named contract groups.",
+  "fields": [
+   { "name": "location", "text": "The province the area is centred on.", "values": "a province, such as scope:visiting_location", "required": true },
+   { "name": "amount", "text": "How many contracts to spawn at most.", "values": "a number or a script value", "required": true },
+   { "name": "group", "text": "Which contract groups may be used.", "values": "a list of contract group keys in braces", "required": true }
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "progress_activity_phase_after",
+  "label": "Move to the next phase after…",
+  "summary": "Moves the activity on to its next phase after the given time.",
+  "details": "The time can be written in days, weeks or months. Vanilla mostly uses `days = 1`. Works on an activity.",
+  "fields": [
+   { "name": "days / weeks / months", "text": "How long to wait before the phase changes.", "values": "a number", "required": true }
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "random",
+  "label": "Random chance",
+  "summary": "Runs the effects inside it only with the given percentage chance.",
+  "details": "The chance can be changed by an optional modifier list (the same kind of list used for mean time to happen). Vanilla uses chances such as 50, 25 and 75, and puts everything from events and toasts to trait changes inside.",
+  "fields": [
+   { "name": "chance", "text": "The chance, as a percentage, that the effects run.", "values": "a number or a script value", "required": true },
+   { "name": "modifier", "text": "Optional rules that raise or lower the chance.", "values": "a modifier block", "required": false }
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "raze_county",
+  "label": "Raze county",
+  "summary": "Changes the holding of the county's capital province to the given type.",
+  "details": "With `purge_secondary_holdings = yes`, all other holdings in the county are destroyed too, except those whose type is listed as excluded. Works on a county title. Vanilla uses it once, turning the capital into a nomad holding and purging the rest.",
+  "fields": [
+   { "name": "holding_type", "text": "The holding type the capital province gets.", "values": "a holding type, for example nomad_holding", "required": true },
+   { "name": "purge_secondary_holdings", "text": "Whether all other holdings in the county are destroyed.", "values": "yes or no", "required": false, "default": "no" },
+   { "name": "excluded_holding_type", "text": "A holding type that is spared by the purge. Can be repeated.", "values": "a holding type, for example temple_holding", "required": false }
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "rebuild_great_building",
+  "label": "Rebuild great building",
+  "summary": "Rebuilds the Great Building in the province, so it is no longer ruined.",
+  "details": "Works on a province. Vanilla uses it twice, written as `yes`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "recalculate_cultural_heads_of_type",
+  "label": "Recalculate cultural heads",
+  "summary": "Forces the game to work out the cultural heads again for the given way of choosing them.",
+  "details": "The game's documentation lists `domain` and `herd` as the types. Vanilla uses it once, with `herd`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "recalculate_participant_group",
+  "label": "Recalculate participant group",
+  "summary": "Forces the game to work out again which participation group the character belongs to in a situation.",
+  "details": "Works on a character; the situation is the value. Vanilla gives it situations such as `situation:dynastic_cycle` and `situation:the_christian_church`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "recalculate_succession_election_vote",
+  "label": "Recalculate election vote",
+  "summary": "Makes the elector decide their vote again in every succession election they vote in, and applies it at once.",
+  "details": "Without this, the vote would only change at their next AI update. It does nothing for a player character, whose vote is their own to cast. Works on a character. Written as `yes`. No vanilla use is given.",
+  "fields": [],
+  "sources": ["doc"], "uncertain": false
+ },
+ {
+  "kind": "effect", "key": "record_situation_special_event",
+  "label": "Record situation event",
+  "summary": "Adds a special entry to the situation's history, dated the day the effect runs.",
+  "details": "It only applies to situations that keep a full history (`keep_full_history = yes`). The `key` selects the localization text of the entry, and the character and the variables can be used in that text. Variables can only hold objects (characters, titles), not plain values. Works on a situation.",
+  "fields": [
+   { "name": "key", "text": "Names the entry and its localization text.", "values": "a localization key", "required": true },
+   { "name": "actor", "text": "A character the entry is about.", "values": "a character, such as scope:character", "required": false },
+   { "name": "phase", "text": "The situation phase the entry belongs to.", "values": "a situation phase type key", "required": false },
+   { "name": "variables", "text": "Objects the entry's text can refer to.", "values": "a block of name = object pairs", "required": false }
+  ],
+  "sources": ["doc", "vanilla"], "uncertain": false
+ }
+]

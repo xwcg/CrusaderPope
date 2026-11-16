@@ -1,11 +1,12 @@
 /**
  * glTF 2.0 files (docs/blender.md): a writer for `.gltf` + `.bin` (external images) and a reader for everything
- * Blender's exporter writes — `.glb`, `.gltf` with a separate `.bin`, `.gltf` with embedded (data URI) buffers and
+ * Blender's exporter writes: `.glb`, `.gltf` with a separate `.bin`, `.gltf` with embedded (data URI) buffers and
  * images. Plain Node.
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
+import { tr } from '../../shared/i18n.ts';
 export interface GltfAccessor
 {
     bufferView?: number;
@@ -270,13 +271,13 @@ export function readGltf(file: string, bytes?: Uint8Array): GltfFile
     }
 
     if (!doc?.asset || String(doc.asset.version).split('.')[0] !== '2')
-        throw new Error('Not a glTF 2.0 file.');
+        throw new Error(tr('Not a glTF 2.0 file.'));
 
     const unsupported = (doc.extensionsRequired ?? []).filter((e) => e !== 'KHR_mesh_quantization' && e !== 'KHR_texture_transform');
 
     if (unsupported.length)
         throw new Error(
-            `The file needs ${unsupported.join(', ')}${unsupported.includes('KHR_draco_mesh_compression') ? ' (Draco compression: export again with Compression off)' : ''}, which is not supported.`
+            tr('The file needs {join}{value}, which is not supported.', { join: unsupported.join(', '), value: unsupported.includes('KHR_draco_mesh_compression') ? ' (Draco compression: export again with Compression off)' : '' })
         );
 
     const buffers = (doc.buffers ?? []).map((b, i) =>
@@ -284,7 +285,7 @@ export function readGltf(file: string, bytes?: Uint8Array): GltfFile
         if (b.uri === undefined)
         {
             if (i !== 0 || !glbBin)
-                throw new Error('A glTF buffer has no data.');
+                throw new Error(tr('A glTF buffer has no data.'));
 
             return glbBin;
         }
@@ -299,7 +300,7 @@ function viewBytes(f: GltfFile, index: number): { bytes: Uint8Array; stride?: nu
     const v = f.doc.bufferViews?.[index];
 
     if (!v)
-        throw new Error(`glTF bufferView ${index} is missing.`);
+        throw new Error(tr('glTF bufferView {index} is missing.', { index }));
 
     const b = f.buffers[v.buffer];
     return { bytes: b.subarray(v.byteOffset ?? 0, (v.byteOffset ?? 0) + v.byteLength), stride: v.byteStride };
@@ -323,7 +324,7 @@ function readComponent(dv: DataView, off: number, type: number): number
             return dv.getFloat32(off, true);
     }
 
-    throw new Error(`Unknown glTF component type ${type}.`);
+    throw new Error(tr('Unknown glTF component type {type}.', { type }));
 }
 
 /** value of a normalized integer component */
@@ -353,13 +354,13 @@ export function readAccessor(f: GltfFile, index: number): { values: Float64Array
     const acc = f.doc.accessors?.[index];
 
     if (!acc)
-        throw new Error(`glTF accessor ${index} is missing.`);
+        throw new Error(tr('glTF accessor {index} is missing.', { index }));
 
     const size = COMPONENTS[acc.type];
     const bytes = BYTES[acc.componentType];
 
     if (!size || !bytes)
-        throw new Error(`Unsupported glTF accessor type ${acc.type}/${acc.componentType}.`);
+        throw new Error(tr('Unsupported glTF accessor type {type}/{componentType}.', { type: acc.type, componentType: acc.componentType }));
 
     const out = new Float64Array(acc.count * size);
 
@@ -410,7 +411,7 @@ export function imageBytes(f: GltfFile, index: number): { bytes: Uint8Array; mim
     const img = f.doc.images?.[index];
 
     if (!img)
-        throw new Error(`glTF image ${index} is missing.`);
+        throw new Error(tr('glTF image {index} is missing.', { index }));
 
     const bytes = img.bufferView !== undefined ? viewBytes(f, img.bufferView).bytes : external(f.dir, img.uri ?? '');
     const mime = img.mimeType ?? (/\.jpe?g$/i.test(img.uri ?? '') ? 'image/jpeg' : /\.webp$/i.test(img.uri ?? '') ? 'image/webp' : 'image/png');

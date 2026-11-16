@@ -1,0 +1,2790 @@
+[
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnActiveSettingsChange",
+  "label": "Active settings changed",
+  "summary": "Called when the player picks another entry in the settings dropdown of the court scene editor.",
+  "details": "Vanilla wires it to the onselectionchanged event of that dropdown, whose entries come from GetAllSettings and whose shown entry comes from GetActiveSettingsIndex. What it does with the pick rests on the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:171"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnArtifactDescriptionEdit",
+  "label": "Artifact description edited",
+  "summary": "Handles the player finishing an edit of an artifact entry's description text in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the artifact description field of the editor (the GUI event oneditingfinished). Vanilla passes the artifact entry being edited.",
+  "fields": [
+   {
+    "name": "artifact",
+    "text": "The artifact entry of the scene that was edited.",
+    "values": "vanilla passes ArtifactSettings.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnArtifactEditFinished",
+  "label": "Artifact edit finished",
+  "summary": "Handles the end of a change to an artifact entry in the court scene editor.",
+  "details": "Vanilla fires it from the onchangefinish event, the counterpart of OnArtifactEditStarted. The game documents nothing more.",
+  "fields": [
+   {
+    "name": "artifact",
+    "text": "The artifact entry that was changed.",
+    "values": "vanilla passes ArtifactSettings.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnArtifactEditStarted",
+  "label": "Artifact edit started",
+  "summary": "Handles the start of a change to an artifact entry in the court scene editor.",
+  "details": "Vanilla fires it from the onchangestart event, the counterpart of the finish function. The game documents nothing more.",
+  "fields": [
+   {
+    "name": "artifact",
+    "text": "The artifact entry about to be changed.",
+    "values": "vanilla passes ArtifactSettings.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnArtifactLocatorEdit",
+  "label": "Artifact locator edited",
+  "summary": "Handles the player finishing an edit of an artifact entry's locator name in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the artifact locator field of the editor (the GUI event oneditingfinished). What a locator is here rests on the name; the input does not say.",
+  "fields": [
+   {
+    "name": "artifact",
+    "text": "The artifact entry that was edited.",
+    "values": "vanilla passes ArtifactSettings.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:2435"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnArtifactPositionEdit",
+  "label": "Artifact position edited",
+  "summary": "Handles the player finishing an edit of one coordinate of an artifact entry's position in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the artifact position field of the editor (the GUI event oneditingfinished). The same function serves the x, y and z fields.",
+  "fields": [
+   {
+    "name": "artifact",
+    "text": "The artifact entry that was edited.",
+    "values": "vanilla passes ArtifactSettings.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "axis",
+    "text": "Which of the three axes to change.",
+    "values": "'x', 'y' or 'z' (vanilla passes these letters)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnArtifactRotationEdit",
+  "label": "Artifact rotation edited",
+  "summary": "Handles the player finishing an edit of one rotation value of an artifact entry in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the artifact rotation field of the editor (the GUI event oneditingfinished). The same function serves the x, y and z fields.",
+  "fields": [
+   {
+    "name": "artifact",
+    "text": "The artifact entry that was edited.",
+    "values": "vanilla passes ArtifactSettings.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "axis",
+    "text": "Which of the three axes to change.",
+    "values": "'x', 'y' or 'z' (vanilla passes these letters)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnArtifactSlotTypeEdit",
+  "label": "Artifact slot type edited",
+  "summary": "Handles the player finishing an edit of an artifact entry's slot type in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the artifact slot type field of the editor (the GUI event oneditingfinished). What a slot type is exactly rests on the name.",
+  "fields": [
+   {
+    "name": "artifact",
+    "text": "The artifact entry that was edited.",
+    "values": "vanilla passes ArtifactSettings.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnAssetDescriptionEdit",
+  "label": "Asset description edited",
+  "summary": "Handles the player finishing an edit of an asset entry's description text in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the asset description field of the editor (the GUI event oneditingfinished).",
+  "fields": [
+   {
+    "name": "asset",
+    "text": "The asset entry of the scene that was edited.",
+    "values": "vanilla passes AssetSettings.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnAssetEditFinished",
+  "label": "Asset edit finished",
+  "summary": "Handles the end of a change to an asset entry in the court scene editor.",
+  "details": "Vanilla fires it from the onchangefinish event, the counterpart of the start function. The game documents nothing more.",
+  "fields": [
+   {
+    "name": "asset",
+    "text": "The asset entry that was changed.",
+    "values": "vanilla passes AssetSettings.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnAssetEditStarted",
+  "label": "Asset edit started",
+  "summary": "Handles the start of a change to an asset entry in the court scene editor.",
+  "details": "Vanilla fires it from the onchangestart event, the counterpart of the finish function. The game documents nothing more.",
+  "fields": [
+   {
+    "name": "asset",
+    "text": "The asset entry about to be changed.",
+    "values": "vanilla passes AssetSettings.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnAssetLocatorEdit",
+  "label": "Asset locator edited",
+  "summary": "Handles the player finishing an edit of an asset entry's locator name in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the asset locator field of the editor (the GUI event oneditingfinished).",
+  "fields": [
+   {
+    "name": "asset",
+    "text": "The asset entry that was edited.",
+    "values": "vanilla passes AssetSettings.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnAssetNameEdit",
+  "label": "Asset name edited",
+  "summary": "Handles the player finishing an edit of an asset entry's name in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the asset name field of the editor (the GUI event oneditingfinished).",
+  "fields": [
+   {
+    "name": "asset",
+    "text": "The asset entry that was edited.",
+    "values": "vanilla passes AssetSettings.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnAssetPositionEdit",
+  "label": "Asset position edited",
+  "summary": "Handles the player finishing an edit of one coordinate of an asset entry's position in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the asset position field of the editor (the GUI event oneditingfinished). The same function serves the x, y and z fields.",
+  "fields": [
+   {
+    "name": "asset",
+    "text": "The asset entry that was edited.",
+    "values": "vanilla passes AssetSettings.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "axis",
+    "text": "Which of the three axes to change.",
+    "values": "'x', 'y' or 'z' (vanilla passes these letters)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnAssetRotationEdit",
+  "label": "Asset rotation edited",
+  "summary": "Handles the player finishing an edit of one rotation value of an asset entry in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the asset rotation field of the editor (the GUI event oneditingfinished). The same function serves the x, y and z fields.",
+  "fields": [
+   {
+    "name": "asset",
+    "text": "The asset entry that was edited.",
+    "values": "vanilla passes AssetSettings.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "axis",
+    "text": "Which of the three axes to change.",
+    "values": "'x', 'y' or 'z' (vanilla passes these letters)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnAssetScaleEdit",
+  "label": "Asset scale edited",
+  "summary": "Handles the player finishing an edit of an asset entry's scale in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the asset scale field of the editor (the GUI event oneditingfinished).",
+  "fields": [
+   {
+    "name": "asset",
+    "text": "The asset entry that was edited.",
+    "values": "vanilla passes AssetSettings.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnCameraDescriptionEdit",
+  "label": "Camera description edited",
+  "summary": "Handles the player finishing an edit of a camera entry's description text in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the camera description field of the editor (the GUI event oneditingfinished).",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry that was edited.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnCameraEditFinished",
+  "label": "Camera edit finished",
+  "summary": "Handles the end of a change to a camera entry in the court scene editor.",
+  "details": "Vanilla fires it from the onchangefinish event, the counterpart of the start function. The game documents nothing more.",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry that was changed.",
+    "values": "vanilla passes Camera.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnCameraEditStarted",
+  "label": "Camera edit started",
+  "summary": "Handles the start of a change to a camera entry in the court scene editor.",
+  "details": "Vanilla fires it from the onchangestart event, the counterpart of the finish function. The game documents nothing more.",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry about to be changed.",
+    "values": "vanilla passes Camera.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnCameraFarEdit",
+  "label": "Camera far edited",
+  "summary": "Handles the player finishing an edit of a camera entry's far value in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the camera far field of the editor (the GUI event oneditingfinished). Going by the name, this is the far clipping distance (how far the camera sees).",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry that was edited.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnCameraFovEdit",
+  "label": "Camera field of view edited",
+  "summary": "Handles the player finishing an edit of a camera entry's field of view in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the camera field of view field of the editor (the GUI event oneditingfinished).",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry that was edited.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnCameraNameLocalizationKeyEdit",
+  "label": "Camera name key edited",
+  "summary": "Handles the player finishing an edit of the localization key that names a camera entry in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the camera name key field of the editor (the GUI event oneditingfinished). A localization key is the id of a text in the localization files.",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry that was edited.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnCameraNearEdit",
+  "label": "Camera near edited",
+  "summary": "Handles the player finishing an edit of a camera entry's near value in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the camera near field of the editor (the GUI event oneditingfinished). Going by the name, this is the near clipping distance (how close things can be and still be seen).",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry that was edited.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnCameraPositionEdit",
+  "label": "Camera position edited",
+  "summary": "Handles the player finishing an edit of one coordinate of a camera entry's position in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the camera position field of the editor (the GUI event oneditingfinished). The same function serves the x, y and z fields.",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry that was edited.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "axis",
+    "text": "Which of the three axes to change.",
+    "values": "'x', 'y' or 'z' (vanilla passes these letters)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnCharacterDescriptionEdit",
+  "label": "Character description edited",
+  "summary": "Handles the player finishing an edit of a character entry's description text in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the character description field of the editor (the GUI event oneditingfinished).",
+  "fields": [
+   {
+    "name": "character",
+    "text": "The character entry of the scene that was edited.",
+    "values": "vanilla passes CharacterProperties.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnCharacterEditFinished",
+  "label": "Character edit finished",
+  "summary": "Handles the end of a change to a character entry in the court scene editor.",
+  "details": "Vanilla fires it from the onchangefinish event, the counterpart of the start function. The game documents nothing more.",
+  "fields": [
+   {
+    "name": "character",
+    "text": "The character entry that was changed.",
+    "values": "vanilla passes CharacterProperties.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnCharacterEditStarted",
+  "label": "Character edit started",
+  "summary": "Handles the start of a change to a character entry in the court scene editor.",
+  "details": "Vanilla fires it from the onchangestart event, the counterpart of the finish function. The game documents nothing more.",
+  "fields": [
+   {
+    "name": "character",
+    "text": "The character entry about to be changed.",
+    "values": "vanilla passes CharacterProperties.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnCharacterLocatorEdit",
+  "label": "Character locator edited",
+  "summary": "Handles the player finishing an edit of a character entry's locator name in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the character locator field of the editor (the GUI event oneditingfinished).",
+  "fields": [
+   {
+    "name": "character",
+    "text": "The character entry that was edited.",
+    "values": "vanilla passes CharacterProperties.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnCharacterPositionEdit",
+  "label": "Character position edited",
+  "summary": "Handles the player finishing an edit of one coordinate of a character entry's position in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the character position field of the editor (the GUI event oneditingfinished). The same function serves the x, y and z fields.",
+  "fields": [
+   {
+    "name": "character",
+    "text": "The character entry that was edited.",
+    "values": "vanilla passes CharacterProperties.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "axis",
+    "text": "Which of the three axes to change.",
+    "values": "'x', 'y' or 'z' (vanilla passes these letters)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnCharacterRolesEdit",
+  "label": "Character roles edited",
+  "summary": "Handles the player finishing an edit of a character entry's roles in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the character roles field of the editor (the GUI event oneditingfinished). What the roles are exactly rests on the name.",
+  "fields": [
+   {
+    "name": "character",
+    "text": "The character entry that was edited.",
+    "values": "vanilla passes CharacterProperties.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnCharacterRotationEdit",
+  "label": "Character rotation edited",
+  "summary": "Handles the player finishing an edit of one rotation value of a character entry in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the character rotation field of the editor (the GUI event oneditingfinished). The same function serves the x, y and z fields.",
+  "fields": [
+   {
+    "name": "character",
+    "text": "The character entry that was edited.",
+    "values": "vanilla passes CharacterProperties.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "axis",
+    "text": "Which of the three axes to change.",
+    "values": "'x', 'y' or 'z' (vanilla passes these letters)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnColorChange",
+  "label": "Light color changed",
+  "summary": "Handles a colour change of a light entry in the court scene editor.",
+  "details": "Vanilla fires it from the oncolorchanged event of the light's colour picker (tooltip \"Click to open color picker\"); OnLightColorPickerFinishChange is wired to the same picker.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry whose colour changed.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:1315"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnConeInnerAngleEdit",
+  "label": "Light inner cone angle edited",
+  "summary": "Handles the player finishing an edit of a light entry's inner cone angle in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the inner cone angle field of the editor (the GUI event oneditingfinished). Going by the name, it belongs to spot-light style lights.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry that was edited.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnConeOuterAngleEdit",
+  "label": "Light outer cone angle edited",
+  "summary": "Handles the player finishing an edit of a light entry's outer cone angle in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the outer cone angle field of the editor (the GUI event oneditingfinished). Going by the name, it belongs to spot-light style lights.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry that was edited.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnIntensityEdit",
+  "label": "Light intensity edited",
+  "summary": "Handles the player finishing an edit of a light entry's intensity (brightness) in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the intensity field of the editor (the GUI event oneditingfinished).",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry that was edited.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnLightCameraEdit",
+  "label": "Light camera edited",
+  "summary": "Handles the player finishing an edit of one value of the camera tied to a light in the court scene editor.",
+  "details": "Vanilla fires it when editing finishes in the fov, pitch or yaw field shown for a light, and passes both the light and a camera entry. That the value belongs to a camera linked to the light rests on this use.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry being edited.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "camera",
+    "text": "The camera entry being edited.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "value",
+    "text": "Which value was edited.",
+    "values": "'fov', 'pitch' or 'yaw' (vanilla passes these words)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnLightColorPickerFinishChange",
+  "label": "Light color picker finished",
+  "summary": "Handles the player finishing a change in the colour picker of a light entry in the court scene editor.",
+  "details": "Vanilla fires it from the oneditingfinished event of the light's colour picker; OnColorChange is wired to the same picker.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry whose colour was picked.",
+    "values": "vanilla passes Light.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:1316"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnLightDescriptionEdit",
+  "label": "Light description edited",
+  "summary": "Handles the player finishing an edit of a light entry's description text in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the light description field of the editor (the GUI event oneditingfinished).",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry that was edited.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnLightEditFinished",
+  "label": "Light edit finished",
+  "summary": "Handles the end of a change to a light entry in the court scene editor.",
+  "details": "Vanilla fires it from the onchangefinish event in two places, the counterpart of the start function. The game documents nothing more.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry that was changed.",
+    "values": "vanilla passes Light.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnLightEditStarted",
+  "label": "Light edit started",
+  "summary": "Handles the start of a change to a light entry in the court scene editor.",
+  "details": "Vanilla fires it from the onchangestart event in two places, the counterpart of the finish function. The game documents nothing more.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry about to be changed.",
+    "values": "vanilla passes Light.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnLightIntensityVariationEdit",
+  "label": "Light intensity variation edited",
+  "summary": "Handles the player finishing an edit of how much a light's intensity varies in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the intensity variation field of the editor (the GUI event oneditingfinished). Going by the name, it belongs to animated (flickering) lights.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry that was edited.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnLightIntensityVariationFrequencyEdit",
+  "label": "Light intensity variation speed edited",
+  "summary": "Handles the player finishing an edit of how often a light's intensity varies in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the intensity variation frequency field of the editor (the GUI event oneditingfinished). Going by the name, it belongs to animated (flickering) lights.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry that was edited.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnLightLookAtEdit",
+  "label": "Light look-at edited",
+  "summary": "A function of the court scene editor window that, going by its name, handles an edit of the point a light looks at.",
+  "details": "The game's own files do not use it, so nothing confirms its purpose. It takes two arguments and returns nothing. The game documents nothing more.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Unknown; the game documents no meaning.",
+    "values": "unknown"
+   },
+   {
+    "name": "Arg1",
+    "text": "Unknown; the game documents no meaning.",
+    "values": "unknown"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnLightPitchEdit",
+  "label": "Light pitch edited",
+  "summary": "Handles the player finishing an edit of a light entry's pitch (tilt up or down) in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the light pitch field of the editor (the GUI event oneditingfinished).",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry that was edited.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnLightPositionEdit",
+  "label": "Light position edited",
+  "summary": "Handles the player finishing an edit of one coordinate of a light entry's position in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the light position field of the editor (the GUI event oneditingfinished). The same function serves the x, y and z fields.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry that was edited.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "axis",
+    "text": "Which of the three axes to change.",
+    "values": "'x', 'y' or 'z' (vanilla passes these letters)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnLightPositionVariationEdit",
+  "label": "Light position variation edited",
+  "summary": "Handles the player finishing an edit of how far a light's position varies in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the position variation field of the editor (the GUI event oneditingfinished). Going by the name, it belongs to animated lights.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry that was edited.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnLightPositionVariationFrequencyEdit",
+  "label": "Light position variation speed edited",
+  "summary": "Handles the player finishing an edit of how often a light's position varies in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the position variation frequency field of the editor (the GUI event oneditingfinished). Going by the name, it belongs to animated lights.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry that was edited.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnLightYawEdit",
+  "label": "Light yaw edited",
+  "summary": "Handles the player finishing an edit of a light entry's yaw (turn left or right) in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the light yaw field of the editor (the GUI event oneditingfinished).",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry that was edited.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnRadiusEdit",
+  "label": "Light radius edited",
+  "summary": "Handles the player finishing an edit of a light entry's radius (reach) in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the radius field of the editor (the GUI event oneditingfinished).",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry that was edited.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnSetPitch",
+  "label": "Camera pitch typed",
+  "summary": "Handles the player finishing a typed pitch (tilt) value for a camera entry in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the camera pitch field of the editor (the GUI event oneditingfinished).",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry that was edited.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnSetShadowFade",
+  "label": "Camera shadow fade typed",
+  "summary": "Handles the player finishing a typed shadow fade value for a camera entry in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the camera shadow fade field of the editor (the GUI event oneditingfinished).",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry that was edited.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnSetYaw",
+  "label": "Camera yaw typed",
+  "summary": "Handles the player finishing a typed yaw (turn) value for a camera entry in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the camera yaw field of the editor (the GUI event oneditingfinished).",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry that was edited.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnShadowsFadeEdit",
+  "label": "Shadows fade edited",
+  "summary": "Handles the player finishing an edit of the shadows fade value, which is not tied to one camera or light entry, in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the shadows fade field of the editor (the GUI event oneditingfinished). It takes no argument, unlike OnSetShadowFade and SetShadowFade, which get a camera entry; what it belongs to beyond that rests on the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:820"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.OnShadowsStrengthEdit",
+  "label": "Shadows strength edited",
+  "summary": "Handles the player finishing an edit of the shadows strength value, which is not tied to one camera or light entry, in the court scene editor.",
+  "details": "Vanilla fires it when the player finishes typing in the shadows strength field of the editor (the GUI event oneditingfinished). It takes no argument, unlike OnSetShadowFade and SetShadowFade, which get a camera entry; what it belongs to beyond that rests on the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.PauseSelectionUpdate",
+  "label": "Pause selection update",
+  "summary": "Going by its name, pauses the editor's updating of the selection while a change is in progress.",
+  "details": "Vanilla calls it from the onchangestart event, and ResumeSelectionUpdate from onchangefinish, on the same control. The exact effect rests on the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:874"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.RedoCommand",
+  "label": "Redo",
+  "summary": "Redoes the last undone change in the court scene editor.",
+  "details": "Vanilla calls it from a button with the tooltip \"Redo change\", enabled by CanRedo. It is the counterpart of UndoCommand.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:149"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ReloadEdit",
+  "label": "Reload settings",
+  "summary": "Reloads the scene settings in the court scene editor, using the configuration file in the user Documents folder if there is one.",
+  "details": "Vanilla calls it from the button \"Reload\". ReloadSafe, on the button \"Default\", reloads the default settings instead.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:125"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ReloadSafe",
+  "label": "Reload default settings",
+  "summary": "Reloads the default scene settings in the court scene editor, from the configuration file shipped with the game.",
+  "details": "Vanilla calls it from the button \"Default\". ReloadEdit, on the button \"Reload\", prefers the file in the user Documents folder.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:132"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.RemoveArtifact",
+  "label": "Remove artifact",
+  "summary": "Removes an artifact entry from the scene in the court scene editor.",
+  "details": "Vanilla calls it from a button click on that entry.",
+  "fields": [
+   {
+    "name": "artifact",
+    "text": "The artifact entry to remove.",
+    "values": "vanilla passes ArtifactSettings.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.RemoveAsset",
+  "label": "Remove asset",
+  "summary": "Removes an asset entry from the scene in the court scene editor.",
+  "details": "Vanilla calls it from a button click on that entry.",
+  "fields": [
+   {
+    "name": "asset",
+    "text": "The asset entry to remove.",
+    "values": "vanilla passes AssetSettings.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.RemoveCamera",
+  "label": "Remove camera",
+  "summary": "Removes a camera entry from the scene in the court scene editor.",
+  "details": "Vanilla calls it from a button click on that entry.",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry to remove.",
+    "values": "vanilla passes Camera.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.RemoveCharacter",
+  "label": "Remove character",
+  "summary": "Removes a character entry from the scene in the court scene editor.",
+  "details": "Vanilla calls it from a button click on that entry.",
+  "fields": [
+   {
+    "name": "character",
+    "text": "The character entry to remove.",
+    "values": "vanilla passes CharacterProperties.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.RemoveLight",
+  "label": "Remove light",
+  "summary": "Removes a light entry from the scene in the court scene editor.",
+  "details": "Vanilla calls it from a button click on that entry.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to remove.",
+    "values": "vanilla passes Light.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ResumeSelectionUpdate",
+  "label": "Resume selection update",
+  "summary": "Going by its name, lets the editor update the selection again after a change is finished.",
+  "details": "Vanilla calls it from the onchangefinish event; it is the counterpart of PauseSelectionUpdate.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:875"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.Save",
+  "label": "Save scene",
+  "summary": "Saves the current court scene configuration from the court scene editor.",
+  "details": "The editor's own button text is \"Save\" and its tooltip says the new configuration file ends up in the user Documents folder.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:118"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.Self",
+  "label": "Editor window itself",
+  "summary": "Gives the court scene editor window itself.",
+  "details": "The game documents no description. Other types use their Self function to hand the object itself on, for example as a function argument; going by that, this does the same for this window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetArtifactPosition",
+  "label": "Set artifact position",
+  "summary": "Sets one coordinate of an artifact entry's position in the court scene editor.",
+  "details": "Vanilla fires it when the position value changes in the editor (the GUI event onvaluechanged). The same function serves the x, y and z fields.",
+  "fields": [
+   {
+    "name": "artifact",
+    "text": "The artifact entry to change.",
+    "values": "vanilla passes ArtifactSettings.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "axis",
+    "text": "Which of the three axes to change.",
+    "values": "'x', 'y' or 'z' (vanilla passes these letters)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetArtifactRotation",
+  "label": "Set artifact rotation",
+  "summary": "Sets one rotation value of an artifact entry in the court scene editor.",
+  "details": "Vanilla fires it when the rotation value changes in the editor (the GUI event onvaluechanged). The same function serves the x, y and z fields.",
+  "fields": [
+   {
+    "name": "artifact",
+    "text": "The artifact entry to change.",
+    "values": "vanilla passes ArtifactSettings.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "axis",
+    "text": "Which of the three axes to change.",
+    "values": "'x', 'y' or 'z' (vanilla passes these letters)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetAssetPosition",
+  "label": "Set asset position",
+  "summary": "Sets one coordinate of an asset entry's position in the court scene editor.",
+  "details": "Vanilla fires it when the position value changes in the editor (the GUI event onvaluechanged). The same function serves the x, y and z fields.",
+  "fields": [
+   {
+    "name": "asset",
+    "text": "The asset entry to change.",
+    "values": "vanilla passes AssetSettings.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "axis",
+    "text": "Which of the three axes to change.",
+    "values": "'x', 'y' or 'z' (vanilla passes these letters)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetAssetRotation",
+  "label": "Set asset rotation",
+  "summary": "Sets one rotation value of an asset entry in the court scene editor.",
+  "details": "Vanilla fires it when the rotation value changes in the editor (the GUI event onvaluechanged). The same function serves the x, y and z fields.",
+  "fields": [
+   {
+    "name": "asset",
+    "text": "The asset entry to change.",
+    "values": "vanilla passes AssetSettings.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "axis",
+    "text": "Which of the three axes to change.",
+    "values": "'x', 'y' or 'z' (vanilla passes these letters)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetAssetScale",
+  "label": "Set asset scale",
+  "summary": "Sets the scale of an asset entry in the court scene editor.",
+  "details": "Vanilla fires it when the scale value changes in the editor (the GUI event onvaluechanged).",
+  "fields": [
+   {
+    "name": "asset",
+    "text": "The asset entry to change.",
+    "values": "vanilla passes AssetSettings.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetCameraActive",
+  "label": "Set camera active",
+  "summary": "Makes the editor view the scene from a camera entry.",
+  "details": "Vanilla calls it from a button on the camera entry with the tooltip \"View the scene from this camera\"; the button is enabled only while CanChangeActiveCamera holds.",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry to activate.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:317"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetCameraDefault",
+  "label": "Set default camera",
+  "summary": "Makes a camera entry the default camera for the royal court.",
+  "details": "Vanilla calls it from a checkbox-style button on the camera entry; its tooltip says \"Set camera as the default one for royal court\".",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry to make the default.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:1031"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetCameraFar",
+  "label": "Set camera far",
+  "summary": "Sets the far value of a camera entry in the court scene editor.",
+  "details": "Vanilla fires it when the camera far value changes in the editor (the GUI event onvaluechanged). Going by the name, this is the far clipping distance.",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry to change.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetCameraFov",
+  "label": "Set camera field of view",
+  "summary": "Sets the field of view of a camera entry in the court scene editor.",
+  "details": "Vanilla fires it when the field of view value changes in the editor (the GUI event onvaluechanged).",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry to change.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetCameraNear",
+  "label": "Set camera near",
+  "summary": "Sets the near value of a camera entry in the court scene editor.",
+  "details": "Vanilla fires it when the camera near value changes in the editor (the GUI event onvaluechanged). Going by the name, this is the near clipping distance.",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry to change.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetCameraPosition",
+  "label": "Set camera position",
+  "summary": "Sets one coordinate of a camera entry's position in the court scene editor.",
+  "details": "Vanilla fires it when the position value changes in the editor (the GUI event onvaluechanged). The same function serves the x, y and z fields.",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry to change.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "axis",
+    "text": "Which of the three axes to change.",
+    "values": "'x', 'y' or 'z' (vanilla passes these letters)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetCharacterPosition",
+  "label": "Set character position",
+  "summary": "Sets one coordinate of a character entry's position in the court scene editor.",
+  "details": "Vanilla fires it when the position value changes in the editor (the GUI event onvaluechanged). The same function serves the x, y and z fields.",
+  "fields": [
+   {
+    "name": "character",
+    "text": "The character entry to change.",
+    "values": "vanilla passes CharacterProperties.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "axis",
+    "text": "Which of the three axes to change.",
+    "values": "'x', 'y' or 'z' (vanilla passes these letters)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetCharacterRotation",
+  "label": "Set character rotation",
+  "summary": "Sets one rotation value of a character entry in the court scene editor.",
+  "details": "Vanilla fires it when the rotation value changes in the editor (the GUI event onvaluechanged). The same function serves the x, y and z fields.",
+  "fields": [
+   {
+    "name": "character",
+    "text": "The character entry to change.",
+    "values": "vanilla passes CharacterProperties.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "axis",
+    "text": "Which of the three axes to change.",
+    "values": "'x', 'y' or 'z' (vanilla passes these letters)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetConeInnerAngle",
+  "label": "Set light inner cone angle",
+  "summary": "Sets the inner cone angle of a light entry in the court scene editor.",
+  "details": "Vanilla fires it when the inner cone angle value changes in the editor (the GUI event onvaluechanged). Going by the name, it belongs to spot-light style lights.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to change.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetConeOuterAngle",
+  "label": "Set light outer cone angle",
+  "summary": "Sets the outer cone angle of a light entry in the court scene editor.",
+  "details": "Vanilla fires it when the outer cone angle value changes in the editor (the GUI event onvaluechanged). Going by the name, it belongs to spot-light style lights.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to change.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetDeveloperCameraActive",
+  "label": "Set developer camera",
+  "summary": "Switches the court scene editor between its temporary developer camera and the selected in-game camera.",
+  "details": "Vanilla calls it from a button click and passes the opposite of the current state (Not of IsDeveloperCameraActive), so the click toggles it. The button is enabled only while CanChangeActiveCamera and IsToolsetEnabled hold.",
+  "fields": [
+   {
+    "name": "active",
+    "text": "Whether the developer camera should be on.",
+    "values": "yes or no (vanilla passes the opposite of IsDeveloperCameraActive)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:59"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetIntensity",
+  "label": "Set light intensity",
+  "summary": "Sets the intensity (brightness) of a light entry in the court scene editor.",
+  "details": "Vanilla fires it when the intensity value changes in the editor (the GUI event onvaluechanged).",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to change.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetLightIntensityVariation",
+  "label": "Set light intensity variation",
+  "summary": "Sets how much a light's intensity varies in the court scene editor.",
+  "details": "Vanilla fires it when the intensity variation value changes in the editor (the GUI event onvaluechanged). Going by the name, it belongs to animated lights.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to change.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetLightIntensityVariationFrequency",
+  "label": "Set light intensity variation speed",
+  "summary": "Sets how often a light's intensity varies in the court scene editor.",
+  "details": "Vanilla fires it when the intensity variation frequency value changes in the editor (the GUI event onvaluechanged). Going by the name, it belongs to animated lights.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to change.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetLightLookAt",
+  "label": "Set light look-at",
+  "summary": "A function of the court scene editor window that, going by its name, sets the point a light looks at.",
+  "details": "The game's own files do not use it, so nothing confirms its purpose. It takes two arguments and returns nothing. The game documents nothing more.",
+  "fields": [
+   {
+    "name": "Arg0",
+    "text": "Unknown; the game documents no meaning.",
+    "values": "unknown"
+   },
+   {
+    "name": "Arg1",
+    "text": "Unknown; the game documents no meaning.",
+    "values": "unknown"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetLightPitch",
+  "label": "Set light pitch",
+  "summary": "Sets the pitch (tilt up or down) of a light entry in the court scene editor.",
+  "details": "Vanilla fires it when the pitch value changes in the editor (the GUI event onvaluechanged).",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to change.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetLightPosition",
+  "label": "Set light position",
+  "summary": "Sets one coordinate of a light entry's position in the court scene editor.",
+  "details": "Vanilla fires it when the position value changes in the editor (the GUI event onvaluechanged). The same function serves the x, y and z fields.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to change.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   },
+   {
+    "name": "axis",
+    "text": "Which of the three axes to change.",
+    "values": "'x', 'y' or 'z' (vanilla passes these letters)",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetLightPositionVariation",
+  "label": "Set light position variation",
+  "summary": "Sets how far a light's position varies in the court scene editor.",
+  "details": "Vanilla fires it when the position variation value changes in the editor (the GUI event onvaluechanged). Going by the name, it belongs to animated lights.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to change.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetLightPositionVariationFrequency",
+  "label": "Set light position variation speed",
+  "summary": "Sets how often a light's position varies in the court scene editor.",
+  "details": "Vanilla fires it when the position variation frequency value changes in the editor (the GUI event onvaluechanged). Going by the name, it belongs to animated lights.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to change.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetLightType",
+  "label": "Set light type",
+  "summary": "Sets the type of a light entry in the court scene editor.",
+  "details": "Vanilla calls it when the selection in a type list changes (onselectionchanged). The available types are not shown in the input.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to change.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetLightYaw",
+  "label": "Set light yaw",
+  "summary": "Sets the yaw (turn left or right) of a light entry in the court scene editor.",
+  "details": "Vanilla fires it when the yaw value changes in the editor (the GUI event onvaluechanged).",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to change.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetPitch",
+  "label": "Set camera pitch",
+  "summary": "Sets the pitch (tilt up or down) of a camera entry in the court scene editor.",
+  "details": "Vanilla fires it when the pitch value changes in the editor (the GUI event onvaluechanged).",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry to change.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetRadius",
+  "label": "Set light radius",
+  "summary": "Sets the radius (reach) of a light entry in the court scene editor.",
+  "details": "Vanilla fires it when the radius value changes in the editor (the GUI event onvaluechanged).",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to change.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetShadowFade",
+  "label": "Set camera shadow fade",
+  "summary": "Sets the shadow fade value of a camera entry in the court scene editor.",
+  "details": "Vanilla fires it when the shadow fade value changes in the editor (the GUI event onvaluechanged).",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry to change.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetShadowsFade",
+  "label": "Set shadows fade",
+  "summary": "Sets the shadows fade value, which is not tied to one camera or light entry, in the court scene editor.",
+  "details": "Vanilla fires it when the shadows fade value changes in the editor (the GUI event onvaluechanged). It takes no argument, unlike OnSetShadowFade and SetShadowFade, which get a camera entry; what it belongs to beyond that rests on the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetShadowsStrength",
+  "label": "Set shadows strength",
+  "summary": "Sets the shadows strength value, which is not tied to one camera or light entry, in the court scene editor.",
+  "details": "Vanilla fires it when the shadows strength value changes in the editor (the GUI event onvaluechanged). It takes no argument, unlike OnSetShadowFade and SetShadowFade, which get a camera entry; what it belongs to beyond that rests on the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:781"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.SetYaw",
+  "label": "Set camera yaw",
+  "summary": "Sets the yaw (turn left or right) of a camera entry in the court scene editor.",
+  "details": "Vanilla fires it when the yaw value changes in the editor (the GUI event onvaluechanged).",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry to change.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ShowArtifactDebugLines",
+  "label": "Showing artifact debug lines",
+  "summary": "Whether the editor currently draws debug lines for artifacts.",
+  "details": "Vanilla uses it as the checked state of a checkbox, paired with ToggleArtifactDebugLines which flips it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ShowAssetsDebugLines",
+  "label": "Showing asset debug lines",
+  "summary": "Whether the editor currently draws debug lines for assets.",
+  "details": "Vanilla uses it as the checked state of a checkbox, paired with ToggleAssetsDebugLines which flips it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ShowCharacterDebugLines",
+  "label": "Showing character debug lines",
+  "summary": "Whether the editor currently draws debug lines for characters.",
+  "details": "Vanilla uses it as the checked state of a checkbox, paired with ToggleCharacterDebugLines which flips it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ShowSelectionDebugLines",
+  "label": "Showing selection debug lines",
+  "summary": "Whether the editor currently draws debug lines for the selection.",
+  "details": "Vanilla uses it as the checked state of a checkbox, paired with ToggleSelectionDebugLines which flips it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleAnimatedLight",
+  "label": "Toggle animated light",
+  "summary": "Switches a light entry between flickering (animated) and steady.",
+  "details": "Vanilla calls it from a checkbox-style button on the light entry; its tooltip says it makes the light flicker and shows the animation controls.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to change.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:1596"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleAnimationCameraIdle",
+  "label": "Toggle idle camera animation",
+  "summary": "Switches the idle camera animation on or off in the court scene editor.",
+  "details": "Vanilla calls it from a button click; its tooltip says \"Animate idle camera\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:249"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleAnimationCameraTransition",
+  "label": "Toggle camera transition animation",
+  "summary": "Switches animated transitions between cameras on or off in the court scene editor.",
+  "details": "Vanilla calls it from a button click; its tooltip says \"Use animated transitions between cameras\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:265"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleArtifactDebugLines",
+  "label": "Toggle artifact debug lines",
+  "summary": "Switches the debug lines for artifacts on or off in the court scene editor.",
+  "details": "Vanilla calls it from a button click; ShowArtifactDebugLines reports the state.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleArtifactExpanded",
+  "label": "Toggle artifact expanded",
+  "summary": "Going by its name, opens or closes the detail section of an artifact entry in the court scene editor list.",
+  "details": "Vanilla calls it from an expand button on that entry in the artifact list. Its exact effect rests on the name.",
+  "fields": [
+   {
+    "name": "artifact",
+    "text": "The artifact entry to expand or collapse.",
+    "values": "vanilla passes ArtifactSettings.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:686"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleAssetExpanded",
+  "label": "Toggle asset expanded",
+  "summary": "Going by its name, opens or closes the detail section of an asset entry in the court scene editor list.",
+  "details": "Vanilla calls it from a button click on that entry. Its exact effect rests on the name.",
+  "fields": [
+   {
+    "name": "asset",
+    "text": "The asset entry to expand or collapse.",
+    "values": "vanilla passes AssetSettings.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleAssetsDebugLines",
+  "label": "Toggle asset debug lines",
+  "summary": "Switches the debug lines for assets on or off in the court scene editor.",
+  "details": "Vanilla calls it from a button click; ShowAssetsDebugLines reports the state.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleCameraExpanded",
+  "label": "Toggle camera expanded",
+  "summary": "Going by its name, opens or closes the detail section of a camera entry in the court scene editor list.",
+  "details": "Vanilla calls it from a button click on that entry. Its exact effect rests on the name.",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry to expand or collapse.",
+    "values": "vanilla passes Camera.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleCameraToTakeScreenshot",
+  "label": "Toggle screenshot camera",
+  "summary": "Marks or unmarks a camera entry as the one used to take screenshots.",
+  "details": "Vanilla calls it from a button on that camera; its tooltip says \"Use the camera to take screenshots\".",
+  "fields": [
+   {
+    "name": "camera",
+    "text": "The camera entry to change.",
+    "values": "vanilla passes Camera.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:1059"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleCharacterDebugLines",
+  "label": "Toggle character debug lines",
+  "summary": "Switches the debug lines for characters on or off in the court scene editor.",
+  "details": "Vanilla calls it from a button click; ShowCharacterDebugLines reports the state.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleCharacterExpanded",
+  "label": "Toggle character expanded",
+  "summary": "Going by its name, opens or closes the detail section of a character entry in the court scene editor list.",
+  "details": "Vanilla calls it from a button click on that entry. Its exact effect rests on the name.",
+  "fields": [
+   {
+    "name": "character",
+    "text": "The character entry to expand or collapse.",
+    "values": "vanilla passes CharacterProperties.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleCubemapShadow",
+  "label": "Toggle cubemap shadow",
+  "summary": "Switches a light entry between normal and omnidirectional (all-around) shadows.",
+  "details": "Vanilla calls it from a checkbox-style button on the light entry; its tooltip says \"Make this light source use omnidirectional shadows\". The button is enabled only while the light casts shadows (IsAffectedByShadow).",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to change.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:1756"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleLightAffectedByShadow",
+  "label": "Toggle light casts shadow",
+  "summary": "Switches whether a light entry casts shadows.",
+  "details": "Vanilla calls it from a checkbox-style button labelled \"Cast shadow\"; its tooltip says \"Make this light source cast shadows\".",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to change.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:1740"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleLightEnabled",
+  "label": "Toggle light enabled",
+  "summary": "Switches a light entry on or off in the court scene editor.",
+  "details": "Vanilla calls it from a checkbox-style button on the light entry; its tooltip says \"Toggle this light\".",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to switch.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:1612"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleLightExpanded",
+  "label": "Toggle light expanded",
+  "summary": "Going by its name, opens or closes the detail section of a light entry in the court scene editor list.",
+  "details": "Vanilla calls it from a button click on that entry. Its exact effect rests on the name.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry to expand or collapse.",
+    "values": "vanilla passes Light.Self",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:410"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleSelectionDebugLines",
+  "label": "Toggle selection debug lines",
+  "summary": "Switches the debug lines for the selection on or off in the court scene editor.",
+  "details": "Vanilla calls it from a button click; ShowSelectionDebugLines reports the state.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleShowDebugCamera",
+  "label": "Toggle shadow camera display",
+  "summary": "Switches the drawing of a light entry's shadow camera volume on or off in the court scene editor.",
+  "details": "Vanilla calls it from a checkbox-style button on the light entry; its tooltip says \"Draw shadow camera volume. Only available when shadow is active\". The button is enabled only while the light casts shadows.",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry it applies to.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:1794"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleShowDebugLight",
+  "label": "Toggle light debug widget",
+  "summary": "Switches the debug widget of a light entry on or off in the court scene editor.",
+  "details": "Vanilla calls it from a checkbox-style button labelled \"Toggle debug widget\"; its tooltip says \"Toggle debug widges for light sources\" (spelled so in the game).",
+  "fields": [
+   {
+    "name": "light",
+    "text": "The light entry it applies to.",
+    "values": "vanilla passes Light.AccessSelf",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:1778"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.ToggleToolsedEnabled",
+  "label": "Toggle tools editor",
+  "summary": "Switches the editor's interactive scene tools on or off.",
+  "details": "Vanilla calls it from the button \"Toggle tools\"; its tooltip says \"Toggle interactive scene editor tools\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:107"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneEditorWindow.UndoCommand",
+  "label": "Undo",
+  "summary": "Undoes the last change in the court scene editor.",
+  "details": "Vanilla calls it from a button with the tooltip \"Undo change\", enabled by CanUndo. It is the counterpart of RedoCommand.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui:141"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneSettings.AccessSelf",
+  "label": "Scene settings (editable)",
+  "summary": "Gives access to the court scene settings object itself, in a form that can be changed.",
+  "details": "The game documents no description. The name has the form of the Access variants other types have, which hand on the object for editing; the court editor passes such values to its edit functions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneSettings.GetSettingsCulture",
+  "label": "Visual culture",
+  "summary": "The visual culture the court scene settings belong to, as text.",
+  "details": "Vanilla shows it in the editor next to the label \"Visual culture:\", taken from the active settings of the court scene editor.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: gui/window_court_scene_editor.gui"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtSceneSettings.Self",
+  "label": "Scene settings",
+  "summary": "The court scene settings object itself.",
+  "details": "The game documents no description. Vanilla passes it to GetSceneSettingsName to show a settings name in text and tooltips.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtTaskInteractionItem.AccessSelf",
+  "label": "Task item (editable)",
+  "summary": "Gives access to the court task interaction item itself, in a form that can be changed.",
+  "details": "The game documents no description. The name has the form of the Access variants other types have, which hand on the object itself.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtTaskInteractionItem.GetCourtPosition",
+  "label": "Court position",
+  "summary": "The court position this item in the court task interaction window stands for.",
+  "details": "Vanilla uses it as the data context of a part of the window. The return type is not registered, so what it is exactly rests on the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtTaskInteractionItem.Select",
+  "label": "Select task item",
+  "summary": "Selects this item in the court task interaction window.",
+  "details": "Vanilla calls it from a click on an item. Going by the name, the window then treats its court position as the chosen one.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtTaskInteractionItem.Self",
+  "label": "Task item",
+  "summary": "The court task interaction item itself.",
+  "details": "The game documents no description. Other types use their Self function to hand the object itself on.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtTaskInteractionWindow.AccessPositions",
+  "label": "Court positions list",
+  "summary": "The list of court positions shown in the court task interaction window.",
+  "details": "Vanilla uses it as the data model of a list in the window. The return type is not registered, so the exact kind of entries rests on the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtTaskInteractionWindow.AccessSelf",
+  "label": "Task window (editable)",
+  "summary": "Gives access to the court task interaction window itself, in a form that can be changed.",
+  "details": "The game documents no description. The name has the form of the Access variants other types have, which hand on the object itself.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtTaskInteractionWindow.CanSendOffer",
+  "label": "Can send offer",
+  "summary": "Whether the offer made in the court task interaction window can be sent now.",
+  "details": "Vanilla uses it as the enabled state of the send button, with GetSendOfferTooltip as the button tooltip.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtTaskInteractionWindow.Close",
+  "label": "Close window",
+  "summary": "Closes the court task interaction window.",
+  "details": "Vanilla calls it from a close button click.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtTaskInteractionWindow.GetCharacterInteractionConfirmationWindow",
+  "label": "Confirmation window",
+  "summary": "The confirmation window that belongs to the court task interaction.",
+  "details": "Vanilla uses it as the data context of a part of the window. The return type is not registered, so what it holds exactly rests on the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtTaskInteractionWindow.GetSelectedPosition",
+  "label": "Selected court position",
+  "summary": "The court position currently selected in the court task interaction window.",
+  "details": "Vanilla compares each court position in the list with it to mark the selected one, and shows its name in the text \"Selected Position: ...\".",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: localization/english/gui/interaction_court_task_window_l_english.yml"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtTaskInteractionWindow.GetSelectedPositionHeader",
+  "label": "Selected position header",
+  "summary": "Going by its name, the header text for the selected court position in the court task interaction window.",
+  "details": "Vanilla uses it as the text of a label in the window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtTaskInteractionWindow.GetSendOfferTooltip",
+  "label": "Send offer tooltip",
+  "summary": "The tooltip text of the send button in the court task interaction window.",
+  "details": "Vanilla uses it as the tooltip of the button whose enabled state is CanSendOffer. Going by the name, it likely explains why sending is or is not possible.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtTaskInteractionWindow.HasSelectedPosition",
+  "label": "Has selected position",
+  "summary": "Whether a court position is currently selected in the court task interaction window.",
+  "details": "Vanilla uses it, and its negation, to show or hide parts of the window.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtTaskInteractionWindow.SelectPosition",
+  "label": "Select court position",
+  "summary": "Selects a court position in the court task interaction window.",
+  "details": "The game's own files do not use it, so the argument is not shown. Going by the name, it takes the court position to select.",
+  "fields": [
+   {
+    "name": "position",
+    "text": "Probably the court position to select; the game documents no meaning.",
+    "values": "unknown"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtTaskInteractionWindow.Self",
+  "label": "Task window",
+  "summary": "The court task interaction window itself.",
+  "details": "The game documents no description. Other types use their Self function to hand the object itself on.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtTaskInteractionWindow.Send",
+  "label": "Send offer",
+  "summary": "Sends the offer made in the court task interaction window.",
+  "details": "Vanilla calls it from the send button click; the button is enabled only while CanSendOffer holds.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtToolset.AccessSelf",
+  "label": "Toolset (editable)",
+  "summary": "Gives access to the court toolset object itself, in a form that can be changed.",
+  "details": "The game documents no description. The name has the form of the Access variants other types have, which hand on the object itself.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtToolset.IsModeRotation",
+  "label": "Is rotation mode",
+  "summary": "Whether the court scene editor's tool is in rotation mode.",
+  "details": "Vanilla uses it as the checked state of a toolbar button, with SetModeRotation as its click.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtToolset.IsModeScale",
+  "label": "Is scale mode",
+  "summary": "Whether the court scene editor's tool is in scale mode.",
+  "details": "Vanilla uses it as the checked state of a toolbar button, with SetModeScale as its click.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtToolset.IsModeSelect",
+  "label": "Is select mode",
+  "summary": "Whether the court scene editor's tool is in select mode.",
+  "details": "Vanilla uses it as the checked state of a toolbar button, with SetModeSelect as its click.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtToolset.IsModeTranslate",
+  "label": "Is move mode",
+  "summary": "Whether the court scene editor's tool is in translate (move) mode.",
+  "details": "Vanilla uses it as the checked state of a toolbar button. The input shows no matching SetModeTranslate use.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtToolset.Self",
+  "label": "Toolset",
+  "summary": "The court toolset object itself.",
+  "details": "The game documents no description. Other types use their Self function to hand the object itself on.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtToolset.SetModeRotation",
+  "label": "Set rotation mode",
+  "summary": "Puts the court scene editor's tool into rotation mode.",
+  "details": "Vanilla calls it from a toolbar button click; IsModeRotation reports the state.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtToolset.SetModeScale",
+  "label": "Set scale mode",
+  "summary": "Puts the court scene editor's tool into scale mode.",
+  "details": "Vanilla calls it from a toolbar button click; IsModeScale reports the state.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "data_function",
+  "key": "CourtToolset.SetModeSelect",
+  "label": "Set select mode",
+  "summary": "Puts the court scene editor's tool into select mode.",
+  "details": "Vanilla calls it from a toolbar button click; IsModeSelect reports the state.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ }
+]

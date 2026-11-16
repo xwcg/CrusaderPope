@@ -2,8 +2,8 @@
  * The conditions around coats of arms (docs/map.md, "Coats of arms") evaluated with history at a date (facts.ts):
  * dynamic definitions (root: the title), special selections of the template lists (root: the holder, scope:culture,
  * scope:faith, scope:title), the limits of game start effects (start.ts). Scripted triggers are followed with their
- * $PARAM$s, game rules are at their defaults, DLC features owned. What history cannot tell — flags, variables,
- * claims, modifiers, regions — is false (so `has_character_flag = x` fails and `… = no` holds).
+ * $PARAM$s, game rules are at their defaults, DLC features owned. What history cannot tell (flags, variables,
+ * claims, modifiers, regions) is false (so `has_character_flag = x` fails and `… = no` holds).
  */
 import type { GameIndex } from '../indexer/gameIndex.ts';
 import type { PNode } from '../indexer/parser.ts';
@@ -14,7 +14,7 @@ export type Scope =
     | { t: 'none'; }
     | { t: 'char'; id: string; }
     | { t: 'title'; key: string; }
-    | { t: 'culture' | 'faith' | 'religion' | 'dynasty' | 'house'; key: string; }
+    | { t: 'culture' | 'faith' | 'religion' | 'rite' | 'dynasty' | 'house'; key: string; }
     | { t: 'province'; id: number; };
 
 export interface TriggerCtx
@@ -31,17 +31,18 @@ export interface TriggerCtx
 
 const TIER_NAMES: Record<string, number> = { tier_barony: 1, tier_county: 2, tier_duchy: 3, tier_kingdom: 4, tier_empire: 5, tier_hegemony: 6 };
 /** `x:key` scopes by prefix */
-const PREFIXED: Record<string, 'title' | 'culture' | 'faith' | 'religion' | 'dynasty' | 'house' | 'char'> = {
+const PREFIXED: Record<string, 'title' | 'culture' | 'faith' | 'religion' | 'rite' | 'dynasty' | 'house' | 'char'> = {
     title: 'title',
     culture: 'culture',
     faith: 'faith',
     religion: 'religion',
+    rite: 'rite',
     dynasty: 'dynasty',
     house: 'house',
     character: 'char'
 };
 /** scope links followed from a scope (see step) */
-const STEPS = new Set(['root', 'this', 'prev', 'holder', 'culture', 'faith', 'religion', 'dynasty', 'house', 'primary_title', 'liege', 'top_liege', 'de_jure_liege', 'empire', 'kingdom', 'duchy', 'county', 'title_province']);
+const STEPS = new Set(['root', 'this', 'prev', 'holder', 'culture', 'faith', 'religion', 'rite', 'main_rite', 'dynasty', 'house', 'primary_title', 'liege', 'top_liege', 'de_jure_liege', 'empire', 'kingdom', 'duchy', 'county', 'title_province']);
 const LOGIC_SKIP = new Set(['text', 'desc', 'subject', 'object', 'value', 'count', 'percent', 'limit']);
 
 const kids = (n: PNode | undefined): PNode[] => (n && Array.isArray(n.v) ? n.v : []);
@@ -87,6 +88,8 @@ export class CoaTriggers
 {
     private idx: GameIndex;
     private facts: CoaFacts;
+    /** the triggers taken as false because history cannot tell them, by how often (each named once in the log) */
+    readonly unknown = new Map<string, number>();
 
     constructor(idx: GameIndex, facts: CoaFacts)
     {
@@ -231,6 +234,12 @@ export class CoaTriggers
             return r ? { t: 'religion', key: r } : undefined;
         }
 
+        if (s.t === 'faith' && p === 'main_rite')
+        {
+            const r = f.mainRite(s.key, when);
+            return r ? { t: 'rite', key: r } : undefined;
+        }
+
         if (s.t === 'house' && p === 'dynasty')
         {
             const d = f.houseDynasty(s.key);
@@ -253,6 +262,8 @@ export class CoaTriggers
                 const r = who?.faith ? f.faith(who.faith)?.religion : undefined;
                 return r ? { t: 'religion', key: r } : undefined;
             }
+            case 'rite':
+                return who?.rite ? { t: 'rite', key: who.rite } : undefined;
             case 'dynasty':
                 return who?.dynasty ? { t: 'dynasty', key: who.dynasty } : undefined;
             case 'house':
@@ -329,9 +340,10 @@ export class CoaTriggers
                 return this.holds(block ?? [], s, ctx);
             case 'OR':
                 return this.chain(block ?? [], s, ctx, false);
-            case 'NOT':
             case 'NAND':
                 return !this.holds(block ?? [], s, ctx);
+            // (NOT with several statements is true when none of them holds, as NOR)
+            case 'NOT':
             case 'NOR':
                 return !this.chain(block ?? [], s, ctx, false);
             case 'calc_true_if':
@@ -475,13 +487,23 @@ export class CoaTriggers
             const x = f.faith(s.key);
 
             if (k === 'has_doctrine')
-                return !!x?.doctrines.has(v);
+                return f.hasDoctrine(s.key, v, when);
 
             if (k === 'has_icon')
                 return x?.icon === v;
 
             if (k === 'religion_tag')
                 return x?.religion === v;
+        }
+        else if (s.t === 'rite')
+        {
+            const x = f.rite(s.key);
+
+            if (k === 'rite_has_doctrine')
+                return !!x?.doctrines.has(v);
+
+            if (k === 'rite_has_tenet')
+                return !!x?.tenets.has(v);
         }
         else if (s.t === 'religion')
         {
@@ -550,7 +572,14 @@ export class CoaTriggers
             }
         }
 
-        // flags, variables, claims, modifiers, laws, regions …: unknown — false (`… = no` holds)
+        // flags, variables, claims, modifiers, laws, regions …: unknown, so false (`… = no` holds); each one named once
+        // in the log, so a coat of arms that comes out wrong can be traced to a trigger this reader does not know
+        const n = this.unknown.get(k) ?? 0;
+        this.unknown.set(k, n + 1);
+
+        if (!n)
+            console.warn(`coats of arms: the trigger ${k} is not worked out from history, taken as false (\`= no\` holds)`);
+
         return v === 'no';
     }
 }

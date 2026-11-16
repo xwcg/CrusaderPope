@@ -152,8 +152,8 @@ export interface TitleState
 
 /**
  * Holders and lieges at the date (the last `holder` / `liege` at or before it; `0` clears), and what follows from
- * them: a holder's primary title is their highest-tier title (titles `ai_primary_priority` never makes primary — noble
- * families — only when they hold nothing else) — among several, the one `set_primary_title_to` names (character
+ * them: a holder's primary title is their highest-tier title (titles `ai_primary_priority` never makes primary (noble
+ * families) only when they hold nothing else); among several, the one `set_primary_title_to` names (character
  * history), else the one of the highest `ai_primary_priority` for them (titles-priority.ts), else the one held longest
  * (the game keeps the first title of a tier: a later one of the same tier does not replace it); their liege is the
  * holder of their primary title's `liege` (a lower title's `liege` can name the holder's own vassal: the emperor's
@@ -241,7 +241,7 @@ export function titleState(tree: TitleTree, env: TitleEnv, when: number): TitleS
         }
 
         const score = all.map((t) => priorityFor(titles[t].priority, facts[h]));
-        // (titles that are never primary — noble families — only when there is nothing else)
+        // (titles that are never primary (noble families) only when there is nothing else)
         const some = score.some((s) => s > NEVER_PRIMARY);
         let top = -1;
 

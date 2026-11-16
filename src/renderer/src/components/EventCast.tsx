@@ -1,37 +1,38 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import type { CastMember, EventPortrait, EventStory, OnActionInfo, PortraitOptions, Rich, ScriptEditRequest, ScriptEditResult, SectionSource, StoryOrigin } from '../../../shared/api';
+import type { CastMember, EntryCreate, EventPortrait, EventStory, OnActionInfo, PortraitOptions, Rich, ScriptEditRequest, ScriptEditResult, SectionSource, StoryOrigin } from '../../../shared/api';
 import { api } from '../api';
 import { reportChange } from '../changes';
 import { pickStatement } from '../picker/pickStatement';
-import { reportEditError, runScriptEdit } from '../scriptEdits';
+import { createsOf, reportEditError, rewrittenText, runScriptEdit } from '../scriptEdits';
 import { EditCtx } from './editCtx';
 import { errorText } from './ModDialogs';
 import { LineList, RichText } from './rich';
 import '../styles/edit.css';
 import { Select } from './Select';
 
+import { tr } from '../../../shared/i18n';
 /**
  * Who is who in an event, and what fires it (docs/readable-view.md "Who's who", docs/mods.md "What fires an event"):
- * the card's "Who's who" section — root, the scopes it is given and names, their portraits — and the origins' "＋ When
+ * the card's "Who's who" section (root, the scopes it is given and names, their portraits) and the origins' "＋ When
  * it happens…" (an on_action of the game fires it, always or among its random events).
  */
 
 const POSITIONS: [string, string][] = [
-    ['left', 'Left'],
-    ['right', 'Right'],
-    ['center', 'Center'],
-    ['lower_left', 'Lower left'],
-    ['lower_center', 'Lower middle'],
-    ['lower_right', 'Lower right']
+    ['left', tr('Left')],
+    ['right', tr('Right')],
+    ['center', tr('Center')],
+    ['lower_left', tr('Lower left')],
+    ['lower_center', tr('Lower middle')],
+    ['lower_right', tr('Lower right')]
 ];
 const POS_LABEL: Record<string, string> = Object.fromEntries(POSITIONS);
 
 /** Portrait toggles (`= yes`), as the settings line offers them. */
 const FLAGS: [string, string, string][] = [
-    ['hide_info', 'Hide who it is', 'Only the portrait: no coat of arms, tooltip or click (hide_info)'],
-    ['animate_if_dead', 'Animate if dead', 'Animate the portrait even when the character is dead (animate_if_dead)'],
-    ['override_imprisonment_visuals', 'No prison look', 'Show them as usual even when imprisoned (override_imprisonment_visuals)'],
-    ['remove_default_outfit', 'Only the outfit tags', 'Clothing categories without a matching outfit tag are left out (remove_default_outfit)']
+    ['hide_info', tr('Hide who it is'), tr('Only the portrait: no coat of arms, tooltip or click (hide_info)')],
+    ['animate_if_dead', tr('Animate if dead'), tr('Animate the portrait even when the character is dead (animate_if_dead)')],
+    ['override_imprisonment_visuals', tr('No prison look'), tr('Show them as usual even when imprisoned (override_imprisonment_visuals)')],
+    ['remove_default_outfit', tr('Only the outfit tags'), tr('Clothing categories without a matching outfit tag are left out (remove_default_outfit)')]
 ];
 
 const nameLabel = (n: string): string =>
@@ -43,7 +44,7 @@ const nameLabel = (n: string): string =>
 /** "personality_rational" → "Rational", "throne_room_bow_1" → "Throne room bow 1", "camera_event_very_left" → "Very left" */
 const animLabel = (n: string): string => nameLabel(n.replace(/^personality_/, '').replace(/^camera_(event_)?/, ''));
 
-/** Into a section (its block, or a new one made where it belongs) — like the sections' "＋ Add". */
+/** Into a section (its block, or a new one made where it belongs), like the sections' "＋ Add". */
 function sectionInsert(s: SectionSource, text: string): ScriptEditRequest | undefined
 {
     if (s.src)
@@ -94,17 +95,18 @@ async function setPortrait(story: EventStory, scope: string, pos: string | null)
         if (!pos)
         {
             if (mine?.src)
-                await runScriptEdit({ op: 'remove', at: mine.src }, `No portrait of ${who}`);
+                await runScriptEdit({ op: 'remove', at: mine.src }, tr('No portrait of {who}', { who }));
 
             return;
         }
 
         const text = portraitBlock(pos, mine?.kids ?? [{ key: 'character', text: `character = ${scope}` }]);
-        const what = `${POS_LABEL[pos]} portrait: ${who}`;
+        const what = tr('{POS_LABEL} portrait: {who}', { POS_LABEL: POS_LABEL[pos], who });
 
+        // (a portrait statement replaced keeps its written comments where they stay: rewrittenText)
         if (taken?.src)
         {
-            await runScriptEdit({ op: 'replace', at: taken.src, text }, what);
+            await runScriptEdit({ op: 'replace', at: taken.src, text: await rewrittenText(taken.src, () => text) }, what);
 
             if (mine)
             {
@@ -113,11 +115,11 @@ async function setPortrait(story: EventStory, scope: string, pos: string | null)
                 const old = fresh && 'cast' in fresh ? fresh.cast?.portraits.find((p) => p.scope === scope && p.pos === mine.pos) : undefined;
 
                 if (old?.src)
-                    await runScriptEdit({ op: 'remove', at: old.src }, `${who}: moved to the ${POS_LABEL[pos].toLowerCase()} portrait`);
+                    await runScriptEdit({ op: 'remove', at: old.src }, tr('{who}: moved to the {position} portrait', { who, position: POS_LABEL[pos].toLowerCase() }));
             }
         }
         else if (mine?.src)
-            await runScriptEdit({ op: 'replace', at: mine.src, text }, what);
+            await runScriptEdit({ op: 'replace', at: mine.src, text: await rewrittenText(mine.src, () => text) }, what);
         else if (cast.portraitAt)
             await runScriptEdit({ op: 'insert', at: cast.portraitAt, text }, what);
         else if (story.src)
@@ -125,17 +127,21 @@ async function setPortrait(story: EventStory, scope: string, pos: string | null)
     }
     catch (e)
     {
-        reportEditError('Portrait not changed')(e);
+        reportEditError(tr('Portrait not changed'))(e);
     }
 }
 
-/** A portrait's statement rewritten with changed settings. */
-async function writePortrait(p: EventPortrait, kids: Kid[], what: string): Promise<void>
+/** A portrait's statement rewritten with changed settings. `creates`: the entries a picked condition made. */
+async function writePortrait(p: EventPortrait, kids: Kid[], what: string, creates?: EntryCreate[]): Promise<void>
 {
     if (!p.src)
         return;
 
-    await runScriptEdit({ op: 'replace', at: p.src, text: portraitBlock(p.pos, kids) }, what).catch(reportEditError('Portrait not changed'));
+    const made = createsOf(creates);
+    const src = p.src;
+    await rewrittenText(src, () => portraitBlock(p.pos, kids))
+        .then((text) => runScriptEdit({ op: 'replace', at: src, text, ...(made.creates ? { creates: made.creates } : {}) }, what + made.note))
+        .catch(reportEditError(tr('Portrait not changed')));
 }
 
 // (the options, loaded once: the index scans the game's events for them)
@@ -179,7 +185,7 @@ function MoodSelect(props: { value: string; options: PortraitOptions; onChange: 
                 </optgroup>
             ))}
             {o.scripted.length > 0 && (
-                <optgroup label="Scripted (picks by situation)">
+                <optgroup label={tr('Scripted (picks by situation)')}>
                     {o.scripted.map((s) => (
                         <option key={s.name} value={'scripted:' + s.name}>
                             {animLabel(s.name)}
@@ -210,7 +216,7 @@ function PortraitSettings({ p, who, editable }: { p: EventPortrait; who: string;
                     {parts.join(' · ')}
                     {p.triggered.map((t, i) => (
                         <div key={i}>
-                            mood <b>{t.animation ? animLabel(t.animation) : '…'}</b> when <RichText rich={t.when} />
+                            {tr('mood')}{' '}<b>{t.animation ? animLabel(t.animation) : '…'}</b> {' '}{tr('when')}{' '}<RichText rich={t.when} />
                         </div>
                     ))}
                 </div>
@@ -230,13 +236,13 @@ function PortraitSettings({ p, who, editable }: { p: EventPortrait; who: string;
         else if (v)
             kids = withKid(kids, 'animation', `animation = ${v}`);
 
-        void writePortrait(p, kids, `${who}: ${v ? animLabel(v.replace(/^scripted:/, '')).toLowerCase() : 'no mood'}`);
+        void writePortrait(p, kids, `${who}: ${v ? animLabel(v.replace(/^scripted:/, '')).toLowerCase() : tr('no mood')}`);
     };
-    const setOutfit = (tags: string[]): void => void writePortrait(p, withKid(p.kids, 'outfit_tags', tags.length ? `outfit_tags = { ${tags.join(' ')} }` : null), `${who}: outfit ${tags.join(', ') || 'as usual'}`);
+    const setOutfit = (tags: string[]): void => void writePortrait(p, withKid(p.kids, 'outfit_tags', tags.length ? `outfit_tags = { ${tags.join(' ')} }` : null), tr('{who}: outfit {outfit}', { who, outfit: tags.join(', ') || tr('as usual') }));
     const addWhen = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> =>
     {
         const r0 = e.currentTarget.getBoundingClientRect();
-        const r = await pickStatement({ kind: 'trigger', scope: 'character', subject: who === 'You' ? undefined : who, title: `${who}: ${animLabel(whenMood).toLowerCase()} when…`, at: { x: r0.left, y: r0.bottom + 4 } });
+        const r = await pickStatement({ kind: 'trigger', scope: 'character', subject: who === 'You' ? undefined : who, title: tr('{who}: {mood} when…', { who, mood: animLabel(whenMood).toLowerCase() }), at: { x: r0.left, y: r0.bottom + 4 }, newEntries: true });
 
         if (!r?.text.trim())
             return;
@@ -250,27 +256,27 @@ function PortraitSettings({ p, who, editable }: { p: EventPortrait; who: string;
         // (after the other ones: the first whose condition holds is used)
         const last = p.kids.map((k) => k.key).lastIndexOf('triggered_animation');
         const kids = last >= 0 ? [...p.kids.slice(0, last + 1), { key: 'triggered_animation', text }, ...p.kids.slice(last + 1)] : [...p.kids, { key: 'triggered_animation', text }];
-        await writePortrait(p, kids, `${who}: ${animLabel(whenMood).toLowerCase()} when ${r.summary ? r.summary.charAt(0).toLowerCase() + r.summary.slice(1) : '…'}`);
+        await writePortrait(p, kids, tr('{who}: {mood} when {condition}', { who, mood: animLabel(whenMood).toLowerCase(), condition: r.summary ? r.summary.charAt(0).toLowerCase() + r.summary.slice(1) : '…' }), r.creates);
     };
     const removeWhen = (i: number): void =>
     {
         let n = -1;
-        void writePortrait(p, p.kids.filter((k) => k.key !== 'triggered_animation' || ++n !== i), `${who}: one mood less`);
+        void writePortrait(p, p.kids.filter((k) => k.key !== 'triggered_animation' || ++n !== i), tr('{who}: one mood less', { who }));
     };
     return (
         <div className="ww-pset" onClick={(e) => e.stopPropagation()}>
             <div className="ww-pline">
                 <label>
-                    Mood <MoodSelect value={mood} options={o} none="(the game chooses)" title="Their animation in the portrait (animation / scripted_animation)" onChange={setMood} />
+                    {tr('Mood')}{' '}<MoodSelect value={mood} options={o} none={tr('(the game chooses)')} title={tr('Their animation in the portrait (animation / scripted_animation)')} onChange={setMood} />
                 </label>
                 <label>
-                    Camera{' '}
+                    {tr('Camera')}{' '}
                     <Select
                         className="ww-select"
                         value={p.camera ?? ''}
-                        title="How the portrait is framed (camera)"
-                        onChange={(e) => void writePortrait(p, withKid(p.kids, 'camera', e.target.value ? `camera = ${e.target.value}` : null), `${who}: camera ${e.target.value ? animLabel(e.target.value).toLowerCase() : 'as usual'}`)}>
-                        <option value="">As usual</option>
+                        title={tr('How the portrait is framed (camera)')}
+                        onChange={(e) => void writePortrait(p, withKid(p.kids, 'camera', e.target.value ? `camera = ${e.target.value}` : null), tr('{who}: camera {camera}', { who, camera: e.target.value ? animLabel(e.target.value).toLowerCase() : tr('as usual') }))}>
+                        <option value="">{tr('As usual')}</option>
                         {p.camera && !o.cameras.some((c) => c.name === p.camera) && <option value={p.camera}>{animLabel(p.camera)}</option>}
                         {o.cameras.map((c) => (
                             <option key={c.name} value={c.name}>
@@ -280,16 +286,16 @@ function PortraitSettings({ p, who, editable }: { p: EventPortrait; who: string;
                     </Select>
                 </label>
                 <label>
-                    Outfit {p.outfitTags.map((t) => (
+                    {tr('Outfit')}{' '}{p.outfitTags.map((t) => (
                         <span key={t} className="ww-chip">
                             {nameLabel(t)}
-                            <button title="Take this outfit tag off" onClick={() => setOutfit(p.outfitTags.filter((x) => x !== t))}>
+                            <button title={tr('Take this outfit tag off')} onClick={() => setOutfit(p.outfitTags.filter((x) => x !== t))}>
                                 ✕
                             </button>
                         </span>
                     ))}
-                    <Select className="ww-select" value="" title="Clothes for the portrait (outfit_tags): later tags win" onChange={(e) => e.target.value && setOutfit([...p.outfitTags, e.target.value])}>
-                        <option value="">{p.outfitTags.length ? '＋' : 'As usual'}</option>
+                    <Select className="ww-select" value="" title={tr('Clothes for the portrait (outfit_tags): later tags win')} onChange={(e) => e.target.value && setOutfit([...p.outfitTags, e.target.value])}>
+                        <option value="">{p.outfitTags.length ? '＋' : tr('As usual')}</option>
                         {o.outfits
                             .filter((x) => !p.outfitTags.includes(x.name))
                             .map((x) => (
@@ -310,22 +316,22 @@ function PortraitSettings({ p, who, editable }: { p: EventPortrait; who: string;
             </div>
             {p.shownIf && (
                 <div className="ww-note">
-                    Shown only if <RichText rich={p.shownIf} />
+                    {tr('Shown only if')}{' '}<RichText rich={p.shownIf} />
                 </div>
             )}
             {p.triggered.map((t, i) => (
                 <div key={i} className="ww-when">
-                    Mood <b>{t.animation ? animLabel(t.animation) : '…'}</b> when <RichText rich={t.when} />
-                    <button className="ghost small ww-remove" title="Take this mood away" onClick={() => removeWhen(i)}>
+                    {tr('Mood')}{' '}<b>{t.animation ? animLabel(t.animation) : '…'}</b> {' '}{tr('when')}{' '}<RichText rich={t.when} />
+                    <button className="ghost small ww-remove" title={tr('Take this mood away')} onClick={() => removeWhen(i)}>
                         ✕
                     </button>
                 </div>
             ))}
             <div className="ww-pline">
-                <MoodSelect value={whenMood} options={o} title="The mood for the condition chosen next" onChange={setWhenMood} />
-                <button className="ghost small" title="This mood instead when a condition holds (triggered_animation; the first that holds is used)" onClick={(e) => void addWhen(e)}>
-                    ＋ mood when…
-                </button>
+                {/* (labelled: on its own the select read as a stray "Anger" under the portrait) */}
+                {tr('Other mood')}{' '}<MoodSelect value={whenMood} options={o} title={tr('The mood for the condition chosen next')} onChange={setWhenMood} />
+                <button className="ghost small" title={tr('This mood instead when a condition holds (triggered_animation; the first that holds is used)')} onClick={(e) => void addWhen(e)}>
+                    {tr('＋ mood when…')}</button>
             </div>
         </div>
     );
@@ -362,7 +368,7 @@ function CastRow(props: {
                 ))}
                 {props.conditions && (
                     <div className="ww-conds">
-                        <span className="ww-note">who fits:</span>
+                        <span className="ww-note">{tr('who fits:')}</span>
                         <LineList lines={props.conditions} compact />
                     </div>
                 )}
@@ -371,20 +377,19 @@ function CastRow(props: {
             <div className="ww-side">
                 {editable ?
                     (
-                        <Select className="ww-portrait" value={pos} title="Where they are shown in the event window" onChange={(e) => void setPortrait(story, code, e.target.value || null)}>
-                            <option value="">No portrait</option>
+                        <Select className="ww-portrait" value={pos} title={tr('Where they are shown in the event window')} onChange={(e) => void setPortrait(story, code, e.target.value || null)}>
+                            <option value="">{tr('No portrait')}</option>
                             {POSITIONS.map(([p, l]) => (
                                 <option key={p} value={p}>
-                                    {l} portrait
-                                </option>
+                                    {tr('{l} portrait', { l })}</option>
                             ))}
                         </Select>
                     ) :
                     (
-                        pos && <span className="ww-note">{POS_LABEL[pos]} portrait</span>
+                        pos && <span className="ww-note">{tr('{POS_LABEL} portrait', { POS_LABEL: POS_LABEL[pos] })}</span>
                     )}
                 {props.onRemove && (
-                    <button className="ghost small ww-remove" title="Forget the name (the statement that gives it goes)" onClick={props.onRemove}>
+                    <button className="ghost small ww-remove" title={tr('Forget the name (the statement that gives it goes)')} onClick={props.onRemove}>
                         ✕
                     </button>
                 )}
@@ -411,7 +416,7 @@ export function WhosWho({ story, editable }: { story: EventStory; editable: bool
     const nameSomeone = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> =>
     {
         const r0 = e.currentTarget.getBoundingClientRect();
-        const r = await pickStatement({ kind: 'effect', goal: 'name', scope: 'character', title: 'Who’s who', at: { x: r0.left, y: r0.bottom + 4 } });
+        const r = await pickStatement({ kind: 'effect', goal: 'name', scope: 'character', title: tr('Who’s who'), at: { x: r0.left, y: r0.bottom + 4 }, newEntries: true });
 
         if (!r?.text.trim() || !story.sections)
             return;
@@ -422,20 +427,19 @@ export function WhosWho({ story, editable }: { story: EventStory; editable: bool
         if (!req)
             return;
 
+        const made = createsOf(r.creates);
         setOpen(true);
-        await runScriptEdit(req, `Named: ${name ? `scope:${name}` : 'someone'} (right away)`).catch(reportEditError('Nobody named'));
+        await runScriptEdit({ ...req, ...(made.creates ? { creates: made.creates } : {}) }, tr('Named: {scope} (right away)', { scope: name ? `scope:${name}` : 'someone' }) + made.note).catch(reportEditError(tr('Nobody named')));
     };
 
     return (
         <div className="ev-section whoswho">
             <div className="ev-section-title clickable" onClick={() => setOpen((v) => !v)}>
-                {open ? '▾' : '▸'} Who’s who
-                {!open && members > 0 && <span className="ww-count">· {members + 1}</span>}
+                {open ? '▾' : '▸'} {' '}{tr('Who’s who')}{!open && members > 0 && <span className="ww-count">· {members + 1}</span>}
                 {editable && story.sections && (
                     <span className="sec-add" onClick={(e) => e.stopPropagation()}>
-                        <button className="ghost small" title="Pick someone (your liege, a random courtier who …) and give them a name the event's texts, portraits and effects can use" onClick={(e) => void nameSomeone(e)}>
-                            ＋ name someone
-                        </button>
+                        <button className="ghost small" title={tr('Pick someone (your liege, a random courtier who …) and give them a name the event\'s texts, portraits and effects can use')} onClick={(e) => void nameSomeone(e)}>
+                            {tr('＋ name someone')}</button>
                     </span>
                 )}
             </div>
@@ -444,32 +448,32 @@ export function WhosWho({ story, editable }: { story: EventStory; editable: bool
                     <CastRow
                         name="You"
                         code="root"
-                        who={[cast.rootNotes.find((n) => n.of)?.who ?? 'The character who gets the event']}
-                        notes={cast.rootNotes.map((n) => (n.of ? `sent by ${n.from} — “they”: ${n.of}` : `${n.from}: ${n.who}`))}
+                        who={[cast.rootNotes.find((n) => n.of)?.who ?? tr('The character who gets the event')]}
+                        notes={cast.rootNotes.map((n) => (n.of ? tr('sent by {from} — “they”: {of}', { from: n.from, of: n.of }) : `${n.from}: ${n.who}`))}
                         conditions={cast.rootNotes.find((n) => n.of && n.conditions)?.conditions}
                         story={story}
                         editable={editable}
                     />
-                    {cast.given.map((m) => <CastRow key={'g' + m.name} name={nameLabel(m.name)} code={`scope:${m.name}`} who={m.who} tag={m.from ? `given by ${m.from}` : undefined} conditions={m.conditions} story={story} editable={editable} />)}
+                    {cast.given.map((m) => <CastRow key={'g' + m.name} name={nameLabel(m.name)} code={`scope:${m.name}`} who={m.who} tag={m.from ? tr('given by {from}', { from: m.from }) : undefined} conditions={m.conditions} story={story} editable={editable} />)}
                     {cast.named.map((m) => (
                         <CastRow
                             key={'n' + m.name}
                             name={nameLabel(m.name)}
                             code={`scope:${m.name}`}
                             who={m.who}
-                            tag={m.temporary ? 'named here, only while it is checked' : 'named here'}
+                            tag={m.temporary ? tr('named here, only while it is checked') : tr('named here')}
                             conditions={m.conditions}
                             story={story}
                             editable={editable}
-                            onRemove={editable && m.src && ed?.can(m.src) ? () => void runScriptEdit({ op: 'remove', at: m.src! }, `Forgot scope:${m.name}`).catch(reportEditError('Not removed')) : undefined}
+                            onRemove={editable && m.src && ed?.can(m.src) ? () => void runScriptEdit({ op: 'remove', at: m.src! }, tr('Forgot scope:{name}', { name: m.name })).catch(reportEditError(tr('Not removed'))) : undefined}
                         />
                     ))}
+                    {cast.givenNote && <div className="ww-unknown">{cast.givenNote}</div>}
                     {cast.unknown.length > 0 && (
                         <div className="ww-unknown">
-                            Also used: {cast.unknown.map((u) => <code key={u}>scope:{u}</code>)} — not named here: they must come with what fires the event.
-                        </div>
+                            {tr('Also used:')}{' '}{cast.unknown.map((u) => <code key={u}>scope:{u}</code>)} {' '}{tr('— not named here: they must come with what fires the event.')}</div>
                     )}
-                    {editable && !members && <div className="sec-empty">Only you so far. “＋ name someone” picks another character and names them for the texts, portraits and effects.</div>}
+                    {editable && !members && <div className="sec-empty">{tr('Only you so far. “＋ name someone” picks another character and names them for the texts, portraits and effects.')}</div>}
                 </div>
             )}
         </div>
@@ -490,11 +494,11 @@ export async function unfire(story: EventStory, o: StoryOrigin): Promise<void>
 {
     try
     {
-        reportFire(await api.unfireEvent(story.key.name, o.ref.name), `No longer fired by ${o.label}`);
+        reportFire(await api.unfireEvent(story.key.name, o.ref.name), tr('No longer fired by {label}', { label: o.label }));
     }
     catch (e)
     {
-        reportEditError('Not changed')(e);
+        reportEditError(tr('Not changed'))(e);
     }
 }
 
@@ -504,8 +508,8 @@ export function WhenButton({ story, label }: { story: EventStory; label?: string
     const [open, setOpen] = useState(false);
     return (
         <>
-            <button className="ghost small origin-add" title="Choose a moment of the game that fires the event (an on_action): every year, when a child is born, at a death …" onClick={() => setOpen(true)}>
-                ＋ {label ?? 'When it happens…'}
+            <button className="ghost small origin-add" title={tr('Choose a moment of the game that fires the event (an on_action): every year, when a child is born, at a death …')} onClick={() => setOpen(true)}>
+                ＋ {label ?? tr('When it happens…')}
             </button>
             {open && <WhenChooser story={story} onClose={() => setOpen(false)} />}
         </>
@@ -576,7 +580,7 @@ function WhenChooser({ story, onClose }: { story: EventStory; onClose: () => voi
             return;
 
         const r0 = e.currentTarget.getBoundingClientRect();
-        const r = await pickStatement({ kind: 'effect', goal: 'send', event: story.key.name, scope: 'character', subject: 'them', title: `${sel.label}: who gets the event`, at: { x: r0.left, y: r0.bottom + 4 } });
+        const r = await pickStatement({ kind: 'effect', goal: 'send', event: story.key.name, scope: 'character', subject: 'them', title: tr('{label}: who gets the event', { label: sel.label }), at: { x: r0.left, y: r0.bottom + 4 } });
 
         if (!r?.text.trim())
             return;
@@ -603,9 +607,9 @@ function WhenChooser({ story, onClose }: { story: EventStory; onClose: () => voi
                 onAction: sel.name,
                 how,
                 weight: Number(weight) || 100,
-                ...(send ? { send: send.text, keepAs: keep || undefined, about: sel.root ?? `the one ${sel.label} is about` } : {})
+                ...(send ? { send: send.text, keepAs: keep || undefined, about: sel.root ?? tr('the one {label} is about', { label: sel.label }) } : {})
             });
-            reportFire(r, how === 'always' ? `Fired by ${sel.label}, always` : `Fired by ${sel.label}, sometimes (weight ${Number(weight) || 100})`);
+            reportFire(r, how === 'always' ? tr('Fired by {label}, always', { label: sel.label }) : tr('Fired by {label}, sometimes (weight {weight})', { label: sel.label, weight: Number(weight) || 100 }));
             onClose();
         }
         catch (e)
@@ -632,9 +636,9 @@ function WhenChooser({ story, onClose }: { story: EventStory; onClose: () => voi
                 }}
             >
                 <div className="sc-head">
-                    <h3>When does {story.key.name} happen?</h3>
-                    <input ref={input} autoFocus value={q} placeholder="Filter: birth, death, yearly, war, marriage…" onChange={(e) => setQ(e.target.value)} />
-                    <button onClick={onClose}>Cancel</button>
+                    <h3>{tr('When does {name} happen?', { name: story.key.name })}</h3>
+                    <input ref={input} autoFocus value={q} placeholder={tr('Filter: birth, death, yearly, war, marriage…')} onChange={(e) => setQ(e.target.value)} />
+                    <button onClick={onClose}>{tr('Cancel')}</button>
                 </div>
                 <div className="wc-body">
                     <div className="wc-list">
@@ -643,8 +647,8 @@ function WhenChooser({ story, onClose }: { story: EventStory; onClose: () => voi
                             <button key={o.name} className={'wc-item' + (sel?.name === o.name ? ' selected' : '') + (o.fires ? ' fires' : '')} onClick={() => setSel(o)}>
                                 <span className="wc-label">
                                     {o.label}
-                                    {o.fires && <em>· fires it {o.fires}</em>}
-                                    {o.byGame && <span className="wc-game" title="Nothing in script fires it: the game does">· game</span>}
+                                    {o.fires && <em>{tr('· fires it {fires}', { fires: o.fires })}</em>}
+                                    {o.byGame && <span className="wc-game" title={tr('The game itself fires it')}>{tr('· game')}</span>}
                                 </span>
                                 <span className="wc-sum">{o.summary ?? o.name}</span>
                                 <span className="wc-count">{o.events + o.randomEvents || ''}</span>
@@ -652,18 +656,18 @@ function WhenChooser({ story, onClose }: { story: EventStory; onClose: () => voi
                         ))}
                     </div>
                     <div className="wc-detail">
-                        {!sel ? <div className="ne-note">Choose a moment on the left. The event then fires whenever the game reaches it — if the event’s own conditions (“Only happens if”) hold.</div> : (
+                        {!sel ? <div className="ne-note">{tr('Choose a moment on the left. The event then fires whenever the game reaches it — if the event’s own conditions (“Only happens if”) hold.')}</div> : (
                             <>
                                 <h4>
                                     {sel.label} <code>{sel.name}</code>
                                 </h4>
                                 {sel.summary && <p>{sel.summary}</p>}
                                 <div className="wc-field">
-                                    <span>You (root) are</span> {sel.root ?? 'not described — usually the character it happens to'}
+                                    <span>{tr('You (root) are')}</span> {sel.root ?? tr('not described — usually the character it happens to')}
                                 </div>
                                 {sel.scopes.length > 0 && (
                                     <div className="wc-field">
-                                        <span>It names</span>
+                                        <span>{tr('It names')}</span>
                                         <ul>
                                             {sel.scopes.map((s) => (
                                                 <li key={s.name}>
@@ -674,37 +678,35 @@ function WhenChooser({ story, onClose }: { story: EventStory; onClose: () => voi
                                     </div>
                                 )}
                                 <div className="wc-field">
-                                    <span>Now</span> {sel.byGame ? 'fired by the game' : 'fired from script'} · {count(sel.events, 'event')} always, {count(sel.randomEvents, 'random event')}
+                                    <span>{tr('Now')}</span> {sel.byGame && sel.byScript ? tr('fired by the game and from script') : sel.byGame ? tr('fired by the game') : sel.byScript ? tr('fired from script') : tr('nothing fires it yet')} {' '}{tr('· {count} always, {count2}', { count: count(sel.events, 'event'), count2: count(sel.randomEvents, tr('random event')) })}
                                 </div>
-                                {sel.fires && <div className="ne-problem">It fires this event already ({sel.fires}).</div>}
+                                {sel.fires && <div className="ne-problem">{tr('It fires this event already ({fires}).', { fires: sel.fires })}</div>}
                                 <div className="wc-field wc-who">
-                                    <span>Who gets it (becomes “you”)</span>
+                                    <span>{tr('Who gets it (becomes “you”)')}</span>
                                     <label>
-                                        <input type="radio" checked={!send} onChange={() => setSend(null)} /> {sel.root ? cap(sel.root) : 'The one it is about'}
+                                        <input type="radio" checked={!send} onChange={() => setSend(null)} /> {sel.root ? cap(sel.root) : tr('The one it is about')}
                                     </label>
                                     <label>
-                                        <input type="radio" checked={!!send} onChange={(e) => void chooseWho(e as unknown as React.MouseEvent<HTMLElement>)} /> Someone of theirs: {send ? <b>{send.summary}</b> : <i>their father, liege, a random child …</i>}{' '}
+                                        <input type="radio" checked={!!send} onChange={(e) => void chooseWho(e as unknown as React.MouseEvent<HTMLElement>)} /> {' '}{tr('Someone of theirs:')}{' '}{send ? <b>{send.summary}</b> : <i>{tr('their father, liege, a random child …')}</i>}{' '}
                                         <button className="ghost small" onClick={(e) => void chooseWho(e)}>
-                                            {send ? 'Change…' : 'Choose…'}
+                                            {send ? tr('Change…') : tr('Choose…')}
                                         </button>
                                     </label>
                                     {send && (
-                                        <label className="wc-keep" title="The one the on_action is about, saved for the event: its texts, portraits and conditions can use them">
-                                            and keep the one it is about as <code>scope:</code>
+                                        <label className="wc-keep" title={tr('The one the on_action is about, saved for the event: its texts, portraits and conditions can use them')}>
+                                            {tr('and keep the one it is about as')}{' '}<code>scope:</code>
                                             <input value={keepAs} placeholder="child" onChange={(e) => setKeepAs(e.target.value.replace(/[^\w]/g, ''))} />
                                         </label>
                                     )}
                                 </div>
                                 <div className="wc-actions">
                                     <button className="primary" disabled={busy} title="events = { … }: every time, when the event's conditions hold" onClick={() => void fire('always')}>
-                                        Always, when it happens
-                                    </button>
-                                    <span className="wc-or">or</span>
+                                        {tr('Always, when it happens')}</button>
+                                    <span className="wc-or">{tr('or')}</span>
                                     <button disabled={busy} title="random_events = { weight = … }: each time one of its random events is picked, by weight" onClick={() => void fire('sometimes')}>
-                                        Sometimes — one of its random events
-                                    </button>
-                                    <label className="wc-weight" title="How likely among its random events (others use 100 and more)">
-                                        weight <input value={weight} onChange={(e) => setWeight(e.target.value.replace(/[^\d]/g, ''))} />
+                                        {tr('Sometimes — one of its random events')}</button>
+                                    <label className="wc-weight" title={tr('How likely among its random events (others use 100 and more)')}>
+                                        {tr('weight')}{' '}<input value={weight} onChange={(e) => setWeight(e.target.value.replace(/[^\d]/g, ''))} />
                                     </label>
                                 </div>
                             </>

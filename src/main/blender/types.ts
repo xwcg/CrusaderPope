@@ -1,6 +1,6 @@
 /**
  * Data passed between the index worker (what a model is made of), the main process and the Blender worker
- * (conversion), and the manifest written next to an export — docs/blender.md.
+ * (conversion), and the manifest written next to an export; docs/blender.md.
  */
 
 export interface PlanTexture

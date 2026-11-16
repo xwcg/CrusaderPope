@@ -27,7 +27,7 @@ export async function shaderFiles(args: string[]): Promise<{ vfs: GameFiles; mod
     const list = state.lists.find((l) => l.ref === want || l.ref === 'playset:' + want || l.name === want);
 
     if (!list)
-        throw new Error(`mod list "${want}" not found (lists: ${state.lists.map((l) => `${l.name} [${l.ref}]`).join(', ') || 'none — run node with --experimental-sqlite'})`);
+        throw new Error(`mod list "${want}" not found (lists: ${state.lists.map((l) => `${l.name} [${l.ref}]`).join(', ') || 'none; run node with --experimental-sqlite'})`);
 
     const mods = modsOfList(state, list.ref);
     return { vfs: new GameFiles(gameDir, mods), mods, label: `${list.name}: ${mods.map((m) => m.name).join(' → ')}` };

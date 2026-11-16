@@ -1,5 +1,5 @@
 /**
- * 3D model files for the browser — see docs/images.md.
+ * 3D model files for the browser; see docs/images.md.
  *
  * `.asset` files are read for display (pdxmesh / entity declarations, textures, animations, attachments), `.mesh`
  * files are summarized and turned into viewer geometry (bind pose) with the textures of the pdxmesh that declares
@@ -16,6 +16,7 @@ import { compose, invert, mul, sampleJoint, type AnimFile, type Bone, type M4, t
 import type { ModelExportPlan } from '../blender/types.ts';
 import type { AssetFileInfo, LinkSpan, MeshFileInfo, ModelEntityDecl, ModelFolderItem, ModelGeometry, ModelInfo, ModelMeshSettings, ModelPdxMesh, ModelTexture, PartSkin, PortraitDecal, PortraitPart } from '../../shared/api.ts';
 
+import { tr } from '../../shared/i18n.ts';
 /** pdxmesh as the scan keeps it */
 interface ScanMesh
 {
@@ -68,7 +69,7 @@ const lodOf = (shape: string): number | undefined =>
     return m && m[1] !== '0' ? parseInt(m[1], 10) : undefined;
 };
 
-/** The decal list of a mesh creatures show — the portrait builder's first character showing it (docs/portraits.md, "Creatures"). */
+/** The decal list of a mesh creatures show: the portrait builder's first character showing it (docs/portraits.md, "Creatures"). */
 type DecalSource = (mesh: string) => Promise<{ decals: PortraitDecal[]; from: string; } | undefined>;
 
 export class ModelBrowser
@@ -275,8 +276,12 @@ export class ModelBrowser
     folder(folder: string): ModelFolderItem[]
     {
         const s = this.ensureScan();
-        return this.idx.filesIn(T_MODEL, folder).map(({ name, file, mod, touch }) =>
+        return this.idx.filesIn(T_MODEL, folder).map(({ name, file, mod, touch, removed }) =>
         {
+            // (a model a mod's replace_path removed: listed, nothing read from it)
+            if (removed)
+                return { name, file, kind: file.toLowerCase().endsWith('.asset') ? 'asset' : 'mesh', removed };
+
             if (file.toLowerCase().endsWith('.asset'))
             {
                 const sum = s.assetSummary.get(name);
@@ -291,7 +296,7 @@ export class ModelBrowser
                 file,
                 kind: 'mesh',
                 thumb: decl?.settings.flatMap((x) => x.textures).find((t) => t.role === 'diffuse' && t.path)?.path,
-                summary: blend ? `blend shape ${blend.id}` : decl ? undefined : 'not declared',
+                summary: blend ? tr('blend shape {id}', { id: blend.id }) : decl ? undefined : tr('not declared'),
                 mod,
                 touch
             };
@@ -378,7 +383,7 @@ export class ModelBrowser
             const pdxmesh = scalar(field(list, 'pdxmesh'));
             const acc = kids(field(kids(field(kids(field(list, 'game_data')), 'portrait_entity_user_data')), 'portrait_accessory'));
             const mask = scalar(field(acc, 'pattern_mask'));
-            const patternMask = mask ? this.texture('pattern mask', mask, [dir]) : undefined;
+            const patternMask = mask ? this.texture(tr('pattern mask'), mask, [dir]) : undefined;
 
             if (patternMask)
                 addTex(patternMask);
@@ -481,7 +486,7 @@ export class ModelBrowser
 
         if (!file)
         {
-            info.error = 'Could not read the file.';
+            info.error = tr('Could not read the file.');
             return info;
         }
 

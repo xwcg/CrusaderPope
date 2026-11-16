@@ -78,6 +78,7 @@ export function composeMapInfo(s: MapStatic, d: MapDated): MapInfo
         date: d.date,
         dates: s.dates,
         range: s.range,
+        ...(s.save ? { save: s.save } : {}),
         kinds: s.kinds,
         titles,
         layers,

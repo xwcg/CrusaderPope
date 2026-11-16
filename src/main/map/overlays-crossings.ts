@@ -14,12 +14,14 @@ export interface Crossing
     to: number;
     through: number;
     line: [number, number, number, number];
+    /** a `river_large` crossing (over a major river province) */
+    river?: boolean;
 }
 
-/** The `sea` rows of adjacencies.csv; `at`: start and stop as written (y from the bottom), when all four are given. */
-export function seaAdjacencies(csv: string): { from: number; to: number; through: number; at?: [number, number, number, number]; }[]
+/** The `sea` and `river_large` rows of adjacencies.csv; `at`: start and stop as written (y from the bottom), when all four are given. */
+export function seaAdjacencies(csv: string): { from: number; to: number; through: number; at?: [number, number, number, number]; river?: boolean; }[]
 {
-    const out: { from: number; to: number; through: number; at?: [number, number, number, number]; }[] = [];
+    const out: { from: number; to: number; through: number; at?: [number, number, number, number]; river?: boolean; }[] = [];
 
     for (const raw of csv.replace(/^﻿/, '').split(/\r?\n/))
     {
@@ -27,11 +29,14 @@ export function seaAdjacencies(csv: string): { from: number; to: number; through
         const from = parseInt(f[0], 10);
         const to = parseInt(f[1], 10);
 
-        if (!(from > 0) || !(to > 0) || f[2]?.toLowerCase() !== 'sea')
+        // `sea` (over a sea zone) and `river_large` (over a major river province: drawn alike, the owner confirmed)
+        const type = f[2]?.toLowerCase();
+
+        if (!(from > 0) || !(to > 0) || (type !== 'sea' && type !== 'river_large'))
             continue;
 
         const at = [4, 5, 6, 7].map((i) => parseFloat(f[i] ?? ''));
-        out.push({ from, to, through: parseInt(f[3], 10) || 0, ...(at.every((v) => v >= 0) ? { at: at as [number, number, number, number] } : {}) });
+        out.push({ from, to, through: parseInt(f[3], 10) || 0, ...(at.every((v) => v >= 0) ? { at: at as [number, number, number, number] } : {}), ...(type === 'river_large' ? { river: true } : {}) });
     }
 
     return out;
@@ -81,7 +86,7 @@ function edge(ids: Uint16Array, w: number, h: number, p: number, box: number[], 
     return { coast, rim };
 }
 
-/** The nearest pair of pixels between two lists (x, y pairs) — the second in a grid of cells, searched ring by ring. */
+/** The nearest pair of pixels between two lists (x, y pairs), the second in a grid of cells, searched ring by ring. */
 function nearestPair(a: number[], b: number[]): [number, number, number, number] | null
 {
     if (!a.length || !b.length)
@@ -137,7 +142,7 @@ function nearestPair(a: number[], b: number[]): [number, number, number, number]
 
 /**
  * The crossings between land provinces (`land` by id): as written, else between the nearest coast pixels (pixels next
- * to water — else next to anything else) of the two, made a pixel longer at both ends so that they reach the land.
+ * to water, else next to anything else) of the two, made a pixel longer at both ends so that they reach the land.
  * `raster` gives the province ids and each id's bounds (x0 y0 x1 y1, −1 without pixels); asked for only when a row
  * has no coordinates.
  */
@@ -158,7 +163,7 @@ export function seaCrossings(
 
         if (r.at)
         {
-            out.push({ from: r.from, to: r.to, through: r.through, line: [r.at[0], height - r.at[1], r.at[2], height - r.at[3]] });
+            out.push({ from: r.from, to: r.to, through: r.through, line: [r.at[0], height - r.at[1], r.at[2], height - r.at[3]], ...(r.river ? { river: true } : {}) });
             continue;
         }
 
@@ -174,7 +179,7 @@ export function seaCrossings(
         const len = Math.hypot(x1 - x0, y1 - y0) || 1;
         const ux = (x1 - x0) / len;
         const uy = (y1 - y0) / len;
-        out.push({ from: r.from, to: r.to, through: r.through, line: [x0 - ux, y0 - uy, x1 + ux, y1 + uy] });
+        out.push({ from: r.from, to: r.to, through: r.through, line: [x0 - ux, y0 - uy, x1 + ux, y1 + uy], ...(r.river ? { river: true } : {}) });
     }
 
     return out;

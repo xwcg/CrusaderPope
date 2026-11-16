@@ -1,0 +1,584 @@
+[
+ {
+  "kind": "trigger",
+  "key": "long_term_treasury",
+  "label": "Long-term treasury",
+  "summary": "Whether the character has the required amount in their long-term treasury.",
+  "details": "The game's documentation ties it to the AI category 'long term'. Compare it with <, <=, =, !=, > or >=. Vanilla compares it against costs such as a building cost or the cost of feudalizing a holding.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "long_term_treasury_maximum",
+  "label": "Long-term treasury cap",
+  "summary": "Whether the character's long-term treasury budget is supposed to grow to a given size.",
+  "details": "The game's documentation only says how big the 'long term' treasury budget is supposed to get. It does not say how the limit is worked out, and vanilla does not use it. Compare it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "long_term_treasury_or_gold",
+  "label": "Long-term treasury or gold",
+  "summary": "Whether the character has the required long-term treasury, or the required gold if they do not use a treasury.",
+  "details": "The game's documentation says it falls back to gold when the character does not use a treasury. Compare it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "lowest_skill",
+  "label": "Lowest skill",
+  "summary": "Whether the given skill is the character's lowest skill, not counting prowess.",
+  "details": "It is also true when several skills share the lowest value. Vanilla writes the skill name after it, for example `lowest_skill = stewardship`, and also passes a variable in a template (`$SKILL$`).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "lowest_skill_including_prowess",
+  "label": "Lowest skill (with prowess)",
+  "summary": "Whether the given skill is the character's lowest skill, counting prowess too.",
+  "details": "It is also true when several skills share the lowest value. The difference to `lowest_skill` is only that prowess is included in the comparison.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "maa_current_troops_count",
+  "label": "Men-at-arms troops now",
+  "summary": "Whether a men-at-arms regiment currently has the given number of soldiers.",
+  "details": "Works on a regiment. Compare it with <, <=, =, !=, > or >=. Vanilla mostly compares it with the regiment's maximum (`maa_max_troops_count`), mainly with `<`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "maa_max_troops_count",
+  "label": "Men-at-arms max troops",
+  "summary": "Whether a men-at-arms regiment can hold the given maximum number of soldiers.",
+  "details": "Works on a regiment. Compare it with <, <=, =, !=, > or >=. Vanilla uses it only in checks like `<= 2000`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "maa_regiments_count",
+  "label": "Men-at-arms regiments",
+  "summary": "Whether the number of personal men-at-arms regiments the character has matches the comparison.",
+  "details": "Compare it with <, <=, =, !=, > or >=. Vanilla often compares it with the character's maximum (`maa_regiments_max_count`) using `<`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "maa_regiments_max_count",
+  "label": "Max men-at-arms regiments",
+  "summary": "Whether the most personal men-at-arms regiments the character may have matches the comparison.",
+  "details": "Compare it with <, <=, =, !=, > or >=. Vanilla checks it against 0 and against the current regiment count.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "maa_size",
+  "label": "Men-at-arms size",
+  "summary": "Whether a men-at-arms regiment has the given number of sub-regiments.",
+  "details": "Works on a regiment. It counts the sub-regiments in it, not the soldiers. Compare it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "main_administrative_tier",
+  "label": "Main administrative tier",
+  "summary": "Whether the title tier of the ruler's main administrative title matches the comparison.",
+  "details": "Tiers are ordered, so `> tier_county` means higher than county. Vanilla uses it with `> tier_county` and `!= tier_county`. Compare with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "mandate_type_qualification",
+  "label": "Mandate qualification",
+  "summary": "Whether the diarch (the co-ruler under a diarchy) qualifies for a given mandate type to the required degree.",
+  "details": "The documented example is `target = fill_coffers` with `value > 10`. The same name also works as a script value (`add = mandate_type_qualification:fill_coffers`). Vanilla does not use it, so the exact meaning of the number is only what the game's documentation says.",
+  "fields": [
+   {
+    "name": "target",
+    "text": "The mandate type to check.",
+    "values": "a mandate type, e.g. fill_coffers",
+    "required": true
+   },
+   {
+    "name": "value",
+    "text": "The comparison against the qualification.",
+    "values": "<, <=, =, !=, > or >= with a number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "martial",
+  "label": "Martial skill",
+  "summary": "Whether the character's martial skill matches the comparison.",
+  "details": "Compare it with <, <=, =, !=, > or >=. Vanilla mostly compares it with named ratings such as `high_skill_rating`, or with plain numbers like 12.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "martial_diff",
+  "label": "Martial skill difference",
+  "summary": "Whether the character's martial skill differs from a target character's by the given amount.",
+  "details": "The documented usage line is garbled (it is written with `martial =`). It shows a block with `target`, a value comparison and an optional `abs = yes/no` (default no), which probably means the absolute difference. Vanilla does not use it.",
+  "fields": [
+   {
+    "name": "target",
+    "text": "The character to compare against.",
+    "values": "a character",
+    "required": true
+   },
+   {
+    "name": "value",
+    "text": "The comparison for the difference.",
+    "values": "<, <=, =, !=, > or >= with a number or script value",
+    "required": true
+   },
+   {
+    "name": "abs",
+    "text": "Whether the difference is taken without its sign.",
+    "values": "yes or no",
+    "default": "no"
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "martial_for_portrait",
+  "label": "Martial for portrait",
+  "summary": "Whether the character's martial skill, scaled to a range from 0.0 to 1.0, matches the comparison.",
+  "details": "The game's documentation says the scaled number is meant for portraits. Compare it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "martial_lifestyle_perk_points",
+  "label": "Martial perk points",
+  "summary": "Whether the number of perk points the character has available matches the comparison.",
+  "details": "The name suggests the martial lifestyle, but the game's documentation only speaks of available perk points. Vanilla compares it with `max_perk_amount_per_lifestyle`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "martial_lifestyle_perks",
+  "label": "Martial perks",
+  "summary": "Whether the number of perks the character has from the martial lifestyle matches the comparison.",
+  "details": "Compare it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "martial_lifestyle_unlockable_perks",
+  "label": "Martial perks unlockable",
+  "summary": "Whether the number of martial lifestyle perks the character can unlock right now matches the comparison.",
+  "details": "A perk counts when the character has its parent perks and its `can_be_picked` condition is met. Perk points are not checked, so a perk can count even if the character cannot pay for it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "martial_lifestyle_xp",
+  "label": "Martial lifestyle XP",
+  "summary": "Whether the character's martial lifestyle experience matches the comparison.",
+  "details": "The game's documentation repeats the text of the perk points trigger (it asks how many perk points are available), which looks like a copy mistake. Going by the name, this is the experience in the martial lifestyle. Vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "matrilinear_betrothal",
+  "label": "Matrilinear betrothal",
+  "summary": "Whether the character's betrothal is matrilinear.",
+  "details": "False if the character has no betrothal. Write `yes` or `no`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "matrilinear_marriage",
+  "label": "Matrilinear marriage",
+  "summary": "Whether the character's marriage with their spouse is matrilinear.",
+  "details": "Write `yes` or `no`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "max_accolades",
+  "label": "Max accolades",
+  "summary": "Whether the most accolades the character can have matches the comparison.",
+  "details": "Compare it with <, <=, =, !=, > or >=. Vanilla checks `> 0`, i.e. whether the character may have any. The documented example line names `max_active_accolades`, which looks like a typo for this key.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "max_domain_fertility",
+  "label": "Max domain fertility",
+  "summary": "Whether the maximum domain fertility of the character matches the comparison.",
+  "details": "Compare it with <, <=, =, !=, > or >=. The game's documentation says nothing more and vanilla does not use it.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "max_herd",
+  "label": "Max herd",
+  "summary": "Whether the herd limit of the domicile matches the comparison.",
+  "details": "Works on a domicile. Compare it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "max_military_strength",
+  "label": "Max military strength",
+  "summary": "Whether the character's maximum military strength matches the comparison.",
+  "details": "Compare it with <, <=, =, !=, > or >=. Vanilla mostly compares it with a number or with another character's value, for example `> scope:vassal.max_military_strength`. It also writes a block with `value` and `multiply` to scale the other value, for example `multiply = 1.3`.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "The value to compare against, which can itself be a block.",
+    "values": "a number, a script value, or a block with `value` and `multiply`",
+    "required": true
+   },
+   {
+    "name": "multiply",
+    "text": "A factor the value is multiplied by before the comparison.",
+    "values": "a number"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "max_number_maa_soldiers_of_base_type",
+  "label": "Max soldiers of base type",
+  "summary": "Whether the character can have the given maximum number of men-at-arms soldiers of one base type.",
+  "details": "A base type is the general kind such as heavy cavalry or heavy infantry. Vanilla writes it as a block with `type` and a `value` comparison, for example `type = heavy_cavalry value >= 500`.",
+  "fields": [
+   {
+    "name": "type",
+    "text": "The base men-at-arms type.",
+    "values": "a base men-at-arms type, e.g. heavy_cavalry",
+    "required": true
+   },
+   {
+    "name": "value",
+    "text": "The comparison for the maximum number of soldiers.",
+    "values": "<, <=, =, !=, > or >= with a number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "max_number_maa_soldiers_of_type",
+  "label": "Max soldiers of type",
+  "summary": "Whether the character can have the given maximum number of men-at-arms soldiers of one type.",
+  "details": "It is the same check as the base type form, but for a specific men-at-arms type. Vanilla does not use it, so its block fields are assumed to match the base type form (`type` and `value`).",
+  "fields": [
+   {
+    "name": "type",
+    "text": "The men-at-arms type.",
+    "values": "a men-at-arms type",
+    "required": true
+   },
+   {
+    "name": "value",
+    "text": "The comparison for the maximum number of soldiers.",
+    "values": "<, <=, =, !=, > or >= with a number",
+    "required": true
+   }
+  ],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "max_number_of_concubines",
+  "label": "Max concubines",
+  "summary": "Whether the most concubines the character can have matches the comparison.",
+  "details": "It checks the limit, not how many they have now. Example from the game's documentation: `max_number_of_concubines > 2`.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "max_number_of_knights",
+  "label": "Max knights",
+  "summary": "Whether the number of knights the character can potentially have matches the comparison.",
+  "details": "It checks the limit, not how many they have now. Vanilla compares it with 0 or 1 and once with the number of knights of `root`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "max_provisions",
+  "label": "Max provisions",
+  "summary": "Whether the domicile's maximum provisions match the comparison.",
+  "details": "Works on a domicile. Compare it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "max_scheme_success_chance",
+  "label": "Max scheme success chance",
+  "summary": "Whether the highest success chance the scheme can reach matches the comparison.",
+  "details": "Works on a scheme. Compare it with <, <=, =, !=, > or >=. The game's documentation does not say whether the chance is written as a percent.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "maximum_scheme_breaches",
+  "label": "Max scheme breaches",
+  "summary": "Whether the most breaches the scheme can have matches the comparison.",
+  "details": "Works on a scheme. It checks the limit, not the breaches so far. Compare it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "meets_legitimacy_expectation_of",
+  "label": "Meets legitimacy expectation",
+  "summary": "Whether the character meets the legitimacy expectations of the given AI vassal.",
+  "details": "Write the vassal after it, for example `meets_legitimacy_expectation_of = scope:some_vassal`. The checked character is the one the trigger runs on. Vanilla mostly passes `prev`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "member_count",
+  "label": "Member count",
+  "summary": "Whether the number of members in the confederation matches the comparison.",
+  "details": "Works on a confederation. Compare it with <, <=, =, !=, > or >=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "memory_age_years",
+  "label": "Memory age (years)",
+  "summary": "Whether the memory was created the given number of whole years ago.",
+  "details": "It is rounded down, so a memory 11 months old counts as 0. Vanilla mostly checks recency, such as `< 5` or `< 1`. It also compares against a computed value, for example `value = root.age subtract = 12`.",
+  "fields": [
+   {
+    "name": "value",
+    "text": "Block form seen in vanilla: the number the memory age is compared with.",
+    "values": "a script value such as `scope:activity.activity_host.age`"
+   },
+   {
+    "name": "subtract",
+    "text": "An amount taken off that value first.",
+    "values": "a number or script value"
+   }
+  ],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "memory_creation_date",
+  "label": "Memory creation date",
+  "summary": "Whether the date the memory was created matches the comparison.",
+  "details": "Compare it with a valid date using <, <=, =, > or >=. It has no !=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "memory_end_date",
+  "label": "Memory end date",
+  "summary": "Whether the date the memory will be forgotten matches the comparison.",
+  "details": "The end date can change over time. Compare it with a valid date using <, <=, =, > or >=. It has no !=.",
+  "fields": [],
+  "sources": [
+   "doc"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "mercenary_company_expiration_days",
+  "label": "Mercenary contract days left",
+  "summary": "Whether the days left in the mercenary company's contract match the comparison.",
+  "details": "It is 0 if the company is not hired. Vanilla uses it once with `< 180`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "merit",
+  "label": "Merit",
+  "summary": "Whether the character has the required merit.",
+  "details": "The game's documentation does not explain what merit is. Compare it with <, <=, =, !=, > or >=. Vanilla compares it with named values such as `duchy_starting_merit_value`, with numbers like 3000, and with other characters' merit.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "merit_level",
+  "label": "Merit level",
+  "summary": "Whether the character has the required merit level.",
+  "details": "Compare it with <, <=, =, !=, > or >=. Vanilla also writes a bare number (`merit_level = 5`) and compares with another character's level, for example `< root.merit_level`.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ }
+]

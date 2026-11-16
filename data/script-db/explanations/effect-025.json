@@ -1,0 +1,402 @@
+[
+ {
+  "kind": "effect",
+  "key": "stop_promoting_legend",
+  "label": "Stop promoting legend",
+  "summary": "Makes the character stop being the promoter (owner) of the legend they currently promote.",
+  "details": "Only matters if the character currently promotes a legend. Written as `stop_promoting_legend = yes`, on a character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "store_localized_text_in_death",
+  "label": "Keep text after death",
+  "summary": "Stores a piece of localized text, given by its key, on the character so it is still there after they die.",
+  "details": "The game says to use it sparingly, because every stored text makes the save file bigger. Use `remove_localized_text` once the text is no longer needed. Works on a character. Vanilla uses it only once, with the key `test_saved_text`.",
+  "fields": [{ "name": "key", "text": "The key of the localized text to keep.", "values": "a localization key", "required": true }],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "stress_and_fulfillment_impact",
+  "label": "Stress and fulfillment by traits",
+  "summary": "Adds stress to the character depending on their traits, and also changes their spiritual fulfillment depending on whether they act in line with or against those traits.",
+  "details": "Whether a trait is sinful or virtuous also affects the fulfillment change. All the listed values are added together, so positive and negative ones cancel each other out. Each trait may be named only once. The game's documentation says trait values cannot be script values, but vanilla fills them with named values such as `medium_stress_impact_gain` (defined in the game's script values file), so treat that documentation line with care. Works on a character.",
+  "fields": [
+   { "name": "base", "text": "An amount of stress that is always added, whatever traits the character has.", "values": "a number, a script value or a named stress value such as `minor_stress_impact_loss`", "required": false },
+   { "name": "<trait>", "text": "Stress added only if the character has this trait. Write one line per trait, each trait once.", "values": "a number or a named stress value such as `medium_stress_impact_gain`", "required": false }
+  ],
+  "sources": ["doc", "vanilla", "vanilla: common/script_values/00_stress_values.txt:32"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "stress_impact",
+  "label": "Stress by traits",
+  "summary": "Adds stress to the character depending on which of the listed traits they have.",
+  "details": "All listed values are added together, so positive and negative ones cancel each other out. Each trait may be named only once. The game's documentation says trait values cannot be script values, but vanilla fills them with named values such as `medium_stress_impact_gain` (defined in the game's script values file), so treat that documentation line with care. Unlike `stress_and_fulfillment_impact`, the game's documentation mentions no change to fulfillment. Works on a character.",
+  "fields": [
+   { "name": "base", "text": "An amount of stress that is always added, whatever traits the character has.", "values": "a number, a script value or a named stress value such as `minor_stress_impact_loss`", "required": false },
+   { "name": "<trait>", "text": "Stress added only if the character has this trait. Write one line per trait, each trait once.", "values": "a number or a named stress value such as `medium_stress_impact_gain`", "required": false }
+  ],
+  "sources": ["doc", "vanilla", "vanilla: common/script_values/00_stress_values.txt:32"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "subtract_supply",
+  "label": "Subtract supply",
+  "summary": "Takes the given amount of supply away from the army.",
+  "details": "The supply cannot go beyond the army's maximum supply capacity. Vanilla uses it once, with the named value `natural_disaster_army_supply_loss_value`. Works on an army.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "switch",
+  "label": "Switch",
+  "summary": "Runs one set of effects chosen by looking at the result of a trigger, with an optional fallback set.",
+  "details": "The `trigger` names the check to evaluate. Each case is named after a possible result of it and holds the effects to run for that result. Vanilla uses numbers, `yes` and `no`, or other values as case names. The `fallback` block runs when no case matches. The input names no scope restriction.",
+  "fields": [
+   { "name": "trigger", "text": "The trigger whose result decides which case runs.", "values": "a trigger name taking a simple value, such as `has_trait` or `exists`; vanilla also uses `yes`", "required": true },
+   { "name": "<case>", "text": "The effects to run when the trigger gives this result. Write one block per case.", "values": "a block of effects", "required": false },
+   { "name": "fallback", "text": "The effects to run when no case matches.", "values": "a block of effects", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "take_hostage",
+  "label": "Take hostage",
+  "summary": "Makes the character take the target character as a hostage.",
+  "details": "The character in scope is the warden, the one who holds the hostage. The target is the hostage. Vanilla gives the target as a saved scope such as `scope:hostage`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "title_create_faction",
+  "label": "Title creates faction",
+  "summary": "Makes the title create a faction of the given type against the given target.",
+  "details": "Works on a landed title. Vanilla uses it twice, both times with the type `peasant_faction`, aimed at a character such as a county's holder.",
+  "fields": [
+   { "name": "type", "text": "The kind of faction to create.", "values": "a faction type, e.g. `peasant_faction`", "required": true },
+   { "name": "target", "text": "Who or what the faction is against.", "values": "a scope, e.g. `scope:story.story_owner`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "title_join_faction",
+  "label": "Title joins faction",
+  "summary": "Makes the title join the given faction.",
+  "details": "Works on a landed title. The value is the faction to join, usually a saved scope as in vanilla.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "title_leave_faction",
+  "label": "Title leaves faction",
+  "summary": "Makes the title leave the given faction.",
+  "details": "Works on a landed title. The value is the faction to leave, usually a saved scope as in vanilla.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "transfer_owned_maa_control",
+  "label": "Transfer men-at-arms control",
+  "summary": "Hands control of the title's owned men-at-arms (MaA) regiments over to the target title.",
+  "details": "Works on a landed title; the target is another landed title. Vanilla gives the target as the primary title of a character. The game's documentation names only control, not ownership; see `transfer_title_maa_ownership` for ownership.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "transfer_title_maa",
+  "label": "Move regiment to title",
+  "summary": "Moves a men-at-arms (MaA) regiment over to another title.",
+  "details": "Works on a regiment; the target is a landed title. Vanilla gives the target as a character's primary title or as the title the regiment already belongs to (`regiment_owning_title`).",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "transfer_title_maa_ownership",
+  "label": "Transfer men-at-arms ownership",
+  "summary": "Hands ownership of the title's owned men-at-arms (MaA) regiments over to the target title.",
+  "details": "Works on a landed title; the target is another landed title. Vanilla gives the target as a primary title or a named title such as `title:h_roman_empire`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "transfer_to_new_clerical_region",
+  "label": "Move to new clerical region",
+  "summary": "Gives the target clerical region title to the character and destroys the clerical region title they held before.",
+  "details": "It fails if the target is not a clerical region title, or if the character does not hold a clerical region at all. Works on a character; the target is a landed title.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "tributary_contract_set_obligation_level",
+  "label": "Set tributary obligation level",
+  "summary": "Sets the level of one obligation type in the character's tributary contract.",
+  "details": "The level can be an index number, the name of a level, or a saved scope. The documentation’s own usage lines say `vassal_contract_set_obligation_level`, which looks copied from the vassal version; vanilla uses the block form with this effect's name. Vanilla uses types such as `default_tributary_taxes` with numeric levels. Works on a character.",
+  "fields": [
+   { "name": "type", "text": "Which obligation of the contract to change.", "values": "an obligation type, e.g. `default_tributary_taxes`, `mandala_government_levies`", "required": true },
+   { "name": "level", "text": "The level to set.", "values": "an index number (0, 1, 2 ...), a level name such as `herd_obligation_low`, or a scope like `scope:obligation`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "trigger_event",
+  "label": "Trigger event",
+  "summary": "Fires an event or an on_action, right away or after a delay.",
+  "details": "Say what to fire with exactly one of `id`, `on_action` or `saved_event_id` (a saved scope holding an event ID). The delay is optional and is one of `days`, `months` or `years` (a single number, or two numbers in braces to pick randomly between them), `trigger_on_next_date` (a full date, or month and day for the next time it comes round) or `delayed = yes` (the next tick). Vanilla also writes a bare event ID as the value.",
+  "fields": [
+   { "name": "id", "text": "The event to fire.", "values": "an event ID such as `health.1001`", "required": false },
+   { "name": "on_action", "text": "An on_action to fire instead of a single event.", "values": "an on_action name", "required": false },
+   { "name": "saved_event_id", "text": "An event ID held in a saved scope.", "values": "a scope such as `scope:my_flag_name`", "required": false },
+   { "name": "days", "text": "Waits this many days first.", "values": "a number, or `{ min max }` for a random pick", "required": false },
+   { "name": "months", "text": "Waits this many months first.", "values": "a number, or `{ min max }`", "required": false },
+   { "name": "years", "text": "Waits this many years first.", "values": "a number, or `{ min max }`", "required": false },
+   { "name": "weeks", "text": "Waits this many weeks first. Not in the game's documentation; vanilla uses it a few times.", "values": "a number", "required": false },
+   { "name": "trigger_on_next_date", "text": "Fires on a given date.", "values": "\"year.month.day\" for one date, or \"month.day\" for the next time it comes round", "required": false },
+   { "name": "delayed", "text": "Delays the event to the next tick.", "values": "yes", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "trigger_situation_catalyst",
+  "label": "Trigger situation catalyst",
+  "summary": "Triggers a situation catalyst on every sub-region of the situation.",
+  "details": "If a county is given, the catalyst triggers only in that sub-region. A character can be named as the actor who causes it. The game's documentation also mentions a short form `activate_situation_catalyst = <catalyst>`, for example with `situation_catalyst_type:war_started`; vanilla often gives just a catalyst name. Works on a situation.",
+  "fields": [
+   { "name": "catalyst", "text": "Which catalyst to fire.", "values": "a catalyst type", "required": true },
+   { "name": "character", "text": "The actor who triggers the catalyst.", "values": "a character, e.g. `root` or `scope:actor`", "required": false },
+   { "name": "county", "text": "Limits the catalyst to the sub-region of this county or province.", "values": "a scope such as `scope:county_temp`", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "trigger_sub_region_catalyst",
+  "label": "Trigger sub-region catalyst",
+  "summary": "Triggers a situation catalyst in one sub-region only.",
+  "details": "The short form takes just the catalyst. The block form can also name the character who causes it. Works on a situation sub-region.",
+  "fields": [
+   { "name": "catalyst", "text": "Which catalyst to fire.", "values": "a catalyst type", "required": true },
+   { "name": "character", "text": "The actor who triggers the catalyst.", "values": "a character, e.g. `scope:owner`", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "try_create_important_action",
+  "label": "Create important action",
+  "summary": "Tries to create an important action notification, and keeps the current one if it already exists.",
+  "details": "The important action type must be defined in the game's files. Extra named scopes can be given to pass objects to the action's own effect. Vanilla also passes `actor` and `recipient` (three uses, for the types `action_can_lawfully_imprison`, `action_can_pardon` and `action_can_challenge_to_single_combat`).",
+  "fields": [
+   { "name": "important_action_type", "text": "The important action to create.", "values": "the key of an important action type, e.g. `action_can_pardon`", "required": true },
+   { "name": "actor", "text": "A scope saved for the action to use. Vanilla always passes `root`.", "values": "a scope such as `root`", "required": false },
+   { "name": "recipient", "text": "A scope saved for the action to use. Vanilla always passes `this`.", "values": "a scope such as `this`", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "try_create_suggestion",
+  "label": "Create suggestion",
+  "summary": "Tries to create a suggestion notification, and keeps the current one if it already exists.",
+  "details": "The suggestion type must be defined in the game's files. The other fields are optional and can be used by the suggestion's own effect. Vanilla has no use of it in the input.",
+  "fields": [
+   { "name": "suggestion_type", "text": "The suggestion to create.", "values": "the key of a suggestion type", "required": true },
+   { "name": "actor", "text": "A character the suggestion's effect can use.", "values": "a character", "required": false },
+   { "name": "recipient", "text": "A character the suggestion's effect can use.", "values": "a character", "required": false },
+   { "name": "secondary_actor", "text": "A second acting character the suggestion's effect can use.", "values": "a character", "required": false },
+   { "name": "secondary_recipient", "text": "A second receiving character the suggestion's effect can use.", "values": "a character", "required": false },
+   { "name": "landed_title", "text": "A title the suggestion's effect can use.", "values": "a landed title", "required": false }
+  ],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "effect",
+  "key": "try_start_diarchy",
+  "label": "Start diarchy",
+  "summary": "Tries to start a diarchy of the given type for the character.",
+  "details": "It fails without any message if no valid diarch can be found. To check afterwards, test `exists = <ruler>.diarch`. The documented usage line says `start_diarchy`, but vanilla uses this effect's name with a type such as `regency`, `co_monarchy` or `vizierate`. Works on a character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "unequip_artifact_from_owner",
+  "label": "Unequip artifact",
+  "summary": "Makes the character who owns the artifact stop equipping it.",
+  "details": "Written as `unequip_artifact_from_owner = yes`, on an artifact.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "unlearn_court_language_of",
+  "label": "Unlearn court language",
+  "summary": "Makes the character forget the court language of the target character.",
+  "details": "A character cannot unlearn the language of their own culture. The target is a character; the language taken away is the one their court uses.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "unlearn_language",
+  "label": "Unlearn language",
+  "summary": "Makes the character forget the given language.",
+  "details": "A character cannot unlearn the language of their own culture. The documented example is `language_norwegian`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "unlearn_language_of_culture",
+  "label": "Unlearn culture's language",
+  "summary": "Makes the character forget the language of the target culture.",
+  "details": "A character cannot unlearn the language of their own culture. Vanilla gives the culture as a saved scope or as the culture of a location or county.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "unpledge_attacker",
+  "label": "Pledged attacker",
+  "summary": "Removes the target character's pledge to the attacking side of the great holy war (GHW).",
+  "details": "Works on a great holy war. The value is the character who withdraws their pledge.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "unpledge_defender",
+  "label": "Pledged defender",
+  "summary": "Removes the target character's pledge to the defending side of the great holy war (GHW).",
+  "details": "Works on a great holy war. The value is the character who withdraws their pledge.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "update_dynamic_coa",
+  "label": "Update dynamic coat of arms",
+  "summary": "Picks a new dynamic coat of arms definition for the title and, if one is picked, replaces the title's current coat of arms with it.",
+  "details": "Written as `update_dynamic_coa = yes`, on a landed title.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "upgrade_building_effect",
+  "label": "Upgrade building",
+  "summary": "Replaces an existing building in the holding with the next building in its upgrade line.",
+  "details": "Give any building of the line and it is upgraded to the next level. Another building of the same type must already be in place, or the effect fails with an error. Duchy capital buildings also fail to be created if the province does not support them. Works on a province. The input shows no vanilla use.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "use_hook",
+  "label": "Use hook",
+  "summary": "Makes the character use a hook they hold on the target character.",
+  "details": "A weak hook is used up (removed). A strong hook is not removed but goes on cooldown. Vanilla gives the target mostly as a saved scope such as `scope:recipient`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "vassal_contract_decrease_obligation_level",
+  "label": "Decrease vassal obligation level",
+  "summary": "Lowers the level of one obligation type in the character's vassal contract.",
+  "details": "The value is the obligation type. Vanilla uses `feudal_government_taxes` and `feudal_government_levies`. Works on a character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "vassal_contract_increase_obligation_level",
+  "label": "Increase vassal obligation level",
+  "summary": "Raises the level of one obligation type in the character's vassal contract.",
+  "details": "The value is the obligation type. Vanilla uses `feudal_government_taxes` and `feudal_government_levies`. Works on a character.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "vassal_contract_set_obligation_level",
+  "label": "Set vassal obligation level",
+  "summary": "Sets the level of one obligation type in the character's vassal contract.",
+  "details": "The level can be an index number, the name of a level, or a saved scope. Vanilla uses types such as `feudal_government_taxes`, `religious_rights` and `celestial_provinces`, mostly with numeric levels. Works on a character.",
+  "fields": [
+   { "name": "type", "text": "Which obligation of the contract to change.", "values": "an obligation type, e.g. `feudal_government_taxes`, `religious_rights`", "required": true },
+   { "name": "level", "text": "The level to set.", "values": "an index number (1, 2 ...), a level name such as `feudal_obligation_low`, or a scope like `scope:obligation`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "visit_court_of",
+  "label": "Visit a court",
+  "summary": "Makes the character a guest at the target character's court.",
+  "details": "The character in scope is the one who visits; the target is the host. Vanilla gives the host mostly as a saved scope or `root`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "effect",
+  "key": "while",
+  "label": "While loop",
+  "summary": "Repeats the effects inside it as long as a condition holds, or a set number of times.",
+  "details": "Use `limit` for a condition that must hold, or `count` for a set number of rounds. The loop stops at 1000 rounds by default. The effects to repeat are written in the same block. The input names no scope restriction.",
+  "fields": [
+   { "name": "limit", "text": "The condition that must hold for another round to run.", "values": "a block of triggers", "required": false },
+   { "name": "count", "text": "The most rounds to run.", "values": "a number, e.g. 3", "required": false }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

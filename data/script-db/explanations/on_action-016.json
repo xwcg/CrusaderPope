@@ -1,0 +1,283 @@
+[
+ {
+  "kind": "on_action", "key": "on_title_gain_inheritance",
+  "label": "Title inherited",
+  "summary": "Fires when a character receives a title by inheritance.",
+  "details": "The game's code fires it. The root is the new holder, `scope:title` is the title that changes hands and `scope:previous_holder` is the former holder, who should be dead. Vanilla uses it to start an event a day later that tries to end inherited regencies, to give dread for inheriting the Mongol or Greatest of Khans title (only to holders with a certain flag), and, when the title is a noble family title, to bring unlanded close family members who have no court or tie elsewhere into the new holder's court.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_title_gain_usurpation",
+  "label": "Title usurped",
+  "summary": "Fires when a character takes a title by usurpation.",
+  "details": "The game's code fires it. Vanilla's comments say the root is the new holder, `scope:title` is the title that changes hands and `scope:previous_holder` is the former holder, who should not be dead, although the game's documentation lists no expected scope. Vanilla uses it to trigger struggle catalysts when the title is in the Spain or Persia empires and the transfer type is usurped.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_title_lost",
+  "label": "Title lost",
+  "summary": "Fires when a character loses a title, for any reason.",
+  "details": "The game's code fires it. The root is the old holder, `scope:title` is the title that changes hands and `scope:new_holder` is the receiver. Vanilla uses it to fire an England partition event, to destroy the Kingdom of Fashion title when it is a holder's only kingdom, to add landless tribal Scandinavians to adventurer lists, and, going by a comment in the cut-off part of its definition, to remove concubines from characters who became unlanded.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+}
+,
+ {
+  "kind": "on_action", "key": "on_tour_dinner_liege",
+  "label": "Tour dinner, liege",
+  "summary": "Picks one random event for the touring liege during a dinner on a tour.",
+  "details": "Script fires it, not the game's code; the root is a character. It draws from a weighted list of dinner events in which the liege is the guest, such as a drinking contest or someone choking. The list includes a weight-100 entry that does nothing, so there is a chance that no event happens.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_tour_dinner_vassal",
+  "label": "Tour dinner, vassal",
+  "summary": "Picks one random event for the host vassal during a dinner on a tour.",
+  "details": "Script fires it, not the game's code; the root is a character. It draws from a weighted list of dinner events seen from the host's side, such as the stores running dry, a prank on the sleeping liege or an offer to murder the liege. All entries have the same weight.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_tour_festival_liege",
+  "label": "Tour festival, liege",
+  "summary": "Picks one random event for the touring liege during a cultural festival on a tour.",
+  "details": "Script fires it, not the game's code; the root is a character. It draws from a weighted list of festival events, such as a performer messing up, taxing the festival or meeting mercenaries. A weight-200 entry does nothing, so a no-event outcome is the most likely single result. Some entries are marked in vanilla as two-sided (liege and host).",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_tour_festival_vassal",
+  "label": "Tour festival, vassal",
+  "summary": "Picks one random event for the host vassal during a cultural festival on a tour.",
+  "details": "Script fires it, not the game's code; the root is a character. It draws from a weighted list of festival events seen from the host's side, such as staging a play about the liege or a parade. A weight-200 entry does nothing; it is the heaviest single weight, but most of the list is real events.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_tour_grounds_liege",
+  "label": "Tour grounds, liege",
+  "summary": "Picks one random event for the touring liege while visiting a vassal's grounds on a tour.",
+  "details": "Script fires it, not the game's code; the root is a character. It draws from a weighted list of events such as hunting mishaps, taxing the host, finding secrets or sparring. One entry does nothing, so it can end with no event.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_tour_grounds_vassal",
+  "label": "Tour grounds, vassal",
+  "summary": "Picks one random event for the host vassal while the liege visits their grounds on a tour.",
+  "details": "Script fires it, not the game's code; the root is a character. It draws from a weighted list of events seen from the host's side, such as showing off hunting skills, staging a fake hunt or hiding a secret stash room. One entry does nothing, so it can end with no event.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_tour_travel",
+  "label": "Tour travel",
+  "summary": "Maybe fires a random event while the character travels on a tour.",
+  "details": "Script fires it, not the game's code; the root is a character. It only runs when the root is the host of a tour activity and the current county belongs to the root or to one of their vassals or below. Then there is a 20 percent chance that one event is picked from a weighted list of travel encounters, such as peasants, bandits or a tavern visit.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_tradition_added",
+  "label": "Tradition added",
+  "summary": "Fires when a culture gains a tradition.",
+  "details": "The game's code fires it. Vanilla's comments say the root is the culture and `scope:tradition` is the tradition added, although the game's documentation lists no expected scope. Vanilla uses it to notify every player of that culture, to give rulers who should follow same-faith succession that law when they lack it, and to set a variable that starts the tradition cooldown.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_tradition_removed",
+  "label": "Tradition removed",
+  "summary": "Fires when a culture loses a tradition.",
+  "details": "The game's code fires it. Vanilla's comments say the root is the culture and `scope:tradition` is the tradition removed, although the game's documentation lists no expected scope. Vanilla only uses it to notify every player of that culture.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_trait_gained",
+  "label": "Trait gained",
+  "summary": "Fires whenever a living character gains a trait, for any reason.",
+  "details": "The game's code fires it. Vanilla's comments say the root is the character gaining the trait and `scope:trait` is the trait, although the game's documentation lists no expected scope. It only runs if the character is alive. Vanilla uses it to make characters who gain the devoted trait learn a liturgical language, and to give the scholar and mystic lifestyle traits (or trait experience if they already have them) for a faith tenet when the gained trait carries a certain flag, guarded by a 3-day flag so the added traits do not start a loop.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_trait_lost",
+  "label": "Trait lost",
+  "summary": "Fires whenever a character loses a trait, for any reason.",
+  "details": "The game's code fires it. Vanilla's comments say the root is the character losing the trait and `scope:trait` is the trait, although the game's documentation lists no expected scope. Vanilla only uses it to clear a flag when excommunication is lifted.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_travel_activity_arrival_too_late",
+  "label": "Travel to activity, arrived too late",
+  "summary": "Fires when an activity has already started while the character's travel to it is still going.",
+  "details": "The game's code fires it. The root is the owner of the travel plan and `scope:travel_plan` is the plan. The plan has already been sent back home at this point. Vanilla starts an activity event about the missed activity.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_travel_activity_complete",
+  "label": "Travel for activity complete",
+  "summary": "Fires when a travel made for an activity ends because the activity is now complete.",
+  "details": "The game's code fires it. Vanilla's definition is empty, so it does nothing unless a mod fills it in.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_travel_activity_estimated_arrival_too_late",
+  "label": "Travel to activity, running late",
+  "summary": "Fires when the game estimates that the character will not reach an activity in time.",
+  "details": "The game's code fires it. The root is the owner of the travel plan, `scope:travel_plan` is the plan and `scope:estimated_arrival_diff_days` is the gap in days between the activity start and the estimated arrival (negative means late). It fires only once until the estimate becomes good again. Vanilla starts an activity event in response.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_travel_activity_invalidated",
+  "label": "Travel for activity invalidated",
+  "summary": "Fires when a travel made for an activity ends because the activity was invalidated rather than completed.",
+  "details": "The game's code fires it. After it runs, the travel plan is rerouted home. Vanilla's definition is empty, so it does nothing unless a mod fills it in.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_travel_leader_removed",
+  "label": "Travel leader removed",
+  "summary": "Fires when a travel plan's leader is removed and not replaced.",
+  "details": "The game's code fires it. The root is the owner of the travel plan, `scope:travel_plan` is the plan and `scope:old_travel_leader` is the removed leader. Vanilla runs it only for playable characters and starts an event that offers to hire a new leader from the entourage or the current location.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_travel_plan_abort",
+  "label": "Travel plan aborted",
+  "summary": "Fires when a travel plan ends without being completed, or is aborted by script.",
+  "details": "The game's code fires it. Every plan ends through either this or `on_travel_plan_complete`, and usually everyone is moved to their default location afterwards. Vanilla runs it for rulers and uses it to start the travel completion event, to remove travel-related variables, flags and modifiers, to apply wayfarer perk effects, to refund costs of petitions, and to tell the sender when a holy journey was abandoned. The shown definition is cut off, so more may follow.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_travel_plan_arrival",
+  "label": "Travel plan arrival",
+  "summary": "Fires when the character arrives at one destination of their travel plan.",
+  "details": "The game's code fires it; a plan can have several destinations in a row. It is blocked on arrival at a pilgrimage destination or during a pilgrimage event chain. Vanilla has a weighted draw with a no-event entry and a welcome event, achievement tracking for players, completion events for landless adventurers' contracts whose destination was reached, souvenir and reminiscing effects, and a points of interest tracker. The shown definition is cut off.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_travel_plan_cancel",
+  "label": "Travel plan cancelled",
+  "summary": "Fires when the player cancels a travel plan, which then sends the party back home.",
+  "details": "The game's code fires it. The plan does not end until they arrive home, and people in it are removed from the activities linked to it. Vanilla uses it to clean up variables and flags and to refund the cost of decisions such as petitioning a liege, paying homage or pledging loyalty, and to tell the sender when a holy journey was called off. The game's documentation lists no expected scope. The shown definition is cut off.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_travel_plan_complete",
+  "label": "Travel plan completed",
+  "summary": "Fires when a character reaches the final destination of a travel plan, or the plan is completed by script.",
+  "details": "The game's code fires it. Vanilla runs it for rulers. It starts the first valid event from a list (pilgrimage, claim, mandala succession or the general completion event), starts a regency check a day later, gives each adult AI member of the entourage a 20 percent base chance (higher the more provinces were passed) to gain the traveler trait, and applies perk effects and a bonus for the leisurely travel option. The shown definition is cut off.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_travel_plan_movement",
+  "label": "Travel plan movement",
+  "summary": "Fires when a travelling character arrives in any province along the way.",
+  "details": "The game's code fires it. Vanilla runs it for adult rulers. It chains other on_actions with day delays (travel events, dangers, talent scouting, relationships, migration), counts the provinces passed on the plan, gives traveler trait progress, tracks cultures met on worldly pilgrimages, and starts an event once more than 50 provinces were passed, if the character is not yet a traveler. Other vanilla files add more on_actions to it for religious tenets. The shown definition is cut off.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_travel_plan_start",
+  "label": "Travel plan started",
+  "summary": "Fires when a character starts a travel plan, as they begin the journey to the first destination.",
+  "details": "The game's code fires it. Vanilla runs it for rulers, or for unlanded characters on a playdate, but not when a variable marks a recently invalidated hostage. It ends isolation modifiers, stores the start date on the character and the plan, sets the province count to 1, and adds the court physician and bodyguard to the entourage when they are available. The shown definition is cut off.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_travel_relocation_end",
+  "label": "Relocation travel end",
+  "summary": "Used by the debug interaction that moves a domicile; going by its name, it fires when that move ends.",
+  "details": "Script fires it, not the game's code. The timing is inferred from the name; vanilla's comment only names the debug interaction, and the definition is empty.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "on_travel_relocation_start",
+  "label": "Relocation travel start",
+  "summary": "Used by the debug interaction that moves a domicile; going by its name, it fires when that move starts.",
+  "details": "Script fires it, not the game's code. The timing is inferred from the name. Vanilla's comment names the debug interaction and says the effect is handled in the event ep3_contract_event.0002; the definition itself is empty.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "on_trigger_court_events",
+  "label": "Royal court events",
+  "summary": "Picks a random royal court event for a character.",
+  "details": "The game's code fires it. The root is the character getting court events. It only runs when the character is available and the royal court feature is active. The draw is a long weighted list of court events grouped by theme, with a chance of no event that is raised by 80 for AI characters, so they get fewer. The shown definition is cut off.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_vassal_become_powerful",
+  "label": "Vassal becomes powerful",
+  "summary": "An empty on_action that, going by its name, is meant for a vassal becoming powerful.",
+  "details": "Script fires it, not the game's code. The game documents nothing more, and vanilla's definition only has an empty random event list, so nothing happens unless a mod fills it in and fires it.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": true
+ },
+ {
+  "kind": "on_action", "key": "on_vassal_change",
+  "label": "Vassal changes liege",
+  "summary": "Fires when a vassal changes their liege.",
+  "details": "The game's code fires it. Vanilla's comments say the root is the vassal changing status and `scope:old_liege` is the previous liege. It also fires when a ruler becomes independent; those cases show the root as their own liege. Vanilla uses it to check the diarchy, to give noble families to house heads who become direct vassals of a top liege, and to handle administrative rulers who become independent (move them under another realm, or change their government). The shown definition is cut off.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_vassal_gained",
+  "label": "Vassal gained",
+  "summary": "Fires when a character gains a vassal.",
+  "details": "The game's code fires it. The root is the character gaining the vassal, `scope:vassal` is the new vassal and `scope:old_liege` is the vassal's previous liege, who may not exist if the vassal was unlanded or independent. Vanilla uses it to notify vassals of the new liege, to remove nomadic confederation members, to force landless rulers to hand the vassal on to their own liege or make the vassal independent, to destroy ceremonial titles of vassalized realms, and to put vassals in blocs. The shown definition is cut off.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_visited_ep3_monument",
+  "label": "Visited monument",
+  "summary": "Fires when a character visits one of the Roads to Power monuments (a point of interest).",
+  "details": "Script fires it from those points of interest. The root is a character. Vanilla starts a travel event.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_visited_grand_city",
+  "label": "Visited grand city",
+  "summary": "Fires when a character visits a grand city point of interest.",
+  "details": "Script fires it from the grand city point of interest. The root is a character. Vanilla starts three city travel events, after a one-day delay.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_war_invalidated",
+  "label": "War invalidated",
+  "summary": "Fires when a war is invalidated.",
+  "details": "The game's code fires it. `scope:attacker`, `scope:defender` and `scope:war` are used in vanilla. Vanilla sends the attacker a message, schedules a cleanup event for AI participants who have a delayed-cleanse flag, runs a contract assistance effect for the war, gives glory to both sides' accolades when each side has a knight who is unhealthy or imprisoned, and runs administrative, contract, mercenary and blood brother effects.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_war_started",
+  "label": "War started",
+  "summary": "Fires when a war starts.",
+  "details": "The game's code fires it. `scope:attacker`, `scope:defender` and `scope:war` are used in vanilla. Vanilla logs border wars, gives attackers a 15-year faith confession penalty when a faith variable forbids war, notifies player vassals of the war, creates a war memory for the attacker, lets activities react, marks that a player has declared war (for achievements) and handles hostage cases. The shown definition is cut off.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_war_transferred",
+  "label": "War transferred",
+  "summary": "Fires when a war is transferred to another character.",
+  "details": "The game's code fires it. The root is a character. Vanilla starts an event that lets the attacker back out of the war.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_war_white_peace",
+  "label": "War ends in white peace",
+  "summary": "Fires when a war ends in white peace, with no winner.",
+  "details": "The game's code fires it. `scope:attacker`, `scope:defender` and `scope:war` are used in vanilla. Vanilla schedules cleanup events for AI participants with a delayed-cleanse flag, pays out contract assistance money, triggers a struggle catalyst when one side supports and the other opposes a struggle, gives the attacker a war memory, and punishes destruction mandalas with a loss of piety and legitimacy. The shown definition is cut off.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_war_won_attacker",
+  "label": "War won by attacker",
+  "summary": "Fires when a war ends with the attacker winning.",
+  "details": "The game's code fires it. Only one of this and `on_war_won_defender` runs for a war. Vanilla does its work in `effect` because the war is destroyed before the next tick. It saves the winner and loser as scopes for text, gives a prestige reward in the Temujin versus Jamukha war, and hands out legend seeds for beating the Greatest of Khans or winning a great holy war. The shown definition is cut off.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_war_won_defender",
+  "label": "War won by defender",
+  "summary": "Fires when a war ends with the defender winning.",
+  "details": "The game's code fires it. Only one of this and `on_war_won_attacker` runs for a war. Vanilla saves the winner and loser as scopes for text, gives a humiliating memory to nomadic attackers who started a war with under 50 war score and lost, gives a memory to tributaries whose suzerain defended them, and hands out legend seeds for beating the Greatest of Khans or winning a great holy war. The shown definition is cut off.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ },
+ {
+  "kind": "on_action", "key": "on_ward_arrive_at_guardian",
+  "label": "Ward arrives at guardian",
+  "summary": "Fires when a child ward arrives at the guardian they travelled to.",
+  "details": "Script fires it, not the game's code. Vanilla first checks that the ward is still a living, unlanded child without a guardian, and that the guardian is still valid. It then moves the ward to the guardian's court, sets the guardian relation, adds opinion, carries over culture or faith conversion flags to the guardian relation and starts an event for the guardian. It uses the saved scopes `scope:guardian`, `scope:ward` and `scope:ward_liege`. The shown definition is cut off.",
+  "fields": [], "sources": ["doc", "vanilla"], "uncertain": false
+ }
+]

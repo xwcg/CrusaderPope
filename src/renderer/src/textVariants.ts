@@ -1,27 +1,29 @@
 /**
  * Conditional versions of an event's texts (docs/mods.md, "Editing in place"): "＋ text version when…" builds the
- * condition with the statement picker, gives the version a new localization key (`<event>.desc.<n>`, empty — it reads
- * "(no text yet)" until written) and puts it into the text's statement in the game's form:
+ * condition with the statement picker, gives the version a new localization key (`<event>.desc.<n>`, empty: it reads
+ * "(no text yet)" until written; made in the same request as the statement, so one undo step takes both back) and puts
+ * it into the text's statement in the game's form:
  *
  *     desc = x   →   desc = { first_valid = { triggered_desc = { trigger = { … } desc = <new> } desc = x } }
  *
  * A `first_valid` / `random_valid` the text has gets the new version before its unconditional fallback; texts made of
  * several parts (no first_valid: every valid part is shown) get it as one more part.
  *
- * "＋ text part" adds a part without a condition — the parts of a text are shown one after another:
+ * "＋ text part" adds a part without a condition; the parts of a text are shown one after another:
  *
  *     desc = x   →   desc = { desc = x desc = <new> }        desc = { … }   →   desc = { … desc = <new> }
  *
  * Descriptions nest (DescNode): every part or version, at any depth, is moved up and down by swapping its statement
- * with its neighbour's, removed by removing its statement, and containers get parts / versions added — located by
+ * with its neighbour's, removed by removing its statement, and containers get parts / versions added, located by
  * their paths (keyed statement indexes from the `desc` statement down).
  */
-import type { LineSource } from '../../shared/api';
+import type { EntryCreate, LineSource } from '../../shared/api';
 import { parseSnippet, printScript, type SNode } from '../../shared/scriptCatalog';
 import { api } from './api';
 import { pickStatement } from './picker/pickStatement';
-import { reportEditError, runScriptEdit } from './scriptEdits';
+import { createsOf, reportEditError, rewrittenText, runScriptEdit } from './scriptEdits';
 
+import { tr } from '../../shared/i18n';
 /** The text statement with a new conditional version (`key` shown when `condition` holds). */
 export function withTextVariant(statement: string, key: string, condition: string): string
 {
@@ -29,7 +31,7 @@ export function withTextVariant(statement: string, key: string, condition: strin
     const n = nodes[0];
 
     if (!n)
-        throw new Error('No text statement to add to.');
+        throw new Error(tr('No text statement to add to.'));
 
     const variant: SNode = {
         k: 'triggered_desc',
@@ -75,7 +77,7 @@ export function withTextPart(statement: string, key: string): string
     const n = parseSnippet(statement)[0];
 
     if (!n)
-        throw new Error('No text statement to add to.');
+        throw new Error(tr('No text statement to add to.'));
 
     const part: SNode = { k: 'desc', op: '=', v: key };
     const out: SNode = n.kids ? { ...n, kids: [...n.kids, part] } : { k: n.k, op: '=', kids: [{ k: 'desc', op: '=', v: n.v ?? '' }, part] };
@@ -97,7 +99,7 @@ function editAt(statement: string, parent: number[], change: (list: SNode[], at:
     const root = parseSnippet(statement)[0];
     const stale = (): never =>
     {
-        throw new Error('The text changed — nothing done.');
+        throw new Error(tr('The text changed — nothing done.'));
     };
     const walk = (n: SNode, rest: number[]): SNode =>
     {
@@ -142,8 +144,8 @@ export function withRemoved(statement: string, parent: number[], a: number): str
 }
 
 /**
- * The text statement with `item` added to the block at `parent`: at its end, or — `beforeFallback`, a first_valid's
- * new conditional version — before the unconditional versions at its end.
+ * The text statement with `item` added to the block at `parent`: at its end, or (`beforeFallback`, a first_valid's
+ * new conditional version) before the unconditional versions at its end.
  */
 export function withAdded(statement: string, parent: number[], item: SNode, beforeFallback: boolean): string
 {
@@ -158,17 +160,17 @@ export function withAdded(statement: string, parent: number[], item: SNode, befo
     });
 }
 
-/** Runs a rewrite of the text statement at `at` and reports it. */
-async function rewrite(at: LineSource, make: (text: string) => string, done: string, failed: string): Promise<void>
+/**
+ * Runs a rewrite of the text statement at `at` and reports it. `creates`: the entries the new text needs. The written
+ * statement's comments are kept (rewrittenText).
+ */
+async function rewrite(at: LineSource, make: (text: string) => string, done: string, failed: string, creates?: EntryCreate[]): Promise<void>
 {
     try
     {
-        const cur = await api.scriptText(at);
-
-        if (cur.problem)
-            throw new Error(cur.problem);
-
-        await runScriptEdit({ op: 'replace', at, text: make(cur.text) }, done);
+        const text = await rewrittenText(at, make);
+        const made = createsOf(creates);
+        await runScriptEdit({ op: 'replace', at, text, ...(made.creates ? { creates: made.creates } : {}) }, done + made.note);
     }
     catch (e)
     {
@@ -179,23 +181,23 @@ async function rewrite(at: LineSource, make: (text: string) => string, done: str
 /** Swaps two items of a description's block (`withSwapped`). */
 export function moveText(at: LineSource, parent: number[], a: number, b: number): Promise<void>
 {
-    return rewrite(at, (t) => withSwapped(t, parent, a, b), 'Moved a text', 'Not moved');
+    return rewrite(at, (t) => withSwapped(t, parent, a, b), tr('Moved a text'), tr('Not moved'));
 }
 
 /** Removes an item of a description's block (`withRemoved`); its localization stays. */
 export function removeText(at: LineSource, parent: number[], a: number): Promise<void>
 {
-    return rewrite(at, (t) => withRemoved(t, parent, a), 'Removed a text', 'Not removed');
+    return rewrite(at, (t) => withRemoved(t, parent, a), tr('Removed a text'), tr('Not removed'));
 }
 
 /**
  * Adds a text to the block at `parent` of a description: a part of a sequence or a version of a `first_valid` /
- * `random_valid` — `conditional`: a `triggered_desc` whose condition the picker builds (a first_valid's goes before
+ * `random_valid`; `conditional`: a `triggered_desc` whose condition the picker builds (a first_valid's goes before
  * its fallback). The text gets a new key `<eventId>.desc.<n>`, empty until written.
  */
 export async function addDescItem(at: LineSource, eventId: string, parent: number[], conditional: boolean, firstValid: boolean, pos?: { x: number; y: number; }): Promise<void>
 {
-    const cond = conditional ? await pickStatement({ kind: 'trigger', scope: 'character', title: 'a text: shown when…', at: pos }) : undefined;
+    const cond = conditional ? await pickStatement({ kind: 'trigger', scope: 'character', title: tr('a text: shown when…'), at: pos, newEntries: true }) : undefined;
 
     if (conditional && !cond?.text.trim())
         return;
@@ -203,9 +205,15 @@ export async function addDescItem(at: LineSource, eventId: string, parent: numbe
     const key = await freeKey(eventId, 'desc');
     const text: SNode = { k: 'desc', op: '=', v: key };
     const item: SNode = cond ? { k: 'triggered_desc', op: '=', kids: [{ k: 'trigger', op: '=', kids: parseSnippet(cond.text) }, text] } : text;
-    await api.editLoc(key, '');
-    await rewrite(at, (t) => withAdded(t, parent, item, !!cond && firstValid), 'Added a text — write it with ✎', 'No text added');
+    await rewrite(at, (t) => withAdded(t, parent, item, !!cond && firstValid), tr('Added a text — write it with ✎'), tr('No text added'), [emptyText(key), ...(cond?.creates ?? [])]);
 }
+
+/**
+ * A new text's key, empty, written with the statement that names it (a `loc` create: the same request, so one undo
+ * step takes both back, and a refused statement leaves no key behind). The text controls are on events only, which a
+ * loaded save never holds (its layer has characters and faiths), so saveEdit's refusal of creates never meets them.
+ */
+const emptyText = (key: string): EntryCreate => ({ what: 'loc', key, fields: [], loc: '' });
 
 /** A key `<eventId>.<part>.<n>` no localization has yet. */
 async function freeKey(eventId: string, part: 'desc' | 't'): Promise<string>
@@ -223,44 +231,33 @@ export async function addTextPart(at: LineSource, eventId: string): Promise<void
 {
     try
     {
-        const cur = await api.scriptText(at);
-
-        if (cur.problem)
-            throw new Error(cur.problem);
-
         const key = await freeKey(eventId, 'desc');
-        const next = withTextPart(cur.text, key);
-        await api.editLoc(key, '');
-        await runScriptEdit({ op: 'replace', at, text: next }, 'Added a text part — write it with ✎');
+        const next = await rewrittenText(at, (t) => withTextPart(t, key));
+        await runScriptEdit({ op: 'replace', at, text: next, creates: [emptyText(key)] }, tr('Added a text part — write it with ✎'));
     }
     catch (e)
     {
-        reportEditError('No text part added')(e);
+        reportEditError(tr('No text part added'))(e);
     }
 }
 
 /** Asks for the condition, makes the key, writes both (see the file comment). `eventId`: the event's id. */
 export async function addTextVariant(at: LineSource, eventId: string, part: 'desc' | 't', pos?: { x: number; y: number; }): Promise<void>
 {
-    const cond = await pickStatement({ kind: 'trigger', scope: 'character', title: part === 'desc' ? 'a text version: shown when…' : 'a title version: shown when…', at: pos });
+    const cond = await pickStatement({ kind: 'trigger', scope: 'character', title: part === 'desc' ? tr('a text version: shown when…') : tr('a title version: shown when…'), at: pos, newEntries: true });
 
     if (!cond?.text.trim())
         return;
 
     try
     {
-        const cur = await api.scriptText(at);
-
-        if (cur.problem)
-            throw new Error(cur.problem);
-
         const key = await freeKey(eventId, part);
-        const next = withTextVariant(cur.text, key, cond.text);
-        await api.editLoc(key, '');
-        await runScriptEdit({ op: 'replace', at, text: next }, `Added a ${part === 'desc' ? 'text' : 'title'} version${cond.summary ? ` (when ${cond.summary.charAt(0).toLowerCase()}${cond.summary.slice(1)})` : ''} — write it with ✎`);
+        const next = await rewrittenText(at, (t) => withTextVariant(t, key, cond.text));
+        const made = createsOf([emptyText(key), ...(cond.creates ?? [])]);
+        await runScriptEdit({ op: 'replace', at, text: next, creates: made.creates }, tr('Added a {kind} version{condition} — write it with ✎', { kind: part === 'desc' ? 'text' : 'title', condition: cond.summary ? tr(' (when {summary}{summary2})', { summary: cond.summary.charAt(0).toLowerCase(), summary2: cond.summary.slice(1) }) : '' }) + made.note);
     }
     catch (e)
     {
-        reportEditError('No text version added')(e);
+        reportEditError(tr('No text version added'))(e);
     }
 }

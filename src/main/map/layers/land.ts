@@ -5,6 +5,7 @@ import { unquote } from '../history.ts';
 import { TIER_RANK } from '../titles.ts';
 import { bodyOf, fieldOf, once, perCounty, Things, type LayerCtx, type LayerDef } from '../layers.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 /**
  * Development bands, the same at every date (vanilla: most counties 0–14 in 867, 0–29 in 1178, a few up to 60;
  * AGOT alike): narrow at the low end. Colours light to dark (magma's, reversed).
@@ -49,6 +50,10 @@ const development: LayerDef = {
         const { titles } = ctx.tree;
         const values = perCounty(ctx, (ci) =>
         {
+            // (a loaded save: its counties' own development)
+            if (ctx.save)
+                return ctx.save.development.get(titles[ci].key) ?? fallback;
+
             let best: { date: number; rank: number; value: number; } | undefined;
 
             for (let t = ci, guard = 0; t >= 0 && guard < 10; t = ctx.state.parentOf[t], guard++)
@@ -69,9 +74,9 @@ const development: LayerDef = {
         }, NaN);
         return {
             id: 'development',
-            label: 'Development',
-            title: 'The counties’ development at the date',
-            row: 'Development',
+            label: tr('Development'),
+            title: tr('The counties’ development at the date'),
+            row: tr('Development'),
             historical: true,
             labels: false,
             values,
@@ -113,6 +118,19 @@ const specialBuilding: LayerDef = {
         const perProvince = once(ctx, 'specialBuildings', () =>
         {
             const out = new Map<number, BuildingStmt[]>();
+
+            // (a loaded save: its provinces' great buildings, built)
+            if (ctx.save)
+            {
+                for (const [p, key] of ctx.save.duchy)
+                    out.set(p, [{ date: ctx.when, kind: 'duchy', key }]);
+
+                for (const [p, key] of ctx.save.special)
+                    out.set(p, [...(out.get(p) ?? []), { date: ctx.when, kind: 'built', key }]);
+
+                return out;
+            }
+
             const walk = (n: PNode, date: number, list: BuildingStmt[]): void =>
             {
                 const kind = n.k ? BUILDING_KEYS[n.k] : undefined;
@@ -173,7 +191,7 @@ const specialBuilding: LayerDef = {
             });
         }
 
-        return { id: 'special_building', label: 'Special buildings', title: 'Special and duchy capital buildings (and empty special building slots) at the date', row: 'Special building', historical: true, things: things.list, values };
+        return { id: 'special_building', label: tr('Special buildings'), title: tr('Special and duchy capital buildings (and empty special building slots) at the date'), row: tr('Special building'), historical: true, things: things.list, values };
     }
 };
 
@@ -183,7 +201,7 @@ const REGION_TITLES = ['hegemonies', 'empires', 'kingdoms', 'duchies', 'counties
 /**
  * Geographical regions (map_data/geographical_regions: `<region> = { duchies = { … } counties = { … } provinces = { … }
  * regions = { … } }`, the lists' titles standing for their de jure provinces; subregions may be declared after their
- * region — AGOT does). A province is in many regions; the layer shows the "world regions" (`world_*`, which the
+ * region, as AGOT does). A province is in many regions; the layer shows the "world regions" (`world_*`, which the
  * game's files say are "mutually exclusive on the same tier & should cover every part of the map"), the smallest one
  * a province is in. Other `world_*` regions cut across those (vanilla's world_atlantic, world_innovation_camels,
  * world_horse_buildings_in_hills_and_mountains): the ones overlapping others without containing them are dropped,
@@ -333,7 +351,7 @@ const region: LayerDef = {
                 }
             }
 
-            return { id: 'region', label: 'Regions', title: 'The geographical world regions (the smallest one of each province)', row: 'Region', things: things.list, values };
+            return { id: 'region', label: tr('Regions'), title: tr('The geographical world regions (the smallest one of each province)'), row: tr('Region'), things: things.list, values };
         })
 };
 

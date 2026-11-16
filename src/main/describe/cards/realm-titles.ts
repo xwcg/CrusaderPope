@@ -5,6 +5,7 @@ import { capitalize, humanize, rich } from '../text.ts';
 import type { CardFn } from './types.ts';
 import { RealmCard, isBlock, items, join, type Block } from './realm-kit.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 /** Title tiers by key prefix (common/landed_titles/_landed_titles.info: `h_` hegemony … `b_` barony). */
 const TIERS: Record<string, [string, string]> = {
     h: ['Hegemony', 'hegemonies'],
@@ -43,10 +44,10 @@ function sizeText(counts: Record<string, number>, tiers: string): string
 
 /** Regnal names (`holding_regnal_male_names = { … }` …): who takes them and when. */
 const REGNAL: [string, string][] = [
-    ['holding_regnal_male_names', 'Male holders take one of the names'],
-    ['holding_regnal_female_names', 'Female holders take one of the names'],
-    ['posthumous_regnal_male_names', 'Male holders are remembered by one of the names'],
-    ['posthumous_regnal_female_names', 'Female holders are remembered by one of the names']
+    ['holding_regnal_male_names', tr('Male holders take one of the names')],
+    ['holding_regnal_female_names', tr('Female holders take one of the names')],
+    ['posthumous_regnal_male_names', tr('Male holders are remembered by one of the names')],
+    ['posthumous_regnal_female_names', tr('Female holders are remembered by one of the names')]
 ];
 
 /**
@@ -64,24 +65,34 @@ const title: CardFn = (b, x) =>
     const le = liege && TITLE_KEY.test(liege) ? b.idx.get('landed_titles', liege) : undefined;
 
     if (le)
-        c.fact('De jure part of ', b.d.entitySeg(le));
+        c.fact(tr('De jure part of '), b.d.entitySeg(le));
 
-    if (kids.length)
-        c.fact(sizeText(countTiers(x.body), 'hekdcb'.slice('hekdcb'.indexOf(tier) + 1)));
+    // a title written again by a mod keeps what the definition before it has and it doesn't write (the game merges
+    // titles; docs/mods.md "Landed titles"): those values and de jure titles listed too, marked, without anchors
+    const before = b.idx.mergedBeforeIdx(x.e);
+    const prev = before >= 0 && before !== b.idx.winningIdx(x.e) ? b.idx.defNode(x.e, undefined, before)?.node : undefined;
+    const written = new Set(x.body.map((n) => n.k));
+    const kept = prev && Array.isArray(prev.v) ? prev.v.filter((n) => n.k && !written.has(n.k)) : [];
+    const keptKids = deJure(kept);
+    const FROM = tr(' — kept from the definition before');
+
+    if (kids.length || keptKids.length)
+        c.fact(sizeText(countTiers([...x.body, ...keptKids]), 'hekdcb'.slice('hekdcb'.indexOf(tier) + 1)));
     else if ('hekd'.includes(tier))
-        c.fact('Titular — no de jure lands');
-
+        c.fact(tr('Titular — no de jure lands'));
     // one line per de jure title, with its size (a barony: its province)
-    const lines = kids.map((n): Line =>
+    const lineOf = (n: (typeof kids)[number], own: boolean): Line =>
     {
         const t = n.k![0];
         const province = n.v.find((p) => p.k === 'province')?.v;
-        const size = t === 'b' ? (typeof province === 'string' ? `province ${province}` : '') : sizeText(countTiers(n.v), t === 'c' ? 'b' : 'c');
-        return { text: rich(b.d.ref(n.k!, ['landed_titles']), size ? ` — ${size}` : ''), tip: n.k!, src: c.anchor(n, 'other') };
-    });
+        const size = t === 'b' ? (typeof province === 'string' ? tr('province {province}', { province }) : '') : sizeText(countTiers(n.v), t === 'c' ? 'b' : 'c');
+        return own ? { text: rich(b.d.ref(n.k!, ['landed_titles']), size ? ` (${size})` : ''), tip: n.k!, src: c.anchor(n, 'other') } : { text: rich(b.d.ref(n.k!, ['landed_titles']), size ? ` (${size})` : '', FROM), tip: n.k! };
+    };
+    const lines = [...kids.map((n) => lineOf(n, true)), ...keptKids.map((n) => lineOf(n, false))];
     const kidTiers = new Set(kids.map((n) => n.k![0]));
-    c.section(kidTiers.size === 1 ? capitalize(TIERS[[...kidTiers][0]][1]) : 'De jure lands', lines);
-    c.settings('Settings', 'landed_titles');
+    c.section(kidTiers.size === 1 ? capitalize(TIERS[[...kidTiers][0]][1]) : tr('De jure lands'), lines);
+    const keptSettings = kept.filter((n) => !keptKids.includes(n as (typeof keptKids)[number]) && n.k !== 'cultural_names');
+    c.settings(tr('Settings'), 'landed_titles', b.fieldLines('landed_titles', keptSettings).map((l) => ({ ...l, text: [...l.text, FROM] })));
     const names = c.block('cultural_names');
 
     if (names)
@@ -89,7 +100,7 @@ const title: CardFn = (b, x) =>
         const rows = names.v
             .filter((n) => n.k && typeof n.v === 'string')
             .map((n): Line => ({ text: rich(b.d.ref(n.k!, ['culture/name_lists']), ': “', b.d.loc(n.v as string) ?? [humanize(n.v as string)], '”'), tip: `${n.k} = ${n.v}`, src: c.anchor(n, 'other'), locKey: n.v as string }));
-        c.section('Cultural names', rows);
+        c.section(tr('Cultural names'), rows);
     }
 
     const regnal: Line[] = [];
@@ -102,13 +113,13 @@ const title: CardFn = (b, x) =>
             regnal.push({ text: rich(label, ': ', items(n).map((i) => b.idx.plainLoc(i.v as string) ?? humanize(i.v as string)).join(', ')), tip: k, src: c.anchor(n, 'other') });
     }
 
-    c.section('Regnal names', regnal);
-    c.triggers('can_create', 'Can be created when', 'character');
-    c.triggers('can_create_on_partition', 'Created on partition when', 'character');
-    c.triggers('can_destroy', 'Can be destroyed when', 'character');
-    c.triggers('personal_relation_vassal', 'The vassal named in its holder’s relations', 'character');
+    c.section(tr('Regnal names'), regnal);
+    c.triggers('can_create', tr('Can be created when'), 'character');
+    c.triggers('can_create_on_partition', tr('Created on partition when'), 'character');
+    c.triggers('can_destroy', tr('Can be destroyed when'), 'character');
+    c.triggers('personal_relation_vassal', tr('The vassal named in its holder’s relations'), 'character');
     c.skip('personal_relation_entry');
-    c.ai('ai_primary_priority', 'How much the AI wants it as its primary title');
+    c.ai('ai_primary_priority', tr('How much the AI wants it as its primary title'));
     return c.done();
 };
 
@@ -120,37 +131,37 @@ const holding: CardFn = (b, x) =>
     const lines: Line[] = [];
 
     if (heirs)
-        lines.push({ text: rich('Heirs to a county with it as capital must be ', join(items(heirs).map((n) => b.d.ref(n.v as string, ['governments'])), ' or ')), icon: 'note', tip: 'required_heir_government_types', src: c.anchor(heirs, 'other') });
+        lines.push({ text: rich(tr('Heirs to a county with it as capital must be '), join(items(heirs).map((n) => b.d.ref(n.v as string, ['governments'])), ' or ')), icon: 'note', tip: 'required_heir_government_types', src: c.anchor(heirs, 'other') });
 
-    c.settings('Settings', 'holdings', lines);
+    c.settings(tr('Settings'), 'holdings', lines);
     const buildings = c.block('buildings');
 
     if (buildings)
-        c.section('Buildings', items(buildings).map((n): Line => ({ text: [b.d.ref(n.v as string, ['buildings'])], tip: n.v as string, src: c.anchor(n, 'other') })));
+        c.section(tr('Buildings'), items(buildings).map((n): Line => ({ text: [b.d.ref(n.v as string, ['buildings'])], tip: n.v as string, src: c.anchor(n, 'other') })));
 
     const params = c.block('parameters');
 
     if (params)
-        c.section('Parameters', items(params).map((n): Line => ({ text: [capitalize(humanize(n.v as string))], icon: 'flag', tip: n.v as string, src: c.anchor(n, 'other') })));
+        c.section(tr('Parameters'), items(params).map((n): Line => ({ text: [capitalize(humanize(n.v as string))], icon: 'flag', tip: n.v as string, src: c.anchor(n, 'other') })));
 
     return c.done();
 };
 
 /** Lists of a government: what they name and how they read. */
 const GOVERNMENT_LISTS: [string, string, string[]][] = [
-    ['valid_holdings', 'Can also hold ', ['holdings']],
-    ['required_county_holdings', 'Needed in a county before more can be built: ', ['holdings']],
-    ['primary_heritages', 'Preferred by the heritages ', ['culture/pillars']],
-    ['preferred_religions', 'Preferred by the religions ', ['religion/religion_types']],
-    ['blocked_subject_courts', 'No royal court for subjects with ', ['governments']],
-    ['compatible_government_type_succession', 'Also takes heirs with ', ['governments']]
+    ['valid_holdings', tr('Can also hold '), ['holdings']],
+    ['required_county_holdings', tr('Needed in a county before more can be built: '), ['holdings']],
+    ['primary_heritages', tr('Preferred by the heritages '), ['culture/pillars']],
+    ['preferred_religions', tr('Preferred by the religions '), ['religion/religion_types']],
+    ['blocked_subject_courts', tr('No royal court for subjects with '), ['governments']],
+    ['compatible_government_type_succession', tr('Also takes heirs with '), ['governments']]
 ];
 
 /** Opinion script values of a government (`opinion_of_liege` …) and who has the opinion. */
 const GOVERNMENT_OPINIONS: [string, string][] = [
-    ['opinion_of_liege', 'Vassals’ opinion of their liege'],
-    ['opinion_of_suzerain', 'Tributaries’ opinion of their suzerain'],
-    ['opinion_of_overlord', 'Subjects’ opinion of their overlord']
+    ['opinion_of_liege', tr('Vassals’ opinion of their liege')],
+    ['opinion_of_suzerain', tr('Tributaries’ opinion of their suzerain')],
+    ['opinion_of_overlord', tr('Subjects’ opinion of their overlord')]
 ];
 
 /**
@@ -178,7 +189,7 @@ const government: CardFn = (b, x) =>
     if (caps)
         lines.push({
             text: rich(
-                'Highest levels: ',
+                tr('Highest levels: '),
                 caps.v.filter((n) => n.k && typeof n.v === 'string')
                     .map((n) => `${humanize(n.k!)} ${n.v}`)
                     .join(', ')
@@ -190,21 +201,21 @@ const government: CardFn = (b, x) =>
     const prestige = c.block('prestige_opinion_override');
 
     if (prestige)
-        lines.push({ text: rich('Opinion from prestige levels: ', items(prestige).map((n) => n.v).join(', ')), tip: 'prestige_opinion_override', src: c.anchor(prestige, 'other') });
+        lines.push({ text: rich(tr('Opinion from prestige levels: '), items(prestige).map((n) => n.v).join(', ')), tip: 'prestige_opinion_override', src: c.anchor(prestige, 'other') });
 
-    c.settings('Settings', 'governments', lines);
+    c.settings(tr('Settings'), 'governments', lines);
     const flags = c.block('flags');
 
     // (the game's government tooltip lists the flags with a loc text of the same key)
     if (flags)
-        c.section('Features', items(flags).map((n): Line => ({ text: c.text(n.v as string) ?? [capitalize(humanize(n.v as string))], icon: 'flag', tip: `flags: ${n.v}`, src: c.anchor(n, 'other') })));
+        c.section(tr('Features'), items(flags).map((n): Line => ({ text: c.text(n.v as string) ?? [capitalize(humanize(n.v as string))], icon: 'flag', tip: tr('flags: {v}', { v: n.v }), src: c.anchor(n, 'other') })));
 
     const rules = c.block('government_rules');
 
     if (rules)
-        c.section('Rules', c.fields('government_rules', rules.v), b.blockSection(rules, 'field', c.ctx, 'government_rules'));
+        c.section(tr('Rules'), c.fields('government_rules', rules.v), b.blockSection(rules, 'field', c.ctx, 'government_rules'));
 
-    for (const [k, title] of [['character_modifier', 'Ruler modifiers'], ['top_liege_character_modifier', 'Independent ruler modifiers']])
+    for (const [k, title] of [['character_modifier', tr('Ruler modifiers')], ['top_liege_character_modifier', tr('Independent ruler modifiers')]])
     {
         const n = c.block(k);
 
@@ -220,19 +231,19 @@ const government: CardFn = (b, x) =>
             c.section(title, c.value(n), b.blockSection(n, 'field', c.ctx, 'script_value'));
     }
 
-    c.triggers('can_get_government', 'Rulers get it when', 'character');
-    c.triggers('can_move_realm_capital', 'Can move the realm capital when', 'character');
+    c.triggers('can_get_government', tr('Rulers get it when'), 'character');
+    c.triggers('can_move_realm_capital', tr('Can move the realm capital when'), 'character');
     const ai = c.block('ai');
 
     if (ai)
         c.aiMore(c.fields('government_ai', ai.v));
 
-    c.ai('ai_ruler_desired_kingdom_titles', 'Kingdoms the AI keeps (below 0: all)');
-    c.ai('ai_ruler_desired_empire_titles', 'Empires the AI keeps (below 0: all)');
+    c.ai('ai_ruler_desired_kingdom_titles', tr('Kingdoms the AI keeps (below 0: all)'));
+    c.ai('ai_ruler_desired_empire_titles', tr('Empires the AI keeps (below 0: all)'));
     const council = c.block('ai_can_reassign_council_positions');
 
     if (council)
-        c.aiMore([{ text: ['The AI may reassign council positions when:'], conditions: c.conditions(council, 'character'), src: c.anchor(council, 'trigger', true) }]);
+        c.aiMore([{ text: [tr('The AI may reassign council positions when:')], conditions: c.conditions(council, 'character'), src: c.anchor(council, 'trigger', true) }]);
 
     return c.done();
 };

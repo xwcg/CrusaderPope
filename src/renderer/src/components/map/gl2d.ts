@@ -2,11 +2,14 @@
  * The 2D map's WebGL2 drawing (docs/map.md, "Presentation"): the province raster as an R16UI texture, two palettes
  * per mode indexed by province id (colour + kind, group), the background picture (terrain colour map / paper map), a
  * coarse distance field per mode (inner glow along borders, shallow water along coasts), borders between groups and
- * provinces — smooth lines when zoomed in —, hover and selection.
+ * provinces (smooth lines when zoomed in), hover and selection.
  */
 import type { MapInfo } from '../../../../shared/api';
 import { WATER, rgbOf, type Groups, type Style } from './model';
+import { FOG_BLEND, FOG_MASK, FOG_MASK_VERT } from './fogShaders';
+import type { FogDraw } from './fog';
 
+import { tr } from '../../../../shared/i18n';
 /** palette texture width (province id → texel) */
 const PAL_W = 4096;
 /** the group palette's values of seas and lakes, of rivers (ungrouped land: 0, a group: its index + 1) */
@@ -45,11 +48,17 @@ uniform float uScale;
 uniform vec2 uCanvas;
 uniform uint uHover;
 uniform uint uSel;
+// the selected province when it has no group in the mode (0: none); it is highlighted itself
+uniform uint uSelId;
 uniform float uFieldScale;
 uniform float uGlow;
 // the groups are a numeric layer's bands
 uniform bool uBands;
+// the fog of war (setFog): its mask (R alpha), on / ALPHA_MIN / CONTRAST / BRIGHTNESS
+uniform sampler2D uFogMask;
+uniform vec4 uFogSet;
 out vec4 o;
+${FOG_BLEND}
 
 const uint WATER = 0xffffffffu;
 const uint RIVER = 0xfffffffeu;
@@ -59,9 +68,9 @@ uint idAt(ivec2 q) { return texelFetch(uIds, clamp(q, ivec2(0), ivec2(uSize) - 1
 uint groupOf(uint id) { return texelFetch(uGroup, palAt(id), 0).r; }
 
 // Zoomed in: each group's (and province's) indicator smoothed by a quadratic B-spline over the 3 × 3 texels around p;
-// p is in the one with the highest value, the edge is where it ties with the next — its distance (map pixels) is the
+// p is in the one with the highest value, the edge is where it ties with the next; its distance (map pixels) is the
 // difference over the difference's gradient. Stair steps become smooth curves.
-void smoothAt(vec2 p, out uint id, out uint g, out uint gNext, out float dG, out float dP) {
+void smoothAt(vec2 p, out uint id, out uint g, out uint gNext, out float dG, out float dP, out uint idNext) {
   vec2 q = p - 0.5;
   vec2 c = floor(q + 0.5);
   vec2 t = q - c;
@@ -103,15 +112,17 @@ void smoothAt(vec2 p, out uint id, out uint g, out uint gNext, out float dG, out
   int pb = -1;
   for (int k = 0; k < np; k++) if (k != pa && (pb < 0 || pw[k] > pw[pb])) pb = k;
   id = pv[pa];
+  idNext = pb < 0 ? id : pv[pb];
   dP = pb < 0 ? 1e3 : (pw[pa] - pw[pb]) / max(length(pd[pa] - pd[pb]), 1e-3);
 }
 
 // Zoomed out (a screen pixel over one map pixel or more): the id under p and its neighbours one screen pixel away.
-void coarseAt(vec2 p, float d, out uint id, out uint g, out uint gNext, out float dG, out float dP) {
+void coarseAt(vec2 p, float d, out uint id, out uint g, out uint gNext, out float dG, out float dP, out uint idNext) {
   ivec2 q = ivec2(floor(p));
   id = idAt(q);
   g = groupOf(id);
   gNext = g;
+  idNext = id;
   dG = 1e3;
   dP = 1e3;
   vec2 dirs[4] = vec2[4](vec2(d, 0.0), vec2(0.0, d), vec2(-d, 0.0), vec2(0.0, -d));
@@ -119,16 +130,16 @@ void coarseAt(vec2 p, float d, out uint id, out uint g, out uint gNext, out floa
     uint n = idAt(ivec2(floor(p + dirs[k])));
     uint ng = groupOf(n);
     if (ng != g) { gNext = ng; dG = 0.0; }
-    if (n != id) dP = 0.0;
+    if (n != id) { dP = 0.0; idNext = n; }
   }
 }
 
 void main() {
   vec2 p = uOrigin + vec2(gl_FragCoord.x, uCanvas.y - gl_FragCoord.y) * uScale;
   if (p.x < 0.0 || p.y < 0.0 || p.x >= uSize.x || p.y >= uSize.y) { o = vec4(0.075, 0.08, 0.095, 1.0); return; }
-  uint id; uint g; uint gNext; float dG; float dP;
-  if (uScale < 1.0) smoothAt(p, id, g, gNext, dG, dP);
-  else coarseAt(p, uScale, id, g, gNext, dG, dP);
+  uint id; uint g; uint gNext; float dG; float dP; uint idNext;
+  if (uScale < 1.0) smoothAt(p, id, g, gNext, dG, dP, idNext);
+  else coarseAt(p, uScale, id, g, gNext, dG, dP, idNext);
   vec4 c = texelFetch(uColor, palAt(id), 0);
   vec3 back = texture(uBack, p / uSize).rgb;
   float lum = dot(back, vec3(0.3, 0.55, 0.15));
@@ -154,7 +165,10 @@ void main() {
     col = mix(col, pow(col, vec3(1.45)) * 0.9, glow * 0.6);
   }
   if (g != 0u && g == uHover) col = mix(col, vec3(1.0), 0.18);
-  if (g != 0u && g == uSel) col = mix(col, vec3(1.0, 0.93, 0.7), 0.28);
+  // the selection: everything else dimmed, the group itself lighter
+  bool inSel = (uSel != 0u && g == uSel) || (uSelId != 0u && id == uSelId);
+  if ((uSel != 0u || uSelId != 0u) && !inSel) col *= 0.68;
+  if (inSel) col = mix(col, vec3(1.0, 0.93, 0.7), 0.2);
   // borders in screen pixels: groups wider as the map is zoomed in, provinces faint and only when zoomed in; river
   // banks thin (a realm goes on across its rivers)
   float sG = dG / uScale;
@@ -170,12 +184,42 @@ void main() {
   if (band) aP = max(aP, clamp(1.0 - sG, 0.0, 1.0) * 0.3);
   vec3 ink = uStyle == 1 ? vec3(0.2, 0.14, 0.09) : col * (water ? 0.72 : 0.38);
   if (aP > 0.0) col = mix(col, ink, aP);
-  bool selEdge = uSel != 0u && !river && (g == uSel || gNext == uSel);
-  if (aG > 0.0 && (!band || selEdge)) {
-    vec3 line = selEdge ? vec3(1.0, 0.88, 0.5) : coast && water ? mix(col, vec3(0.05, 0.06, 0.07), 0.5) : ink;
-    col = mix(col, line, aG * (selEdge ? 1.0 : 0.92));
+  // (a province without a group: its own edge, the distance to its border)
+  bool byId = uSelId != 0u;
+  bool selEdge = byId ? (id == uSelId || idNext == uSelId) : uSel != 0u && !river && (g == uSel || gNext == uSel);
+  if (selEdge) {
+    // the selected group's edge: a glow inside, a dark rim outside, a gold line a pixel wider than the borders
+    float hs = (byId ? mix(0.75, 1.6, zoom) : hw) + 1.0;
+    float sE = byId ? sP : sG;
+    if (inSel) col = mix(col, vec3(1.0, 0.84, 0.42), 0.4 * exp(-sE / 7.0));
+    else col = mix(col, vec3(0.04, 0.03, 0.02), clamp(hs + 3.0 - sE, 0.0, 1.0) * 0.75);
+    col = mix(col, vec3(1.0, 0.86, 0.45), clamp(hs + 0.5 - sE, 0.0, 1.0));
+  }
+  else if (aG > 0.0 && !band) {
+    vec3 line = coast && water ? mix(col, vec3(0.05, 0.06, 0.07), 0.5) : ink;
+    col = mix(col, line, aG * 0.92);
+  }
+  // the fog of war: the game's blend of what is out of sight to black (no pattern, ring or zoom fade in 2D)
+  if (uFogSet.x > 0.5) {
+    float a = uFogSet.y + texture(uFogMask, p / uSize).r * (1.0 - uFogSet.y);
+    col = fowBlend(col, 1.0 - a, 0.0, uFogSet.z, uFogSet.w);
   }
   o = vec4(col, 1.0);
+}`;
+
+/** The fog's mask pass (a fullscreen quad into the mask's framebuffer): the game's CreateFogOfWarAlphaMap. */
+const FOG_PASS = `#version 300 es
+precision highp float;
+precision highp int;
+precision highp usampler2D;
+uniform usampler2D uIds;
+uniform vec2 uSize;
+uniform vec2 uMask;
+${FOG_MASK}
+out vec4 o;
+void main() {
+  vec2 uv = gl_FragCoord.xy / uMask;
+  o = vec4(fogMaskAt(uv * uSize, floor(gl_FragCoord.xy)), 0.5, 0.0, 1.0);
 }`;
 
 function texture(gl: WebGL2RenderingContext, filter: number): WebGLTexture
@@ -189,7 +233,7 @@ function texture(gl: WebGL2RenderingContext, filter: number): WebGLTexture
     return t;
 }
 
-/** another group than `r` next to it — a river is none */
+/** another group than `r` next to it (a river is none) */
 const differs = (o: number, r: number): boolean => o !== r && o !== RIVER_GROUP;
 
 /** cells a border reaches in the field: its steps saturate at 255 (a cell is 3 steps of the chamfer, FIELD_STEPS / 3 per step) */
@@ -199,7 +243,7 @@ const FIELD_TILE = 32;
 
 /**
  * Per cell of FIELD_CELL map pixels: the distance to the nearest cell of another group (water is one; rivers are
- * no border: a realm goes on across them; chamfer 3-4 in two passes), FIELD_STEPS per cell, up to 255 — computed over
+ * no border: a realm goes on across them; chamfer 3-4 in two passes), FIELD_STEPS per cell, up to 255; computed over
  * the cells [cx0, cx1) × [cy0, cy1) (the cells around only as neighbours) and written for [ox0, ox1) × [oy0, oy1) into
  * `out` (w × h cells: the whole field).
  */
@@ -301,7 +345,7 @@ function fieldPart(ids: Uint16Array, width: number, height: number, group: Uint3
 }
 
 /**
- * The distance field for a group palette: all of it, or — given the last palette and field of the same raster — only
+ * The distance field for a group palette: all of it, or (given the last palette and field of the same raster) only
  * the tiles near provinces whose group changed (a new date moves a few borders), with the cells a border reaches
  * around them computed too.
  */
@@ -344,7 +388,7 @@ function distanceField(info: MapInfo, ids: Uint16Array, group: Uint32Array, last
                 dirty[ty * tw + tx] = 1;
     }
 
-    // (tiles cost their cells and the reach around: more than half the map's cells — all of it at once)
+    // (tiles cost their cells and the reach around: more than half the map's cells; all of it at once)
     let n = 0;
 
     for (const t of dirty)
@@ -396,6 +440,10 @@ export class Map2D
     private bands = false;
     /** the last group palette and its distance field (a new date redoes only the tiles near changed provinces) */
     private field: { group: Uint32Array; data: Uint8Array; } | undefined;
+    /** the fog of war: on / ALPHA_MIN / CONTRAST / BRIGHTNESS, the mask's texture, what it was made from */
+    private fogSet = [0, 0.5, -0.8, 0];
+    private fogMask: WebGLTexture | null = null;
+    private fogBuilt: FogDraw | null = null;
 
     /** Throws with a message for the user (no WebGL2, the map larger than the GPU's textures, a shader error). */
     constructor(canvas: HTMLCanvasElement, info: MapInfo, ids: Uint16Array)
@@ -403,12 +451,12 @@ export class Map2D
         const gl = canvas.getContext('webgl2', { antialias: false });
 
         if (!gl)
-            throw new Error('WebGL2 is not available');
+            throw new Error(tr('WebGL2 is not available'));
 
         const max = gl.getParameter(gl.MAX_TEXTURE_SIZE) as number;
 
         if (info.width > max || info.height > max)
-            throw new Error(`The map (${info.width} × ${info.height}) is larger than this GPU's textures (${max})`);
+            throw new Error(tr('The map ({width} × {height}) is larger than this GPU\'s textures ({max})', { width: info.width, height: info.height, max }));
 
         this.gl = gl;
         this.info = info;
@@ -421,7 +469,7 @@ export class Map2D
             gl.compileShader(s);
 
             if (!gl.getShaderParameter(s, gl.COMPILE_STATUS))
-                throw new Error('Map shader: ' + (gl.getShaderInfoLog(s) ?? ''));
+                throw new Error(tr('Map shader: ') + (gl.getShaderInfoLog(s) ?? ''));
 
             return s;
         };
@@ -431,7 +479,7 @@ export class Map2D
         gl.linkProgram(prog);
 
         if (!gl.getProgramParameter(prog, gl.LINK_STATUS))
-            throw new Error('Map shader: ' + (gl.getProgramInfoLog(prog) ?? ''));
+            throw new Error(tr('Map shader: ') + (gl.getProgramInfoLog(prog) ?? ''));
 
         this.prog = prog;
         this.buf = gl.createBuffer()!;
@@ -449,7 +497,7 @@ export class Map2D
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, 1, 1, 0, gl.RED, gl.UNSIGNED_BYTE, new Uint8Array([255]));
         this.tex = { ids: idTex, color: texture(gl, gl.NEAREST), group: texture(gl, gl.NEAREST), back, field };
 
-        for (const n of ['uIds', 'uColor', 'uGroup', 'uBack', 'uField', 'uStyle', 'uSize', 'uOrigin', 'uScale', 'uCanvas', 'uHover', 'uSel', 'uFieldScale', 'uGlow', 'uBands'])
+        for (const n of ['uIds', 'uColor', 'uGroup', 'uBack', 'uField', 'uStyle', 'uSize', 'uOrigin', 'uScale', 'uCanvas', 'uHover', 'uSel', 'uSelId', 'uFieldScale', 'uGlow', 'uBands', 'uFogMask', 'uFogSet'])
             this.u[n] = gl.getUniformLocation(prog, n);
 
         gl.useProgram(prog);
@@ -463,6 +511,87 @@ export class Map2D
         gl.uniform1i(this.u.uGroup, 2);
         gl.uniform1i(this.u.uBack, 3);
         gl.uniform1i(this.u.uField, 4);
+        gl.uniform1i(this.u.uFogMask, 5);
+        // (a stand-in until the fog's mask is made: the sampler needs a texture)
+        gl.activeTexture(gl.TEXTURE5);
+        this.fogMask = texture(gl, gl.LINEAR);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RG8, 1, 1, 0, gl.RG, gl.UNSIGNED_BYTE, new Uint8Array([255, 128]));
+    }
+
+    /**
+     * The fog of war (fog.ts): the mask made from the table of alphas (the game's pass on the GPU, only for another
+     * table) and drawn over the map as the game's blend to black; null: off.
+     */
+    setFog(fog: FogDraw | null): void
+    {
+        const { gl } = this;
+
+        if (!fog)
+        {
+            this.fogSet[0] = 0;
+            return;
+        }
+
+        const def = fog.def;
+        this.fogSet = [1, def.alphaMin, def.contrast, def.brightness];
+
+        if (this.fogBuilt === fog || this.fogBuilt?.key === fog.key)
+            return;
+
+        const max = gl.getParameter(gl.MAX_TEXTURE_SIZE) as number;
+        const w = Math.min(def.textureWidth, max);
+        const h = Math.min(def.textureHeight, max);
+        const sh = (type: number, src: string): WebGLShader =>
+        {
+            const x = gl.createShader(type)!;
+            gl.shaderSource(x, src);
+            gl.compileShader(x);
+
+            if (!gl.getShaderParameter(x, gl.COMPILE_STATUS))
+                throw new Error(tr('Map shader: ') + (gl.getShaderInfoLog(x) ?? ''));
+
+            return x;
+        };
+        const prog = gl.createProgram()!;
+        gl.attachShader(prog, sh(gl.VERTEX_SHADER, FOG_MASK_VERT));
+        gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FOG_PASS));
+        gl.linkProgram(prog);
+
+        if (!gl.getProgramParameter(prog, gl.LINK_STATUS))
+            throw new Error(tr('Map shader: ') + (gl.getProgramInfoLog(prog) ?? ''));
+
+        // the mask: RG8 (R the alpha) at the game's size, sampled linearly
+        gl.activeTexture(gl.TEXTURE5);
+        gl.bindTexture(gl.TEXTURE_2D, this.fogMask);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RG8, w, h, 0, gl.RG, gl.UNSIGNED_BYTE, null);
+        const fbo = gl.createFramebuffer()!;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.fogMask, 0);
+        // the table of alphas: a texel per province id, 4096 wide
+        // (a texture made binds on the active unit: the table's own, 6)
+        gl.activeTexture(gl.TEXTURE6);
+        const tab = texture(gl, gl.NEAREST);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, PAL_W, fog.table.length / PAL_W, 0, gl.RED, gl.UNSIGNED_BYTE, fog.table);
+        gl.useProgram(prog);
+        gl.uniform1i(gl.getUniformLocation(prog, 'uIds'), 0);
+        gl.uniform1i(gl.getUniformLocation(prog, 'uFogTab'), 6);
+        gl.uniform2f(gl.getUniformLocation(prog, 'uSize'), this.info.width, this.info.height);
+        gl.uniform2f(gl.getUniformLocation(prog, 'uMask'), w, h);
+        gl.uniform2f(gl.getUniformLocation(prog, 'uFogKernel'), (def.kernelScale * this.info.width) / w, (def.kernelScale * this.info.height) / h);
+        const loc = gl.getAttribLocation(prog, 'aPos');
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.buf);
+        gl.enableVertexAttribArray(loc);
+        gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+        gl.viewport(0, 0, w, h);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.deleteFramebuffer(fbo);
+        gl.deleteTexture(tab);
+        gl.deleteProgram(prog);
+        gl.useProgram(this.prog);
+        gl.activeTexture(gl.TEXTURE5);
+        gl.bindTexture(gl.TEXTURE_2D, this.fogMask);
+        this.fogBuilt = fog;
     }
 
     /** The mode's palettes and distance field. */
@@ -526,8 +655,8 @@ export class Map2D
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
     }
 
-    /** @param hover the hovered group + 1 (0: none), `sel` the selected one */
-    draw(canvas: HTMLCanvasElement, view: View, style: Style, hover: number, sel: number): void
+    /** @param hover the hovered group + 1 (0: none), `sel` the selected one, `selId` the selected province when it has no group (0: none) */
+    draw(canvas: HTMLCanvasElement, view: View, style: Style, hover: number, sel: number, selId = 0): void
     {
         const { gl, u, info } = this;
         const dpr = window.devicePixelRatio || 1;
@@ -549,9 +678,11 @@ export class Map2D
         gl.uniform1i(u.uStyle, style === 'terrain' ? 0 : style === 'paper' ? 1 : 2);
         gl.uniform1ui(u.uHover, hover);
         gl.uniform1ui(u.uSel, sel);
+        gl.uniform1ui(u.uSelId, selId);
         gl.uniform1f(u.uFieldScale, (255 / FIELD_STEPS) * FIELD_CELL);
         gl.uniform1f(u.uGlow, this.glow);
         gl.uniform1i(u.uBands, this.bands ? 1 : 0);
+        gl.uniform4f(u.uFogSet, this.fogSet[0], this.fogSet[1], this.fogSet[2], this.fogSet[3]);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
 
@@ -561,6 +692,8 @@ export class Map2D
 
         for (const t of Object.values(this.tex))
             gl.deleteTexture(t);
+
+        gl.deleteTexture(this.fogMask);
 
         gl.deleteBuffer(this.buf);
         gl.deleteProgram(this.prog);

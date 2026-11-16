@@ -1,0 +1,797 @@
+[
+ {
+  "kind": "saved_scope",
+  "key": "old_acclaimed_knight",
+  "label": "Old acclaimed knight",
+  "summary": "The knight who was the acclaimed knight of an accolade before it changed, saved as `scope:old_acclaimed_knight`.",
+  "details": "The accolade on_actions list it among their saved scopes, next to the new owner and new accolade type (4 uses). Going by the name, it is the previous acclaimed knight; the game gives no description.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/accolade_on_actions.txt:106"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "old_capital",
+  "label": "Old capital",
+  "summary": "The county that was the title's capital before the capital was moved.",
+  "details": "Vanilla saves it in a major decision that changes a title's capital, from the title's capital county, and uses it in title on_actions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/decisions/80_major_decisions.txt:3255"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "old_culture",
+  "label": "Old culture",
+  "summary": "The culture that something had before it changed.",
+  "details": "Vanilla saves it from a character's culture in a nomad culture decision and from a culture passed in to a culture effect. County on_actions also use it, where a county changes culture.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/decisions/10_nomad_culture_and_faith_decisions.txt:304",
+   "vanilla: common/scripted_effects/00_culture_effects.txt:45"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "old_diarch",
+  "label": "Old diarch",
+  "summary": "The character who was diarch before the diarchy changed.",
+  "details": "The diarchy on_actions describe it as the character who was the diarch (10 uses); one of them clears that character's conspirator list if they are still around.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/diarchy_on_action.txt:144"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "old_dynasty",
+  "label": "Old dynasty",
+  "summary": "A dynasty from before a change, named old_dynasty. The game documents nothing more.",
+  "details": "Vanilla never uses it, so nothing shows when it is set.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "old_employer",
+  "label": "Old employer",
+  "summary": "The character who employed someone before, such as a courtier or a mercenary company.",
+  "details": "The councillor and court maintenance on_actions describe it as the old employer. The court maintenance one leaves it unset if the character had no employer; the mercenary on_actions use it for the one who previously hired the company.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/court_maintenance_on_actions.txt:5",
+   "vanilla: common/on_action/mercenary_on_actions.txt:38"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "old_faith",
+  "label": "Old faith",
+  "summary": "The faith that something had before it changed.",
+  "details": "Vanilla saves a character's or county's faith under this name, for example the county's faith in a chaplain council task and a character's faith in a religious interaction. It is used very often (171 uses) and in county on_actions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/council_tasks/00_court_chaplain_tasks.txt:537",
+   "vanilla: common/character_interactions/00_religious_interactions.txt:2166"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "old_government",
+  "label": "Old government",
+  "summary": "The government type a ruler had before it changed.",
+  "details": "A government effect saves the character's government type here before switching it, and a decision does the same. Government on_actions and faction effects then use it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/scripted_effects/00_government_effects.txt:8"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "old_holy_site",
+  "label": "Old holy site",
+  "summary": "The holy site that used to hold an artifact, saved as `scope:old_holy_site`.",
+  "details": "The inventory on_actions document it as the holy site that used to own the artifact, set only in some cases. Check that it exists before using it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/inventory_on_actions.txt:5"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "old_liege",
+  "label": "Old liege",
+  "summary": "The vassal's previous liege, from before the vassal's liege changed.",
+  "details": "The title on_actions document it as the previous liege of the vassal; it may be nobody (the vassal was not a ruler or was independent), so test with `exists`. A DLC scripted effect also saves one from a variable.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/title_on_actions.txt:4790",
+   "vanilla: common/scripted_effects/07_frankokratia_scripted_effects.txt:2497"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "old_location",
+  "label": "Old location",
+  "summary": "A place from before a move, named old_location. The game documents nothing more.",
+  "details": "Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "old_owner",
+  "label": "Old owner",
+  "summary": "The character who used to own something, such as an artifact, before it changed hands.",
+  "details": "The inventory on_actions document it as the person who used to hold the artifact. Vanilla also saves it from a character in court events.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/inventory_on_actions.txt:4",
+   "vanilla: events/court_events/court_events_general.txt:346"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "old_primary",
+  "label": "Old primary",
+  "summary": "The primary title of an heir before a succession.",
+  "details": "The inventory on_actions document it as the heir's primary title before the succession happened. A scheme event also saves a character's primary title under this name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/inventory_on_actions.txt:38",
+   "vanilla: events/scheme_events/scheme_critical_moments_events.txt:6273"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "old_rite",
+  "label": "Old rite",
+  "summary": "The rite a county or title had before it was changed.",
+  "details": "Vanilla saves the county's rite in a chaplain council task and a title's state rite in a decision.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/council_tasks/00_court_chaplain_tasks.txt:538",
+   "vanilla: common/decisions/dlc_decisions/ep3_decisions.txt:1748"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "old_successor",
+  "label": "Old successor",
+  "summary": "A successor from before a change, named old_successor. The game documents nothing more.",
+  "details": "Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "old_travel_leader",
+  "label": "Old travel leader",
+  "summary": "The leader of a journey who has been removed.",
+  "details": "The travel on_actions describe it as the now removed leader. Used twice, in the travel on_actions and travel events.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/travel_on_actions.txt:2101"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "old_value",
+  "label": "Old value",
+  "summary": "The old level, from before a change.",
+  "details": "The court grandeur on_action documents it as the old level, next to `scope:new_value`. The scheme on_actions compare it with scheme charge thresholds; what the number is there is inferred from that.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/court_grandeur_on_actions.txt:3"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "opinion_of_liege",
+  "label": "Opinion of liege",
+  "summary": "A number the game gives to a subject contract's levy and tax math: the opinion of the liege.",
+  "details": "It is only set when the contract has `uses_opinion_of_liege = yes`. The contract's other scopes are `scope:liege`, `scope:subject` and `scope:tax_slot`, so it is the subject's opinion of their liege. Vanilla's own script does not read it.",
+  "fields": [],
+  "sources": ["vanilla: common/subject_contracts/contracts/_subject_contracts.info:5", "vanilla: common/subject_contracts/contracts/_subject_contracts.info:34"],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "other_culture",
+  "label": "Other culture",
+  "summary": "A second culture in a situation that involves two, such as a mix of cultures.",
+  "details": "Vanilla saves it as a temporary scope in the legend spread events and uses it very often (175 uses), including in the hybrid culture naming files.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: events/dlc/ce1/legend_spread_events_nick.txt:2272"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "other_house",
+  "label": "Other house",
+  "summary": "The second house in a situation that involves two houses.",
+  "details": "Vanilla's house relation effects save a house passed in to the effect under this name. The house feud events use it too.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/scripted_effects/10_dlc_tgp_house_relation_scripted_effects.txt:5"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "overlord",
+  "label": "Overlord",
+  "summary": "The character who is the overlord in the event.",
+  "details": "Vanilla saves a character under this name in the migration and east Asia decision events (34 uses). Who counts as overlord depends on the event; the input does not say.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: events/dlc/mpo/mpo_migration_events.txt:230"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "owner",
+  "label": "Owner",
+  "summary": "The owner of the thing the script is about; what is owned changes with the place.",
+  "details": "The game gives an owner under this name in many places, each different: the owner of an accolade (the knight's liege or employer), the character owning a travel plan (host or guest), the owner of a memory, and the owner of a domicile. Vanilla uses it 6,151 times, so check where it is set.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/accolade_types/_accolade_type.info:15",
+   "vanilla: common/activities/activity_types/_activity_type.info:211",
+   "vanilla: common/character_memory_types/_character_memories.info:16",
+   "vanilla: common/domiciles/buildings/_domicile_buildings.info:36"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "patron",
+  "label": "Patron",
+  "summary": "The character who acts as patron in the situation.",
+  "details": "Vanilla saves a character as patron in a DLC scripted effect and uses it in the holy order on_actions. The exact relationship depends on the case.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/scripted_effects/09_dlc_mpo_scripted_effects.txt:1794"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "percent_of_monthly_gold_income",
+  "label": "Percent of monthly gold income",
+  "summary": "A number the game gives when the AI weighs a court position: the position's cost as a percentage of the liege's monthly gold income.",
+  "details": "It can be above 100, and it does not count expenses. It is 100 when the liege has no monthly income. Vanilla uses it once, multiplied into a court position score.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/script_values/00_ep1_script_values.txt:539", "vanilla: common/court_positions/types/_court_positions.info:347"],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "percent_of_monthly_gold_income_all_positions",
+  "label": "Percent of gold income, all positions",
+  "summary": "A number the game gives when the AI weighs a court position: what all employed court positions cost, as a percentage of the liege's monthly gold income.",
+  "details": "When a new hire is weighed, their salary is counted in. It is 100 when the liege has no monthly income. Vanilla uses it once, in the same court position score as the plain version.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/script_values/00_ep1_script_values.txt:550", "vanilla: common/court_positions/types/_court_positions.info:359"],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "percent_of_positive_monthly_piety_balance",
+  "label": "Percent of piety balance",
+  "summary": "A number the game gives when the AI weighs a court position: the position's cost as a percentage of the liege's monthly piety balance.",
+  "details": "It is 100 when that balance is negative. Vanilla's own script does not read it.",
+  "fields": [],
+  "sources": ["vanilla: common/court_positions/types/_court_positions.info:355"],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "percent_of_positive_monthly_piety_balance_all_positions",
+  "label": "Percent of piety balance, all positions",
+  "summary": "A number the game gives when the AI weighs a court position: what all employed court positions cost, as a percentage of the liege's monthly piety balance.",
+  "details": "When a new hire is weighed, their salary is counted in. It is 100 when that balance is negative. Vanilla's own script does not read it.",
+  "fields": [],
+  "sources": ["vanilla: common/court_positions/types/_court_positions.info:369"],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "percent_of_positive_monthly_prestige_balance",
+  "label": "Percent of prestige balance",
+  "summary": "A number the game gives when the AI weighs a court position: the position's cost as a percentage of the liege's monthly prestige balance.",
+  "details": "It is 100 when that balance is negative. Vanilla's own script does not read it.",
+  "fields": [],
+  "sources": ["vanilla: common/court_positions/types/_court_positions.info:351"],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "percent_of_positive_monthly_prestige_balance_all_positions",
+  "label": "Percent of prestige balance, all positions",
+  "summary": "A number the game gives when the AI weighs a court position: what all employed court positions cost, as a percentage of the liege's monthly prestige balance.",
+  "details": "When a new hire is weighed, their salary is counted in. It is 100 when that balance is negative. Vanilla's own script does not read it.",
+  "fields": [],
+  "sources": ["vanilla: common/court_positions/types/_court_positions.info:364"],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "personal_beliefs",
+  "label": "Personal beliefs",
+  "summary": "A character's personal beliefs. The game documents nothing more.",
+  "details": "Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "personal_maa_cap",
+  "label": "Personal men-at-arms cap",
+  "summary": "A value for the cap on a character's personal men-at-arms.",
+  "details": "Used 4 times, only in the scripted rules file. The exact use is not shown in the input; the meaning rests on the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "personal_maa_maintenance",
+  "label": "Personal men-at-arms maintenance",
+  "summary": "A value for the upkeep cost of a character's personal men-at-arms.",
+  "details": "Used 3 times, only in the scripted rules file. The meaning rests on the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "player",
+  "label": "Player",
+  "summary": "The player character looking at an activity's window; the game gives it to the window's scripts of an activity type.",
+  "details": "Vanilla activity types such as the chariot race and the debate use it (39 uses).",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/activities/activity_types/_activity_type.info:994"],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "player_heir",
+  "label": "Player heir",
+  "summary": "The heir of the player's character.",
+  "details": "Vanilla saves the heir of a character about to die in a decision event, and title on_actions use it too.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: events/dlc/pam/pam_decision_events.txt:1120"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "pool",
+  "label": "Pool",
+  "summary": "A pool, named pool. The game documents nothing more.",
+  "details": "Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "positive",
+  "label": "Positive",
+  "summary": "A yes or no flag saying whether the outcome is positive.",
+  "details": "Used 3 times, in a debug interaction and the accolade on_actions, which list it as a yes/no event target. The meaning rests on the name.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/accolade_on_actions.txt:2"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "predecessor",
+  "label": "Predecessor",
+  "summary": "A character called the predecessor; who they are depends on the situation.",
+  "details": "Vanilla saves a character under this name in the death on_action (while a travelling character dies), in a murder story cycle and in court events. Destiny on_actions use it too.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/death.txt:673"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "previous_controller",
+  "label": "Previous controller",
+  "summary": "The previous controller of a county, from before it was occupied.",
+  "details": "The army on_actions document it as the previous controller of the county (22 uses, also in siege events). The occupant is the on_action's root.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/army_on_actions.txt:34"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "previous_defender",
+  "label": "Previous defender",
+  "summary": "A defender from before a change, named previous_defender. The game documents nothing more.",
+  "details": "Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "previous_holder",
+  "label": "Previous holder",
+  "summary": "The character who held a title before it changed hands.",
+  "details": "Vanilla saves a title's holder under this name in a decision, and a coronation event saves it too. Title on_actions use it often (131 uses).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/decisions/dlc_decisions/tgp/tgp_east_asia_decisions.txt:704"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "previous_player_character",
+  "label": "Previous player character",
+  "summary": "The character the player played before switching to a new one.",
+  "details": "The player change and player destiny on_actions document it as the old player character. Used twice.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/player_change_on_actions.txt:5"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "previous_player_heir",
+  "label": "Previous player heir",
+  "summary": "The heir the player's character had before the change of player character.",
+  "details": "The player destiny on_actions document it as the previous player heir. Used once.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/player_select_destiny_on_actions.txt:932"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "previous_province",
+  "label": "Previous province",
+  "summary": "The province the game gives when the cost of a planned activity phase is worked out: where the phase before it is, or the player's capital for the first or only phase.",
+  "details": "Vanilla uses it 14 times, all in the tour script values file.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/activities/activity_types/_activity_type.info:400"],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "previous_title",
+  "label": "Previous title",
+  "summary": "The primary title a character held before a change.",
+  "details": "The title on_actions document it as the previous primary title held by the character. Used once.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/title_on_actions.txt:5370"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "protagonist",
+  "label": "Protagonist",
+  "summary": "The main character of a legend.",
+  "details": "Vanilla saves a legend's protagonist under this name in legend events and uses it in legend types and effects.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: events/dlc/ce1/legend_spread_events_nick.txt:7814"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "province",
+  "label": "Province",
+  "summary": "The province the situation is about; which one changes with the place.",
+  "details": "The game gives a province under this name in several places: in activities it is where the current phase takes place, in great projects the province of the project, and pool character selectors get the province of a title that needs a holder. Vanilla's own script saves others under it too (1,507 uses), so check where it is set.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: common/activities/activity_types/_activity_type.info:57",
+   "vanilla: common/great_projects/types/_great_project_types.info:31",
+   "vanilla: common/pool_character_selectors/_pool_character_selectors.info:29"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "provinces",
+  "label": "Provinces",
+  "summary": "A list of provinces, named provinces. The game documents nothing more.",
+  "details": "Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "prowess",
+  "label": "Prowess",
+  "summary": "A prowess number (prowess is a character's skill in personal combat); in the ruler designer's portrait rules, prowess scaled for portraits.",
+  "details": "The portrait customization rules for the ruler designer get it from the game, scaled for portraits, to weigh which portrait changes apply. Vanilla's own script also saves a value under this name in a few places (5 uses), such as a debug interaction, accolade effects and a hold court event.",
+  "fields": [],
+  "sources": [
+   "vanilla",
+   "vanilla: gfx/portraits/customization_rules/_customization_rules.info:31",
+   "vanilla: events/activities/hold_court_activity/hold_court_events_joe.txt:2003"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "puppet",
+  "label": "Puppet",
+  "summary": "The character who is the puppet in a puppet relationship.",
+  "details": "Vanilla saves a character as puppet in the eunuch story events and uses it in puppet actions and puppet types (25 uses).",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: events/dlc/ep3/ep3_story_cycle_admin_eunuch_events.txt:5173"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "puppet_or_actor",
+  "label": "Puppet or actor",
+  "summary": "The character acting in an interaction, or their puppet when the player acts through one.",
+  "details": "Used very often in character interactions (7849 uses). Vanilla saves the acting character under this name in some interactions. The exact rule for when the puppet counts is not in the input.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/character_interactions/00_heir.txt:48"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "puppeteer",
+  "label": "Puppeteer",
+  "summary": "The character who controls a puppet.",
+  "details": "Vanilla saves a character as puppeteer in festival events and uses it in puppet scripted triggers.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: events/activities/festival_activity/festival_events.txt:1586"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "quality",
+  "label": "Quality",
+  "summary": "The quality level of something, such as an artifact.",
+  "details": "Used very often (548 uses), in artifact features and visuals. It is also saved as a value in artifact creation. It is a number. The game gives it to the cost of repairing an artifact, as the artifact's quality.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/scripted_effects/00_ep1_artifact_creation_effects.txt:98", "vanilla: common/scripted_costs/_scripted_costs.info:102"],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "quarter",
+  "label": "Quarter",
+  "summary": "Which quarter of the year it is, as a number from 1 to 4.",
+  "details": "The quarterly pulse on_action documentation says it is a saved value from 1 to 4. Vanilla uses it 6 times, in the yearly and relation on_actions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/_on_actions.info:13"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "raid_loot",
+  "label": "Raid loot",
+  "summary": "The loot gained from a raid; the game gives it when the raiding army returns its loot (`on_return_raid_loot`).",
+  "details": "There the root is the raiding army and `scope:raider` the character who owns it. Vanilla raid events also copy the army's `raid_loot` into a variable of that name; 22 uses in all.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: events/war_events/raid_events.txt:708", "vanilla: common/raids/intents/raid_intents.info:13"],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "raider",
+  "label": "Raider",
+  "summary": "The character who is raiding.",
+  "details": "Vanilla saves a character as raider in holy order effects and emperor events, and uses it very often (188 uses) in army on_actions and raid intents.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/scripted_effects/00_holy_order_effects.txt:5665"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "random_destiny_types",
+  "label": "Random destiny types",
+  "summary": "A set of destiny types picked at random for the player to choose from.",
+  "details": "Used once, in the player destiny on_actions, where a value is saved under this name. The input does not show the details.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/player_select_destiny_on_actions.txt:574"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "real_father",
+  "label": "Real father",
+  "summary": "The biological father of a character, as opposed to the one believed to be the father.",
+  "details": "Vanilla saves a character as real father in blackmail interactions and uses it very often (232 uses) in birth on_actions.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/character_interactions/00_blackmail_interactions.txt:122"
+  ],
+  "uncertain": false
+ },
+ {
+  "kind": "saved_scope",
+  "key": "reason",
+  "label": "Reason",
+  "summary": "Why something happened, such as why a title changed or a ruler left.",
+  "details": "Used 82 times, in chronicles and the diarchy on_actions. It is saved as a value in the title on_actions. Which reasons exist depends on the on_action.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla",
+   "vanilla: common/on_action/title_on_actions.txt:2856"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "recent_appointment_cooldown",
+  "label": "Recent appointment cooldown",
+  "summary": "A cooldown for recent appointments. The game documents nothing more.",
+  "details": "Vanilla never uses it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": true
+ },
+ {
+  "kind": "saved_scope",
+  "key": "recipient",
+  "label": "Recipient",
+  "summary": "The character an interaction is aimed at.",
+  "details": "The most used saved scope in the input (17671 uses), found throughout the character interactions such as accolade and adoption interactions. The actor starts the interaction and the recipient receives it.",
+  "fields": [],
+  "sources": [
+   "doc",
+   "vanilla"
+  ],
+  "uncertain": false
+ }
+]

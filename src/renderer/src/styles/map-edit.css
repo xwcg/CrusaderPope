@@ -234,3 +234,56 @@
   white-space: nowrap;
   text-align: left;
 }
+
+/* The map's right-click menu (MapEditMenu.tsx): the province's changeable rows, then the chosen row's editor */
+.map-menu {
+  min-width: 260px;
+  max-width: 340px;
+  font-size: 13px;
+}
+.map-menu.map-menu-edit {
+  width: 320px;
+}
+.map-menu-head {
+  padding: 4px 8px 6px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+  font-family: var(--font-display);
+  font-size: 15px;
+}
+.map-menu-why {
+  padding: 6px 8px;
+  color: var(--text-dim);
+  max-width: 300px;
+}
+.map-menu-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  text-align: left;
+}
+.map-menu-item.on {
+  background: var(--bg-hover, rgba(255, 255, 255, 0.07));
+}
+.map-menu-k {
+  flex: none;
+  width: 84px;
+  color: var(--text-dim);
+}
+.map-menu-v {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.map-menu-pen {
+  flex: none;
+  color: var(--text-dim);
+  font-size: 11px;
+}
+.map-menu-editor {
+  padding: 2px 4px 4px;
+  max-height: 70vh;
+  overflow-y: auto;
+}

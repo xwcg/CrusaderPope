@@ -2,9 +2,11 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { PickedImage } from '../../../shared/api';
 import '../styles/edit.css';
 
+import { tr } from '../../../shared/i18n';
+import { Slider } from './Slider';
 /**
  * Crop and rotate an image before it goes into the mod (docs/mods.md, "Crop and rotate"): a new event scene, a
- * replaced texture. The crop frame keeps the target's proportions (a scene 1592×848, a texture its own size) — drag
+ * replaced texture. The crop frame keeps the target's proportions (a scene 1592×848, a texture its own size); drag
  * it, drag a corner to size it; ⟲ ⟳ turn by 90°, "Straighten" by up to 30°, ⇆ mirrors. The result is drawn at the
  * target size (black where the turned image leaves corners empty) and handed back as PNG; "Use as is" skips it.
  */
@@ -257,32 +259,28 @@ export function ImageCropDialog(props: {
                     {img ? <canvas ref={canvas} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={() => (drag.current = null)} /> : <span className="ne-note">…</span>}
                 </div>
                 <div className="crop-tools">
-                    <button title="Turn left by 90°" onClick={() => setQuarter((q) => (q + 3) % 4)}>
+                    <button title={tr('Turn left by 90°')} onClick={() => setQuarter((q) => (q + 3) % 4)}>
                         ⟲ 90°
                     </button>
-                    <button title="Turn right by 90°" onClick={() => setQuarter((q) => (q + 1) % 4)}>
+                    <button title={tr('Turn right by 90°')} onClick={() => setQuarter((q) => (q + 1) % 4)}>
                         ⟳ 90°
                     </button>
-                    <button className={flip ? 'on' : ''} title="Mirror left–right" onClick={() => setFlip((f) => !f)}>
-                        ⇆ Mirror
-                    </button>
-                    <label className="crop-fine" title="Turn by a little, to straighten a horizon">
-                        Straighten
-                        <input type="range" min={-30} max={30} step={0.5} value={fine} onChange={(e) => setFine(Number(e.target.value))} />
-                        <span>{fine > 0 ? '+' : ''}{fine}°</span>
+                    <button className={flip ? 'on' : ''} title={tr('Mirror left–right')} onClick={() => setFlip((f) => !f)}>
+                        {tr('⇆ Mirror')}</button>
+                    <label className="crop-fine" title={tr('Turn by a little, to straighten a horizon')}>
+                        {tr('Straighten')}<Slider min={-30} max={30} step={0.5} value={fine} defaultValue={0} defaultLabel="0°" onChange={setFine} />
+                        <span className="crop-deg">{fine > 0 ? '+' : ''}{fine}°</span>
                     </label>
                     <button className="ghost small" onClick={reset}>
-                        Reset
-                    </button>
+                        {tr('Reset')}</button>
                 </div>
                 {props.note && <div className="ne-note">{props.note}</div>}
                 <div className="ne-actions">
-                    <button onClick={props.onCancel}>Cancel</button>
-                    <button title="The file as it is — not cropped (converted as usual)" onClick={props.onAsIs}>
-                        Use as is
-                    </button>
+                    <button onClick={props.onCancel}>{tr('Cancel')}</button>
+                    <button title={tr('The file as it is — not cropped (converted as usual)')} onClick={props.onAsIs}>
+                        {tr('Use as is')}</button>
                     <button className="primary" disabled={!img || busy} onClick={() => void finish()}>
-                        {busy ? 'Cropping…' : 'Crop & use'}
+                        {busy ? tr('Cropping…') : tr('Crop & use')}
                     </button>
                 </div>
             </div>

@@ -1,3 +1,4 @@
+import { tr } from '../../shared/i18n.ts';
 /**
  * Parser and writer for Paradox's binary asset container (`.mesh`, `.anim`): header `@@b@`, then a stream of
  * objects (`[` repeated depth times + zero-terminated name) and properties (`!` + name length byte + name +
@@ -23,7 +24,7 @@ export function parsePdx(buf: Uint8Array): PdxNode
     const dv = new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
 
     if (buf[0] !== 0x40 || buf[1] !== 0x40 || buf[2] !== 0x62 || buf[3] !== 0x40)
-        throw new Error('Not a PDX binary file');
+        throw new Error(tr('Not a PDX binary file'));
 
     const root: PdxNode = { name: 'file', props: {}, children: [] };
     const stack: PdxNode[] = [root];
@@ -97,7 +98,7 @@ export function parsePdx(buf: Uint8Array): PdxNode
             {
                 value = new Float32Array(count);
 
-                // (a copy of the bytes: reading through numbers could change NaN payloads — one vanilla mesh has NaN UVs)
+                // (a copy of the bytes: reading through numbers could change NaN payloads; one vanilla mesh has NaN UVs)
                 if (LE)
                     new Uint8Array(value.buffer).set(buf.subarray(pos, pos + count * 4));
                 else
@@ -127,14 +128,14 @@ export function parsePdx(buf: Uint8Array): PdxNode
             }
             else
             {
-                throw new Error(`Unknown PDX data type '${type}' at ${pos}`);
+                throw new Error(tr('Unknown PDX data type \'{type}\' at {pos}', { type, pos }));
             }
 
             stack[stack.length - 1].props[name] = value;
         }
         else
         {
-            throw new Error(`Unexpected byte 0x${c.toString(16)} at ${pos}`);
+            throw new Error(tr('Unexpected byte 0x{toString} at {pos}', { toString: c.toString(16), pos }));
         }
     }
 
@@ -192,7 +193,7 @@ export function writePdx(root: PdxNode): Uint8Array
         for (const [name, v] of Object.entries(n.props))
         {
             if (name.length > 255)
-                throw new Error(`PDX property name too long: ${name}`);
+                throw new Error(tr('PDX property name too long: {name}', { name }));
 
             push(Uint8Array.of(0x21, name.length));
             push(latin1(name, false));

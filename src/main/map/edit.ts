@@ -2,11 +2,11 @@
  * Changes made from the map in the active mod (docs/map.md, "Editing from the map"): at the map's date a county's
  * culture and faith (on its capital barony's province) and a barony's holding (history/provinces), a title's holder
  * and liege and a county's development (history/titles); a title's colour (its definition in common/landed_titles,
- * overridden into the mod first — mods/edit.ts). A history file of the mod replaces the game's file of that path
+ * overridden into the mod first, mods/edit.ts). A history file of the mod replaces the game's file of that path
  * entirely, so the first edit of one copies the file the game loads now into the mod, byte for byte, and edits the
  * copy in place (edit-history.ts). Every edit is checked to give the value at the date before it is written, then
  * handed to the index; it is an undo step of the mod (mods/undo.ts, kind 'map': each file it wrote back to its bytes
- * before, a file it made removed — also after a restart). Plain Node.
+ * before, a file it made removed, also after a restart). Plain Node.
  */
 import { existsSync, readFileSync } from 'node:fs';
 import type { MapCharacter, MapEditRequest, MapEditResult } from '../../shared/api.ts';
@@ -21,6 +21,7 @@ import { change, describeChange, journalOf, undoChange } from '../mods/undo.ts';
 import { DATE_KEY, dateNum } from './history.ts';
 import { anchor, entriesIn, inEffect, lineOf, setInEntry, statementsOf, valueOf, type HistFile, type HistStmt, type SetAt } from './edit-history.ts';
 
+import { tr } from '../../shared/i18n.ts';
 /** keys and values written (ASCII: see bytesText) */
 const VALUE = /^[\w.-]+$/;
 
@@ -31,7 +32,7 @@ const VALUE = /^[\w.-]+$/;
  */
 const HISTORY: Record<string, { dir: string; keys: string[]; what: string; value: RegExp; latest?: boolean; }> = {
     culture: { dir: 'history/provinces', keys: ['culture'], what: 'culture', value: VALUE },
-    faith: { dir: 'history/provinces', keys: ['religion', 'faith'], what: 'faith', value: VALUE },
+    faith: { dir: 'history/provinces', keys: ['religion', 'faith', 'rite'], what: 'faith', value: VALUE },
     holding: { dir: 'history/provinces', keys: ['holding'], what: 'holding', value: VALUE },
     holder: { dir: 'history/titles', keys: ['holder'], what: 'holder', value: VALUE },
     liege: { dir: 'history/titles', keys: ['liege'], what: 'liege', value: VALUE },
@@ -61,7 +62,7 @@ const toBytes = (text: string, bom: boolean): Buffer => Buffer.from((bom ? BOM :
 /** UTF-8 text as bytesText has it (a mod's name in a header comment). */
 const asBytes = (s: string): string => Buffer.from(s, 'utf8').toString('latin1');
 
-/** What can be undone (every result carries it: the page keeps its Undo while there is one) — the active mod's map edits. */
+/** What can be undone (every result carries it: the page keeps its Undo while there is one): the active mod's map edits. */
 function stack(host: ModsHost): Pick<MapEditResult, 'undo' | 'undoNext'>
 {
     const steps = journalOf(host).list(host.settings().activeMod ?? '', 'map');
@@ -70,13 +71,17 @@ function stack(host: ModsHost): Pick<MapEditResult, 'undo' | 'undoNext'>
 
 export async function mapEdit(host: ModsHost, req: MapEditRequest): Promise<MapEditResult>
 {
+    // (a loaded save: the map shows it; its edits change the save, docs/saves.md)
+    if (host.settings().loadedSave)
+        return host.query!<MapEditResult>('saveMapEdit', req);
+
     try
     {
         if (req.kind === 'undo')
             return req.plan ? { ok: true, ...stack(host) } : { ...(await undo(host)), ...stack(host) };
 
         // (one undo step: the history file or the title copied into the mod first goes with the edit)
-        const r = await change(host, `Map: ${req.kind}`, 'map', async (): Promise<MapEditResult> =>
+        const r = await change(host, tr('Map: {kind}', { kind: req.kind }), 'map', async (): Promise<MapEditResult> =>
         {
             const a = await activeMod(host);
 
@@ -84,7 +89,7 @@ export async function mapEdit(host: ModsHost, req: MapEditRequest): Promise<MapE
                 return { ok: false, message: a };
 
             if (!a.loaded)
-                return { ok: false, message: `The active mod ${a.mod.name} is not in the mod list loaded in the explorer — load a list with it to edit from the map.` };
+                return { ok: false, message: tr('The active mod {name} is not in the mod list loaded in the explorer — load a list with it to edit from the map.', { name: a.mod.name }) };
 
             return req.kind === 'color' ? await setColor(host, a, req) : await setHistory(host, a, req);
         });
@@ -102,7 +107,7 @@ async function layering(host: ModsHost, a: Active): Promise<{ vfs: GameFiles; mi
     const gameDir = host.gameDir();
 
     if (!gameDir)
-        throw new Error('The game folder is not set.');
+        throw new Error(tr('The game folder is not set.'));
 
     const state = await modsState(host);
     const vfs = new GameFiles(gameDir, modsOfList(state, state.selected));
@@ -124,7 +129,7 @@ function checkNotHidden(vfs: GameFiles, mine: number, rel: string, mod: string):
     const by = hiddenBy(vfs, mine, rel);
 
     if (by)
-        throw new Error(`${by} loads after ${mod} and replaces ${rel.slice(0, rel.lastIndexOf('/'))} (replace_path), so ${mod}’s files there are not loaded — move ${mod} below it in the load order.`);
+        throw new Error(tr('{by} loads after {mod} and replaces {slice} (replace_path), so {mod}’s files there are not loaded — move {mod} below it in the load order.', { by, mod, slice: rel.slice(0, rel.lastIndexOf('/')) }));
 }
 
 // ---------------------------------------------------------------------------
@@ -175,8 +180,8 @@ interface InEffect
 }
 
 /**
- * The statement in effect at the date: of the first entry that has one (a county's culture: its capital first), or —
- * `latest` — the latest of all (development: the county's or a de jure liege's; the county's on the same date).
+ * The statement in effect at the date: of the first entry that has one (a county's culture: its capital first), or,
+ * `latest`, the latest of all (development: the county's or a de jure liege's; the county's on the same date).
  */
 function readAt(files: HistFile[], entries: string[], keys: string[], when: number, latest?: boolean): InEffect | undefined
 {
@@ -199,7 +204,7 @@ function readAt(files: HistFile[], entries: string[], keys: string[], when: numb
     return best;
 }
 
-/** A character's facts at a date from the index (undefined: not known — no index); null: no such character. */
+/** A character's facts at a date from the index (undefined: not known, no index); null: no such character. */
 async function characterAt(host: ModsHost, id: string, date: string): Promise<MapCharacter | null | undefined>
 {
     try
@@ -217,12 +222,12 @@ async function setHistory(host: ModsHost, a: Active, req: MapEditRequest): Promi
     const spec = HISTORY[req.kind];
 
     if (!spec)
-        throw new Error(`Unknown map edit: ${req.kind}`);
+        throw new Error(tr('Unknown map edit: {kind}', { kind: req.kind }));
 
     const date = req.date && DATE_KEY.test(req.date) ? req.date : undefined;
 
     if (!date)
-        throw new Error('No date: the map’s date says when the change happens.');
+        throw new Error(tr('No date: the map’s date says when the change happens.'));
 
     const when = dateNum(date);
     const titles = spec.dir === 'history/titles';
@@ -234,7 +239,7 @@ async function setHistory(host: ModsHost, a: Active, req: MapEditRequest): Promi
         : (req.provinces ?? []).filter((p) => Number.isInteger(p) && p > 0).map(String);
 
     if (!entries.length)
-        throw new Error('Nothing to change: no province or title given.');
+        throw new Error(tr('Nothing to change: no province or title given.'));
 
     const { vfs, mine } = await layering(host, a);
     const files = filesWith(vfs, spec.dir, entries);
@@ -253,13 +258,13 @@ async function setHistory(host: ModsHost, a: Active, req: MapEditRequest): Promi
     const rel = src ? src.f.rel : `${spec.dir}/${fileTag(a)}_${spec.dir.slice(spec.dir.indexOf('/') + 1)}.txt`;
 
     if (src && src.f.source > mine)
-        throw new Error(`${vfs.sources[src.f.source].name} loads after ${a.mod.name} and has ${rel} too, so its version keeps winning — move ${a.mod.name} below it in the load order.`);
+        throw new Error(tr('{name} loads after {name2} and has {rel} too, so its version keeps winning — move {name2} below it in the load order.', { name: vfs.sources[src.f.source].name, name2: a.mod.name, rel }));
 
     checkNotHidden(vfs, mine, rel, a.mod.name);
     const abs = modPath(a, rel);
 
     if (!abs)
-        throw new Error(`${rel} is not a path inside the mod folder.`);
+        throw new Error(tr('{rel} is not a path inside the mod folder.', { rel }));
 
     const from = src && src.f.source !== mine ? vfs.sources[src.f.source].name : undefined;
     const mod = { id: a.mod.id, name: a.mod.name };
@@ -274,16 +279,16 @@ async function setHistory(host: ModsHost, a: Active, req: MapEditRequest): Promi
     const value = (req.value ?? '').trim();
 
     if (!spec.value.test(value))
-        throw new Error(`“${value}” is no ${spec.what}${spec.latest ? ' (a whole number)' : ''}.`);
+        throw new Error(tr('“{value}” is no {what}{value2}.', { value, what: spec.what, value2: spec.latest ? tr(' (a whole number)') : '' }));
 
     const none = value === '0' && (req.kind === 'holder' || req.kind === 'liege');
     const before = cur && valueOf(cur.stmt.node);
 
     if (before === value || (none && (!before || before === '0')))
-        throw new Error(`The ${spec.what} of ${title ?? entry} is ${none ? 'none' : value} at ${date} already.`);
+        throw new Error(tr('The {what} of {value} is {value2} at {date} already.', { what: spec.what, value: title ?? entry, value2: none ? 'none' : value, date }));
 
-    // when: from the date on; else the statement in effect replaced — a de jure liege's development: the county's own
-    // from the same date (it wins then); no statement: from the start (province history — title history is dated only)
+    // when: from the date on; else the statement in effect replaced (a de jure liege's development: the county's own
+    // from the same date (it wins then)); no statement: from the start (province history; title history is dated only)
     let at: SetAt;
 
     if (whenMode === 'date')
@@ -295,7 +300,7 @@ async function setHistory(host: ModsHost, a: Active, req: MapEditRequest): Promi
     else if (!titles)
         at = {};
     else
-        throw new Error(`${title} has no ${spec.what} in its history before ${date} — change it from ${date} on.`);
+        throw new Error(tr('{title} has no {what} in its history before {date} — change it from {date} on.', { title, what: spec.what, date }));
 
     // the text to edit: the file as loaded (copied into the mod when it is not the mod's), else the mod's file for new entries
     const old = existsSync(abs) ? readFileSync(abs) : null;
@@ -308,15 +313,15 @@ async function setHistory(host: ModsHost, a: Active, req: MapEditRequest): Promi
     const shown = got && valueOf(got.stmt.node);
 
     if (shown !== value)
-        throw new Error(`The change would not show at ${date}: the ${spec.what} read there would be ${shown ?? 'none'}${got && got.entry !== entry ? ` (${got.entry}’s)` : ''} (${rel}).`);
+        throw new Error(tr('The change would not show at {date}: the {what} read there would be {value}{value2} ({rel}).', { date, what: spec.what, value: shown ?? 'none', value2: got && got.entry !== entry ? ` (${got.entry}’s)` : '', rel }));
 
     const notes: string[] = [];
 
     if (from)
-        notes.push(`${rel} is copied from ${from === 'Game' ? 'the game' : from} first: a history file of the same path replaces the whole file.`);
+        notes.push(tr('{rel} is copied from {value} first: a history file of the same path replaces the whole file.', { rel, value: from === 'Game' ? 'the game' : from }));
 
     if (!src)
-        notes.push(`${entry} had no history: a new entry in ${rel}.`);
+        notes.push(tr('{entry} had no history: a new entry in {rel}.', { entry, rel }));
 
     const since = at.stmt ? own?.block?.k : at.date;
 
@@ -325,10 +330,10 @@ async function setHistory(host: ModsHost, a: Active, req: MapEditRequest): Promi
         const who = await characterAt(host, value, since ?? date);
 
         if (who === null)
-            throw new Error(`There is no character ${value} in the loaded game files.`);
+            throw new Error(tr('There is no character {value} in the loaded game files.', { value }));
 
         if (who && !who.alive)
-            notes.push(`${who.name}${who.house ? ' ' + who.house : ''} (${value}) is not alive at ${since ?? date}${who.birth ? ` (born ${who.birth}${who.death ? `, died ${who.death}` : ''})` : ''}.`);
+            notes.push(tr('{name}{value} ({value2}) is not alive at {value3}{value4}.', { name: who.name, value: who.house ? ' ' + who.house : '', value2: value, value3: since ?? date, value4: who.birth ? tr(' (born {birth}{value})', { birth: who.birth, value: who.death ? `, died ${who.death}` : '' }) : '' }));
     }
 
     const later = (spec.latest ? entries : [entry])
@@ -337,10 +342,10 @@ async function setHistory(host: ModsHost, a: Active, req: MapEditRequest): Promi
         .sort((x, y) => x.s.date - y.s.date)[0];
 
     if (later)
-        notes.push(`Later history still changes it: ${later.s.block?.k} (${later.e === entry ? '' : later.e + ': '}${later.s.node.k} = ${valueOf(later.s.node)}).`);
+        notes.push(tr('Later history still changes it: {k} ({value}{k2} = {valueOf}).', { k: later.s.block?.k, value: later.e === entry ? '' : later.e + ': ', k2: later.s.node.k, valueOf: valueOf(later.s.node) }));
 
-    const how = at.stmt ? (since ? `since ${since}` : 'from the start') : at.date ? (at.date === date ? `from ${date}` : `since ${at.date}`) : 'from the start';
-    return commit(host, mod, `${title ?? entry}: ${at.stmt?.k ?? spec.keys[0]} = ${value} ${how}`, [{ abs, rel, bytes: toBytes(out.text, base.bom) }], lineOf(out.text, out.at), notes);
+    const how = at.stmt ? (since ? tr('since {since}', { since }) : tr('from the start')) : at.date ? (at.date === date ? tr('from {date}', { date }) : tr('since {date}', { date: at.date })) : tr('from the start');
+    return commit(host, mod, `${title ?? entry}: ${at.stmt?.k && at.stmt.k !== 'rite' ? at.stmt.k : spec.keys[0]} = ${value} ${how}`, [{ abs, rel, bytes: toBytes(out.text, base.bom) }], lineOf(out.text, out.at), notes);
 }
 
 // ---------------------------------------------------------------------------
@@ -348,8 +353,8 @@ async function setHistory(host: ModsHost, a: Active, req: MapEditRequest): Promi
 // ---------------------------------------------------------------------------
 
 /**
- * The title's block in a landed_titles file, at any depth: the last one with values of its own — not an empty block
- * written only as the way to a title inside it (override.ts titleText) —, else the last one.
+ * The title's block in a landed_titles file, at any depth: the last one with values of its own (not an empty block
+ * written only as the way to a title inside it (override.ts titleText)), else the last one.
  */
 function findTitle(nodes: PNode[], key: string): PNode | undefined
 {
@@ -383,7 +388,7 @@ export function setTitleColor(text: string, title: string, rgb: number[]): EditO
     const node = findTitle(parse(text), title);
 
     if (!node)
-        throw new Error(`${title} was not found in the file.`);
+        throw new Error(tr('{title} was not found in the file.', { title }));
 
     const stmt = `color = { ${rgb.join(' ')} }`;
     const kids = (node.v as PNode[]).filter((c) => c.k);
@@ -401,7 +406,7 @@ async function setColor(host: ModsHost, a: Active, req: MapEditRequest): Promise
     const title = req.title ?? '';
 
     if (!VALUE.test(title))
-        throw new Error('No title given.');
+        throw new Error(tr('No title given.'));
 
     const plan = await planOverride(host, T_TITLE, title);
 
@@ -417,7 +422,7 @@ async function setColor(host: ModsHost, a: Active, req: MapEditRequest): Promise
     const target = opt.open?.file ?? (rel ? modPath(a, rel) : undefined);
 
     if (!rel || !target)
-        throw new Error(`${title} cannot be copied into ${a.mod.name}.`);
+        throw new Error(tr('{title} cannot be copied into {name}.', { title, name: a.mod.name }));
 
     const { vfs, mine } = await layering(host, a);
     checkNotHidden(vfs, mine, rel, a.mod.name);
@@ -429,7 +434,7 @@ async function setColor(host: ModsHost, a: Active, req: MapEditRequest): Promise
     const m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(req.value ?? '');
 
     if (!m)
-        throw new Error(`“${req.value ?? ''}” is no colour (#rrggbb).`);
+        throw new Error(tr('“{value}” is no colour (#rrggbb).', { value: req.value ?? '' }));
 
     const rgb = [m[1], m[2], m[3]].map((h) => parseInt(h, 16));
 
@@ -438,7 +443,7 @@ async function setColor(host: ModsHost, a: Active, req: MapEditRequest): Promise
     if (!opt.open)
     {
         const r = await applyOverride(host, { type: T_TITLE, name: title, mode: 'copy' });
-        notes.push(`${title} is copied into ${r.rel} first.`, ...r.notes);
+        notes.push(tr('{title} is copied into {rel} first.', { title, rel: r.rel }), ...r.notes);
     }
 
     const { text, bom } = bytesText(readFileSync(target));
@@ -476,10 +481,10 @@ async function undo(host: ModsHost): Promise<MapEditResult>
     const u = await undoChange(host, { mod: host.settings().activeMod ?? '', kind: 'map' });
 
     if (!u)
-        return { ok: false, message: 'No map edit to undo.' };
+        return { ok: false, message: tr('No map edit to undo.') };
 
     if (u.refused)
         return { ok: false, message: `${u.label}: ${u.refused}` };
 
-    return { ok: true, message: `Undone: ${u.label}`, mod: u.mod, file: u.file, rel: u.rel, line: u.line, notes: u.removed.length ? [`Removed again: ${u.removed.join(', ')}`] : [] };
+    return { ok: true, message: tr('Undone: {label}', { label: u.label }), mod: u.mod, file: u.file, rel: u.rel, line: u.line, notes: u.removed.length ? [tr('Removed again: {join}', { join: u.removed.join(', ') })] : [] };
 }

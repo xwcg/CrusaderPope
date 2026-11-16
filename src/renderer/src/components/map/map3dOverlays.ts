@@ -1,19 +1,28 @@
 /**
  * Lines over the 3D terrain (docs/map.md, "Rivers and sea crossings"), added to the scene with Map3D.addOverlay: the
  * rivers as ribbons on the ground (the finest level of overlay-data.ts; the height of the terrain, or of the water where
- * it is higher), as wide as their class — far away at least 1.5 pixels, thin ones fading out there as in 2D —,
+ * it is higher), as wide as their class (far away at least 1.5 pixels, thin ones fading out there as in 2D),
  * water-coloured with the sky and the sun's glint on them; the sea crossings as ribbons of rounded dashes over the
- * water. The ribbons are pushed a little towards the eye (far terrain patches are coarser than the heights).
+ * water. The ribbons are pushed a little towards the eye; far away they lie on the coarser terrain the patches there
+ * draw (the height texture's mip levels a patch of that distance can have; in a deep narrow valley the coarse ground
+ * is above the river's own).
  */
 import * as THREE from 'three';
 import type { MapInfo } from '../../../../shared/api';
 import type { Map3D, Terrain } from './map3d';
 import { overlaysOf, riverWidth, type Overlays } from './overlay-data';
+import { FOG_APPLY } from './fogShaders';
 
 /** The ribbons' vertex shader: a centre line point moved sideways by the half width (at least `uMin` pixels). */
 const VERT = `
 uniform float uPx;
 uniform float uMin;
+// the terrain's heights and sizes (its own uniforms), quads along a patch's side
+uniform sampler2D uHeight;
+uniform vec2 uSize;
+uniform vec2 uHSize;
+uniform float uHeightScale;
+uniform float uGrid;
 // the perpendicular (x, z) and the side (−1, 1)
 in vec3 aSide;
 // half the width (map pixels), the length along the line (map pixels)
@@ -30,7 +39,15 @@ void main() {
   // world units per pixel there
   float px = dist * uPx;
   float hw = max(aHalf, uMin * px);
-  vec3 p = position + vec3(aSide.x, 0.0, aSide.y) * aSide.z * hw;
+  // the terrain patch here (Map3D: split while the eye is nearer than 2.2 × its size) is between dist / 7.4 and
+  // dist / 2.2 in size; its heights come from the mip level of its quads: on the highest of those levels' ground
+  float k = uHSize.x / uSize.x / uGrid;
+  float lo = max(0.0, floor(log2(dist / 7.4 * k)));
+  float hi = max(0.0, ceil(log2(dist / 2.2 * k)));
+  float y = position.y;
+  for (float l = lo; l <= hi; l += 1.0)
+    y = max(y, textureLod(uHeight, position.xz / uSize, l).r * uHeightScale);
+  vec3 p = vec3(position.x, y, position.z) + vec3(aSide.x, 0.0, aSide.y) * aSide.z * hw;
   p += normalize(cameraPosition - p) * (0.2 + dist * 0.004);
   vSide = aSide.z;
   vAlong = aAlong;
@@ -50,6 +67,8 @@ uniform int uStyle;
 uniform vec3 uLight;
 uniform vec3 uFog;
 uniform vec2 uFogRange;
+uniform vec2 uSize;
+uniform float uZoom;
 in float vSide;
 in float vAlong;
 in float vHalf;
@@ -58,29 +77,45 @@ in float vFade;
 in vec3 vWorld;
 out vec4 fragColor;
 
+${FOG_APPLY}
 vec3 fogged(vec3 col) {
-  return mix(col, uFog, smoothstep(uFogRange.x, uFogRange.y, distance(vWorld, cameraPosition)));
+  return mix(fowApply(col, vWorld), uFog, smoothstep(uFogRange.x, uFogRange.y, distance(vWorld, cameraPosition)));
 }
 `;
 
 const RIVER_FRAG = `${FRAG_COMMON}
+uniform float uTime;
+// rivers.settings: flow uv scale, flow speed (uv / s), noise scale, noise speed
+uniform vec4 uFlow;
+float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float vnoise(vec2 p) {
+  vec2 i = floor(p), f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash(i), hash(i + vec2(1, 0)), u.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), u.x), u.y);
+}
 void main() {
   float e = abs(vSide);
   float a = clamp((1.0 - e) * vPx + 0.5, 0.0, 1.0) * vFade;
   if (a <= 0.0) discard;
   vec3 water = uStyle == 2 ? vec3(0.17, 0.27, 0.36) : uStyle == 1 ? vec3(0.27, 0.32, 0.33) : vec3(0.2, 0.36, 0.46);
   vec3 col = water * mix(1.15, 0.78, e * e);
-  // the sky's light looking across, the sun's glint
+  // the flow: ripples along the river (map pixels × the uv scale) moving downstream at the flow speed, a finer noise
+  // drifting at the noise speed; the points run from the source (overlays-rivers.ts)
+  vec2 uv = vec2(vAlong, vSide * vHalf) * uFlow.x;
+  float r = vnoise(vec2(uv.x * 2.0 - uTime * uFlow.y * 10.0, uv.y * 3.0)) * 0.65
+          + vnoise(uv * uFlow.z * 12.0 + vec2(-uTime * uFlow.w * 0.15, uTime * 0.05)) * 0.35;
+  col *= 0.9 + 0.2 * r;
+  // the sky's light looking across, the sun's glint (broken by the ripples)
   vec3 v = normalize(cameraPosition - vWorld);
   col = mix(col, vec3(0.42, 0.52, 0.6), pow(1.0 - max(v.y, 0.0), 4.0) * 0.35);
-  col += vec3(1.0, 0.95, 0.85) * pow(max(dot(reflect(-uLight, vec3(0.0, 1.0, 0.0)), v), 0.0), 60.0) * 0.3;
+  col += vec3(1.0, 0.95, 0.85) * pow(max(dot(reflect(-uLight, vec3(0.0, 1.0, 0.0)), v), 0.0), 60.0) * 0.3 * (0.4 + 1.2 * r);
   fragColor = vec4(fogged(col), a * 0.95);
 }
 `;
 
 /**
  * Rounded dashes along the ribbon (in the ribbon's half widths: a dash 0.72 half wide, 2.3 long with its round ends,
- * gaps of 1.73 — the 2D proportions), on a dark rim to the ribbon's edge.
+ * gaps of 1.73; the 2D proportions), on a dark rim to the ribbon's edge.
  */
 const CROSSING_FRAG = `${FRAG_COMMON}
 void main() {
@@ -176,6 +211,9 @@ class Ribbon
     }
 }
 
+/** the zoom step below which the rivers flow (the frames keep coming there: county level is 7) */
+const FLOW_ZOOM = 10;
+
 /** The terrain material's uniforms (style, sun, fog) among the scene's objects: the ribbons share them. */
 function terrainUniforms(scene: THREE.Object3D | null): Record<string, THREE.IUniform> | undefined
 {
@@ -195,10 +233,12 @@ function build(map: Map3D, o: Overlays, shared: Record<string, THREE.IUniform>):
 {
     const ground = (x: number, z: number): number => map.surface(x, z);
     /** (`min`: the least half width in pixels) */
+    const flow = o.info.rivers?.flow ?? [0.4, 0.075, 0.25, 2];
     const material = (frag: string, min: number): THREE.ShaderMaterial =>
         new THREE.ShaderMaterial({
             glslVersion: THREE.GLSL3,
-            uniforms: { ...shared, uMin: { value: min } },
+            // (uTime: the terrain's, set by Map3D while its overlays animate)
+            uniforms: { ...shared, uMin: { value: min }, uFlow: { value: new THREE.Vector4(...flow) } },
             vertexShader: VERT,
             fragmentShader: frag,
             transparent: true,
@@ -262,8 +302,11 @@ export function attachOverlays(map: Map3D, info: MapInfo, _terrain: Terrain): vo
     const uPx = { value: 0.001 };
     const size = new THREE.Vector2();
     let alive = true;
+    // (the rivers' flow: drawn moving only near (zoom steps below FLOW_ZOOM, county level and closer))
+    let rivers = false;
     map.addOverlay({
         object: group,
+        animated: (zoom) => rivers && zoom < FLOW_ZOOM,
         dispose: () =>
         {
             alive = false;
@@ -282,7 +325,8 @@ export function attachOverlays(map: Map3D, info: MapInfo, _terrain: Terrain): vo
         if (!alive || !o || !t)
             return;
 
-        const shared = { uPx, uStyle: t.uStyle, uLight: t.uLight, uFog: t.uFog, uFogRange: t.uFogRange };
+        const shared = { uPx, uStyle: t.uStyle, uLight: t.uLight, uFog: t.uFog, uFogRange: t.uFogRange, uZoom: t.uZoom, uFow: t.uFow, uFowSet: t.uFowSet, uFowAdj: t.uFowAdj, uTime: t.uTime, uHeight: t.uHeight, uSize: t.uSize, uHSize: t.uHSize, uHeightScale: t.uHeightScale, uGrid: t.uGrid };
+        rivers = !!o.levels[0] && !!o.info.rivers;
 
         for (const m of build(map, o, shared))
         {

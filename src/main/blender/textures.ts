@@ -1,8 +1,8 @@
 /**
- * Texture conversions between the game's packed maps and what Blender (glTF) reads — docs/blender.md, "Textures".
+ * Texture conversions between the game's packed maps and what Blender (glTF) reads; docs/blender.md, "Textures".
  *
  * - normal maps ("RRxG": x in green, y in alpha, red ≈ x, blue free for masks) ↔ standard tangent-space RGB normal
- *   maps: R = x (game green), G = y (game alpha — +Y is up in the image for both, see docs/blender.md), B = z
+ *   maps: R = x (game green), G = y (game alpha; +Y is up in the image for both, see docs/blender.md), B = z
  *   reconstructed. Exact both ways for x and y; red and blue of the game map come back from the original.
  * - properties maps (r = SSS/AO mask, g = specular, b = metalness, a = roughness) → glTF metallic-roughness
  *   ("ORM": G = roughness, B = metalness, R = the game's red); on the way back only G and B are taken from it.

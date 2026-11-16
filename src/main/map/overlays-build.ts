@@ -14,7 +14,7 @@ import { riverLines, riverPixels } from './overlays-rivers.ts';
 import { seaAdjacencies, seaCrossings } from './overlays-crossings.ts';
 
 /** Bumped when the files change shape (old cache files are then not read). */
-export const OVERLAYS_VERSION = 1;
+export const OVERLAYS_VERSION = 5;
 /** the rivers' levels of detail: how far a simplified line may be from the smoothed one (map pixels) */
 const TOLERANCES = [0.08, 0.5, 2];
 const WATER_KINDS = new Set(['sea', 'lake', 'river', 'impassable_sea']);
@@ -26,6 +26,8 @@ export type OverlaysMeta = Omit<MapOverlaysInfo, 'rivers'> & { rivers?: Pick<Non
 export interface OverlaysInput
 {
     rivers?: Uint8Array;
+    /** how far rivers fade in at a source and out at a free end (map pixels; NRivers FADE_IN / FADE_OUT_DISTANCE) */
+    fades?: [number, number];
     provinces: Uint8Array;
     definitions: string;
     defaultMap: string;
@@ -48,7 +50,7 @@ export async function buildOverlays(input: OverlaysInput): Promise<OverlaysMeta>
         const levels: NonNullable<OverlaysMeta['rivers']>['levels'] = [];
         let at = 0;
 
-        for (const l of riverLines(r.px, r.width, r.height, TOLERANCES))
+        for (const l of riverLines(r.px, r.width, r.height, TOLERANCES, input.fades))
         {
             // (the game's rivers.png is the province map's size; another size is scaled to it)
             if (r.width !== width || r.height !== height)

@@ -24,6 +24,6 @@ export interface CardInput
 
 /**
  * Fills the card of one type. Returns true when the card is complete; otherwise the generic sections follow
- * (StoryBuilder.genericSections: modifiers, trigger / effect blocks, cost) — skip keys already shown with `skip`.
+ * (StoryBuilder.genericSections: modifiers, trigger / effect blocks, cost); skip keys already shown with `skip`.
  */
 export type CardFn = (b: StoryBuilder, x: CardInput) => boolean | void;

@@ -2,10 +2,10 @@
 // dlc_load.json and the mod/*.mod descriptors are copied (not mod content); the real folder is only read, and its
 // files are compared before and after.
 // Usage: node --experimental-strip-types --experimental-sqlite --no-warnings scripts/mods-manage-check.ts [keep]
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { homedir, tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { basename, join } from 'node:path';
 import type { ModsState, Settings } from '../src/shared/api.ts';
 import { resolveGameDir } from '../src/main/gameDir.ts';
 import { defaultUserDir } from '../src/main/mods/discover.ts';
@@ -104,6 +104,11 @@ try
     check(r.n === 1 && r.value.selected === agot.ref && settings.modList === agot.ref, 'select AGOT playset → re-index');
     r = await reindexedBy(mgr.selectList(host, agot.ref));
     check(r.n === 0, 'select the same list again → no re-index');
+    // (the game list made the loaded one's: dlc_load.json of the copy gets AGOT's enabled mods, its other keys kept;
+    // the user's own may hold any mods)
+    const dlcFile = join(tmp, 'dlc_load.json');
+    const dlcText = JSON.stringify({ ...(existsSync(dlcFile) ? JSON.parse(readFileSync(dlcFile, 'utf8')) : {}), enabled_mods: agot.mods.filter((m) => m.enabled).map((m) => m.id) });
+    writeFileSync(dlcFile, dlcText);
     r = await reindexedBy(mgr.selectList(host, 'game'));
     check(r.n === 0, 'select the game list with the same mods → no re-index');
     await rejects(mgr.selectList(host, 'custom:nope'), /Unknown mod list/, 'select an unknown list');
@@ -147,6 +152,17 @@ try
         .sort();
     zip.close();
     check(packed.file === join(tmp, 'mod', 'check_mod.zip') && names.join(',') === 'common/traits/zz_check.txt,descriptor.mod', `packed ${packed.files} files: ${names.join(', ')}`);
+    // a patch mod's manifest (a dot file) travels in its zip; the other dot files stay out
+    writeFileSync(join(tmp, 'mod', 'check_mod', '.crusaderpope-fixes.json'), '{"game":"1.20.1.2","restored":{}}\n');
+    const packedFixes = await mgr.packMod(host, 'mod/check_mod.mod', true);
+    const zipFixes = new ZipArchive(packedFixes.file);
+    const namesFixes = zipFixes.files()
+        .map((e) => e.name)
+        .sort();
+    zipFixes.close();
+    check(namesFixes.join(',') === '.crusaderpope-fixes.json,common/traits/zz_check.txt,descriptor.mod', `a patch mod's zip keeps its manifest: ${namesFixes.join(', ')}`);
+    rmSync(join(tmp, 'mod', 'check_mod', '.crusaderpope-fixes.json'));
+    await mgr.packMod(host, 'mod/check_mod.mod', true);
     await rejects(mgr.packMod(host, 'mod/ugc_2962333032.mod'), /Only unpacked mods in your mod folder/, 'pack a Workshop mod');
 
     // unpack: a packed mod registered with archive=
@@ -277,13 +293,32 @@ try
     const dl = readFileSync(join(tmp, 'dlc_load.json'), 'utf8');
     console.log('dlc_load.json:', dl);
     check(dl === '{"enabled_mods":["mod/check_mod.mod","mod/ugc_2978663046.mod"],"disabled_dlcs":[]}', 'dlc_load.json: enabled mods in order, disabled_dlcs kept');
-    check(g.backup?.startsWith(backupDir) && readFileSync(g.backup, 'utf8') === readFileSync(join(real, 'dlc_load.json'), 'utf8'), 'old dlc_load.json backed up');
+    check(g.backup?.startsWith(backupDir) && readFileSync(g.backup, 'utf8') === dlcText, 'old dlc_load.json backed up');
 
     // delete the loaded custom list → the game alone
     await mgr.selectList(host, custom.ref);
     r = await reindexedBy(mgr.deleteList(host, custom.ref));
     check(r.value.selected === 'none' && !r.value.lists.some((l) => l.ref === custom.ref) && r.n === 1, 'delete the loaded list → none, re-index');
     await rejects(mgr.deleteList(host, agot.ref), /own lists/, 'delete a playset');
+
+    // delete a mod of one's own: in a loaded custom list, in the game list (dlc_load.json names check_mod), the active
+    // mod: out of all of them, its folder and descriptor gone, a re-index; the recycle bin is a TEMP folder here
+    let st = await mgr.saveList(host, { name: 'With check mod', mods: [{ id: 'mod/check_mod.mod', enabled: true }, { id: 'mod/ugc_2978663046.mod', enabled: true }] });
+    const withCheck = st.lists.find((l) => l.kind === 'custom' && l.name === 'With check mod')!;
+    await mgr.selectList(host, withCheck.ref);
+    await mgr.setActive(host, 'mod/check_mod.mod');
+    const plan = await mgr.deleteModPlan(host, 'mod/check_mod.mod');
+    check(plan.lists.includes('With check mod') && plan.gameList && plan.active && plan.files > 0 && plan.folder === join(tmp, 'mod', 'check_mod'), `delete plan: ${JSON.stringify(plan)}`);
+    await rejects(mgr.deleteModPlan(host, 'mod/ugc_2962333032.mod'), /Only mods of your own/, 'delete a workshop mod');
+    const trashDir = join(tmp, 'trash');
+    mkdirSync(trashDir);
+    host.trash = async (p) => renameSync(p, join(trashDir, basename(p)));
+    r = await reindexedBy(mgr.deleteMod(host, 'mod/check_mod.mod').then((x) => x.state));
+    st = r.value;
+    check(!existsSync(join(tmp, 'mod', 'check_mod')) && !existsSync(join(tmp, 'mod', 'check_mod.mod')) && existsSync(join(trashDir, 'check_mod')) && existsSync(join(trashDir, 'check_mod.mod')), 'its folder and descriptor in the recycle bin');
+    check(st.lists.find((l) => l.ref === withCheck.ref)?.mods.map((m) => m.id).join() === 'mod/ugc_2978663046.mod' && !st.activeMod && r.n === 1, 'out of the loaded list, no longer the active mod, a re-index');
+    check(!readFileSync(join(tmp, 'dlc_load.json'), 'utf8').includes('check_mod'), 'out of the game list');
+    await rejects(mgr.deleteMod(host, 'mod/check_mod.mod'), /Unknown mod|Only mods of your own/, 'delete it again (still known from the launcher: refused)');
 }
 finally
 {

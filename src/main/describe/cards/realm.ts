@@ -1,4 +1,4 @@
-/** Cards: Realm and law — laws, governments, succession, titles, holdings, contracts, men-at-arms, game rules. */
+/** Cards: Realm and law (laws, governments, succession, titles, holdings, contracts, men-at-arms, game rules). */
 import type { CardFn } from './types.ts';
 import { LAW_CARDS } from './realm-law.ts';
 import { TITLE_CARDS } from './realm-titles.ts';

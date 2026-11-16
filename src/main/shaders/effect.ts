@@ -1,5 +1,5 @@
 /**
- * PDX effect files (`.shader` / `.fxh` under gfx/FX of the game, jomini and clausewitz) — the block format around the
+ * PDX effect files (`.shader` / `.fxh` under gfx/FX of the game, jomini and clausewitz): the block format around the
  * shader code: Includes, ConstantBuffer, VertexStruct, TextureSampler, Code [[ … ]], MainCode, Effect and render
  * states. See docs/shaders.md.
  *
@@ -28,6 +28,10 @@ export interface FxStruct
     name: string;
     fields: FxField[];
     file: string;
+    /** the stage block a VertexStruct sits in (`PixelShader = { VertexStruct … }` is not in the vertex stage), `both` at the top level */
+    stage?: Stage | 'both';
+    /** a constant buffer declared inside this MainCode (the GUI and tool effects, one per main): only that main sees it */
+    main?: string;
 }
 
 export interface FxSampler
@@ -38,6 +42,8 @@ export interface FxSampler
     props: Record<string, string>;
     stage: Stage | 'both';
     file: string;
+    /** declared inside this MainCode (the GUI effects' `Texture`, one per main): only that main sees it */
+    main?: string;
 }
 
 export interface FxCode
@@ -45,6 +51,8 @@ export interface FxCode
     stage: Stage | 'both';
     code: string;
     file: string;
+    /** a plain HLSL `struct` written outside any Code block (province_effects.fxh): the code is its source, the engine declares it with the vertex structs */
+    raw?: boolean;
 }
 
 export interface FxMain
@@ -80,7 +88,7 @@ export interface FxFile
     effects: FxEffect[];
     /**
      * BlendState / RasterizerState / DepthStencilState blocks by kind and name (`BlendState:hair_alpha_blend`): the kinds
-     * share names — portrait.shader has a BlendState and a DepthStencilState `hair_alpha_blend`; keyed by name alone the
+     * share names: portrait.shader has a BlendState and a DepthStencilState `hair_alpha_blend`; keyed by name alone the
      * depth block replaced the blend block and eyelashes were drawn opaque
      */
     states: Map<string, { kind: string; props: Record<string, string>; }>;
@@ -510,12 +518,26 @@ class Parser
                             if (c?.t === 'code')
                                 m.code = c.v;
                         }
+                        else if (KEYWORDS.get(k.v.toLowerCase()) === 'VertexStruct')
+                        {
+                            // a vertex struct declared inside the MainCode (clausewitz imgui/imgui.shader: VS_INPUT, and the
+                            // compute shader's CS_INPUT): the same as one beside it
+                            const structName = this.next()?.v ?? '';
+                            f.structs.push({ name: structName, fields: this.fields(), file: f.path, stage });
+                        }
                         else if (KEYWORDS.get(k.v.toLowerCase()) === 'ConstantBuffer')
                         {
                             // a constant buffer declared inside the MainCode (jomini entity_editor/grid.shader): its fields are
-                            // uniforms like any other — read as a block, or its closing brace would end the MainCode (and the
+                            // uniforms like any other: read as a block, or its closing brace would end the MainCode (and the
                             // file: the Effect after it was never seen)
-                            f.cbuffers.push(this.cbuffer());
+                            f.cbuffers.push({ ...this.cbuffer(), main: name });
+                        }
+                        else if (/Sampler$|BufferTexture$|^Texture/.test(k.v) && this.peek()?.t === 'word' && this.isP('{', 1))
+                        {
+                            // a sampler declared inside the MainCode (clausewitz cw/pdxgui_default_base.fxh: `TextureSampler Texture`,
+                            // the GUI effects): the same as one beside it, for this main's stage
+                            const samplerName = this.next()!.v;
+                            f.samplers.push({ name: samplerName, kind: k.v, props: this.kvBlock(), stage: m.stage, file: f.path, main: name });
                         }
                         else if (this.isP('='))
                         {
@@ -538,7 +560,7 @@ class Parser
                 case 'VertexStruct':
                 {
                     const name = this.next()?.v ?? '';
-                    f.structs.push({ name, fields: this.fields(), file: f.path });
+                    f.structs.push({ name, fields: this.fields(), file: f.path, stage });
                     break;
                 }
                 case 'ConstantBuffer':
@@ -592,7 +614,7 @@ class Parser
                     if (this.isP(';'))
                         end = this.next()!.e;
 
-                    f.codes.push({ stage, code: this.src.slice(t.s, end), file: f.path });
+                    f.codes.push({ stage, code: this.src.slice(t.s, end), file: f.path, raw: true });
                     break;
                 }
                 default:

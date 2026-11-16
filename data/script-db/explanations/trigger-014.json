@@ -1,0 +1,421 @@
+[
+ {
+  "kind": "trigger",
+  "key": "has_personal_tenet_flag",
+  "label": "Has personal tenet flag",
+  "summary": "Whether any of the character's personal tenets carries the given flag.",
+  "details": "Personal tenets are the tenets a character picks for themselves, apart from the faith's own. Each can set flags (its personal tenet parameters), and this checks for one of those flags. Vanilla checks flag names such as `self_mutilation_active` and `tenet_peace_of_god_personal_truce`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_phase",
+  "label": "Has phase",
+  "summary": "Whether the activity has a phase of the given type, optionally at a given province.",
+  "details": "Written as a plain phase name, or as a block with `type` and/or `location`. Vanilla uses the plain form for tournament phases and the block form for the phases of a tour, with the location set to the capital province.",
+  "fields": [
+   { "name": "type", "text": "The kind of phase to look for.", "values": "an activity phase name" },
+   { "name": "location", "text": "The province the phase takes place in.", "values": "a province, such as `root.capital_province`" }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_phase_future",
+  "label": "Has upcoming phase",
+  "summary": "Whether the activity has a phase of the given type that is still to come.",
+  "details": "The game's own text for this key says \"past phase\" and repeats the usage lines of `has_phase`, so it may be copied from `has_phase_past`. The name says future, so this reading rests on the name. It takes a phase name, or a block with `type` and/or `location`, like `has_phase`.",
+  "fields": [
+   { "name": "type", "text": "The kind of phase to look for.", "values": "an activity phase name" },
+   { "name": "location", "text": "The province the phase takes place in.", "values": "a province, such as `scope:province`" }
+  ],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_phase_past",
+  "label": "Has past phase",
+  "summary": "Whether the activity has a phase of the given type that is already over.",
+  "details": "It takes a phase name, or a block with `type` and/or `location`, like `has_phase`. Vanilla does not use it, so this rests on the game's text alone.",
+  "fields": [
+   { "name": "type", "text": "The kind of phase to look for.", "values": "an activity phase name" },
+   { "name": "location", "text": "The province the phase takes place in.", "values": "a province, such as `scope:province`" }
+  ],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_player_court_position_automation_assign_best",
+  "label": "Auto-assign best candidate",
+  "summary": "Whether the character is a player who has set the given court position to be filled automatically with the best candidate.",
+  "details": "The value is a court position type. The game describes it for player characters only. Vanilla passes a saved court position type, `scope:court_position_type`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_player_court_position_automation_assign_best_or_event",
+  "label": "Auto-assign or event",
+  "summary": "Whether the character is a player who has set the given court position to be filled with the best candidate, or else to show an event.",
+  "details": "The value is a court position type. The game describes it for player characters only. Vanilla passes a saved court position type, `scope:court_position_type`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_player_court_position_automation_event",
+  "label": "Court position shows events",
+  "summary": "Whether the character is a player who has set the given court position to show events.",
+  "details": "The value is a court position type. The game describes it for player characters only. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_player_court_position_automation_none",
+  "label": "Court position not automated",
+  "summary": "Whether the character is a player who has not automated the given court position.",
+  "details": "The game describes it for player characters only, so do not treat it as the plain opposite of the other automation checks. Vanilla passes a court position type key through a `court_position_type:` link.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_pledged_attacker",
+  "label": "Has pledged to attack",
+  "summary": "Whether the given character has pledged to fight as an attacker in this Great Holy War.",
+  "details": "Run it on the Great Holy War, and give the character to check. Vanilla mostly passes `root` or `prev`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_pledged_defender",
+  "label": "Has pledged to defend",
+  "summary": "Whether the given character has pledged to fight as a defender in this Great Holy War.",
+  "details": "Run it on the Great Holy War, and give the character to check. Vanilla mostly passes `prev` or `root`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_potential_acclaimed_knights",
+  "label": "Has potential acclaimed knights",
+  "summary": "Whether the character has any knights who could be appointed as acclaimed knights.",
+  "details": "Written as `yes` or `no`. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_potential_accolade_successors",
+  "label": "Has potential accolade successor",
+  "summary": "Whether the accolade's owner has anyone at court, guests included, who could succeed the accolade if made a knight.",
+  "details": "Run it on an accolade. Written as `yes` or `no`. Vanilla uses it once, with `no`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_preferred_gender_for_clergy",
+  "label": "Is preferred clergy gender",
+  "summary": "Whether the given character is of the gender the faith prefers for its clergy.",
+  "details": "Run it on a faith and give the character to check. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_primary_name_list",
+  "label": "Has primary name list",
+  "summary": "Whether the given name list is the first name list of the culture.",
+  "details": "Run it on a culture. Only the first name list counts. Vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_primary_title",
+  "label": "Has primary title",
+  "summary": "Whether the given title is the character's primary title.",
+  "details": "Give the title to check. Vanilla mostly writes it as `title:e_hre` and the like.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_prisoners",
+  "label": "Has prisoners",
+  "summary": "Whether the character has prisoners.",
+  "details": "Written as `yes` or `no`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_province_modifier",
+  "label": "Province modifier",
+  "summary": "Whether the province has the given modifier.",
+  "details": "Written as the modifier's name. Vanilla uses it a lot for winter and looting modifiers.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_province_modifier_duration_remaining",
+  "label": "Province modifier time left",
+  "summary": "Whether the province has time remaining on the given modifier.",
+  "details": "The game's text does not show how the time is compared, and vanilla does not use it, so the exact form is unknown beyond `= name`.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_province_with_epidemic",
+  "label": "Has province with epidemic",
+  "summary": "Whether the county has a province hit by an epidemic of the stated intensity.",
+  "details": "Run it on a county. Vanilla writes `intensity = any`, a named level such as `minor` or `apocalyptic`, or a comparison such as `intensity < apocalyptic`.",
+  "fields": [
+   { "name": "intensity", "text": "How severe the epidemic must be.", "values": "`any`, a level name such as `minor` or `apocalyptic`, or a comparison like `< apocalyptic`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_puppet_type",
+  "label": "Has puppet type",
+  "summary": "Whether the given puppet type is valid for the character.",
+  "details": "Vanilla uses it with types such as `theological_agent_puppet` and `external_ruler_puppet`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_raid_immunity_against",
+  "label": "Has raid immunity against",
+  "summary": "Whether the character's realm cannot be raided by the given character, because the realm defeated that character's raid army.",
+  "details": "It looks at the realm of the character's top liege.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_raised_armies",
+  "label": "Has raised armies",
+  "summary": "Whether the character has armies that are raised or still gathering.",
+  "details": "Written as `yes` or `no`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_realm_law",
+  "label": "Realm law",
+  "summary": "Whether the character has the given realm law.",
+  "details": "Written as the law's name. Vanilla uses it in over a thousand places, with laws such as `male_only_law` and `nomadic_authority_5`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_realm_law_flag",
+  "label": "Realm law flag",
+  "summary": "Whether the character has a law that carries the given flag.",
+  "details": "This checks for a flag without naming the law that sets it. Vanilla uses it for flags like `title_revocation_allowed`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_realm_law_in_group",
+  "label": "Has law in group",
+  "summary": "Whether the character has a realm law that belongs to the given law group.",
+  "details": "Written as the group's name. Vanilla uses it once, with `crown_authority`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_regnal_name",
+  "label": "Has regnal name",
+  "summary": "Whether the character has the given regnal name, or the same one as another character.",
+  "details": "Cultural equivalents count as the same name. Regnal numbers are ignored. Written as a localization key, or as a block with `character = ...` to compare with that character.",
+  "fields": [
+   { "name": "character", "text": "The character whose regnal name is compared.", "values": "a character, such as `scope:character`" }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_regnal_name_strict",
+  "label": "Has exact regnal name",
+  "summary": "Whether the character has exactly the given regnal name, or exactly the same one as another character.",
+  "details": "Unlike `has_regnal_name`, cultural equivalents do not count. Regnal numbers are ignored. The game notes that it is slow, so use it with care. Written as a localization key, or as a block with `character = ...`.",
+  "fields": [
+   { "name": "character", "text": "The character whose regnal name is compared.", "values": "a character, such as `scope:character`" }
+  ],
+  "sources": ["doc"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_relation_activity_recurrer",
+  "label": "Relation: activity recurrer",
+  "summary": "Whether the character has the scripted relation \"activity recurrer\" with the given character.",
+  "details": "The game's text only says it checks a scripted relationship and does not say what this one means. Vanilla uses it once, with a macro parameter as the target.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_relation_antiquarian",
+  "label": "Relation: antiquarian",
+  "summary": "Whether the character has the scripted relation \"antiquarian\" with the given character.",
+  "details": "The game does not say what the relation means or which side is which, and vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_relation_best_friend",
+  "label": "Relation: best friend",
+  "summary": "Whether the character has the scripted \"best friend\" relation with the given character.",
+  "details": "Vanilla uses it often, usually against `root` or a saved scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_relation_blood_brother",
+  "label": "Relation: blood brother",
+  "summary": "Whether the character has the scripted \"blood brother\" relation with the given character.",
+  "details": "Vanilla uses it mostly against `root` or a saved scope.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_relation_bully",
+  "label": "Relation: bully",
+  "summary": "Whether the given character is the character's bully.",
+  "details": "The character it runs on is then the victim: the game's relation definitions pair bully with victim. Vanilla uses it in childhood events, for example to check that two children have no bully relation either way.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/scripted_relations/00_scripted_relations.txt:142"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_relation_court_physician",
+  "label": "Relation: court physician",
+  "summary": "Whether the character has the scripted relation \"court physician\" with the given character.",
+  "details": "The game does not say which side is the physician, and vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_relation_crush",
+  "label": "Relation: crush",
+  "summary": "Whether the character has the scripted \"crush\" relation with the given character.",
+  "details": "The game does not state which side has the crush. Vanilla tests it against `root`, saved scopes and a few others.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_relation_disciple",
+  "label": "Relation: disciple",
+  "summary": "Whether the given character is a disciple of the character.",
+  "details": "The character it runs on is then the elder: the game's relation definitions pair disciple with elder. Vanilla uses it often, mostly against `root`.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/scripted_relations/00_scripted_relations.txt:331"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_relation_elder",
+  "label": "Relation: elder",
+  "summary": "Whether the given character is an elder of the character.",
+  "details": "The character it runs on is then the disciple: the game's relation definitions pair elder with disciple. Vanilla uses it a number of times, mostly against `root`, `scope:actor` and macro parameters.",
+  "fields": [],
+  "sources": ["doc", "vanilla", "vanilla: common/scripted_relations/00_scripted_relations.txt:346"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_relation_event_recurrer",
+  "label": "Relation: event recurrer",
+  "summary": "Whether the character has the scripted relation \"event recurrer\" with the given character.",
+  "details": "The game does not say what the relation means, and vanilla does not use it.",
+  "fields": [],
+  "sources": ["doc"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_relation_favorite_child",
+  "label": "Relation: favorite child",
+  "summary": "Whether the character has the scripted \"favorite child\" relation with the given character.",
+  "details": "The game does not state which side is the parent. Vanilla uses it a few times, against `root` or saved scopes.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": true
+ },
+ {
+  "kind": "trigger",
+  "key": "has_relation_fellow_disciple",
+  "label": "Relation: fellow disciple",
+  "summary": "Whether the character has the scripted \"fellow disciple\" relation with the given character.",
+  "details": "Vanilla uses it twice, against `root` and `scope:actor`.",
+  "fields": [],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ },
+ {
+  "kind": "trigger",
+  "key": "has_relation_flag",
+  "label": "Has relation flag",
+  "summary": "Whether the character's relation of the given type with the target carries the given flag.",
+  "details": "Flags are marks stored on a relation. Vanilla mostly checks `has_been_confided_in` on friend relations with `root`.",
+  "fields": [
+   { "name": "target", "text": "The other character in the relation.", "values": "a character, such as `root`", "required": true },
+   { "name": "relation", "text": "The type of relation.", "values": "a relation type such as `friend`, `best_friend`, `ward` or `crush`", "required": true },
+   { "name": "flag", "text": "The flag to look for.", "values": "a flag name such as `has_been_confided_in`", "required": true }
+  ],
+  "sources": ["doc", "vanilla"],
+  "uncertain": false
+ }
+]

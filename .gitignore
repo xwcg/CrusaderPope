@@ -4,3 +4,10 @@ dist/
 *.log
 .DS_Store
 .vite/
+
+# the game's own docs (script_docs output) are build input of the script database (docs/script-database.md)
+!data/game-docs/**/*.log
+# the script database is built from them (scripts/script-db-build.ts)
+data/script-db/*.sqlite
+# the explanation work files (scripts/script-db-explain-input.ts)
+data/script-db/work/

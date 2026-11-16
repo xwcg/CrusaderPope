@@ -7,6 +7,7 @@ import { useMemo, useState } from 'react';
 import type { MapInfo } from '../../../../shared/api';
 import { WATER, modesOf, type Groups, type Mode } from './model';
 
+import { tr } from '../../../../shared/i18n';
 /** rows drawn at most (the filter finds the rest) */
 const ROWS = 150;
 const OPEN_KEY = 'map.legend.open';
@@ -83,7 +84,7 @@ export function Legend(props: { info: MapInfo; groups: Groups; mode: Mode; onPic
 
     if (!open)
         return (
-            <button className="map-legend-fold" onClick={toggle} title="Show the legend">
+            <button className="map-legend-fold" onClick={toggle} title={tr('Show the legend')}>
                 {label} ▴
             </button>
         );
@@ -93,9 +94,9 @@ export function Legend(props: { info: MapInfo; groups: Groups; mode: Mode; onPic
             <div className="map-legend-head">
                 <b>{label}</b>
                 <span className="map-dim">
-                    {groups.bySize.length} {scale ? 'bands' : 'on the map'}
+                    {groups.bySize.length} {scale ? 'bands' : tr('on the map')}
                 </span>
-                <button className="map-legend-close ghost" onClick={toggle} title="Hide the legend">
+                <button className="map-legend-close ghost" onClick={toggle} title={tr('Hide the legend')}>
                     ▾
                 </button>
             </div>
@@ -116,17 +117,17 @@ export function Legend(props: { info: MapInfo; groups: Groups; mode: Mode; onPic
                     </div>
                 </div>
             )}
-            {groups.bySize.length > 12 && !scale && <input className="map-legend-filter" value={filter} onChange={(e) => setFilter({ mode: props.mode, q: e.target.value })} placeholder={`Filter ${label.toLowerCase()}…`} />}
+            {groups.bySize.length > 12 && !scale && <input className="map-legend-filter" value={filter} onChange={(e) => setFilter({ mode: props.mode, q: e.target.value })} placeholder={tr('Filter {label}…', { label: label.toLowerCase() })} />}
             <div className="map-legend-rows">
                 {rows.slice(0, ROWS).map((g) => (
-                    <div key={g} className="map-legend-row" onClick={() => props.onPick(g)} onMouseEnter={() => props.onHover?.(g)} onMouseLeave={() => props.onHover?.(null)} title={`${groups.name(g)} — ${share(groups.area[g], land)} of the land`}>
+                    <div key={g} className="map-legend-row" onClick={() => props.onPick(g)} onMouseEnter={() => props.onHover?.(g)} onMouseLeave={() => props.onHover?.(null)} title={tr('{name} — {share} of the land', { name: groups.name(g), share: share(groups.area[g], land) })}>
                         <span className="map-legend-swatch" style={{ background: groups.color(g) }} />
                         <span className="map-legend-name">{groups.name(g)}</span>
                         <span className="map-legend-share">{share(groups.area[g], land)}</span>
                     </div>
                 ))}
-                {rows.length > ROWS && <div className="map-legend-more map-dim">… {rows.length - ROWS} more (filter to find them)</div>}
-                {!rows.length && <div className="map-legend-more map-dim">Nothing by that name</div>}
+                {rows.length > ROWS && <div className="map-legend-more map-dim">{tr('… {more} more (filter to find them)', { more: rows.length - ROWS })}</div>}
+                {!rows.length && <div className="map-legend-more map-dim">{tr('Nothing by that name')}</div>}
             </div>
         </div>
     );

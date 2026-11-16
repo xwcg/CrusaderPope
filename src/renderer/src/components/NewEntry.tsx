@@ -6,6 +6,8 @@ import { errorText } from './ModDialogs';
 import '../styles/edit.css';
 import { Select } from './Select';
 
+import { tr } from '../../../shared/i18n';
+import { fold, foldHas } from '../../../shared/fold';
 /** The type list's context menu (right click on a type): "New <type>…". */
 export function TypeContextMenu(props: { type: TypeSummary; x: number; y: number; onNew: () => void; onClose: () => void; }): React.JSX.Element
 {
@@ -40,8 +42,7 @@ export function TypeContextMenu(props: { type: TypeSummary; x: number; y: number
                     props.onNew();
                 }}
             >
-                New {singular(props.type.label)}…
-            </button>
+                {tr('New {singular}…', { singular: singular(props.type.label) })}</button>
         </div>
     );
 }
@@ -94,24 +95,24 @@ function NestedFields(props: { type: TypeSummary; nested: NonNullable<NewEntryPl
         };
     }, [value.holder, nested.holderType, props.type.id]);
 
-    const words = q.toLowerCase()
+    // (accents and case aside: "etienne" finds "Étienne")
+    const words = fold(q)
         .split(/\s+/)
         .filter(Boolean);
     const shown = (holders ?? [])
-        .filter((h) => words.every((w) => h.name.toLowerCase().includes(w) || h.display?.toLowerCase().includes(w)))
+        .filter((h) => words.every((w) => foldHas(h.name, w) || foldHas(h.display, w)))
         .sort((a, b) => Number(!!b.mod) - Number(!!a.mod) || a.name.localeCompare(b.name))
         .slice(0, 200);
     return (
         <div className="ne-nested">
             <label>
-                <span>In {holder}</span>
-                <input value={q} placeholder={`Filter the ${nested.holderLabel.toLowerCase()}…`} onChange={(e) => setQ(e.target.value)} />
+                <span>{tr('In {holder}', { holder })}</span>
+                <input value={q} placeholder={tr('Filter the {holderLabel}…', { holderLabel: nested.holderLabel.toLowerCase() })} onChange={(e) => setQ(e.target.value)} />
             </label>
             <div className="ne-holders">
                 {nested.newHolder && (
                     <button className={'ne-holder' + (value.holder === NEW ? ' on' : '')} onClick={() => onChange({ ...value, holder: NEW, from: '' })}>
-                        ＋ New {holder}…
-                    </button>
+                        {tr('＋ New {holder}…', { holder })}</button>
                 )}
                 {!holders && <div className="ne-note">…</div>}
                 {shown.map((h) => (
@@ -125,23 +126,23 @@ function NestedFields(props: { type: TypeSummary; nested: NonNullable<NewEntryPl
             {value.holder === NEW && (
                 <>
                     <label>
-                        <span>New {holder}: key</span>
+                        <span>{tr('New {holder}: key', { holder })}</span>
                         <input value={value.newKey} placeholder={`my_${holder.replace(/\W+/g, '_')}`} onChange={(e) => onChange({ ...value, newKey: e.target.value })} />
                     </label>
                     <label>
-                        <span>Its name in game</span>
-                        <input value={value.newName} placeholder="(the key made readable)" onChange={(e) => onChange({ ...value, newName: e.target.value })} />
+                        <span>{tr('Its name in game')}</span>
+                        <input value={value.newName} placeholder={tr('(the key made readable)')} onChange={(e) => onChange({ ...value, newName: e.target.value })} />
                     </label>
                 </>
             )}
             {siblings.length > 0 && (
                 <label>
-                    <span>Start from</span>
+                    <span>{tr('Start from')}</span>
                     <Select value={value.from} onChange={(e) => onChange({ ...value, from: e.target.value })}>
-                        <option value="">Empty</option>
+                        <option value="">{tr('Empty')}</option>
                         {siblings.map((x) => (
                             <option key={x} value={x}>
-                                A copy of {x}
+                                {tr('A copy of {x}', { x })}
                             </option>
                         ))}
                     </Select>
@@ -160,9 +161,9 @@ export function singular(label: string): string
 
 /**
  * "New <type>" (docs/mods.md, "New entries"): its key and name in game, written as a template definition (with its
- * localization) into the active mod — the dialog shows where — then opened; refused with the reason (no active mod,
+ * localization) into the active mod (the dialog shows where), then opened; refused with the reason (no active mod,
  * no script definition …). A type written inside other definitions (laws in law groups, faiths in religions:
- * `NewEntryPlan.nested`) asks first which holder it goes in — or a new one — and what it starts as: empty, or a copy
+ * `NewEntryPlan.nested`) asks first which holder it goes in (or a new one) and what it starts as: empty, or a copy
  * of one of the holder's entries (`NestedFields`).
  */
 export function NewEntryDialog(props: { type: TypeSummary; onClose: () => void; onOpen: (type: string, name: string) => void; }): React.JSX.Element
@@ -215,12 +216,12 @@ export function NewEntryDialog(props: { type: TypeSummary; onClose: () => void; 
             const r = await api.createEntry({ type: props.type.id, key: key.trim(), name: name.trim() || undefined, ...nested, ...(where.from ? { from: where.from } : {}) });
             reportChange({
                 kind: 'ok',
-                text: `New ${one}: ${r.key}`,
+                text: tr('New {one}: {key}', { one, key: r.key }),
                 mod: r.mod,
                 where: `${r.rel}:${r.line}`,
                 file: r.file,
                 line: r.line,
-                details: r.loaded ? undefined : [`${r.mod} is not in the loaded mod list: the explorer does not show it.`],
+                details: r.loaded ? undefined : [tr('{mod} is not in the loaded mod list: the explorer does not show it.', { mod: r.mod })],
                 undo: r.step
             });
             props.onClose();
@@ -252,51 +253,48 @@ export function NewEntryDialog(props: { type: TypeSummary; onClose: () => void; 
                 }}
             >
                 <h3>
-                    New {one}
-                    {plan?.mod && <span className="ne-mod">in {plan.mod}</span>}
+                    {tr('New {one}', { one })}
+                    {plan?.mod && <span className="ne-mod">{tr('in {mod}', { mod: plan.mod })}</span>}
                 </h3>
                 {!plan ? <div className="ne-note">…</div> : plan.problem ? <div className="ne-problem">{plan.problem}</div> : (
                     <>
                         {plan.nested && <NestedFields type={props.type} nested={plan.nested} value={where} onChange={setWhere} />}
                         <label>
-                            <span>{props.type.id === 'events' ? 'Event id' : 'Key'}</span>
+                            <span>{props.type.id === 'events' ? tr('Event id') : tr('Key')}</span>
                             <input ref={input} autoFocus value={key} placeholder={props.type.id === 'events' ? 'my_mod.0001' : `my_${one.replace(/\W+/g, '_')}`} onChange={(e) => setKey(e.target.value)} />
                         </label>
                         {plan.name && (
                             <label>
-                                <span>{props.type.id === 'events' ? 'Title' : 'Name in game'}</span>
-                                <input value={name} placeholder="(the key made readable)" onChange={(e) => setName(e.target.value)} />
+                                <span>{props.type.id === 'events' ? tr('Title') : tr('Name in game')}</span>
+                                <input value={name} placeholder={tr('(the key made readable)')} onChange={(e) => setName(e.target.value)} />
                             </label>
                         )}
                         <div className="ne-note">
                             {plan.nested ?
                                 (
                                     <>
-                                        Written inside the {plan.nested.holderLabel.toLowerCase().replace(/s$/, '')}
+                                        {tr('Written inside the {holderLabel}', { holderLabel: plan.nested.holderLabel.toLowerCase().replace(/s$/, '') })}
                                         {plan.nested.within.length
                                             ? (
                                                 <>
-                                                    (its <code>{plan.nested.within.join(' › ')}</code>)
+                                                    {tr('(its')}{' '}<code>{plan.nested.within.join(' › ')}</code>)
                                                 </>
                                             )
-                                            : null} — a {plan.nested.holderLabel.toLowerCase().replace(/s$/, '')} the mod does not write yet is copied into it first
-                                        {plan.name ? ', with its localization' : ''} — then it opens, to fill in.
-                                    </>
+                                            : null} {' '}{tr('— a {holderLabel} the mod does not write yet is copied into it first', { holderLabel: plan.nested.holderLabel.toLowerCase().replace(/s$/, '') })}{plan.name ? tr(', with its localization') : ''} {' '}{tr('— then it opens, to fill in.')}</>
                                 ) :
                                 (
                                     <>
-                                        Written to <code>{plan.rel}</code>
-                                        {plan.name ? ' with its localization' : ''} — then it opens, to fill in.
-                                    </>
+                                        {tr('Written to')}{' '}<code>{plan.rel}</code>
+                                        {plan.name ? tr(' with its localization') : ''} {' '}{tr('— then it opens, to fill in.')}</>
                                 )}
                         </div>
                         {problem && <div className="ne-problem">{problem}</div>}
                     </>
                 )}
                 <div className="ne-actions">
-                    <button onClick={props.onClose}>Cancel</button>
+                    <button onClick={props.onClose}>{tr('Cancel')}</button>
                     <button className="primary" disabled={!plan || !!plan.problem || !key.trim() || busy || (!!plan.nested && (!where.holder || (where.holder === NEW && !where.newKey.trim())))} onClick={() => void create()}>
-                        {busy ? 'Creating…' : 'Create'}
+                        {busy ? tr('Creating…') : tr('Create')}
                     </button>
                 </div>
             </div>
@@ -306,8 +304,8 @@ export function NewEntryDialog(props: { type: TypeSummary; onClose: () => void; 
 
 /**
  * "Duplicate as a new event…" (the Override menu of an event, docs/mods.md "Duplicating an event"): the new id (the
- * next free one in the mod's namespace) and, if wanted, another title; the copy is written into the active mod — its
- * texts under the new id — and opened.
+ * next free one in the mod's namespace) and, if wanted, another title; the copy is written into the active mod (its
+ * texts under the new id) and opened.
  */
 export function DuplicateEventDialog(props: { source: string; onClose: () => void; onOpen: (type: string, name: string) => void; }): React.JSX.Element
 {
@@ -334,7 +332,7 @@ export function DuplicateEventDialog(props: { source: string; onClose: () => voi
 
                 setTimeout(() => input.current?.select(), 0);
             },
-            (e) => alive && setPlan({ type: 'events', label: 'Events', problem: errorText(e), name: false })
+            (e) => alive && setPlan({ type: 'events', label: tr('Events'), problem: errorText(e), name: false })
         );
         return () =>
         {
@@ -355,12 +353,12 @@ export function DuplicateEventDialog(props: { source: string; onClose: () => voi
             const r = await api.duplicateEvent({ source: props.source, key: key.trim(), title: title.trim() || undefined });
             reportChange({
                 kind: 'ok',
-                text: `Duplicated ${props.source} as ${r.key}`,
+                text: tr('Duplicated {source} as {key}', { source: props.source, key: r.key }),
                 mod: r.mod,
                 where: `${r.rel}:${r.line}`,
                 file: r.file,
                 line: r.line,
-                details: r.loaded ? undefined : [`${r.mod} is not in the loaded mod list: the explorer does not show it.`],
+                details: r.loaded ? undefined : [tr('{mod} is not in the loaded mod list: the explorer does not show it.', { mod: r.mod })],
                 undo: r.step
             });
             props.onClose();
@@ -392,29 +390,28 @@ export function DuplicateEventDialog(props: { source: string; onClose: () => voi
                 }}
             >
                 <h3>
-                    Duplicate {props.source}
-                    {plan?.mod && <span className="ne-mod">into {plan.mod}</span>}
+                    {tr('Duplicate {source}', { source: props.source })}
+                    {plan?.mod && <span className="ne-mod">{tr('into {mod}', { mod: plan.mod })}</span>}
                 </h3>
                 {!plan ? <div className="ne-note">…</div> : plan.problem ? <div className="ne-problem">{plan.problem}</div> : (
                     <>
                         <label>
-                            <span>New event id</span>
+                            <span>{tr('New event id')}</span>
                             <input ref={input} autoFocus value={key} placeholder="my_mod.0001" onChange={(e) => setKey(e.target.value)} />
                         </label>
                         <label>
-                            <span>Title</span>
-                            <input value={title} placeholder="(the original’s)" onChange={(e) => setTitle(e.target.value)} />
+                            <span>{tr('Title')}</span>
+                            <input value={title} placeholder={tr('(the original’s)')} onChange={(e) => setTitle(e.target.value)} />
                         </label>
                         <div className="ne-note">
-                            A copy to change freely: its texts (title, descriptions, options) are copied under the new id; the events it leads to and what fires the original stay as they are. Written to the mod’s events file with the id’s namespace — then it opens.
-                        </div>
+                            {tr('A copy to change freely: its texts (title, descriptions, options) are copied under the new id; the events it leads to and what fires the original stay as they are. Written to the mod’s events file with the id’s namespace — then it opens.')}</div>
                         {problem && <div className="ne-problem">{problem}</div>}
                     </>
                 )}
                 <div className="ne-actions">
-                    <button onClick={props.onClose}>Cancel</button>
+                    <button onClick={props.onClose}>{tr('Cancel')}</button>
                     <button className="primary" disabled={!plan || !!plan.problem || !key.trim() || busy} onClick={() => void create()}>
-                        {busy ? 'Duplicating…' : 'Duplicate'}
+                        {busy ? tr('Duplicating…') : tr('Duplicate')}
                     </button>
                 </div>
             </div>
@@ -425,7 +422,7 @@ export function DuplicateEventDialog(props: { source: string; onClose: () => voi
 /**
  * "Duplicate …" of any other type (the entry list's context menu, docs/mods.md "Duplicating an entry"): the new key
  * (default `<source>_copy`) and, if wanted, another name in game; the copy is written into the active mod where new
- * entries of the type go — its texts under keys following the new one — and opened.
+ * entries of the type go (its texts under keys following the new one) and opened.
  */
 export function DuplicateEntryDialog(props: { type: TypeSummary; source: string; onClose: () => void; onOpen: (type: string, name: string) => void; }): React.JSX.Element
 {
@@ -470,12 +467,12 @@ export function DuplicateEntryDialog(props: { type: TypeSummary; source: string;
             const r = await api.duplicateEntry({ type: props.type.id, source: props.source, key: key.trim(), name: name.trim() || undefined });
             reportChange({
                 kind: 'ok',
-                text: `Duplicated ${props.source} as ${r.key}`,
+                text: tr('Duplicated {source} as {key}', { source: props.source, key: r.key }),
                 mod: r.mod,
                 where: `${r.rel}:${r.line}`,
                 file: r.file,
                 line: r.line,
-                details: r.loaded ? undefined : [`${r.mod} is not in the loaded mod list: the explorer does not show it.`],
+                details: r.loaded ? undefined : [tr('{mod} is not in the loaded mod list: the explorer does not show it.', { mod: r.mod })],
                 undo: r.step
             });
             props.onClose();
@@ -507,30 +504,29 @@ export function DuplicateEntryDialog(props: { type: TypeSummary; source: string;
                 }}
             >
                 <h3>
-                    Duplicate {props.source}
-                    {plan?.mod && <span className="ne-mod">into {plan.mod}</span>}
+                    {tr('Duplicate {source}', { source: props.source })}
+                    {plan?.mod && <span className="ne-mod">{tr('into {mod}', { mod: plan.mod })}</span>}
                 </h3>
                 {!plan ? <div className="ne-note">…</div> : plan.problem ? <div className="ne-problem">{plan.problem}</div> : (
                     <>
                         <label>
-                            <span>New key</span>
+                            <span>{tr('New key')}</span>
                             <input ref={input} autoFocus value={key} onChange={(e) => setKey(e.target.value)} />
                         </label>
                         <label>
-                            <span>Name in game</span>
-                            <input value={name} placeholder="(the original’s)" onChange={(e) => setName(e.target.value)} />
+                            <span>{tr('Name in game')}</span>
+                            <input value={name} placeholder={tr('(the original’s)')} onChange={(e) => setName(e.target.value)} />
                         </label>
                         <div className="ne-note">
-                            A copy of this {what} to change freely: its definition under the new key (with the name everywhere it names itself), its texts (name, description) copied under keys following the new one.{' '}
-                            {plan.nested ? `Written next to it inside its ${singular(plan.nested.holderLabel)} (copied into the mod first when the mod does not write it yet)` : `Written to ${plan.rel ?? 'the mod'}`} — then it opens.
-                        </div>
+                            {tr('A copy of this {what} to change freely: its definition under the new key (with the name everywhere it names itself), its texts (name, description) copied under keys following the new one.', { what })}{' '}
+                            {plan.nested ? tr('Written next to it inside its {singular} (copied into the mod first when the mod does not write it yet)', { singular: singular(plan.nested.holderLabel) }) : tr('Written to {rel}', { rel: plan.rel ?? 'the mod' })} {' '}{tr('— then it opens.')}</div>
                         {problem && <div className="ne-problem">{problem}</div>}
                     </>
                 )}
                 <div className="ne-actions">
-                    <button onClick={props.onClose}>Cancel</button>
+                    <button onClick={props.onClose}>{tr('Cancel')}</button>
                     <button className="primary" disabled={!plan || !!plan.problem || !key.trim() || busy} onClick={() => void create()}>
-                        {busy ? 'Duplicating…' : 'Duplicate'}
+                        {busy ? tr('Duplicating…') : tr('Duplicate')}
                     </button>
                 </div>
             </div>

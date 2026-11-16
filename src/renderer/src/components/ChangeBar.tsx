@@ -1,22 +1,37 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../api';
 import { hideChangeBar, useChangeBar, type Change } from '../changes';
-import { undoEdit } from '../scriptEdits';
+import { redoEdit, undoEdit } from '../scriptEdits';
 import '../styles/edit.css';
 
+import { tr } from '../../../shared/i18n';
 const ICON: Record<Change['kind'], string> = { ok: '✓', info: '↶', error: '⚠' };
 
-const time = (ms: number): string => new Date(ms).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+// (today: the time; an earlier day (a change kept from before a restart): the date too)
+const time = (ms: number): string =>
+{
+    const d = new Date(ms);
+    const t = d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    return d.toDateString() === new Date().toDateString() ? t : `${d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' })} ${t}`;
+};
 
 /**
- * The change bar (changes.ts): one line fixed at the bottom of the window with the last change — what, where, Undo, Open —
+ * The change bar (changes.ts): one line fixed at the bottom of the window with the last change (what, where, Undo, Open),
  * replaced by the next one; "N changes" lists the session's changes (click: open the file there).
  */
 export function ChangeBar(): React.JSX.Element | null
 {
     const { current: c, history, hidden } = useChangeBar();
     const [list, setList] = useState(false);
+    // (the mod's kept changes (also from before a restart) and the undone ones that can come back: asked when the list opens)
+    const [kept, setKept] = useState<Awaited<ReturnType<typeof api.listChanges>> | null>(null);
     const box = useRef<HTMLDivElement>(null);
+
+    useEffect(() =>
+    {
+        if (list)
+            void api.listChanges().then(setKept, () => setKept(null));
+    }, [list, c?.id]);
 
     // the list closes on a click elsewhere and on Esc
     useEffect(() =>
@@ -64,7 +79,7 @@ export function ChangeBar(): React.JSX.Element | null
             <span className="cb-text" title={[c.text, ...(c.details ?? [])].join('\n')}>
                 <b>{c.text}</b>
                 {c.where && (
-                    <button className="cb-where" title="Open in VS Code" onClick={() => open(c)}>
+                    <button className="cb-where" title={tr('Open in VS Code')} onClick={() => open(c)}>
                         {c.where}
                     </button>
                 )}
@@ -73,35 +88,45 @@ export function ChangeBar(): React.JSX.Element | null
             </span>
             <span className="cb-actions">
                 {c.undo !== undefined && (
-                    <button title="Undo this change (Ctrl+Z in the view: the last change)" onClick={() => void undoEdit(c.undo)}>
-                        Undo
-                    </button>
+                    <button title={tr('Undo this change (Ctrl+Z in the view: the last change)')} onClick={() => void undoEdit(c.undo)}>
+                        {tr('Undo')}</button>
                 )}
-                {c.file && <button onClick={() => open(c)}>Open in VS Code</button>}
+                {c.file && <button onClick={() => open(c)}>{tr('Open in VS Code')}</button>}
                 {c.actions?.map((a) => (
                     <button key={a.label} onClick={a.run}>
                         {a.label}
                     </button>
                 ))}
-                {history.length > 0 && (
-                    <button className={'cb-count' + (list ? ' on' : '')} title="This session’s changes" onClick={() => setList(!list)}>
-                        {history.length} {history.length === 1 ? 'change' : 'changes'} ▾
-                    </button>
-                )}
-                <button className="ghost cb-close" title="Hide until the next change" onClick={hideChangeBar}>
+                <button className={'cb-count' + (list ? ' on' : '')} title={tr('The mod’s changes the app keeps (also from before a restart): undo or redo any of them')} onClick={() => setList(!list)}>
+                    {tr('Changes ▾')}
+                </button>
+                <button className="ghost cb-close" title={tr('Hide until the next change')} onClick={hideChangeBar}>
                     ✕
                 </button>
             </span>
             {list && (
                 <div className="cb-list">
-                    {history.map((x) => (
-                        <button key={x.id} className={'cb-item ' + x.kind} disabled={!x.file} title={[x.text, x.where, ...(x.details ?? [])].filter(Boolean).join('\n')} onClick={() => open(x)}>
+                    {kept?.redos.map((x) => (
+                        <div key={'r' + x.id} className="cb-item undone">
                             <span className="cb-time">{time(x.at)}</span>
-                            <span className="cb-item-text">{x.text}</span>
-                            {/* (the file's name and line: the folder is in the tooltip) */}
-                            {x.where && <span className="cb-item-where">{x.where.slice(x.where.lastIndexOf('/') + 1)}</span>}
-                        </button>
+                            <span className="cb-item-text">{tr('{label} (undone)', { label: x.label })}</span>
+                            <button className="ghost small" onClick={() => void redoEdit(x.id).then(() => setList(false))}>{tr('Redo')}</button>
+                        </div>
                     ))}
+                    {(kept?.steps ?? []).map((x) =>
+                    {
+                        // (this session's notice of the step: where it wrote, to open)
+                        const seen = history.find((h) => h.undo === x.id);
+                        return (
+                            <div key={x.id} className="cb-item ok" title={[x.label, seen?.where, ...(seen?.details ?? [])].filter(Boolean).join('\n')}>
+                                <span className="cb-time">{time(x.at)}</span>
+                                <button className="ghost cb-item-text" disabled={!seen?.file} onClick={() => seen && open(seen)}>{x.label}</button>
+                                {seen?.where && <span className="cb-item-where">{seen.where.slice(seen.where.lastIndexOf('/') + 1)}</span>}
+                                <button className="ghost small" onClick={() => void undoEdit(x.id).then(() => setList(false))}>{tr('Undo')}</button>
+                            </div>
+                        );
+                    })}
+                    {kept && !kept.steps.length && !kept.redos.length && <div className="cb-item">{tr('No kept changes of the active mod.')}</div>}
                 </div>
             )}
         </div>

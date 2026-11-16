@@ -11,6 +11,17 @@ On <https://github.com/xwcg/CrusaderPope/releases> download either
 Windows may warn about an unknown publisher (SmartScreen) because the release is not code-signed yet: *More info* →
 *Run anyway*. On the first start a short setup finds your game (see step 4 below).
 
+On Linux (not tested much yet):
+
+- **CrusaderPope-<version>-linux-amd64.deb** — Ubuntu, Debian, Mint …: `sudo apt install ./CrusaderPope-<version>-linux-amd64.deb`,
+  then start it from the app menu; or
+- **CrusaderPope-<version>-linux-x86_64.AppImage** — any distribution: make it executable (`chmod +x`) and start it.
+  On Ubuntu 24.04 and newer an AppImage may close right away (a security setting of Ubuntu's): start it with
+  `--no-sandbox`, or use the .deb.
+
+It finds the game both as the native Linux version and as the Windows version run through Proton (the mods in Steam's
+Proton folder of the game).
+
 ## From the source code
 
 For developers, or to run the newest state. You download the code, install its dependencies once, and start it with
@@ -81,6 +92,7 @@ npm run dist
 ```
 
 writes the setup and the portable zip to `dist/` (electron-builder; `npm run dist:dir` only the unpacked app).
+`npm run dist:linux` on Linux writes the AppImage and the .deb; from Windows through WSL see `scripts/dist-linux-wsl.sh`.
 
 ## Where CrusaderPope keeps its data
 

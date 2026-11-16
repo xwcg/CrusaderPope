@@ -1,6 +1,7 @@
 /** The map's rasters fetched from ck3://map/ (docs/map.md), kept while the page is closed. */
 import { track } from '../../pending';
 
+import { tr } from '../../../../shared/i18n';
 const rasters = new Map<string, Promise<ArrayBuffer>>();
 
 /** A raster file by name (`<key>.bin`, `<key>-height.bin` …); the last few stay in memory. */
@@ -14,7 +15,7 @@ export function fetchRaster(name: string): Promise<ArrayBuffer>
             fetch(`ck3://map/${name}`).then((res) =>
             {
                 if (!res.ok)
-                    throw new Error(`The map file ${name} could not be loaded (${res.status})`);
+                    throw new Error(tr('The map file {name} could not be loaded ({status})', { name, status: res.status }));
 
                 return res.arrayBuffer();
             })
@@ -33,7 +34,7 @@ export function fetchRaster(name: string): Promise<ArrayBuffer>
 
 const views = new WeakMap<ArrayBuffer, Uint16Array>();
 
-/** The province ids (ck3://map/<key>.bin) — the same array each time (a new date keeps the 2D drawing). */
+/** The province ids (ck3://map/<key>.bin): the same array each time (a new date keeps the 2D drawing). */
 export function provinceRaster(key: string): Promise<Uint16Array>
 {
     return fetchRaster(`${key}.bin`).then((b) =>

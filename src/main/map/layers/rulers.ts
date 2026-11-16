@@ -1,6 +1,6 @@
 /** Map layers of the county holders at the date (docs/map.md): their dynasties, houses and governments. */
 import type { PNode } from '../../indexer/parser.ts';
-import { T_CHARACTER } from '../../indexer/schema.ts';
+import { holderType } from '../history-characters.ts';
 import { dateNum, scalarOf } from '../history.ts';
 import { TIER_RANK } from '../titles.ts';
 import { bodyOf, fieldOf, lastOf, once, perCounty, Things, type LayerCtx, type LayerDef } from '../layers.ts';
@@ -8,6 +8,7 @@ import { thingsOf } from './basic.ts';
 import { pillars } from './culture.ts';
 import { religions } from './faith.ts';
 
+import { tr } from '../../../shared/i18n.ts';
 /** A value, or values from their dates on (0: undated) in date order. */
 type Dated = string | [date: number, value: string][];
 
@@ -38,7 +39,7 @@ function valueAt(v: Dated | undefined, when: number): string | undefined
 }
 
 /**
- * Every character's dynasty, house, culture and faith (history/characters — one per line; mostly undated, some in a
+ * Every character's dynasty, house, culture and faith (history/characters: one per line; mostly undated, some in a
  * date's block: Ecgberht founds house_british_isles_wessex on 839.1.1, converts change the faith), once per index:
  * the index's entries, file by file, their lines matched in one pass (vanilla ~250 ms for 71k characters; parsing
  * them would take ~360 ms more, reading only a date's holders ~70 ms per date).
@@ -50,9 +51,12 @@ function people(ctx: LayerCtx): Map<string, Person>
         const idx = ctx.idx;
         const byFile = new Map<number, { id: string; start: number; end: number; }[]>();
 
-        for (const id of idx.names(T_CHARACTER))
+        // (a loaded save: its characters)
+        const type = holderType(idx);
+
+        for (const id of idx.names(type))
         {
-            const d = idx.winningDef(idx.get(T_CHARACTER, id)!);
+            const d = idx.winningDef(idx.get(type, id)!);
 
             if (d)
                 (byFile.get(d.file) ?? byFile.set(d.file, []).get(d.file)!).push({ id, start: d.start, end: d.end });
@@ -139,7 +143,7 @@ const dynasty: LayerDef = {
             const d = valueAt(p?.dynasty, ctx.when) ?? (h ? houseDynasty(ctx, h) : undefined);
             return d ? things.of(d, () => ({ name: ctx.name('dynasties', d), type: ctx.idx.get('dynasties', d) ? 'dynasties' : undefined })) : -1;
         });
-        return { id: 'dynasty', label: 'Dynasties', title: 'The dynasties of the county holders at the date', row: 'Dynasty', historical: true, things: things.list, values };
+        return { id: 'dynasty', label: tr('Dynasties'), title: tr('The dynasties of the county holders at the date'), row: tr('Dynasty'), historical: true, things: things.list, values };
     }
 };
 
@@ -161,7 +165,7 @@ const house: LayerDef = {
 
             return d ? things.of('d:' + d, () => ({ key: d, name: ctx.name('dynasties', d), type: ctx.idx.get('dynasties', d) ? 'dynasties' : undefined })) : -1;
         });
-        return { id: 'house', label: 'Houses', title: 'The houses of the county holders at the date', row: 'House', historical: true, things: things.list, values };
+        return { id: 'house', label: tr('Houses'), title: tr('The houses of the county holders at the date'), row: tr('House'), historical: true, things: things.list, values };
     }
 };
 
@@ -197,7 +201,7 @@ function governments(ctx: LayerCtx): Government[]
 
 /**
  * The government a holder gets when history names none (common/governments, _governments.info): one whose
- * `primary_holding` is their capital's holding — first one preferring them (`primary_heritages` has their culture's
+ * `primary_holding` is their capital's holding, first one preferring them (`primary_heritages` has their culture's
  * heritage or `preferred_religions` their faith's religion: clan for arabic, iranian and turkic heritages and islam,
  * wanua for austronesian), then by `fallback` ("used when lacking other selection": feudal 1, clan 2), then one without
  * `can_get_government` (mostly DLC checks), then the mechanic's default.
@@ -222,7 +226,7 @@ function fallbackGovernment(ctx: LayerCtx, holding: string, heritage: string | u
 }
 
 /**
- * The county holders' governments at the date: the latest `government = …` (history/titles — it sets the government
+ * The county holders' governments at the date: the latest `government = …` (history/titles: it sets the government
  * of the title's holder then, and later holders keep it) on a title the holder holds, the higher title on the same
  * date; else, as the game does, one for the holding of their capital (the capital county of their highest title, else
  * their first county; its first barony's `holding`), their culture and faith.
@@ -301,7 +305,7 @@ const government: LayerDef = {
             return g;
         };
         const values = perCounty(ctx, (ci) => (ctx.state.holderOf[ci] ? govOf(ctx.state.holderOf[ci]) : -1));
-        return { id: 'government', label: 'Governments', title: 'The governments of the county holders at the date', row: 'Government', historical: true, things: list, values };
+        return { id: 'government', label: tr('Governments'), title: tr('The governments of the county holders at the date'), row: tr('Government'), historical: true, things: list, values };
     }
 };
 
